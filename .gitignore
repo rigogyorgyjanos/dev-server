@@ -1,0 +1,10 @@
+# Mindent ignoráljunk a gyökérben
+/*
+
+# Ezek a mappák és a bennük lévő tartalom KIVÉTELT képeznek
+!/common/
+!/db/
+!/game/
+
+# A .gitignore maradjon verziókezelve
+!.gitignore
