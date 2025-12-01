@@ -21,6 +21,9 @@
 #include "pcbang.h"
 #include "skill.h"
 #include "threeway_war.h"
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+#include "crc32.h"
+#endif
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -219,15 +222,17 @@ struct FuncShout
 	{
 		if (!d->GetCharacter() || (d->GetCharacter()->GetGMLevel() == GM_PLAYER && d->GetEmpire() != m_bEmpire))
 			return;
-
 		d->GetCharacter()->ChatPacket(CHAT_TYPE_SHOUT, "%s", m_str);
 	}
+
 };
 
 void SendShout(const char * szText, BYTE bEmpire)
 {
 	const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
-	std::for_each(c_ref_set.begin(), c_ref_set.end(), FuncShout(szText, bEmpire));
+	std::for_each(c_ref_set.begin(), c_ref_set.end(), FuncShout(szText, bEmpire
+																			
+																));
 }
 
 void CInputP2P::Shout(const char * c_pData)
@@ -259,6 +264,16 @@ void CInputP2P::Setup(LPDESC d, const char * c_pData)
 	sys_log(0, "P2P: Setup %s:%d", d->GetHostName(), p->wPort);
 	d->SetP2P(d->GetHostName(), p->wPort, p->bChannel);
 }
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+void CInputP2P::MessengerRequestAdd(const char* c_pData)
+{
+	TPacketGGMessengerRequest* p = (TPacketGGMessengerRequest*)c_pData;
+	sys_log(0, "P2P: Messenger: Friend Request from %s to %s", p->account, p->target);
+
+	LPCHARACTER tch = CHARACTER_MANAGER::Instance().FindPC(p->target);
+	MessengerManager::Instance().P2PRequestToAdd_Stage2(p->account, tch);
+}
+#endif
 
 void CInputP2P::MessengerAdd(const char * c_pData)
 {
@@ -463,6 +478,12 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_GG_MESSENGER_ADD:
 			MessengerAdd(c_pData);
 			break;
+		
+		#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+			case HEADER_GG_MESSENGER_REQUEST_ADD:
+				MessengerRequestAdd(c_pData);
+				break;
+		#endif
 
 		case HEADER_GG_MESSENGER_REMOVE:
 			MessengerRemove(c_pData);

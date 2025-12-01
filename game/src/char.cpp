@@ -61,7 +61,11 @@
 #include "PetSystem.h"
 #endif
 #include "DragonSoul.h"
-
+#ifdef __SEND_TARGET_INFO__
+#include <algorithm>
+#include <iterator>
+using namespace std;
+#endif
 extern const BYTE g_aBuffOnAttrPoints;
 extern bool RaceToJob(unsigned race, unsigned *ret_job);
 
@@ -137,6 +141,9 @@ void CHARACTER::Initialize()
 	m_fSyncTime = get_float_time()-3;
 	m_dwPlayerID = 0;
 	m_dwKillerPID = 0;
+#ifdef __SEND_TARGET_INFO__
+	dwLastTargetInfoPulse = 0;
+#endif
 
 	m_iMoveCount = 0;
 
@@ -839,39 +846,38 @@ void CHARACTER::RestartAtSamePos()
 // Entity에 내가 나타났다고 패킷을 보낸다.
 void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 {
-
 	LPDESC d;
-
 	if (!(d = entity->GetDesc()))
 		return;
 
-	// 길드이름 버그 수정 코드
 	LPCHARACTER ch = (LPCHARACTER) entity;
 	ch->SendGuildName(GetGuild());
-	// 길드이름 버그 수정 코드
 
 	TPacketGCCharacterAdd pack;
-
 	pack.header		= HEADER_GC_CHARACTER_ADD;
 	pack.dwVID		= m_vid;
+#if defined(__WJ_SHOW_MOB_INFO__)
+	if (IsMonster() || IsStone() /*|| IsGrowthPet()*/)
+	{
+		pack.dwLevel	= GetLevel();
+		pack.dwAIFlag	= IsMonster() ? GetAIFlag() : 0;
+	}
+	else
+	{
+		pack.dwLevel	= 0;
+		pack.dwAIFlag	= 0;
+	}
+#endif
 	pack.bType		= GetCharType();
 	pack.angle		= GetRotation();
 	pack.x		= GetX();
 	pack.y		= GetY();
 	pack.z		= GetZ();
 	pack.wRaceNum	= GetRaceNum();
-	if (IsPet())
-	{
-		pack.bMovingSpeed	= 150;
-	}
-	else
-	{
-		pack.bMovingSpeed	= GetLimitPoint(POINT_MOV_SPEED);
-	}
+	pack.bMovingSpeed = IsPet() ? 150 : GetLimitPoint(POINT_MOV_SPEED);
 	pack.bAttackSpeed	= GetLimitPoint(POINT_ATT_SPEED);
 	pack.dwAffectFlag[0] = m_afAffectFlag.bits[0];
 	pack.dwAffectFlag[1] = m_afAffectFlag.bits[1];
-
 	pack.bStateFlag = m_bAddChrState;
 
 	int iDur = 0;
@@ -1307,7 +1313,6 @@ void CHARACTER::SaveReal()
 
 void CHARACTER::FlushDelayedSaveItem()
 {
-	// 저장 안된 소지품을 전부 저장시킨다.
 	LPITEM item;
 
 	for (int i = 0; i < INVENTORY_AND_EQUIP_SLOT_MAX; ++i)
@@ -1427,6 +1432,15 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 
 	if (GetDesc())
 	{
+		#if defined(__IMPROVED_LOGOUT_POINTS__)
+		packet_point_change pack;
+		pack.header = HEADER_GC_CHARACTER_POINT_CHANGE;
+		pack.dwVID = m_vid;
+		pack.type = POINT_PLAYTIME;
+		pack.value = GetRealPoint(POINT_PLAYTIME) + (get_dword_time() - m_dwPlayStartTime) / 60000;
+		pack.amount = 0;
+		GetDesc()->Packet(&pack, sizeof(struct packet_point_change));
+#endif 
 		GetDesc()->BindCharacter(NULL);
 //		BindDesc(NULL);
 	}
@@ -2310,8 +2324,8 @@ void CHARACTER::ComputePoints()
 		}
 
 		// 기본 값들
-		SetPoint(POINT_MOV_SPEED,	100);
-		SetPoint(POINT_ATT_SPEED,	100);
+		SetPoint(POINT_MOV_SPEED,	190);
+		SetPoint(POINT_ATT_SPEED,	130);
 		PointChange(POINT_ATT_SPEED, GetPoint(POINT_PARTY_HASTE_BONUS));
 		SetPoint(POINT_CASTING_SPEED,	100);
 	}
@@ -5082,7 +5096,13 @@ void CHARACTER::ClearTarget()
 	p.header = HEADER_GC_TARGET;
 	p.dwVID = 0;
 	p.bHPPercent = 0;
-
+	p.bElement = 0;
+#if defined(__VIEW_TARGET_HP__) || defined(__DEFENSE_WAVE__)
+	p.iMinHP = 0;
+	p.iMaxHP = 0;
+	p.bAlliance = false;
+#endif
+	
 	CHARACTER_SET::iterator it = m_set_pkChrTargetedBy.begin();
 
 	while (it != m_set_pkChrTargetedBy.end())
@@ -5125,10 +5145,35 @@ void CHARACTER::SetTarget(LPCHARACTER pkChrTarget)
 	{
 		m_pkChrTarget->m_set_pkChrTargetedBy.insert(this);
 
-		p.dwVID	= m_pkChrTarget->GetVID();
+		p.dwVID = m_pkChrTarget->GetVID();
 
-		if (m_pkChrTarget->IsPC() && !m_pkChrTarget->IsPolymorphed() || m_pkChrTarget->GetMaxHP() <= 0)
+#if defined(__VIEW_TARGET_PLAYER_HP__)
+		if ((m_pkChrTarget->GetMaxHP() <= 0))
+		{
 			p.bHPPercent = 0;
+#if defined(__VIEW_TARGET_HP__) || defined(__DEFENSE_WAVE__)
+			p.iMinHP = 0;
+			p.iMaxHP = 0;
+#endif
+		}
+		else if (m_pkChrTarget->IsPC() && !m_pkChrTarget->IsPolymorphed())
+		{
+			p.bHPPercent = MINMAX(0, (static_cast<int64_t>(GetHP()) * 100) / GetMaxHP(), 100);
+#if defined(__VIEW_TARGET_HP__)
+			p.iMinHP = m_pkChrTarget->GetHP();
+			p.iMaxHP = m_pkChrTarget->GetMaxHP();
+#endif
+		}
+#else
+		if ((m_pkChrTarget->IsPC() && !m_pkChrTarget->IsPolymorphed()) || (m_pkChrTarget->GetMaxHP() <= 0))
+		{
+			p.bHPPercent = 0;
+#if defined(__VIEW_TARGET_HP__)
+			p.iMinHP = 0;
+			p.iMaxHP = 0;
+#endif
+		}
+#endif
 		else 
 		{
 			if (m_pkChrTarget->GetRaceNum() == 20101 ||
@@ -5149,23 +5194,83 @@ void CHARACTER::SetTarget(LPCHARACTER pkChrTarget)
 					int iHorseMaxHealth = owner->GetHorseMaxHealth();
 
 					if (iHorseMaxHealth)
+					{
 						p.bHPPercent = MINMAX(0,  iHorseHealth * 100 / iHorseMaxHealth, 100);
+#if defined(__VIEW_TARGET_HP__)
+						p.iMinHP = 100;
+						p.iMaxHP = 100;
+#endif
+					}
 					else
+					{
 						p.bHPPercent = 100;
+#if defined(__VIEW_TARGET_HP__)
+						p.iMinHP = 100;
+						p.iMaxHP = 100;
+#endif
+					}
 				}
 				else
+				{
 					p.bHPPercent = 100;
+					#if defined(__VIEW_TARGET_HP__)
+					p.iMinHP = 100;
+					p.iMaxHP = 100;
+#endif
+				}
 			}
 			else
-				p.bHPPercent = MINMAX(0, (m_pkChrTarget->GetHP() * 100) / m_pkChrTarget->GetMaxHP(), 100);
+			{
+				if (m_pkChrTarget->GetMaxHP() <= 0)
+				{
+					p.bHPPercent = 0;
+#if defined(__VIEW_TARGET_HP__)
+					p.iMinHP = 0;
+					p.iMaxHP = 0;
+#endif
+				}
+				else
+				{
+					p.bHPPercent = MINMAX(0, (static_cast<int64_t>(m_pkChrTarget->GetHP()) * 100) / m_pkChrTarget->GetMaxHP(), 100);
+#if defined(__VIEW_TARGET_HP__)
+					p.iMinHP = m_pkChrTarget->GetHP();
+					p.iMaxHP = m_pkChrTarget->GetMaxHP();
+#endif
+				}
+			}
 		}
 	}
 	else
 	{
 		p.dwVID = 0;
 		p.bHPPercent = 0;
+#if defined(__VIEW_TARGET_HP__)
+		p.iMinHP = 0;
+		p.iMaxHP = 0;
+#endif
+		
 	}
+#ifdef ELEMENT_TARGET
+			const int ELEMENT_BASE = 11;
+			DWORD curElementBase = ELEMENT_BASE;
+			DWORD raceFlag;
+			if (m_pkChrTarget && m_pkChrTarget->IsMonster() && (raceFlag = m_pkChrTarget->GetMobTable().dwRaceFlag) >= RACE_FLAG_ATT_ELEC)
+			{
+				for (int i = RACE_FLAG_ATT_ELEC; i <= RACE_FLAG_ATT_DARK; i *= 2)
+				{
+					curElementBase++;
+					int diff = raceFlag - i;
+					if (abs(diff) <= 1024)
+						break;
+				}
+				p.bElement = curElementBase - ELEMENT_BASE;
+			}
+			else
+			{
+				p.bElement = 0;
+			}
 
+#endif
 	GetDesc()->Packet(&p, sizeof(TPacketGCTarget));
 }
 
@@ -5178,12 +5283,43 @@ void CHARACTER::BroadcastTargetPacket()
 
 	p.header = HEADER_GC_TARGET;
 	p.dwVID = GetVID();
-
-	if (IsPC())
+	
+	if (GetMaxHP() <= 0)
+	{
 		p.bHPPercent = 0;
+#if defined(__VIEW_TARGET_HP__)
+		p.iMinHP = 0;
+		p.iMaxHP = 0;
+#endif
+	}
 	else
-		p.bHPPercent = MINMAX(0, (GetHP() * 100) / GetMaxHP(), 100);
-
+	{
+#if defined(__VIEW_TARGET_PLAYER_HP__)
+		p.bHPPercent = MINMAX(0, (static_cast<int64_t>(GetHP()) * 100) / GetMaxHP(), 100);
+	#if defined(__VIEW_TARGET_HP__)
+		p.iMinHP = GetHP();
+		p.iMaxHP = GetMaxHP();
+	#endif
+#else
+		if (IsPC())
+		{
+			p.bHPPercent = 0;
+	#if defined(__VIEW_TARGET_HP__)
+			p.dwMinHP = 0;
+			p.dwMaxHP = 0;
+	#endif
+		}
+		else
+		{
+			p.bHPPercent = MINMAX(0, (static_cast<int64_t>(GetHP()) * 100) / GetMaxHP(), 100);
+	#if defined(__VIEW_TARGET_HP__)
+			p.dwMinHP = GetHP();
+			p.dwMaxHP = GetMaxHP();
+	#endif
+		}
+#endif
+	}
+	p.bAlliance = false;
 	CHARACTER_SET::iterator it = m_set_pkChrTargetedBy.begin();
 
 	while (it != m_set_pkChrTargetedBy.end())
@@ -5235,7 +5371,11 @@ void CHARACTER::ExitToSavedLocation()
 // 지금까진 privateMapIndex 가 현재 맵 인덱스와 같은지 체크 하는 것을 외부에서 하고,
 // 다르면 warpset을 불렀는데
 // 이를 warpset 안으로 넣자.
+#if defined(__BL_MOVE_CHANNEL__)
+bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex, long lCustomAddr, WORD wCustomPort)
+#else
 bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
+#endif
 {
 	if (!IsPC())
 		return false;
@@ -5302,13 +5442,20 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 	p.lX	= x;
 	p.lY	= y;
 	p.lAddr	= lAddr;
-
+#if defined(__BL_MOVE_CHANNEL__)
+	p.lAddr	= lCustomAddr ? lCustomAddr : lAddr;
+	p.wPort	= wCustomPort ? wCustomPort : wPort;
+#else
+	p.lAddr = lAddr;
+	p.wPort = wPort;
+#endif
+	
 #ifdef ENABLE_PROXY_IP
 	if (!g_stProxyIP.empty())
 		p.lAddr = inet_addr(g_stProxyIP.c_str());
 #endif
 
-	p.wPort	= wPort;
+	
 
 	GetDesc()->Packet(&p, sizeof(TPacketGCWarp));
 
@@ -5914,7 +6061,7 @@ void CHARACTER::ResetPoint(int iLv)
 {
 	BYTE bJob = GetJob();
 
-	PointChange(POINT_LEVEL, iLv - GetLevel());
+	PointChange(POINT_LEVEL, iLv - GetLevel(), false, true);
 
 	SetRealPoint(POINT_ST, JobInitialPoints[bJob].st);
 	SetPoint(POINT_ST, GetRealPoint(POINT_ST));
@@ -6099,13 +6246,12 @@ void CHARACTER::MonsterChat(BYTE bMonsterChatType)
 	if (text.empty())
 		return;
 
-	struct packet_chat pack_chat;
-
-	pack_chat.header    = HEADER_GC_CHAT;
-	pack_chat.size	= sizeof(struct packet_chat) + text.size() + 1;
-	pack_chat.type      = CHAT_TYPE_TALKING;
-	pack_chat.id        = GetVID();
-	pack_chat.bEmpire	= 0;
+	TPacketGCChat pack_chat;
+	pack_chat.header = HEADER_GC_CHAT;
+	pack_chat.size = sizeof(struct packet_chat) + text.size() + 1;
+	pack_chat.type = CHAT_TYPE_TALKING;
+	pack_chat.id = GetVID();
+	pack_chat.bEmpire = 0;
 
 	TEMP_BUFFER buf;
 	buf.write(&pack_chat, sizeof(struct packet_chat));
@@ -7265,3 +7411,132 @@ void CHARACTER::SetLastPMPulse(void)
 {
       m_iLastPMPulse = thecore_pulse() + 25;
 }
+#if defined(__BL_MOVE_CHANNEL__)
+EVENTINFO(move_channel_info)
+{
+	LPCHARACTER		ch;
+	int				left_second;
+	long			lAddr;
+	WORD			wPort;
+
+	move_channel_info(const LPCHARACTER m_ch, const int m_sec, const long m_Addr, const WORD m_Port) :
+		ch(m_ch),
+		left_second(m_sec),
+		lAddr(m_Addr),
+		wPort(m_Port)
+	{}
+};
+
+EVENTFUNC(move_channel_event)
+{
+	move_channel_info* info = dynamic_cast<move_channel_info*>(event->info);
+
+	if (info == nullptr)
+	{
+		sys_err("<move_channel_event> <Factor> Null pointer");
+		return 0;
+	}
+
+	const LPCHARACTER ch = info->ch;
+	if (ch == nullptr)
+		return 0;
+
+	if (info->left_second <= 0)
+	{
+		ch->m_pkTimedEvent = nullptr;
+		if (ch->CanWarp())
+			ch->WarpSet(ch->GetX(), ch->GetY(), 0, info->lAddr, info->wPort);
+		else
+			ch->ChatPacket(CHAT_TYPE_INFO, "Switching canceled.");
+		return 0;
+	}
+	else
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d초 남았습니다."), info->left_second);
+		--info->left_second;
+	}
+
+	return PASSES_PER_SEC(1);
+}
+
+void CHARACTER::MoveChannel(const TRespondMoveChannel* p)
+{
+	if (p == nullptr)
+		return;
+	
+	const LPDESC d = GetDesc();
+	if (d == nullptr)
+		return;
+
+	if (p->wPort == 0 
+		|| p->lAddr == 0)
+	{
+		ChatPacket(CHAT_TYPE_INFO, "Currently, you cannot switch to that channel.");
+		return;
+	}
+
+	if (m_pkTimedEvent)
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("취소 되었습니다."));
+		event_cancel(&m_pkTimedEvent);
+		return;
+	}
+
+	ChatPacket(CHAT_TYPE_INFO, "Please wait a moment. Changing channel...");
+	if (IsHack(false, true, 10))
+		return;
+
+	m_pkTimedEvent = event_create(move_channel_event, 
+		new move_channel_info(this, IsPosition(POS_FIGHTING) ? 10 : 3, p->lAddr, p->wPort), 1);
+}
+#endif
+
+#ifdef ENABLE_SORT_INVEN
+void CHARACTER::SortInven(BYTE option)
+{
+	if (IsDead()) 
+		return;
+	if (GetLastSortTime() > get_global_time()) {
+		ChatPacket(CHAT_TYPE_INFO, "You need to wait %d sec.", GetLastSortTime() - get_global_time());
+		return;
+	}
+
+	std::vector<LPITEM> all;
+	LPITEM myitems;
+	const auto size = static_cast<WORD>(INVENTORY_MAX_NUM);
+
+	for (WORD i = 0; i < size; ++i) {
+		if (myitems = GetInventoryItem(i)) {
+			all.emplace_back(myitems);
+			myitems->RemoveFromCharacter();
+			SyncQuickslot(QUICKSLOT_TYPE_ITEM, static_cast<BYTE>(i), 255);
+		}
+	}
+	if (all.empty())
+		return;
+	std::sort(all.begin(), all.end(), [option](const LPITEM i1, const LPITEM i2) {
+		switch (option) {
+		case 2:
+			return i1->CustomSort() == i2->CustomSort() ? i1->GetSubType() < i2->GetSubType() : i1->CustomSort() < i2->CustomSort();
+		case 3:
+			return i1->GetLevelLimit() == i2->GetLevelLimit() ? i1->GetSubType() < i2->GetSubType() : i1->GetLevelLimit() > i2->GetLevelLimit();
+		default:
+			return std::strcmp(i1->GetName(), i2->GetName()) < 0;
+		}
+	});
+	for (const auto& getitem : all) {
+		const auto table = ITEM_MANAGER::instance().GetTable(getitem->GetVnum());
+		if (!table)
+			continue;
+		static const std::initializer_list<DWORD> out = { ITEM_AUTO_HP_RECOVERY_S, ITEM_AUTO_HP_RECOVERY_M, ITEM_AUTO_HP_RECOVERY_L, ITEM_AUTO_HP_RECOVERY_X, ITEM_AUTO_SP_RECOVERY_S, ITEM_AUTO_SP_RECOVERY_M, ITEM_AUTO_SP_RECOVERY_L, ITEM_AUTO_SP_RECOVERY_X };
+		if (table->dwFlags & ITEM_FLAG_STACKABLE && table->bType != ITEM_BLEND && std::find(out.begin(), out.end(), getitem->GetVnum()) == out.end()) {
+			AutoGiveItem(getitem->GetVnum(), getitem->GetCount(), -1, false);
+			M2_DESTROY_ITEM(getitem);
+		}
+		else
+			AutoGiveItem(getitem);
+	};
+	SetLastSortTime(get_global_time() + 15); // 15 sec
+}
+#endif
+

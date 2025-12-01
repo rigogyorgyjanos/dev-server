@@ -2,6 +2,8 @@
 #define __INC_TABLES_H__
 
 #include "length.h"
+#include "service.h"
+
 
 typedef	DWORD IDENT;
 
@@ -155,6 +157,9 @@ enum
 	
 	HEADER_GD_UPDATE_CHANNELSTATUS	= 139,
 	HEADER_GD_REQUEST_CHANNELSTATUS	= 140,
+#if defined(__BL_MOVE_CHANNEL__)
+	HEADER_GD_MOVE_CHANNEL = 152,
+#endif
 
 	HEADER_GD_SETUP			= 0xff,
 
@@ -289,7 +294,9 @@ enum
 	HEADER_DG_RESULT_CHARGE_CASH	= 179,
 	HEADER_DG_ITEMAWARD_INFORMER	= 180,	//gift notify
 	HEADER_DG_RESPOND_CHANNELSTATUS		= 181,
-
+#if defined(__BL_MOVE_CHANNEL__)
+	HEADER_DG_RESPOND_MOVE_CHANNEL = 188,
+#endif
 	HEADER_DG_MAP_LOCATIONS		= 0xfe,
 	HEADER_DG_P2P			= 0xff,
 
@@ -773,6 +780,21 @@ typedef struct SSafeboxLoadPacket
 	char	szPassword[SAFEBOX_PASSWORD_MAX_LEN + 1];
 } TSafeboxLoadPacket;
 
+
+///Add
+#if defined(__BL_MOVE_CHANNEL__)
+typedef struct SMoveChannel
+{
+	BYTE	bChannel;
+	long	lMapIndex;
+} TMoveChannel;
+
+typedef struct SRespondMoveChannel
+{
+	WORD	wPort;
+	long	lAddr;
+} TRespondMoveChannel;
+#endif
 typedef struct SSafeboxChangePasswordPacket
 {
 	DWORD	dwID;
@@ -1071,6 +1093,7 @@ typedef struct SPacketGDAuthLogin
 	BYTE	bBillType;
 	DWORD	dwBillID;
 	int		iPremiumTimes[PREMIUM_MAX_NUM];
+
 } TPacketGDAuthLogin;
 
 typedef struct SPacketGDLoginByKey

@@ -112,7 +112,11 @@ class CInputMain : public CInputProcessor
 		void		ItemUse(LPCHARACTER ch, const char * data);
 		void		ItemDrop(LPCHARACTER ch, const char * data);
 		void		ItemDrop2(LPCHARACTER ch, const char * data);
+		void		ItemDestroy(LPCHARACTER ch, const char * data);
 		void		ItemMove(LPCHARACTER ch, const char * data);
+		#ifdef ENABLE_SORT_INVEN
+		void		SortInven(LPCHARACTER ch, const char * data);
+#endif
 		void		ItemPickup(LPCHARACTER ch, const char * data);
 		void		ItemToItem(LPCHARACTER ch, const char * pcData);
 		void		QuickslotAdd(LPCHARACTER ch, const char * data);
@@ -140,6 +144,10 @@ class CInputMain : public CInputProcessor
 		void		SafeboxItemMove(LPCHARACTER ch, const char * data);
 		int			Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes);
 
+#if defined(__BL_MOVE_CHANNEL__)
+		void		MoveChannel(LPCHARACTER ch, const char* c_pData);
+#endif
+
 		void 		PartyInvite(LPCHARACTER ch, const char * c_pData);
 		void 		PartyInviteAnswer(LPCHARACTER ch, const char * c_pData);
 		void		PartyRemove(LPCHARACTER ch, const char * c_pData);
@@ -158,6 +166,9 @@ class CInputMain : public CInputProcessor
 		void		Refine(LPCHARACTER ch, const char* c_pData);
 
 		void		Roulette(LPCHARACTER ch, const char* c_pData);
+#ifdef __SEND_TARGET_INFO__
+		void		TargetInfoLoad(LPCHARACTER ch, const char* c_pData);
+#endif
 };
 
 class CInputDead : public CInputMain
@@ -188,6 +199,9 @@ protected:
 	void		PlayerCreateSuccess(LPDESC d, const char * data);
 	void		Boot(const char* data);
 	void		QuestLoad(LPDESC d, const char * c_pData);
+	#if defined(__BL_MOVE_CHANNEL__)
+	void		MoveChannelRespond(LPDESC d, const char* c_pData);
+#endif
 	void		SafeboxLoad(LPDESC d, const char * c_pData);
 	void		SafeboxChangeSize(LPDESC d, const char * c_pData);
 	void		SafeboxWrongPassword(LPDESC d);
@@ -353,6 +367,9 @@ class CInputP2P : public CInputProcessor
 		void		BlockChat(const char * c_pData);
 		void		PCBangUpdate(const char* c_pData);
 		void		IamAwake(LPDESC d, const char * c_pData);
+		#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+	void		MessengerRequestAdd(const char* c_pData);
+#endif
 
 	protected:
 		CPacketInfoGG 	m_packetInfoGG;

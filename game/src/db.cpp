@@ -871,7 +871,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 							}
 
 							char szQuery[1024];
-							snprintf(szQuery, sizeof(szQuery), "UPDATE account SET last_play=NOW() WHERE id=%u", dwID);
 							std::unique_ptr<SQLMsg> msg( DBManager::instance().DirectQuery(szQuery) );
 						}
 

@@ -50,6 +50,63 @@ static int __deposit_limit()
 	return (1000*10000); // 1천만
 }
 
+#ifdef __SEND_TARGET_INFO__
+void CInputMain::TargetInfoLoad(LPCHARACTER ch, const char* c_pData)
+{
+	TPacketCGTargetInfoLoad* p = (TPacketCGTargetInfoLoad*)c_pData;
+	TPacketGCTargetInfo pInfo;
+	pInfo.header = HEADER_GC_TARGET_INFO;
+	static std::vector<LPITEM> s_vec_item;
+	s_vec_item.clear();
+	LPITEM pkInfoItem;
+	LPCHARACTER m_pkChrTarget = CHARACTER_MANAGER::instance().Find(p->dwVID);
+	if (!ch || !m_pkChrTarget)
+		return;
+
+	// if (m_pkChrTarget && (m_pkChrTarget->IsMonster() || m_pkChrTarget->IsStone()))
+	// {
+		// if (thecore_heart->pulse - (int) ch->GetLastTargetInfoPulse() < passes_per_sec * 3)
+			// return;
+
+		// ch->SetLastTargetInfoPulse(thecore_heart->pulse);
+
+	if (ITEM_MANAGER::instance().CreateDropItemVector(m_pkChrTarget, ch, s_vec_item) && (m_pkChrTarget->IsMonster() || m_pkChrTarget->IsStone()))
+	{
+		if (s_vec_item.size() == 0);
+		else if (s_vec_item.size() == 1)
+		{
+			pkInfoItem = s_vec_item[0];
+			pInfo.dwVID	= m_pkChrTarget->GetVID();
+			pInfo.race = m_pkChrTarget->GetRaceNum();
+			pInfo.dwVnum = pkInfoItem->GetVnum();
+			pInfo.count = pkInfoItem->GetCount();
+			ch->GetDesc()->Packet(&pInfo, sizeof(TPacketGCTargetInfo));
+		}
+		else
+		{
+			int iItemIdx = s_vec_item.size() - 1;
+			while (iItemIdx >= 0)
+			{
+				pkInfoItem = s_vec_item[iItemIdx--];
+
+				if (!pkInfoItem)
+				{
+					sys_err("pkInfoItem null in vector idx %d", iItemIdx + 1);
+					continue;
+				}
+
+					pInfo.dwVID	= m_pkChrTarget->GetVID();
+					pInfo.race = m_pkChrTarget->GetRaceNum();
+					pInfo.dwVnum = pkInfoItem->GetVnum();
+					pInfo.count = pkInfoItem->GetCount();
+					ch->GetDesc()->Packet(&pInfo, sizeof(TPacketGCTargetInfo));
+			}
+		}
+	}
+	// }
+}
+#endif
+
 void SendBlockChatInfo(LPCHARACTER ch, int sec)
 {
 	if (sec <= 0)
@@ -502,6 +559,7 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 				pack.bType = bType;
 				strlcpy(pack.szNameFrom, ch->GetName(), sizeof(pack.szNameFrom));
 
+
 				// desc->BufferedPacket을 하지 않고 버퍼에 써야하는 이유는 
 				// P2P relay되어 패킷이 캡슐화 될 수 있기 때문이다.
 				TEMP_BUFFER tmpbuf;
@@ -758,10 +816,10 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 		p.bHeader = HEADER_GG_SHOUT;
 		p.bEmpire = ch->GetEmpire();
 		strlcpy(p.szText, chatbuf, sizeof(p.szText));
-
 		P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGShout));
+		SendShout(chatbuf, ch->GetEmpire()
 
-		SendShout(chatbuf, ch->GetEmpire());
+			);
 
 		return (iExtraLen);
 	}
@@ -772,7 +830,6 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 	pack_chat.size = sizeof(TPacketGCChat) + len;
 	pack_chat.type = pinfo->type;
 	pack_chat.id = ch->GetVID();
-
 	switch (pinfo->type)
 	{
 		case CHAT_TYPE_TALKING:
@@ -886,6 +943,12 @@ void CInputMain::ItemDrop2(LPCHARACTER ch, const char * data)
 	else
 		ch->DropItem(pinfo->Cell, pinfo->count);
 }
+void CInputMain::ItemDestroy(LPCHARACTER ch, const char * data)
+{
+	struct command_item_destroy * pinfo = (struct command_item_destroy *) data;
+	if (ch)
+		ch->DestroyItem(pinfo->Cell);
+}
 
 void CInputMain::ItemMove(LPCHARACTER ch, const char * data)
 {
@@ -988,7 +1051,12 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 				LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(name);
 
 				if (!tch)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님은 접속되 있지 않습니다."), name);
+				{
+					#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+						MessengerManager::instance().P2PRequestToAdd_Stage1(ch, name);
+					#endif
+					//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님은 접속되 있지 않습니다."), name);
+				}
 				else
 				{
 					if (tch == ch) // 자신은 추가할 수 없다.
@@ -2209,6 +2277,14 @@ void CInputMain::SafeboxCheckout(LPCHARACTER ch, const char * c_pData, bool bMal
 		LogManager::instance().ItemLog(ch, pkItem, "SAFEBOX GET", szHint);
 }
 
+#ifdef ENABLE_SORT_INVEN
+void CInputMain::SortInven(LPCHARACTER ch, const char * data)
+{
+	TPacketCGSortInven * pinfo = (TPacketCGSortInven *) data;
+	if (ch) ch->SortInven(pinfo->option);
+}
+#endif
+
 void CInputMain::SafeboxItemMove(LPCHARACTER ch, const char * data)
 {
 	struct command_item_move * pinfo = (struct command_item_move *) data;
@@ -3135,12 +3211,21 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			if (!ch->IsObserverMode())
 				ItemDrop2(ch, c_pData);
 			break;
-
+		case HEADER_CG_ITEM_DESTROY:
+			if (!ch->IsObserverMode())
+				ItemDestroy(ch, c_pData);
+		break;
+		
 		case HEADER_CG_ITEM_MOVE:
 			if (!ch->IsObserverMode())
 				ItemMove(ch, c_pData);
 			break;
-
+#ifdef ENABLE_SORT_INVEN
+		case SORT_INVEN:
+			if (!ch->IsObserverMode())
+				SortInven(ch, c_pData);
+		break;
+#endif
 		case HEADER_CG_ITEM_PICKUP:
 			if (!ch->IsObserverMode())
 				ItemPickup(ch, c_pData);
@@ -3255,7 +3340,11 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_CG_MALL_CHECKOUT:
 			SafeboxCheckout(ch, c_pData, true);
 			break;
-
+#if defined(__BL_MOVE_CHANNEL__)
+		case HEADER_CG_MOVE_CHANNEL:
+			MoveChannel(ch, c_pData);
+			break;
+#endif
 		case HEADER_CG_PARTY_INVITE:
 			PartyInvite(ch, c_pData);
 			break;
@@ -3324,6 +3413,14 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			// }
 			// break;
 			
+#ifdef __SEND_TARGET_INFO__
+		case HEADER_CG_TARGET_INFO_LOAD:
+			{
+				TargetInfoLoad(ch, c_pData);
+			}
+			break;
+#endif
+
 		case HEADER_CG_DRAGON_SOUL_REFINE:
 			{
 				TPacketCGDragonSoulRefine* p = reinterpret_cast <TPacketCGDragonSoulRefine*>((void*)c_pData);
@@ -3399,4 +3496,36 @@ int CInputDead::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 	return (iExtraLen);
 }
+#if defined(__BL_MOVE_CHANNEL__)
+void CInputMain::MoveChannel(LPCHARACTER ch, const char* c_pData)
+{
+	const TPacketCGMoveChannel* p = reinterpret_cast<const TPacketCGMoveChannel*>(c_pData);
+	if (p == nullptr)
+		return;
+	
+	if (ch->m_pkTimedEvent)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("취소 되었습니다."));
+		event_cancel(&ch->m_pkTimedEvent);
+		return;
+	}
+	
+	const BYTE bChannel = p->channel;
+
+	if (bChannel == g_bChannel
+		|| g_bAuthServer
+		|| g_bChannel == 99
+		|| ch->GetMapIndex() >= 1000
+		|| ch->GetDungeon()
+		|| ch->CanWarp() == false
+		)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "You cannot change channel.");
+		return;
+	}
+
+	TMoveChannel t{ bChannel, ch->GetMapIndex() };
+	db_clientdesc->DBPacket(HEADER_GD_MOVE_CHANNEL, ch->GetDesc()->GetHandle(), &t, sizeof(t));
+}
+#endif
 

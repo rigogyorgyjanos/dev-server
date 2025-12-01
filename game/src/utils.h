@@ -3,6 +3,7 @@
 #define __INC_METIN_II_UTILS_H__
 
 #include <math.h>
+#include <string>
 
 #define IS_SET(flag, bit)		((flag) & (bit))
 #define SET_BIT(var, bit)		((var) |= (bit))

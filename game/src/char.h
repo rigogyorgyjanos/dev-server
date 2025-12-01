@@ -13,6 +13,8 @@
 #include "affect_flag.h"
 #include "cube.h"
 #include "mining.h"
+#include "packet.h"
+
 
 class CBuffOnAttributes;
 class CPetSystem;
@@ -583,6 +585,15 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		//////////////////////////////////////////////////////////////////////////////////
 		// Basic Points
+		
+#ifdef __SEND_TARGET_INFO__
+	private:
+		DWORD			dwLastTargetInfoPulse;
+
+	public:
+		DWORD			GetLastTargetInfoPulse() const	{ return dwLastTargetInfoPulse; }
+		void			SetLastTargetInfoPulse(DWORD pulse) { dwLastTargetInfoPulse = pulse; }
+#endif
 	public:
 		DWORD			GetPlayerID() const	{ return m_dwPlayerID; }
 
@@ -830,7 +841,12 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList = true);
 		bool			IsSyncOwner(LPCHARACTER ch) const;
 
+#if defined(__BL_MOVE_CHANNEL__)
+		void			MoveChannel(const TRespondMoveChannel* p);
+		bool			WarpSet(long x, long y, long lRealMapIndex = 0, long lCustomAddr = 0, WORD wCustomPort = 0);
+#else
 		bool			WarpSet(long x, long y, long lRealMapIndex = 0);
+#endif
 		void			SetWarpLocation(long lMapIndex, long x, long y);
 		void			WarpEnd();
 		const PIXEL_POSITION & GetWarpPosition() const { return m_posWarp; }
@@ -1050,6 +1066,11 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		bool			IsItemLoaded() const	{ return m_bItemLoaded; }
 		void			SetItemLoaded()	{ m_bItemLoaded = true; }
+#ifdef ENABLE_SORT_INVEN
+		void			SortInven(BYTE option);
+		DWORD			GetLastSortTime() const { return m_dwLastSortTime; }
+		void			SetLastSortTime(DWORD time) { m_dwLastSortTime = time; }
+#endif
 
 		void			ClearItem();
 		void			SetItem(TItemPos Cell, LPITEM item);
@@ -1085,6 +1106,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// END_OF_ADD_REFINE_BUILDING
 
 		bool			RefineItem(LPITEM pkItem, LPITEM pkTarget);
+		bool			DestroyItem(TItemPos Cell);
 		bool			DropItem(TItemPos Cell,  BYTE bCount=0);
 		bool			GiveRecallItem(LPITEM item);
 		void			ProcessRecallItem(LPITEM item);
@@ -1401,7 +1423,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool				m_bDisableCooltime;
 		DWORD				m_dwLastSkillTime;	///< 마지막으로 skill 을 쓴 시간(millisecond).
 		// End of Skill
-
+#ifdef ENABLE_SORT_INVEN
+		DWORD				m_dwLastSortTime;
+#endif
 		// MOB_SKILL
 	public:
 		bool				HasMobSkill() const;

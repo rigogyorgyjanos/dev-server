@@ -1380,4 +1380,3 @@ bool LC_IsEurope()
 
 	return false;
 }
-

@@ -113,6 +113,7 @@ const char *two_arguments(const char *argument, char *first_arg, size_t first_si
 	return (one_argument(one_argument(argument, first_arg, first_size), second_arg, second_size));
 }
 
+
 const char *first_cmd(const char *argument, char *first_arg, size_t first_arg_size, size_t *first_arg_len_result)
 {           
 	size_t cur_len = 0;

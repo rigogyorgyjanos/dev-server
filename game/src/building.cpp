@@ -92,19 +92,20 @@ void CObject::Reconstruct(DWORD dwVnum)
 void CObject::EncodeInsertPacket(LPENTITY entity)
 {
 	LPDESC d;
-
 	if (!(d = entity->GetDesc()))
 		return;
 
-	sys_log(0, "ObjectInsertPacket vid %u vnum %u rot %f %f %f", 
-			m_dwVID, m_data.dwVnum, m_data.xRot, m_data.yRot, m_data.zRot);
+	sys_log(0, "ObjectInsertPacket vid %u vnum %u rot %f %f %f", m_dwVID, m_data.dwVnum, m_data.xRot, m_data.yRot, m_data.zRot);
 
 	TPacketGCCharacterAdd pack;
-
 	memset(&pack, 0, sizeof(TPacketGCCharacterAdd));
 
 	pack.header         = HEADER_GC_CHARACTER_ADD;
 	pack.dwVID          = m_dwVID;
+#if defined(__WJ_SHOW_MOB_INFO__)
+	pack.dwLevel	= 0;
+	pack.dwAIFlag	= 0;
+#endif
 	pack.bType          = CHAR_TYPE_BUILDING;
 	pack.angle          = m_data.zRot;
 	pack.x              = GetX();

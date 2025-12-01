@@ -465,7 +465,7 @@ bool ConvertToShopItemTable(IN CGroupNode* pNode, OUT TShopTableEx& shopTable)
 		std::sort(shopItems.rbegin(), shopItems.rend(), CompareShopItemName);
 	}
 
-	CGrid grid = CGrid(5, 9);
+	CGrid grid = CGrid(10, 9);
 	int iPos;
 
 	memset(&shopTable.items[0], 0, sizeof(shopTable.items));

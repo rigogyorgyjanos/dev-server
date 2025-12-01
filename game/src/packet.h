@@ -28,6 +28,7 @@ enum
 	HEADER_CG_QUICKSLOT_SWAP			= 18,
 	HEADER_CG_WHISPER				= 19,
 	HEADER_CG_ITEM_DROP2			= 20,
+	HEADER_CG_ITEM_DESTROY			= 21,
 
 	HEADER_CG_ON_CLICK				= 26,
 	HEADER_CG_EXCHANGE				= 27,
@@ -93,7 +94,9 @@ enum
 	// END_OF_SCRIPT_SELECT_ITEM
 	
 	HEADER_CG_LOGIN5_OPENID			= 116,	//OpenID : 클라이언트로부터 OpenID 인증키를 받는다.
-
+#ifdef ENABLE_SORT_INVEN
+	SORT_INVEN 						= 140,
+#endif
 //	HEADER_CG_ROULETTE				= 200,
 //	HEADER_CG_RUNUP_MATRIX_ANSWER	= 201,
 
@@ -109,6 +112,9 @@ enum
 
 	HEADER_CG_DRAGON_SOUL_REFINE			= 205,
 	HEADER_CG_STATE_CHECKER					= 206,
+	#if defined(__BL_MOVE_CHANNEL__)
+	HEADER_CG_MOVE_CHANNEL = 229,
+#endif
 
 	HEADER_CG_CLIENT_VERSION			= 0xfd,
 	HEADER_CG_CLIENT_VERSION2			= 0xf1,
@@ -178,6 +184,11 @@ enum
 	HEADER_GC_PING				= 44,
 	HEADER_GC_SCRIPT				= 45,
 	HEADER_GC_QUEST_CONFIRM			= 46,
+
+#ifdef __SEND_TARGET_INFO__
+	HEADER_GC_TARGET_INFO			= 58,
+	HEADER_CG_TARGET_INFO_LOAD		= 59,
+#endif
 
 	HEADER_GC_MOUNT				= 61,
 	HEADER_GC_OWNERSHIP				= 62,
@@ -329,6 +340,7 @@ enum
 	HEADER_GG_PCBANG_UPDATE			= 28,
 
 	HEADER_GG_CHECK_AWAKENESS		= 29,
+	HEADER_GG_MESSENGER_REQUEST_ADD = 30,
 };
 
 #pragma pack(1)
@@ -463,6 +475,15 @@ typedef struct SPacketGGMessenger
 	char        szCompanion[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGGMessenger;
 
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+typedef struct SPacketGGMessengerRequest
+{
+	uint8_t	header;
+	char	account[CHARACTER_NAME_MAX_LEN + 1];
+	char	target[CHARACTER_NAME_MAX_LEN + 1];
+} TPacketGGMessengerRequest;
+#endif
+
 typedef struct SPacketGGMessengerMobile
 {   
 	BYTE        bHeader;
@@ -552,6 +573,7 @@ typedef struct command_login3
 	char	login[LOGIN_MAX_LEN + 1];
 	char	passwd[PASSWD_MAX_LEN + 1];
 	DWORD	adwClientKey[4];
+
 } TPacketCGLogin3;
 
 typedef struct command_login5
@@ -584,6 +606,7 @@ typedef struct command_player_select
 {
 	BYTE	header;
 	BYTE	index;
+
 } TPacketCGPlayerSelect;
 
 typedef struct command_player_delete
@@ -710,6 +733,20 @@ typedef struct command_item_drop2
 	BYTE	count;
 } TPacketCGItemDrop2;
 
+typedef struct command_item_destroy
+{
+	BYTE		header;
+	TItemPos	Cell;
+} TPacketCGItemDestroy;
+
+#ifdef ENABLE_SORT_INVEN
+typedef struct sort_inven
+{
+	BYTE	header;
+	BYTE 	option;
+} TPacketCGSortInven;
+#endif	
+
 typedef struct command_item_move
 {
 	BYTE 	header;
@@ -751,6 +788,13 @@ enum
 	SHOP_SUBHEADER_CG_SELL,
 	SHOP_SUBHEADER_CG_SELL2
 };
+#if defined(__BL_MOVE_CHANNEL__)
+typedef struct command_move_channel
+{
+	BYTE		header;
+	BYTE		channel;
+} TPacketCGMoveChannel;
+#endif
 
 typedef struct command_shop_buy
 {
@@ -949,7 +993,10 @@ typedef struct packet_add_char
 {
 	BYTE	header;
 	DWORD	dwVID;
-
+#if defined(__WJ_SHOW_MOB_INFO__)
+	DWORD	dwLevel;
+	DWORD	dwAIFlag;
+#endif
 	float	angle;
 	long	x;
 	long	y;
@@ -976,27 +1023,8 @@ typedef struct packet_char_additional_info
 	short	sAlignment;
 	BYTE	bPKMode;
 	DWORD	dwMountVnum;
+
 } TPacketGCCharacterAdditionalInfo;
-
-/*
-   typedef struct packet_update_char_old
-   {
-   BYTE	header;
-   DWORD	dwVID;
-
-   WORD        awPart[CHR_EQUIPPART_NUM];
-   BYTE	bMovingSpeed;
-   BYTE	bAttackSpeed;
-
-   BYTE	bStateFlag;
-   DWORD	dwAffectFlag[2];
-
-   DWORD	dwGuildID;
-   short	sAlignment;
-   BYTE	bPKMode;
-   DWORD	dwMountVnum;
-   } TPacketGCCharacterUpdateOld;
- */
 
 typedef struct packet_update_char
 {
@@ -1451,8 +1479,44 @@ typedef struct packet_target
 	BYTE	header;
 	DWORD	dwVID;
 	BYTE	bHPPercent;
+#if defined(__VIEW_TARGET_HP__) || defined(__DEFENSE_WAVE__)
+	int iMinHP;
+	int iMaxHP;
+	bool bAlliance;
+#endif
+#ifdef ELEMENT_TARGET
+	BYTE	bElement;
+#endif
+	packet_target() : dwVID(0), bHPPercent(0)
+	{
+#if defined(__VIEW_TARGET_HP__) || defined(__DEFENSE_WAVE__)
+		iMinHP = 0;
+		iMaxHP = 0;
+		bAlliance = false;
+#endif
+#ifdef ELEMENT_TARGET
+		bElement = 0;
+#endif
+
+	}
 } TPacketGCTarget;
 
+#ifdef __SEND_TARGET_INFO__
+typedef struct packet_target_info
+{
+	BYTE	header;
+	DWORD	dwVID;
+	DWORD	race;
+	DWORD	dwVnum;
+	BYTE	count;
+} TPacketGCTargetInfo;
+
+typedef struct packet_target_info_load
+{
+	BYTE header;
+	DWORD dwVID;
+} TPacketCGTargetInfoLoad;
+#endif
 typedef struct packet_warp
 {
 	BYTE	bHeader;

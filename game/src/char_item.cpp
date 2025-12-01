@@ -562,7 +562,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 						return true;
 
 					int j = 1;
-					BYTE bPage = bCell / (INVENTORY_MAX_NUM / 2);
+					BYTE bPage = bCell / (INVENTORY_MAX_NUM / 4);
 
 					do
 					{
@@ -571,7 +571,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 						if (p >= INVENTORY_MAX_NUM)
 							return false;
 
-						if (p / (INVENTORY_MAX_NUM / 2) != bPage)
+						if (p / (INVENTORY_MAX_NUM / 4) != bPage)
 							return false;
 
 						if (m_pointsInstant.bItemGrid[p])
@@ -592,7 +592,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 			else
 			{
 				int j = 1;
-				BYTE bPage = bCell / (INVENTORY_MAX_NUM / 2);
+				BYTE bPage = bCell / (INVENTORY_MAX_NUM / 4);
 
 				do
 				{
@@ -601,7 +601,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 					if (p >= INVENTORY_MAX_NUM)
 						return false;
 
-					if (p / (INVENTORY_MAX_NUM / 2) != bPage)
+					if (p / (INVENTORY_MAX_NUM / 4) != bPage)
 						return false;
 
 					if (m_pointsInstant.bItemGrid[p])
@@ -5361,6 +5361,32 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 	}
 	else
 		return UseItemEx(item, DestCell);
+}
+bool CHARACTER::DestroyItem(TItemPos Cell)
+{
+    LPITEM item = NULL;
+    if (!CanHandleItem())
+    {
+        if (NULL != DragonSoul_RefineWindow_GetOpener())
+            ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¡Æ*E*A¡ËA¡í ¢¯¡þ ¡íoAA¢¯¢®¨ù*¢¥A ¨ú¨¡AIAUA¡í ¢¯A¡¾©¡ ¨ùo ¨ú©ª¨öA¢¥I¢¥U."));
+        return false;
+    }
+    if (IsDead())
+        return false;
+    if (!IsValidItemPosition(Cell) || !(item = GetItem(Cell)))
+        return false;
+    if (item->IsExchanging())
+        return false;
+    if (true == item->isLocked())
+        return false;
+    if (quest::CQuestManager::instance().GetPCForce(GetPlayerID())->IsRunning() == true)
+        return false;
+    if (item->GetCount() <= 0)
+        return false;
+    SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, 255);
+    ITEM_MANAGER::instance().RemoveItem(item);
+    ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Du hast %s zerstoert."), item->GetName());
+    return true;
 }
 
 bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)

@@ -11,4 +11,4 @@ extern "C"
 #define LC_TEXT(str) locale_find(str)
 };
 
-#endif
+#endif // __INC_METIN2_GAME_LOCALE_H__

@@ -45,7 +45,11 @@ class CPeer : public CPeerBase
 
 	void	SetChannel(BYTE bChannel)	{ m_bChannel = bChannel; }
 	BYTE	GetChannel()			{ return m_bChannel; }
-
+#if defined(__BL_MOVE_CHANNEL__)
+	void	SetAddr(const long l) { m_lAddr = l; };
+	long	GetAddr() const { return m_lAddr; };
+	bool	CheckMapIndex(const long lMapIndex) const;
+#endif
 	void	SetListenPort(WORD wPort) { m_wListenPort = wPort; }
 	WORD	GetListenPort() { return m_wListenPort; }
 
@@ -66,6 +70,9 @@ class CPeer : public CPeerBase
 	BYTE	m_bChannel;
 	DWORD	m_dwHandle;
 	DWORD	m_dwUserCount;
+#if defined(__BL_MOVE_CHANNEL__)
+	long	m_lAddr;
+#endif
 	WORD	m_wListenPort;	// 게임서버가 클라이언트를 위해 listen 하는 포트
 	WORD	m_wP2PPort;	// 게임서버가 게임서버 P2P 접속을 위해 listen 하는 포트
 	long	m_alMaps[32];	// 어떤 맵을 관장하고 있는가?

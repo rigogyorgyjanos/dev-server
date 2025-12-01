@@ -318,6 +318,7 @@ EVENTFUNC(timed_event)
 					}
 				}
 				break;
+				
 		}
 
 		return 0;
@@ -378,13 +379,14 @@ ACMD(do_cmd)
 		case SCMD_LOGOUT:
 		case SCMD_QUIT:
 		case SCMD_PHASE_SELECT:
+
 			{
 				TimedEventInfo* info = AllocEventInfo<TimedEventInfo>();
 
 				{
-					if (ch->IsPosition(POS_FIGHTING))
-						info->left_second = 10;
-					else
+					// if (ch->IsPosition(POS_FIGHTING))
+						// info->left_second = 10;
+					// else
 						info->left_second = 3;
 				}
 
@@ -1297,7 +1299,20 @@ ACMD(do_messenger_auth)
 		LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(arg2);
 
 		if (tch)
-			tch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님으로 부터 친구 등록을 거부 당했습니다."), ch->GetName());
+			tch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s declined the invitation."), ch->GetName());
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+		else
+		{
+			CCI* pkCCI = P2P_MANAGER::Instance().Find(arg2);
+			if (pkCCI)
+			{
+				LPDESC pkDesc = pkCCI->pkDesc;
+				pkDesc->SetRelay(arg2);
+				pkDesc->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s declined the invitation."), ch->GetName());
+				pkDesc->SetRelay("");
+			}
+		}
+#endif
 	}
 
 	//MessengerManager::instance().AuthToAdd(ch->GetName(), arg2, answer == 'y' ? false : true); // DENY
@@ -2357,6 +2372,8 @@ ACMD(do_in_game_mall)
 				}
 				break;
 		}
+		
+
 
 		char buf[512+1];
 		char sas[33];
@@ -2682,3 +2699,21 @@ ACMD (do_bid_cancel)
 	AuctionManager::instance().bid_cancel (ch, strtoul(arg1, NULL, 10));
 }
 #endif
+
+// ACMD(do_remove_affect)
+// {
+	// std::vector<std::string> vecArgs;
+	// split_argument(argument, vecArgs);
+	// if (vecArgs.size() < 2) { return; }
+	// DWORD affect = 0;
+	// str_to_number(affect, vecArgs[1].c_str());
+	// if (AFFECT_POLYMORPH == affect)
+	// {
+		// if (!ch->IsPolymorphed())
+			// return;
+		// ch->SetPolymorph(0);
+	// }
+	// if(ch->FindAffect(affect))
+		// ch->RemoveAffect(affect);
+// }
+

@@ -20,6 +20,12 @@ class MessengerManager : public singleton<MessengerManager>
 		void	Logout(keyA account);
 
 		void	RequestToAdd(LPCHARACTER ch, LPCHARACTER target);
+		#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+	void	RegisterRequestToAdd(const char* szAccount, const char* szTarget);
+	void	P2PRequestToAdd_Stage1(LPCHARACTER ch, const char* targetName);
+	void	P2PRequestToAdd_Stage2(const char* characterName, LPCHARACTER target);
+#endif
+
 		// void	AuthToAdd(keyA account, keyA companion, bool bDeny);
 		bool	AuthToAdd(keyA account, keyA companion, bool bDeny);
 

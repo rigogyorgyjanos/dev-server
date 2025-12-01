@@ -2,6 +2,9 @@
 #define __INC_METIN_II_LENGTH_H__
 
 #define WORD_MAX 0xffff
+
+#include "service.h"
+
 enum EMisc
 {
 	MAX_HOST_LENGTH			= 15,
@@ -12,7 +15,7 @@ enum EMisc
 	ACCOUNT_STATUS_MAX_LEN	= 8,
 	CHARACTER_NAME_MAX_LEN	= 24,
 	SHOP_SIGN_MAX_LEN		= 32,
-	INVENTORY_MAX_NUM		= 90,
+	INVENTORY_MAX_NUM		= 180,
 	ABILITY_MAX_NUM			= 50,
 	EMPIRE_MAX_NUM			= 4,
 	BANWORD_MAX_LEN			= 24,
@@ -22,10 +25,10 @@ enum EMisc
 
 	GUILD_NAME_MAX_LEN		= 12,
 
-	SHOP_HOST_ITEM_MAX_NUM	= 40,	/* 호스트의 최대 아이템 개수 */
+	SHOP_HOST_ITEM_MAX_NUM	= 80,	/* 호스트의 최대 아이템 개수 */
 	SHOP_GUEST_ITEM_MAX_NUM = 18,	/* 게스트의 최대 아이템 개수 */
 
-	SHOP_PRICELIST_MAX_NUM	= 40,	///< 개인상점 가격정보 리스트에서 유지할 가격정보의 최대 갯수
+	SHOP_PRICELIST_MAX_NUM	= 80,	///< 개인상점 가격정보 리스트에서 유지할 가격정보의 최대 갯수
 
 	CHAT_MAX_LEN			= 512,
 

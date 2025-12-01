@@ -237,7 +237,7 @@ void CInputLogin::ChangeName(LPDESC d, const char * data)
 void CInputLogin::CharacterSelect(LPDESC d, const char * data)
 {
 	struct command_player_select * pinfo = (struct command_player_select *) data;
-	const TAccountTable & c_r = d->GetAccountTable();
+	const TAccountTable& c_r = d->GetAccountTable();
 
 	sys_log(0, "player_select: login: %s index: %d", c_r.login, pinfo->index);
 
@@ -807,6 +807,9 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("본인의 주성 및 부성으로 돌아가시기 바랍니다."));
 		}
 	}
+#if defined(__BL_MOVE_CHANNEL__)
+	ch->ChatPacket(CHAT_TYPE_COMMAND, "server_info %d %ld", g_bChannel, ch->GetMapIndex());
+#endif
 }
 
 void CInputLogin::Empire(LPDESC d, const char * c_pData)

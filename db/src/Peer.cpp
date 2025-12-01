@@ -10,7 +10,9 @@ CPeer::CPeer()
 	m_dwUserCount = 0;
 	m_wListenPort = 0;
 	m_wP2PPort = 0;
-
+#if defined(__BL_MOVE_CHANNEL__)
+	m_lAddr = 0;
+#endif
 	memset(m_alMaps, 0, sizeof(m_alMaps));
 
 	m_itemRange.dwMin = m_itemRange.dwMax = m_itemRange.dwUsableItemIDMin = 0;
@@ -131,7 +133,12 @@ void CPeer::SetMaps(long * pl)
 {
 	thecore_memcpy(m_alMaps, pl, sizeof(m_alMaps));
 }
-
+#if defined(__BL_MOVE_CHANNEL__)
+bool CPeer::CheckMapIndex(const long lMapIndex) const
+{
+	return std::find(std::begin(m_alMaps), std::end(m_alMaps), lMapIndex) != std::end(m_alMaps);
+}
+#endif
 void CPeer::SendSpareItemIDRange()
 {
 	if (m_itemSpareRange.dwMin == 0 || m_itemSpareRange.dwMax == 0 || m_itemSpareRange.dwUsableItemIDMin == 0)

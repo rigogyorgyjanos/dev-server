@@ -5,9 +5,9 @@
 char g_nation_name[4][32] =
 {
 	"",
-	"신수국",
-	"천조국",
-	"진노국",
+	"신수국", // Shinsoo
+	"천조국", // Chunjo
+	"진노국", // Jinno
 };
 
 //	LC_TEXT("신수국")

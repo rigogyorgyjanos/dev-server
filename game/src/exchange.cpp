@@ -271,7 +271,6 @@ bool CExchange::AddGold(long gold)
 	return true;
 }
 
-// 돈이 충분히 있는지, 교환하려는 아이템이 실제로 있는지 확인 한다.
 bool CExchange::Check(int * piItemCount)
 {
 	if (GetOwner()->GetGold() < m_lGold)
@@ -299,42 +298,52 @@ bool CExchange::Check(int * piItemCount)
 
 bool CExchange::CheckSpace()
 {
-	static CGrid s_grid1(5, INVENTORY_MAX_NUM/5 / 2); // inven page 1
-	static CGrid s_grid2(5, INVENTORY_MAX_NUM/5 / 2); // inven page 2
-
+	static CGrid s_grid1(5, INVENTORY_MAX_NUM/5/4);
+	static CGrid s_grid2(5, INVENTORY_MAX_NUM/5/4);
+	static CGrid s_grid3(5, INVENTORY_MAX_NUM/5/4);
+	static CGrid s_grid4(5, INVENTORY_MAX_NUM/5/4);
+	
 	s_grid1.Clear();
 	s_grid2.Clear();
+	s_grid3.Clear();
+	s_grid4.Clear();
 
 	LPCHARACTER	victim = GetCompany()->GetOwner();
 	LPITEM item;
 
 	int i;
 
-	for (i = 0; i < INVENTORY_MAX_NUM / 2; ++i)
-	{
+	const int perPageSlotCount = INVENTORY_MAX_NUM / 4;
+
+	for (i = 0; i < INVENTORY_MAX_NUM; ++i) {
 		if (!(item = victim->GetInventoryItem(i)))
 			continue;
 
-		s_grid1.Put(i, 1, item->GetSize());
-	}
-	for (i = INVENTORY_MAX_NUM / 2; i < INVENTORY_MAX_NUM; ++i)
-	{
-		if (!(item = victim->GetInventoryItem(i)))
-			continue;
+		BYTE itemSize = item->GetSize();
 
-		s_grid2.Put(i - INVENTORY_MAX_NUM / 2, 1, item->GetSize());
+		if (i < perPageSlotCount) // Notice: This is adjusted for 4 Pages only!
+			s_grid1.Put(i, 1, itemSize);
+		else if (i < perPageSlotCount * 2)
+			s_grid2.Put(i - perPageSlotCount, 1, itemSize);
+		else if (i < perPageSlotCount * 3)
+			s_grid3.Put(i - perPageSlotCount * 2, 1, itemSize);
+		else
+			s_grid4.Put(i - perPageSlotCount * 3, 1, itemSize);
 	}
-
-	// 아... 뭔가 개병신 같지만... 용혼석 인벤을 노멀 인벤 보고 따라 만든 내 잘못이다 ㅠㅠ
+	//-----------------------------------------------------------
+	
+	// ??... ??°ˇ °ł?´˝? °°Ao¸¸... ?e???® ?I???≫ łe¸O ?I?? ?¸°i μ?¶o ¸¸μc ł≫ ?ß¸???´? ¤đ¤đ
 	static std::vector <WORD> s_vDSGrid(DRAGON_SOUL_INVENTORY_MAX_NUM);
 	
-	// 일단 용혼석을 교환하지 않을 가능성이 크므로, 용혼석 인벤 복사는 용혼석이 있을 때 하도록 한다.
+	// ??´U ?e???®?≫ ±ł??C?Ao ???≫ °ˇ´E???? ?ⓒ?C·I, ?e???® ?I?? ??≫c´A ?e???®?? ?O?≫ ¶§ C?μμ·? C?´?.
 	bool bDSInitialized = false;
 	
 	for (i = 0; i < EXCHANGE_ITEM_MAX_NUM; ++i)
 	{
 		if (!(item = m_apItems[i]))
 			continue;
+		
+		BYTE itemSize = item->GetSize();
 
 		if (item->IsDragonSoul())
 		{
@@ -357,8 +366,7 @@ bool CExchange::CheckSpace()
 			for (int i = 0; i < DRAGON_SOUL_BOX_SIZE; i++)
 			{
 				WORD wPos = wBasePos + i;
-				// if (0 == s_vDSGrid[wBasePos])
-				if (0 == s_vDSGrid[wPos]) // Fix
+				if (0 == s_vDSGrid[wPos])
 				{
 					bool bEmpty = true;
 					for (int j = 1; j < item->GetSize(); j++)
@@ -373,7 +381,7 @@ bool CExchange::CheckSpace()
 					{
 						for (int j = 0; j < item->GetSize(); j++)
 						{
-							s_vDSGrid[wPos + j * DRAGON_SOUL_BOX_COLUMN_NUM] =  wPos + 1;
+							s_vDSGrid[wPos + j * DRAGON_SOUL_BOX_COLUMN_NUM] = wPos + 1;
 						}
 						bExistEmptySpace = true;
 						break;
@@ -387,25 +395,32 @@ bool CExchange::CheckSpace()
 		}
 		else
 		{
-			int iPos = s_grid1.FindBlank(1, item->GetSize());
-
-			if (iPos >= 0)
-			{
-				s_grid1.Put(iPos, 1, item->GetSize());
+			int iPos = s_grid1.FindBlank(1, itemSize);
+			if (iPos >= 0) {
+				s_grid1.Put(iPos, 1, itemSize);
+				continue;
 			}
-			else
-			{
-				iPos = s_grid2.FindBlank(1, item->GetSize());
 
-				if (iPos >= 0)
-				{
-					s_grid2.Put(iPos, 1, item->GetSize());
-				}
-				else
-				{
-					return false;
-				}
+			iPos = s_grid2.FindBlank(1, itemSize);
+			if (iPos >= 0) {
+				s_grid2.Put(iPos, 1, itemSize);
+				continue;
 			}
+
+			iPos = s_grid3.FindBlank(1, itemSize);
+			if (iPos >= 0) {
+				s_grid3.Put(iPos, 1, itemSize);
+				continue;
+			}
+
+			iPos = s_grid4.FindBlank(1, itemSize);
+			if (iPos >= 0) {
+				s_grid4.Put(iPos, 1, itemSize);
+				continue;
+			}
+
+			return false;  // No space left in inventory
+			
 		}
 	}
 

@@ -480,6 +480,25 @@ void CClientManager::QUERY_QUEST_SAVE(CPeer * pkPeer, TQuestTable * pTable, DWOR
 		CDBManager::instance().ReturnQuery(szQuery, QID_QUEST_SAVE, pkPeer->GetHandle(), NULL);
 	}
 }
+#if defined(__BL_MOVE_CHANNEL__)
+void CClientManager::QUERY_MOVE_CHANNEL(CPeer* pkPeer, DWORD dwHandle, TMoveChannel* data)
+{
+	auto it = std::find_if(m_peerList.begin(), m_peerList.end(), [pkPeer, data](CPeer* p) {
+		return (p != pkPeer && p->GetChannel() == data->bChannel && p->CheckMapIndex(data->lMapIndex));
+	});
+
+	TRespondMoveChannel t{};
+
+	if (it != m_peerList.end())
+	{
+		t.lAddr = (*it)->GetAddr();
+		t.wPort = (*it)->GetListenPort();
+	}
+
+	pkPeer->EncodeHeader(HEADER_DG_RESPOND_MOVE_CHANNEL, dwHandle, sizeof(TRespondMoveChannel));
+	pkPeer->Encode(&t, sizeof(t));
+}
+#endif
 
 void CClientManager::QUERY_SAFEBOX_LOAD(CPeer * pkPeer, DWORD dwHandle, TSafeboxLoadPacket * packet, bool bMall)
 {
@@ -1073,6 +1092,9 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	}
 
 	peer->SetPublicIP(p->szPublicIP);
+#if defined(__BL_MOVE_CHANNEL__)
+	peer->SetAddr(inet_addr(p->szPublicIP));
+#endif
 	peer->SetChannel(p->bChannel);
 	peer->SetListenPort(p->wListenPort);
 	peer->SetP2PPort(p->wP2PPort);
@@ -1230,7 +1252,6 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 		trim_and_lower(pck->szLogin, r.login, sizeof(r.login));
 		strlcpy(r.social_id, pck->szSocialID, sizeof(r.social_id));
 		strlcpy(r.passwd, "TEMP", sizeof(r.passwd));
-
 		InsertLoginData(pkLD);
 
 		if (InsertLogonAccount(pck->szLogin, peer->GetHandle(), pck->szHost))
@@ -1796,9 +1817,14 @@ void CClientManager::QUERY_AUTH_LOGIN(CPeer * pkPeer, DWORD dwHandle, TPacketGDA
 		strlcpy(r.social_id, p->szSocialID, sizeof(r.social_id));
 		strlcpy(r.passwd, "TEMP", sizeof(r.passwd));
 
-		sys_log(0, "AUTH_LOGIN id(%u) login(%s) social_id(%s) login_key(%u), client_key(%u %u %u %u)",
-				p->dwID, p->szLogin, p->szSocialID, p->dwLoginKey,
-				p->adwClientKey[0], p->adwClientKey[1], p->adwClientKey[2], p->adwClientKey[3]);
+		sys_log(0, "AUTH_LOGIN id(%u) login(%s)"
+			" social_id(%s) login_key(%u), client_key(%u %u %u %u)",
+			p->dwID,
+			p->szLogin,
+			p->szSocialID,
+			p->dwLoginKey,
+			p->adwClientKey[0], p->adwClientKey[1], p->adwClientKey[2], p->adwClientKey[3]
+		);
 
 		bResult = 1;
 
@@ -2385,7 +2411,11 @@ void CClientManager::ProcessPackets(CPeer * peer)
 			case HEADER_GD_SAFEBOX_CHANGE_SIZE:
 				QUERY_SAFEBOX_CHANGE_SIZE(peer, dwHandle, (TSafeboxChangeSizePacket *) data);
 				break;
-
+#if defined(__BL_MOVE_CHANNEL__)
+			case HEADER_GD_MOVE_CHANNEL:
+				QUERY_MOVE_CHANNEL(peer, dwHandle, (TMoveChannel*)data);
+				break;
+#endif
 			case HEADER_GD_SAFEBOX_CHANGE_PASSWORD:
 				QUERY_SAFEBOX_CHANGE_PASSWORD(peer, dwHandle, (TSafeboxChangePasswordPacket *) data);
 				break;

@@ -18,7 +18,7 @@ void locale_add(const char **strings)
 	}
 }
 
-const char * locale_find(const char *string)
+const char* locale_find(const char *string)
 {
 	if (0 == g_iUseLocale || LC_IsKorea() || LC_IsWE_Korea())
 	{
@@ -39,7 +39,7 @@ const char * locale_find(const char *string)
 	return iter->second.c_str();
 }
 
-const char *quote_find_end(const char *string)
+const char* quote_find_end(const char *string)
 {
 	const char  *tmp = string;
 	int         quote = 0;

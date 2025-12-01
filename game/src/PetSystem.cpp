@@ -80,8 +80,8 @@ void CPetActor::SetName(const char* name)
 {
 	std::string petName = m_pkOwner->GetName();
 
-	if (0 != m_pkOwner && 
-		0 == name && 
+	if (0 != m_pkOwner &&
+		0 == name &&
 		0 != m_pkOwner->GetName())
 	{
 		petName += "'s Pet";
@@ -89,11 +89,9 @@ void CPetActor::SetName(const char* name)
 	else
 		petName += name;
 
-	if (true == IsSummoned())
-		m_pkChar->SetName(petName);
-
 	m_name = petName;
 }
+
 
 bool CPetActor::Mount()
 {
