@@ -48,7 +48,6 @@
 #include "arena.h"
 #include "dev_log.h"
 #include "horsename_manager.h"
-#include "pcbang.h"
 #include "gm.h"
 #include "map_location.h"
 #include "BlueDragon_Binder.h"
@@ -319,8 +318,6 @@ void CHARACTER::Initialize()
 	// MOB_SKILL_COOLTIME
 	memset(m_adwMobSkillCooltime, 0, sizeof(m_adwMobSkillCooltime));
 	// END_OF_MOB_SKILL_COOLTIME
-
-	m_isinPCBang = false;
 
 	// ARENA
 	m_pArena = NULL;
@@ -1347,8 +1344,6 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 		long playTime = GetRealPoint(POINT_PLAYTIME) - m_dwLoginPlayTime;
 		LogManager::instance().LoginLog(false, GetDesc()->GetAccountTable().id, GetPlayerID(), GetLevel(), GetJob(), playTime);
 
-		if (LC_IsBrazil() != true)
-			CPCBangManager::instance().Log(GetDesc()->GetHostName(), GetPlayerID(), playTime);
 	}
 
 	if (m_pWarMap)

@@ -271,7 +271,6 @@ CPacketInfoGG::CPacketInfoGG()
 
 	Set(HEADER_GG_MONARCH_NOTICE,		sizeof(TPacketGGMonarchNotice),	"MonarchNotice", false);
 	Set(HEADER_GG_MONARCH_TRANSFER,		sizeof(TPacketMonarchGGTransfer),	"MonarchTransfer", false);
-	Set(HEADER_GG_PCBANG_UPDATE,		sizeof(TPacketPCBangUpdate),		"PCBangUpdate",		false);
 	Set(HEADER_GG_CHECK_AWAKENESS,		sizeof(TPacketGGCheckAwakeness),	"CheckAwakeness",		false);
 	#ifdef CROSS_CHANNEL_FRIEND_REQUEST
 	Set(HEADER_GG_MESSENGER_REQUEST_ADD, sizeof(TPacketGGMessengerRequest), "MessengerRequestAdd", false);

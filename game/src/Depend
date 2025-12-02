@@ -88,13 +88,14 @@ OBJDIR/BattleArena.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/BattleArena.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/BattleArena.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/BattleArena.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/BattleArena.o: ../../common/item_length.h BattleArena.h
-OBJDIR/BattleArena.o: start_position.h locale_service.h char_manager.h
-OBJDIR/BattleArena.o: ../../common/stl.h ../../common/length.h vid.h char.h
-OBJDIR/BattleArena.o: entity.h FSM.h state.h horse_rider.h cmd.h affect.h
-OBJDIR/BattleArena.o: affect_flag.h cube.h mining.h sectree_manager.h
-OBJDIR/BattleArena.o: sectree.h regen.h dungeon.h questmanager.h questnpc.h
-OBJDIR/BattleArena.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/BattleArena.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/BattleArena.o: BattleArena.h start_position.h locale_service.h
+OBJDIR/BattleArena.o: char_manager.h ../../common/stl.h ../../common/length.h
+OBJDIR/BattleArena.o: vid.h char.h entity.h FSM.h state.h horse_rider.h cmd.h
+OBJDIR/BattleArena.o: affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/BattleArena.o: sectree_manager.h sectree.h regen.h dungeon.h
+OBJDIR/BattleArena.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/BattleArena.o: ../../liblua/include/lua.h
 OBJDIR/BattleArena.o: ../../liblua/include/lauxlib.h
 OBJDIR/BattleArena.o: ../../liblua/include/lualib.h
 OBJDIR/FSM.o: FSM.h state.h
@@ -444,8 +445,8 @@ OBJDIR/OXEvent.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/OXEvent.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/OXEvent.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/OXEvent.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/OXEvent.o: ../../common/item_length.h config.h questmanager.h
-OBJDIR/OXEvent.o: questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/OXEvent.o: ../../common/service.h ../../common/item_length.h config.h
+OBJDIR/OXEvent.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/OXEvent.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/OXEvent.o: ../../liblua/include/lualib.h start_position.h
 OBJDIR/OXEvent.o: locale_service.h packet.h buffer_manager.h char.h
@@ -637,8 +638,9 @@ OBJDIR/ani.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/ani.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/ani.o: char.h ../../common/stl.h entity.h FSM.h state.h horse_rider.h
 OBJDIR/ani.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/ani.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/ani.o: cube.h mining.h item.h ani.h dev_log.h
+OBJDIR/ani.o: ../../common/service.h ../../common/item_length.h cmd.h vid.h
+OBJDIR/ani.o: affect.h affect_flag.h cube.h mining.h packet.h item.h ani.h
+OBJDIR/ani.o: dev_log.h
 OBJDIR/arena.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/arena.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/arena.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -721,8 +723,8 @@ OBJDIR/arena.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/arena.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/arena.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/arena.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/arena.o: ../../common/item_length.h config.h packet.h desc.h input.h
-OBJDIR/arena.o: packet_info.h cipher.h
+OBJDIR/arena.o: ../../common/service.h ../../common/item_length.h config.h
+OBJDIR/arena.o: packet.h desc.h input.h packet_info.h cipher.h
 OBJDIR/arena.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/arena.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/arena.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -816,7 +818,8 @@ OBJDIR/banword.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/banword.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/banword.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/banword.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/banword.o: ../../common/item_length.h banword.h config.h
+OBJDIR/banword.o: ../../common/service.h ../../common/item_length.h banword.h
+OBJDIR/banword.o: config.h
 OBJDIR/battle.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/battle.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/battle.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -899,9 +902,9 @@ OBJDIR/battle.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/battle.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/battle.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/battle.o: config.h desc.h constants.h ../../common/tables.h
-OBJDIR/battle.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/battle.o: packet_info.h packet.h cipher.h
-OBJDIR/battle.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/battle.o: ../../common/length.h ../../common/service.h
+OBJDIR/battle.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/battle.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/battle.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/battle.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/battle.o: /usr/include/x86/_stdint.h
@@ -1000,8 +1003,8 @@ OBJDIR/blend_item.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.
 OBJDIR/blend_item.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/blend_item.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/blend_item.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/blend_item.o: ../../common/item_length.h dev_log.h locale_service.h
-OBJDIR/blend_item.o: item.h entity.h blend_item.h
+OBJDIR/blend_item.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/blend_item.o: dev_log.h locale_service.h item.h entity.h blend_item.h
 OBJDIR/block_country.o: stdafx.h debug_allocator.h
 OBJDIR/block_country.o: ../../libthecore/include/stdafx.h
 OBJDIR/block_country.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -1096,8 +1099,8 @@ OBJDIR/block_country.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexce
 OBJDIR/block_country.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/block_country.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/block_country.o: constants.h ../../common/tables.h
-OBJDIR/block_country.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/block_country.o: block_country.h dev_log.h
+OBJDIR/block_country.o: ../../common/length.h ../../common/service.h
+OBJDIR/block_country.o: ../../common/item_length.h block_country.h dev_log.h
 OBJDIR/buffer_manager.o: stdafx.h debug_allocator.h
 OBJDIR/buffer_manager.o: ../../libthecore/include/stdafx.h
 OBJDIR/buffer_manager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -1275,13 +1278,14 @@ OBJDIR/building.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hp
 OBJDIR/building.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/building.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/building.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/building.o: ../../common/item_length.h sectree_manager.h sectree.h
-OBJDIR/building.o: entity.h item_manager.h buffer_manager.h config.h packet.h
-OBJDIR/building.o: char.h ../../common/stl.h FSM.h state.h horse_rider.h
-OBJDIR/building.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/building.o: char_manager.h ../../common/length.h guild.h skill.h
-OBJDIR/building.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
-OBJDIR/building.o: guild_manager.h desc.h input.h packet_info.h cipher.h
+OBJDIR/building.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/building.o: sectree_manager.h sectree.h entity.h item_manager.h
+OBJDIR/building.o: buffer_manager.h config.h packet.h char.h
+OBJDIR/building.o: ../../common/stl.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/building.o: affect.h affect_flag.h cube.h mining.h char_manager.h
+OBJDIR/building.o: ../../common/length.h guild.h skill.h ../../libpoly/Poly.h
+OBJDIR/building.o: ../../libpoly/SymTable.h guild_manager.h desc.h input.h
+OBJDIR/building.o: packet_info.h cipher.h
 OBJDIR/building.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/building.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/building.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -1374,13 +1378,13 @@ OBJDIR/castle.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/castle.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/castle.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/castle.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/castle.o: ../../common/item_length.h config.h char_manager.h
-OBJDIR/castle.o: ../../common/stl.h ../../common/length.h vid.h castle.h
-OBJDIR/castle.o: start_position.h locale_service.h monarch.h questlua.h
-OBJDIR/castle.o: quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/castle.o: ../../common/service.h ../../common/item_length.h config.h
+OBJDIR/castle.o: char_manager.h ../../common/stl.h ../../common/length.h
+OBJDIR/castle.o: vid.h castle.h start_position.h locale_service.h monarch.h
+OBJDIR/castle.o: questlua.h quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/castle.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
 OBJDIR/castle.o: buffer_manager.h char.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/castle.o: cmd.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/castle.o: cmd.h affect.h affect_flag.h cube.h mining.h packet.h
 OBJDIR/castle.o: sectree_manager.h sectree.h
 OBJDIR/char.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/char.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -1462,12 +1466,13 @@ OBJDIR/char.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
 OBJDIR/char.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/char.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/char.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/char.o: constants.h ../../common/tables.h ../../common/length.h
+OBJDIR/char.o: ../../common/VnumHelper.h char.h ../../common/stl.h entity.h
+OBJDIR/char.o: FSM.h state.h horse_rider.h constants.h ../../common/tables.h
+OBJDIR/char.o: ../../common/length.h ../../common/service.h
 OBJDIR/char.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/char.o: cube.h mining.h config.h crc32.h char_manager.h
+OBJDIR/char.o: cube.h mining.h packet.h config.h crc32.h char_manager.h
 OBJDIR/char.o: ../../common/length.h desc_client.h desc.h input.h
-OBJDIR/char.o: packet_info.h packet.h cipher.h
+OBJDIR/char.o: packet_info.h cipher.h
 OBJDIR/char.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/char.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -1484,8 +1489,8 @@ OBJDIR/char.o: p2p.h guild.h skill.h ../../libpoly/Poly.h
 OBJDIR/char.o: ../../libpoly/SymTable.h guild_manager.h messenger_manager.h
 OBJDIR/char.o: db.h unique_item.h priv_manager.h war_map.h xmas_event.h
 OBJDIR/char.o: banword.h target.h wedding.h marriage.h mob_manager.h
-OBJDIR/char.o: monarch.h castle.h arena.h dev_log.h horsename_manager.h
-OBJDIR/char.o: pcbang.h gm.h map_location.h BlueDragon_Binder.h skill_power.h
+OBJDIR/char.o: monarch.h castle.h arena.h dev_log.h horsename_manager.h gm.h
+OBJDIR/char.o: map_location.h BlueDragon_Binder.h skill_power.h
 OBJDIR/char.o: buff_on_attributes.h PetSystem.h DragonSoul.h
 OBJDIR/char_affect.o: stdafx.h debug_allocator.h
 OBJDIR/char_affect.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -1576,11 +1581,11 @@ OBJDIR/char_affect.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char_affect.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_affect.o: config.h char.h ../../common/stl.h entity.h FSM.h
 OBJDIR/char_affect.o: state.h horse_rider.h constants.h ../../common/tables.h
-OBJDIR/char_affect.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/char_affect.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/char_affect.o: char_manager.h ../../common/length.h packet.h
-OBJDIR/char_affect.o: buffer_manager.h desc_client.h desc.h input.h
-OBJDIR/char_affect.o: packet_info.h cipher.h
+OBJDIR/char_affect.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_affect.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/char_affect.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/char_affect.o: ../../common/length.h buffer_manager.h desc_client.h
+OBJDIR/char_affect.o: desc.h input.h packet_info.h cipher.h
 OBJDIR/char_affect.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/char_affect.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_affect.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -1680,8 +1685,9 @@ OBJDIR/char_battle.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/char_battle.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char_battle.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_battle.o: config.h desc.h constants.h ../../common/tables.h
-OBJDIR/char_battle.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/char_battle.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/char_battle.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_battle.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/char_battle.o: packet.h cipher.h
 OBJDIR/char_battle.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/char_battle.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_battle.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -1811,10 +1817,11 @@ OBJDIR/char_change_empire.o: ../../../extern/include/boost/smart_ptr/detail/oper
 OBJDIR/char_change_empire.o: config.h char.h ../../common/stl.h entity.h
 OBJDIR/char_change_empire.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/char_change_empire.o: ../../common/tables.h ../../common/length.h
+OBJDIR/char_change_empire.o: ../../common/service.h
 OBJDIR/char_change_empire.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/char_change_empire.o: affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/char_change_empire.o: ../../common/length.h db.h guild_manager.h
-OBJDIR/char_change_empire.o: marriage.h
+OBJDIR/char_change_empire.o: affect_flag.h cube.h mining.h packet.h
+OBJDIR/char_change_empire.o: char_manager.h ../../common/length.h db.h
+OBJDIR/char_change_empire.o: guild_manager.h marriage.h
 OBJDIR/char_horse.o: stdafx.h debug_allocator.h
 OBJDIR/char_horse.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/char_horse.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -1901,12 +1908,13 @@ OBJDIR/char_horse.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char_horse.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_horse.o: config.h char.h ../../common/stl.h entity.h FSM.h
 OBJDIR/char_horse.o: state.h horse_rider.h constants.h ../../common/tables.h
-OBJDIR/char_horse.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/char_horse.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/char_horse.o: char_manager.h ../../common/length.h packet.h guild.h
-OBJDIR/char_horse.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
-OBJDIR/char_horse.o: vector.h questmanager.h questnpc.h questpc.h quest.h
-OBJDIR/char_horse.o: lua_incl.h ../../liblua/include/lua.h
+OBJDIR/char_horse.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_horse.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/char_horse.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/char_horse.o: ../../common/length.h guild.h skill.h
+OBJDIR/char_horse.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h vector.h
+OBJDIR/char_horse.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/char_horse.o: ../../liblua/include/lua.h
 OBJDIR/char_horse.o: ../../liblua/include/lauxlib.h
 OBJDIR/char_horse.o: ../../liblua/include/lualib.h item.h horsename_manager.h
 OBJDIR/char_horse.o: locale_service.h arena.h ../../common/VnumHelper.h
@@ -1995,10 +2003,11 @@ OBJDIR/char_item.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char_item.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_item.o: config.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/char_item.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/char_item.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/char_item.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/char_item.o: char_manager.h ../../common/length.h item_manager.h
-OBJDIR/char_item.o: desc.h input.h packet_info.h packet.h cipher.h
+OBJDIR/char_item.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_item.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/char_item.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/char_item.o: ../../common/length.h item_manager.h desc.h input.h
+OBJDIR/char_item.o: packet_info.h cipher.h
 OBJDIR/char_item.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/char_item.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_item.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -2014,8 +2023,8 @@ OBJDIR/char_item.o: ../../liblua/include/lualib.h fishing.h item.h party.h
 OBJDIR/char_item.o: dungeon.h sectree_manager.h sectree.h refine.h
 OBJDIR/char_item.o: unique_item.h war_map.h guild.h xmas_event.h marriage.h
 OBJDIR/char_item.o: monarch.h polymorph.h blend_item.h castle.h BattleArena.h
-OBJDIR/char_item.o: arena.h dev_log.h pcbang.h threeway_war.h safebox.h
-OBJDIR/char_item.o: shop.h ../../common/VnumHelper.h DragonSoul.h
+OBJDIR/char_item.o: arena.h dev_log.h threeway_war.h safebox.h shop.h
+OBJDIR/char_item.o: ../../common/VnumHelper.h DragonSoul.h
 OBJDIR/char_item.o: buff_on_attributes.h belt_inventory_helper.h
 OBJDIR/char_manager.o: stdafx.h debug_allocator.h
 OBJDIR/char_manager.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -2108,8 +2117,9 @@ OBJDIR/char_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcep
 OBJDIR/char_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_manager.o: constants.h ../../common/tables.h
-OBJDIR/char_manager.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/char_manager.o: desc.h input.h packet_info.h packet.h cipher.h
+OBJDIR/char_manager.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_manager.o: ../../common/item_length.h desc.h input.h
+OBJDIR/char_manager.o: packet_info.h packet.h cipher.h
 OBJDIR/char_manager.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/char_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -2242,11 +2252,11 @@ OBJDIR/char_quickslot.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexc
 OBJDIR/char_quickslot.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char_quickslot.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_quickslot.o: constants.h ../../common/tables.h
-OBJDIR/char_quickslot.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/char_quickslot.o: char.h ../../common/stl.h entity.h FSM.h state.h
-OBJDIR/char_quickslot.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/char_quickslot.o: cube.h mining.h desc.h input.h packet_info.h
-OBJDIR/char_quickslot.o: packet.h cipher.h
+OBJDIR/char_quickslot.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_quickslot.o: ../../common/item_length.h char.h ../../common/stl.h
+OBJDIR/char_quickslot.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/char_quickslot.o: affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/char_quickslot.o: desc.h input.h packet_info.h cipher.h
 OBJDIR/char_quickslot.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/char_quickslot.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_quickslot.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -2342,10 +2352,11 @@ OBJDIR/char_resist.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/char_resist.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char_resist.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_resist.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/char_resist.o: ../../common/item_length.h config.h char.h
-OBJDIR/char_resist.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/char_resist.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/char_resist.o: char_manager.h ../../common/length.h locale_service.h
+OBJDIR/char_resist.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/char_resist.o: config.h char.h ../../common/stl.h entity.h FSM.h
+OBJDIR/char_resist.o: state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/char_resist.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/char_resist.o: ../../common/length.h locale_service.h
 OBJDIR/char_skill.o: stdafx.h debug_allocator.h
 OBJDIR/char_skill.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/char_skill.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -2433,10 +2444,10 @@ OBJDIR/char_skill.o: ../../../extern/include/boost/smart_ptr/detail/operator_boo
 OBJDIR/char_skill.o: config.h vector.h char.h ../../common/stl.h entity.h
 OBJDIR/char_skill.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/char_skill.o: ../../common/tables.h ../../common/length.h
-OBJDIR/char_skill.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/char_skill.o: affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/char_skill.o: ../../common/length.h battle.h desc.h input.h
-OBJDIR/char_skill.o: packet_info.h packet.h cipher.h
+OBJDIR/char_skill.o: ../../common/service.h ../../common/item_length.h cmd.h
+OBJDIR/char_skill.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/char_skill.o: char_manager.h ../../common/length.h battle.h desc.h
+OBJDIR/char_skill.o: input.h packet_info.h cipher.h
 OBJDIR/char_skill.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/char_skill.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_skill.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -2537,9 +2548,9 @@ OBJDIR/char_state.o: ../../../extern/include/boost/smart_ptr/detail/operator_boo
 OBJDIR/char_state.o: config.h vector.h char.h ../../common/stl.h entity.h
 OBJDIR/char_state.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/char_state.o: ../../common/tables.h ../../common/length.h
-OBJDIR/char_state.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/char_state.o: affect_flag.h cube.h mining.h battle.h char_manager.h
-OBJDIR/char_state.o: ../../common/length.h packet.h motion.h
+OBJDIR/char_state.o: ../../common/service.h ../../common/item_length.h cmd.h
+OBJDIR/char_state.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/char_state.o: battle.h char_manager.h ../../common/length.h motion.h
 OBJDIR/char_state.o: ../../common/d3dtype.h party.h buffer_manager.h
 OBJDIR/char_state.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/char_state.o: ../../liblua/include/lua.h
@@ -2635,11 +2646,12 @@ OBJDIR/PetSystem.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/PetSystem.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/PetSystem.o: vector.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/PetSystem.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/PetSystem.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/PetSystem.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/PetSystem.o: sectree_manager.h sectree.h char_manager.h
-OBJDIR/PetSystem.o: ../../common/length.h mob_manager.h PetSystem.h
-OBJDIR/PetSystem.o: ../../common/VnumHelper.h packet.h item_manager.h item.h
+OBJDIR/PetSystem.o: ../../common/length.h ../../common/service.h
+OBJDIR/PetSystem.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/PetSystem.o: affect_flag.h cube.h mining.h packet.h sectree_manager.h
+OBJDIR/PetSystem.o: sectree.h char_manager.h ../../common/length.h
+OBJDIR/PetSystem.o: mob_manager.h PetSystem.h ../../common/VnumHelper.h
+OBJDIR/PetSystem.o: item_manager.h item.h
 OBJDIR/cmd.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/cmd.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/cmd.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -2721,9 +2733,10 @@ OBJDIR/cmd.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/cmd.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/cmd.o: config.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/cmd.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/cmd.o: ../../common/length.h ../../common/item_length.h cmd.h vid.h
-OBJDIR/cmd.o: affect.h affect_flag.h cube.h mining.h locale_service.h desc.h
-OBJDIR/cmd.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/cmd.o: ../../common/length.h ../../common/service.h
+OBJDIR/cmd.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/cmd.o: cube.h mining.h packet.h locale_service.h desc.h input.h
+OBJDIR/cmd.o: packet_info.h cipher.h
 OBJDIR/cmd.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/cmd.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/cmd.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
@@ -2817,11 +2830,11 @@ OBJDIR/cmd_emotion.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/cmd_emotion.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/cmd_emotion.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/cmd_emotion.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/cmd_emotion.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/cmd_emotion.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/cmd_emotion.o: char_manager.h ../../common/length.h motion.h
-OBJDIR/cmd_emotion.o: ../../common/d3dtype.h packet.h buffer_manager.h
-OBJDIR/cmd_emotion.o: unique_item.h wedding.h marriage.h
+OBJDIR/cmd_emotion.o: ../../common/length.h ../../common/service.h
+OBJDIR/cmd_emotion.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/cmd_emotion.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/cmd_emotion.o: ../../common/length.h motion.h ../../common/d3dtype.h
+OBJDIR/cmd_emotion.o: buffer_manager.h unique_item.h wedding.h marriage.h
 OBJDIR/cmd_general.o: stdafx.h debug_allocator.h
 OBJDIR/cmd_general.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/cmd_general.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -2911,8 +2924,9 @@ OBJDIR/cmd_general.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/cmd_general.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/cmd_general.o: /usr/include/md5.h /usr/include/sys/md5.h config.h
 OBJDIR/cmd_general.o: desc_client.h desc.h constants.h ../../common/tables.h
-OBJDIR/cmd_general.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/cmd_general.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/cmd_general.o: ../../common/length.h ../../common/service.h
+OBJDIR/cmd_general.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/cmd_general.o: packet.h cipher.h
 OBJDIR/cmd_general.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/cmd_general.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/cmd_general.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -3015,8 +3029,9 @@ OBJDIR/cmd_gm.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/cmd_gm.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/cmd_gm.o: config.h desc_client.h desc.h constants.h
 OBJDIR/cmd_gm.o: ../../common/tables.h ../../common/length.h
-OBJDIR/cmd_gm.o: ../../common/item_length.h input.h packet_info.h packet.h
-OBJDIR/cmd_gm.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/cmd_gm.o: ../../common/service.h ../../common/item_length.h input.h
+OBJDIR/cmd_gm.o: packet_info.h packet.h cipher.h
+OBJDIR/cmd_gm.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/cmd_gm.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/cmd_gm.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/cmd_gm.o: /usr/include/x86/_stdint.h
@@ -3033,8 +3048,7 @@ OBJDIR/cmd_gm.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
 OBJDIR/cmd_gm.o: vector.h db.h priv_manager.h building.h
 OBJDIR/cmd_gm.o: ../../common/building.h battle.h arena.h start_position.h
 OBJDIR/cmd_gm.o: locale_service.h party.h monarch.h castle.h BattleArena.h
-OBJDIR/cmd_gm.o: xmas_event.h pcbang.h threeway_war.h unique_item.h
-OBJDIR/cmd_gm.o: DragonSoul.h
+OBJDIR/cmd_gm.o: xmas_event.h threeway_war.h unique_item.h DragonSoul.h
 OBJDIR/cmd_oxevent.o: stdafx.h debug_allocator.h
 OBJDIR/cmd_oxevent.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/cmd_oxevent.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -3124,8 +3138,9 @@ OBJDIR/cmd_oxevent.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/cmd_oxevent.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/cmd_oxevent.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/cmd_oxevent.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/cmd_oxevent.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/cmd_oxevent.o: vid.h affect.h affect_flag.h cube.h mining.h OXEvent.h
+OBJDIR/cmd_oxevent.o: ../../common/length.h ../../common/service.h
+OBJDIR/cmd_oxevent.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/cmd_oxevent.o: affect_flag.h cube.h mining.h packet.h OXEvent.h
 OBJDIR/cmd_oxevent.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/cmd_oxevent.o: ../../liblua/include/lua.h
 OBJDIR/cmd_oxevent.o: ../../liblua/include/lauxlib.h
@@ -3213,8 +3228,9 @@ OBJDIR/config.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/config.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/config.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/config.o: /usr/include/ifaddrs.h constants.h ../../common/tables.h
-OBJDIR/config.o: ../../common/length.h ../../common/item_length.h desc.h
-OBJDIR/config.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/config.o: ../../common/length.h ../../common/service.h
+OBJDIR/config.o: ../../common/item_length.h desc.h input.h packet_info.h
+OBJDIR/config.o: packet.h cipher.h
 OBJDIR/config.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/config.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/config.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -3315,8 +3331,9 @@ OBJDIR/constants.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/constants.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/constants.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/constants.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/constants.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/constants.o: vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/constants.o: ../../common/length.h ../../common/service.h
+OBJDIR/constants.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/constants.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/constants.o: ../../common/length.h
 OBJDIR/crc32.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/crc32.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -3481,10 +3498,10 @@ OBJDIR/cube.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/cube.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/cube.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/cube.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/cube.o: ../../common/item_length.h char.h ../../common/stl.h entity.h
-OBJDIR/cube.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/cube.o: cube.h mining.h dev_log.h locale_service.h item.h
-OBJDIR/cube.o: item_manager.h
+OBJDIR/cube.o: ../../common/service.h ../../common/item_length.h char.h
+OBJDIR/cube.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h cmd.h
+OBJDIR/cube.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/cube.o: dev_log.h locale_service.h item.h item_manager.h
 OBJDIR/db.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/db.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/db.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -3565,16 +3582,16 @@ OBJDIR/db.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/db.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/db.o: ../../common/billing.h ../../common/length.h db.h config.h
 OBJDIR/db.o: desc_client.h desc.h constants.h ../../common/tables.h
-OBJDIR/db.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/db.o: packet_info.h packet.h cipher.h
-OBJDIR/db.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/db.o: ../../common/length.h ../../common/service.h
+OBJDIR/db.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/db.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/db.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/db.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
 OBJDIR/db.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/db.o: ../../common/stl.h IFileMonitor.h char.h entity.h FSM.h state.h
 OBJDIR/db.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h mining.h
 OBJDIR/db.o: char_manager.h item.h item_manager.h p2p.h matrix_card.h
-OBJDIR/db.o: login_data.h locale_service.h pcbang.h spam.h auth_brazil.h
+OBJDIR/db.o: login_data.h locale_service.h spam.h auth_brazil.h
 OBJDIR/desc.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/desc.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/desc.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -3656,9 +3673,9 @@ OBJDIR/desc.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/desc.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/desc.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/desc.o: config.h desc.h constants.h ../../common/tables.h
-OBJDIR/desc.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/desc.o: packet_info.h packet.h cipher.h
-OBJDIR/desc.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/desc.o: ../../common/length.h ../../common/service.h
+OBJDIR/desc.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/desc.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/desc.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/desc.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/desc.o: /usr/include/x86/_stdint.h
@@ -3759,8 +3776,8 @@ OBJDIR/desc_client.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/desc_client.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/desc_client.o: config.h desc_client.h desc.h constants.h
 OBJDIR/desc_client.o: ../../common/tables.h ../../common/length.h
-OBJDIR/desc_client.o: ../../common/item_length.h input.h packet_info.h
-OBJDIR/desc_client.o: packet.h cipher.h
+OBJDIR/desc_client.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/desc_client.o: input.h packet_info.h packet.h cipher.h
 OBJDIR/desc_client.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/desc_client.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/desc_client.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -3862,8 +3879,8 @@ OBJDIR/desc_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hp
 OBJDIR/desc_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/desc_manager.o: config.h crc32.h desc.h constants.h
 OBJDIR/desc_manager.o: ../../common/tables.h ../../common/length.h
-OBJDIR/desc_manager.o: ../../common/item_length.h input.h packet_info.h
-OBJDIR/desc_manager.o: packet.h cipher.h
+OBJDIR/desc_manager.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/desc_manager.o: input.h packet_info.h packet.h cipher.h
 OBJDIR/desc_manager.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/desc_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/desc_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -3958,10 +3975,10 @@ OBJDIR/desc_p2p.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hp
 OBJDIR/desc_p2p.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/desc_p2p.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/desc_p2p.o: desc_p2p.h desc.h constants.h ../../common/tables.h
-OBJDIR/desc_p2p.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/desc_p2p.o: packet_info.h packet.h cipher.h
-OBJDIR/desc_p2p.o: ../../../extern/include/cryptopp/cryptlib.h config.h
-OBJDIR/desc_p2p.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/desc_p2p.o: ../../common/length.h ../../common/service.h
+OBJDIR/desc_p2p.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/desc_p2p.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/desc_p2p.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/desc_p2p.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/desc_p2p.o: /usr/include/x86/_stdint.h
 OBJDIR/desc_p2p.o: ../../../extern/include/cryptopp/trap.h protocol.h p2p.h
@@ -4132,9 +4149,9 @@ OBJDIR/dungeon.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.h
 OBJDIR/dungeon.o: dungeon.h sectree_manager.h sectree.h entity.h char.h
 OBJDIR/dungeon.o: ../../common/stl.h FSM.h state.h horse_rider.h constants.h
 OBJDIR/dungeon.o: ../../common/tables.h ../../common/length.h
-OBJDIR/dungeon.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/dungeon.o: affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/dungeon.o: ../../common/length.h party.h packet.h desc.h input.h
+OBJDIR/dungeon.o: ../../common/service.h ../../common/item_length.h cmd.h
+OBJDIR/dungeon.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/dungeon.o: char_manager.h ../../common/length.h party.h desc.h input.h
 OBJDIR/dungeon.o: packet_info.h cipher.h
 OBJDIR/dungeon.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/dungeon.o: ../../../extern/include/cryptopp/stdcpp.h
@@ -4336,9 +4353,10 @@ OBJDIR/entity.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/entity.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/entity.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/entity.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/entity.o: ../../common/length.h ../../common/item_length.h cmd.h vid.h
-OBJDIR/entity.o: affect.h affect_flag.h cube.h mining.h desc.h input.h
-OBJDIR/entity.o: packet_info.h packet.h cipher.h
+OBJDIR/entity.o: ../../common/length.h ../../common/service.h
+OBJDIR/entity.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/entity.o: affect_flag.h cube.h mining.h packet.h desc.h input.h
+OBJDIR/entity.o: packet_info.h cipher.h
 OBJDIR/entity.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/entity.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/entity.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -4434,8 +4452,9 @@ OBJDIR/entity_view.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/entity_view.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/entity_view.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/entity_view.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/entity_view.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/entity_view.o: vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/entity_view.o: ../../common/length.h ../../common/service.h
+OBJDIR/entity_view.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/entity_view.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/entity_view.o: sectree_manager.h sectree.h config.h
 OBJDIR/event.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/event.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -4691,9 +4710,10 @@ OBJDIR/exchange.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/exchange.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/exchange.o: ../../libgame/include/grid.h desc.h constants.h
 OBJDIR/exchange.o: ../../common/tables.h ../../common/length.h
-OBJDIR/exchange.o: ../../common/item_length.h input.h packet_info.h packet.h
-OBJDIR/exchange.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
-OBJDIR/exchange.o: config.h ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/exchange.o: ../../common/service.h ../../common/item_length.h input.h
+OBJDIR/exchange.o: packet_info.h packet.h cipher.h
+OBJDIR/exchange.o: ../../../extern/include/cryptopp/cryptlib.h config.h
+OBJDIR/exchange.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/exchange.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/exchange.o: /usr/include/x86/_stdint.h
 OBJDIR/exchange.o: ../../../extern/include/cryptopp/trap.h desc_client.h
@@ -4871,13 +4891,14 @@ OBJDIR/fishing.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/fishing.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/fishing.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/fishing.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/fishing.o: ../../common/item_length.h fishing.h item.h entity.h
-OBJDIR/fishing.o: locale_service.h item_manager.h config.h packet.h
-OBJDIR/fishing.o: sectree_manager.h sectree.h char.h ../../common/stl.h FSM.h
-OBJDIR/fishing.o: state.h horse_rider.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/fishing.o: cube.h mining.h char_manager.h ../../common/length.h
-OBJDIR/fishing.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
-OBJDIR/fishing.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
+OBJDIR/fishing.o: ../../common/service.h ../../common/item_length.h fishing.h
+OBJDIR/fishing.o: item.h entity.h locale_service.h item_manager.h config.h
+OBJDIR/fishing.o: packet.h sectree_manager.h sectree.h char.h
+OBJDIR/fishing.o: ../../common/stl.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/fishing.o: affect.h affect_flag.h cube.h mining.h char_manager.h
+OBJDIR/fishing.o: ../../common/length.h questmanager.h questnpc.h questpc.h
+OBJDIR/fishing.o: quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/fishing.o: ../../liblua/include/lauxlib.h
 OBJDIR/fishing.o: ../../liblua/include/lualib.h buffer_manager.h
 OBJDIR/fishing.o: desc_client.h desc.h input.h packet_info.h cipher.h
 OBJDIR/fishing.o: ../../../extern/include/cryptopp/cryptlib.h
@@ -4964,7 +4985,8 @@ OBJDIR/gm.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/gm.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/gm.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/gm.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/gm.o: ../../common/item_length.h gm.h locale_service.h
+OBJDIR/gm.o: ../../common/service.h ../../common/item_length.h gm.h
+OBJDIR/gm.o: locale_service.h
 OBJDIR/guild.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/guild.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/guild.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -5048,9 +5070,10 @@ OBJDIR/guild.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/guild.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/guild.o: config.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/guild.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/guild.o: ../../common/length.h ../../common/item_length.h cmd.h vid.h
-OBJDIR/guild.o: affect.h affect_flag.h cube.h mining.h packet.h desc_client.h
-OBJDIR/guild.o: desc.h input.h packet_info.h cipher.h
+OBJDIR/guild.o: ../../common/length.h ../../common/service.h
+OBJDIR/guild.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/guild.o: cube.h mining.h packet.h desc_client.h desc.h input.h
+OBJDIR/guild.o: packet_info.h cipher.h
 OBJDIR/guild.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/guild.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/guild.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -5156,12 +5179,13 @@ OBJDIR/guild_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexce
 OBJDIR/guild_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/guild_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/guild_manager.o: constants.h ../../common/tables.h
-OBJDIR/guild_manager.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/guild_manager.o: config.h char.h ../../common/stl.h entity.h FSM.h
-OBJDIR/guild_manager.o: state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/guild_manager.o: affect_flag.h cube.h mining.h db.h lzo_manager.h
-OBJDIR/guild_manager.o: minilzo.h lzo/lzoconf.h desc_client.h desc.h input.h
-OBJDIR/guild_manager.o: packet_info.h packet.h cipher.h
+OBJDIR/guild_manager.o: ../../common/length.h ../../common/service.h
+OBJDIR/guild_manager.o: ../../common/item_length.h config.h char.h
+OBJDIR/guild_manager.o: ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/guild_manager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/guild_manager.o: cube.h mining.h packet.h db.h lzo_manager.h minilzo.h
+OBJDIR/guild_manager.o: lzo/lzoconf.h desc_client.h desc.h input.h
+OBJDIR/guild_manager.o: packet_info.h cipher.h
 OBJDIR/guild_manager.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/guild_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/guild_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -5260,11 +5284,12 @@ OBJDIR/guild_war.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.h
 OBJDIR/guild_war.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/guild_war.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/guild_war.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/guild_war.o: ../../common/item_length.h config.h char.h
-OBJDIR/guild_war.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/guild_war.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/guild_war.o: packet.h desc_client.h desc.h input.h packet_info.h
-OBJDIR/guild_war.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/guild_war.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/guild_war.o: config.h char.h ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/guild_war.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/guild_war.o: mining.h packet.h desc_client.h desc.h input.h
+OBJDIR/guild_war.o: packet_info.h cipher.h
+OBJDIR/guild_war.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/guild_war.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/guild_war.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/guild_war.o: /usr/include/x86/_stdint.h
@@ -5364,9 +5389,9 @@ OBJDIR/horse_rider.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/horse_rider.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/horse_rider.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/horse_rider.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/horse_rider.o: ../../common/item_length.h horse_rider.h cmd.h config.h
-OBJDIR/horse_rider.o: char_manager.h ../../common/stl.h ../../common/length.h
-OBJDIR/horse_rider.o: vid.h
+OBJDIR/horse_rider.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/horse_rider.o: horse_rider.h cmd.h config.h char_manager.h
+OBJDIR/horse_rider.o: ../../common/stl.h ../../common/length.h vid.h
 OBJDIR/horsename_manager.o: stdafx.h debug_allocator.h
 OBJDIR/horsename_manager.o: ../../libthecore/include/stdafx.h
 OBJDIR/horsename_manager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -5471,8 +5496,9 @@ OBJDIR/horsename_manager.o: ../../../extern/include/boost/config/no_tr1/function
 OBJDIR/horsename_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/horsename_manager.o: horsename_manager.h desc_client.h desc.h
 OBJDIR/horsename_manager.o: constants.h ../../common/tables.h
-OBJDIR/horsename_manager.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/horsename_manager.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/horsename_manager.o: ../../common/length.h ../../common/service.h
+OBJDIR/horsename_manager.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/horsename_manager.o: packet.h cipher.h
 OBJDIR/horsename_manager.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/horsename_manager.o: config.h
 OBJDIR/horsename_manager.o: ../../../extern/include/cryptopp/stdcpp.h
@@ -5566,9 +5592,9 @@ OBJDIR/input.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/input.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input.o: desc.h constants.h ../../common/tables.h
-OBJDIR/input.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/input.o: packet_info.h packet.h cipher.h
-OBJDIR/input.o: ../../../extern/include/cryptopp/cryptlib.h config.h
+OBJDIR/input.o: ../../common/length.h ../../common/service.h
+OBJDIR/input.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/input.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/input.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input.o: /usr/include/x86/_stdint.h
@@ -5666,8 +5692,9 @@ OBJDIR/input_auth.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.
 OBJDIR/input_auth.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_auth.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input_auth.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/input_auth.o: ../../common/item_length.h config.h input.h
-OBJDIR/input_auth.o: packet_info.h packet.h desc_client.h desc.h cipher.h
+OBJDIR/input_auth.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/input_auth.o: config.h input.h packet_info.h packet.h desc_client.h
+OBJDIR/input_auth.o: desc.h cipher.h
 OBJDIR/input_auth.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/input_auth.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_auth.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -5759,13 +5786,13 @@ OBJDIR/input_db.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hp
 OBJDIR/input_db.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_db.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input_db.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/input_db.o: ../../common/item_length.h config.h desc_manager.h
-OBJDIR/input_db.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input_db.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
-OBJDIR/input_db.o: affect.h affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/input_db.o: item.h item_manager.h packet.h protocol.h mob_manager.h
-OBJDIR/input_db.o: shop_manager.h sectree_manager.h sectree.h skill.h
-OBJDIR/input_db.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/input_db.o: ../../common/service.h ../../common/item_length.h config.h
+OBJDIR/input_db.o: desc_manager.h ../../common/stl.h ../../common/length.h
+OBJDIR/input_db.o: IFileMonitor.h char.h entity.h FSM.h state.h horse_rider.h
+OBJDIR/input_db.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/input_db.o: packet.h char_manager.h item.h item_manager.h protocol.h
+OBJDIR/input_db.o: mob_manager.h shop_manager.h sectree_manager.h sectree.h
+OBJDIR/input_db.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/input_db.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/input_db.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/input_db.o: ../../liblua/include/lualib.h p2p.h input.h packet_info.h
@@ -5779,7 +5806,7 @@ OBJDIR/input_db.o: /usr/include/x86/_stdint.h
 OBJDIR/input_db.o: ../../../extern/include/cryptopp/trap.h wedding.h
 OBJDIR/input_db.o: marriage.h login_data.h unique_item.h monarch.h castle.h
 OBJDIR/input_db.o: block_country.h motion.h ../../common/d3dtype.h dev_log.h
-OBJDIR/input_db.o: horsename_manager.h pcbang.h gm.h panama.h map_location.h
+OBJDIR/input_db.o: horsename_manager.h gm.h panama.h map_location.h
 OBJDIR/input_db.o: DragonSoul.h
 OBJDIR/input_login.o: stdafx.h debug_allocator.h
 OBJDIR/input_login.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -5869,6 +5896,7 @@ OBJDIR/input_login.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/input_login.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_login.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input_login.o: constants.h ../../common/tables.h ../../common/length.h
+OBJDIR/input_login.o: ../../common/service.h ../../common/item_length.h
 OBJDIR/input_login.o: config.h input.h packet_info.h packet.h desc_client.h
 OBJDIR/input_login.o: desc.h cipher.h
 OBJDIR/input_login.o: ../../../extern/include/cryptopp/cryptlib.h
@@ -5977,8 +6005,9 @@ OBJDIR/input_main.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.
 OBJDIR/input_main.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_main.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input_main.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/input_main.o: ../../common/item_length.h config.h desc_client.h desc.h
-OBJDIR/input_main.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/input_main.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/input_main.o: config.h desc_client.h desc.h input.h packet_info.h
+OBJDIR/input_main.o: packet.h cipher.h
 OBJDIR/input_main.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/input_main.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_main.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -6085,8 +6114,9 @@ OBJDIR/input_p2p.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_p2p.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input_p2p.o: ../../common/billing.h config.h desc_client.h desc.h
 OBJDIR/input_p2p.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/input_p2p.o: ../../common/item_length.h input.h packet_info.h packet.h
-OBJDIR/input_p2p.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/input_p2p.o: ../../common/service.h ../../common/item_length.h input.h
+OBJDIR/input_p2p.o: packet_info.h packet.h cipher.h
+OBJDIR/input_p2p.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/input_p2p.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_p2p.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_p2p.o: /usr/include/x86/_stdint.h
@@ -6101,7 +6131,7 @@ OBJDIR/input_p2p.o: unique_item.h xmas_event.h castle.h dev_log.h
 OBJDIR/input_p2p.o: locale_service.h questmanager.h questnpc.h questpc.h
 OBJDIR/input_p2p.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/input_p2p.o: ../../liblua/include/lauxlib.h
-OBJDIR/input_p2p.o: ../../liblua/include/lualib.h pcbang.h threeway_war.h
+OBJDIR/input_p2p.o: ../../liblua/include/lualib.h threeway_war.h crc32.h
 OBJDIR/input_udp.o: stdafx.h debug_allocator.h
 OBJDIR/input_udp.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/input_udp.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -6186,8 +6216,8 @@ OBJDIR/input_udp.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.h
 OBJDIR/input_udp.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_udp.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input_udp.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/input_udp.o: ../../common/item_length.h config.h input.h packet_info.h
-OBJDIR/input_udp.o: packet.h desc.h cipher.h
+OBJDIR/input_udp.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/input_udp.o: config.h input.h packet_info.h packet.h desc.h cipher.h
 OBJDIR/input_udp.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/input_udp.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_udp.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -6359,9 +6389,9 @@ OBJDIR/item.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/item.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/item.o: config.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/item.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/item.o: ../../common/length.h ../../common/item_length.h cmd.h vid.h
-OBJDIR/item.o: affect.h affect_flag.h cube.h mining.h desc.h input.h
-OBJDIR/item.o: packet_info.h packet.h cipher.h
+OBJDIR/item.o: ../../common/length.h ../../common/service.h
+OBJDIR/item.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/item.o: cube.h mining.h packet.h desc.h input.h packet_info.h cipher.h
 OBJDIR/item.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/item.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/item.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -6457,7 +6487,8 @@ OBJDIR/item_addon.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.
 OBJDIR/item_addon.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/item_addon.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/item_addon.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/item_addon.o: ../../common/item_length.h item.h entity.h item_addon.h
+OBJDIR/item_addon.o: ../../common/service.h ../../common/item_length.h item.h
+OBJDIR/item_addon.o: entity.h item_addon.h
 OBJDIR/item_attribute.o: stdafx.h debug_allocator.h
 OBJDIR/item_attribute.o: ../../libthecore/include/stdafx.h
 OBJDIR/item_attribute.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -6552,11 +6583,11 @@ OBJDIR/item_attribute.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexc
 OBJDIR/item_attribute.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/item_attribute.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/item_attribute.o: constants.h ../../common/tables.h
-OBJDIR/item_attribute.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/item_attribute.o: item.h entity.h char.h ../../common/stl.h FSM.h
-OBJDIR/item_attribute.o: state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/item_attribute.o: affect_flag.h cube.h mining.h desc.h input.h
-OBJDIR/item_attribute.o: packet_info.h packet.h cipher.h
+OBJDIR/item_attribute.o: ../../common/length.h ../../common/service.h
+OBJDIR/item_attribute.o: ../../common/item_length.h item.h entity.h char.h
+OBJDIR/item_attribute.o: ../../common/stl.h FSM.h state.h horse_rider.h cmd.h
+OBJDIR/item_attribute.o: vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/item_attribute.o: packet.h desc.h input.h packet_info.h cipher.h
 OBJDIR/item_attribute.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/item_attribute.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/item_attribute.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -6656,10 +6687,10 @@ OBJDIR/item_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_b
 OBJDIR/item_manager.o: config.h char.h ../../common/stl.h entity.h FSM.h
 OBJDIR/item_manager.o: state.h horse_rider.h constants.h
 OBJDIR/item_manager.o: ../../common/tables.h ../../common/length.h
-OBJDIR/item_manager.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/item_manager.o: affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/item_manager.o: ../../common/length.h desc_client.h desc.h input.h
-OBJDIR/item_manager.o: packet_info.h packet.h cipher.h
+OBJDIR/item_manager.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/item_manager.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/item_manager.o: packet.h char_manager.h ../../common/length.h
+OBJDIR/item_manager.o: desc_client.h desc.h input.h packet_info.h cipher.h
 OBJDIR/item_manager.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/item_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/item_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -6786,6 +6817,7 @@ OBJDIR/item_manager_idrange.o: ../../../extern/include/boost/config/no_tr1/funct
 OBJDIR/item_manager_idrange.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/item_manager_idrange.o: desc_client.h desc.h constants.h
 OBJDIR/item_manager_idrange.o: ../../common/tables.h ../../common/length.h
+OBJDIR/item_manager_idrange.o: ../../common/service.h
 OBJDIR/item_manager_idrange.o: ../../common/item_length.h input.h
 OBJDIR/item_manager_idrange.o: packet_info.h packet.h cipher.h
 OBJDIR/item_manager_idrange.o: ../../../extern/include/cryptopp/cryptlib.h
@@ -6972,9 +7004,9 @@ OBJDIR/locale_service.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexc
 OBJDIR/locale_service.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/locale_service.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/locale_service.o: locale_service.h constants.h ../../common/tables.h
-OBJDIR/locale_service.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/locale_service.o: banword.h mob_manager.h empire_text_convert.h
-OBJDIR/locale_service.o: config.h skill_power.h
+OBJDIR/locale_service.o: ../../common/length.h ../../common/service.h
+OBJDIR/locale_service.o: ../../common/item_length.h banword.h mob_manager.h
+OBJDIR/locale_service.o: empire_text_convert.h config.h skill_power.h
 OBJDIR/log.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/log.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/log.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -7055,10 +7087,11 @@ OBJDIR/log.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/log.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/log.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/log.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/log.o: ../../common/item_length.h config.h char.h ../../common/stl.h
-OBJDIR/log.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/log.o: affect_flag.h cube.h mining.h desc.h input.h packet_info.h
-OBJDIR/log.o: packet.h cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/log.o: ../../common/service.h ../../common/item_length.h config.h
+OBJDIR/log.o: char.h ../../common/stl.h entity.h FSM.h state.h horse_rider.h
+OBJDIR/log.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/log.o: desc.h input.h packet_info.h cipher.h
+OBJDIR/log.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/log.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/log.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
 OBJDIR/log.o: ../../../extern/include/cryptopp/trap.h item.h locale_service.h
@@ -7147,7 +7180,8 @@ OBJDIR/login_data.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.
 OBJDIR/login_data.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/login_data.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/login_data.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/login_data.o: ../../common/item_length.h login_data.h
+OBJDIR/login_data.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/login_data.o: login_data.h
 OBJDIR/lzo_manager.o: stdafx.h debug_allocator.h
 OBJDIR/lzo_manager.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/lzo_manager.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -7320,11 +7354,11 @@ OBJDIR/marriage.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/marriage.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/marriage.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/marriage.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/marriage.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/marriage.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/marriage.o: char_manager.h ../../common/length.h sectree_manager.h
-OBJDIR/marriage.o: sectree.h desc_client.h desc.h input.h packet_info.h
-OBJDIR/marriage.o: packet.h cipher.h
+OBJDIR/marriage.o: ../../common/length.h ../../common/service.h
+OBJDIR/marriage.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/marriage.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/marriage.o: ../../common/length.h sectree_manager.h sectree.h
+OBJDIR/marriage.o: desc_client.h desc.h input.h packet_info.h cipher.h
 OBJDIR/marriage.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/marriage.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/marriage.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -7525,8 +7559,9 @@ OBJDIR/messenger_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_no
 OBJDIR/messenger_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/messenger_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/messenger_manager.o: constants.h ../../common/tables.h
-OBJDIR/messenger_manager.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/messenger_manager.o: gm.h messenger_manager.h db.h buffer_manager.h
+OBJDIR/messenger_manager.o: ../../common/length.h ../../common/service.h
+OBJDIR/messenger_manager.o: ../../common/item_length.h gm.h
+OBJDIR/messenger_manager.o: messenger_manager.h db.h buffer_manager.h
 OBJDIR/messenger_manager.o: desc_client.h desc.h input.h packet_info.h
 OBJDIR/messenger_manager.o: packet.h cipher.h
 OBJDIR/messenger_manager.o: ../../../extern/include/cryptopp/cryptlib.h
@@ -7627,8 +7662,9 @@ OBJDIR/mining.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/mining.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/mining.o: mining.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/mining.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/mining.o: ../../common/length.h ../../common/item_length.h cmd.h vid.h
-OBJDIR/mining.o: affect.h affect_flag.h cube.h char_manager.h
+OBJDIR/mining.o: ../../common/length.h ../../common/service.h
+OBJDIR/mining.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/mining.o: affect_flag.h cube.h packet.h char_manager.h
 OBJDIR/mining.o: ../../common/length.h item_manager.h item.h config.h db.h
 OBJDIR/mining.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/mob_manager.o: stdafx.h debug_allocator.h
@@ -7720,11 +7756,12 @@ OBJDIR/mob_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/mob_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/mob_manager.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/mob_manager.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/mob_manager.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/mob_manager.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/mob_manager.o: char_manager.h ../../common/length.h item_manager.h
-OBJDIR/mob_manager.o: mob_manager.h regen.h dungeon.h sectree_manager.h
-OBJDIR/mob_manager.o: sectree.h text_file_loader.h ../../common/d3dtype.h
+OBJDIR/mob_manager.o: ../../common/length.h ../../common/service.h
+OBJDIR/mob_manager.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/mob_manager.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/mob_manager.o: ../../common/length.h item_manager.h mob_manager.h
+OBJDIR/mob_manager.o: regen.h dungeon.h sectree_manager.h sectree.h
+OBJDIR/mob_manager.o: text_file_loader.h ../../common/d3dtype.h
 OBJDIR/mob_manager.o: ../../common/pool.h file_loader.h questmanager.h
 OBJDIR/mob_manager.o: questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/mob_manager.o: ../../liblua/include/lua.h
@@ -7812,11 +7849,11 @@ OBJDIR/monarch.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/monarch.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/monarch.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/monarch.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/monarch.o: ../../common/item_length.h monarch.h char.h
-OBJDIR/monarch.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/monarch.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/monarch.o: sectree_manager.h sectree.h desc_client.h desc.h input.h
-OBJDIR/monarch.o: packet_info.h packet.h cipher.h
+OBJDIR/monarch.o: ../../common/service.h ../../common/item_length.h monarch.h
+OBJDIR/monarch.o: char.h ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/monarch.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/monarch.o: mining.h packet.h sectree_manager.h sectree.h desc_client.h
+OBJDIR/monarch.o: desc.h input.h packet_info.h cipher.h
 OBJDIR/monarch.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/monarch.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/monarch.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -7904,11 +7941,11 @@ OBJDIR/motion.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/motion.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/motion.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/motion.o: ../../common/stl.h constants.h ../../common/tables.h
-OBJDIR/motion.o: ../../common/length.h ../../common/item_length.h motion.h
-OBJDIR/motion.o: ../../common/d3dtype.h text_file_loader.h
-OBJDIR/motion.o: ../../common/pool.h file_loader.h mob_manager.h char.h
-OBJDIR/motion.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/motion.o: affect_flag.h cube.h mining.h
+OBJDIR/motion.o: ../../common/length.h ../../common/service.h
+OBJDIR/motion.o: ../../common/item_length.h motion.h ../../common/d3dtype.h
+OBJDIR/motion.o: text_file_loader.h ../../common/pool.h file_loader.h
+OBJDIR/motion.o: mob_manager.h char.h entity.h FSM.h state.h horse_rider.h
+OBJDIR/motion.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h packet.h
 OBJDIR/over9refine.o: stdafx.h debug_allocator.h
 OBJDIR/over9refine.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/over9refine.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -7997,10 +8034,10 @@ OBJDIR/over9refine.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/over9refine.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/over9refine.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/over9refine.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/over9refine.o: ../../common/item_length.h char.h ../../common/stl.h
-OBJDIR/over9refine.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
-OBJDIR/over9refine.o: affect.h affect_flag.h cube.h mining.h item_manager.h
-OBJDIR/over9refine.o: item.h over9refine.h
+OBJDIR/over9refine.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/over9refine.o: char.h ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/over9refine.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/over9refine.o: mining.h packet.h item_manager.h item.h over9refine.h
 OBJDIR/p2p.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/p2p.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/p2p.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -8081,8 +8118,9 @@ OBJDIR/p2p.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/p2p.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/p2p.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/p2p.o: ../../common/stl.h constants.h ../../common/tables.h
-OBJDIR/p2p.o: ../../common/length.h ../../common/item_length.h config.h p2p.h
-OBJDIR/p2p.o: input.h packet_info.h packet.h desc_p2p.h desc.h cipher.h
+OBJDIR/p2p.o: ../../common/length.h ../../common/service.h
+OBJDIR/p2p.o: ../../common/item_length.h config.h p2p.h input.h packet_info.h
+OBJDIR/p2p.o: packet.h desc_p2p.h desc.h cipher.h
 OBJDIR/p2p.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/p2p.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/p2p.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
@@ -8179,8 +8217,8 @@ OBJDIR/packet_info.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/packet_info.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/packet_info.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/packet_info.o: ../../common/stl.h constants.h ../../common/tables.h
-OBJDIR/packet_info.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/packet_info.o: packet_info.h packet.h
+OBJDIR/packet_info.o: ../../common/length.h ../../common/service.h
+OBJDIR/packet_info.o: ../../common/item_length.h packet_info.h packet.h
 OBJDIR/party.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/party.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/party.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -8264,10 +8302,11 @@ OBJDIR/party.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/party.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/party.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/party.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/party.o: ../../common/length.h ../../common/item_length.h cmd.h vid.h
-OBJDIR/party.o: affect.h affect_flag.h cube.h mining.h party.h char_manager.h
+OBJDIR/party.o: ../../common/length.h ../../common/service.h
+OBJDIR/party.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/party.o: cube.h mining.h packet.h party.h char_manager.h
 OBJDIR/party.o: ../../common/length.h config.h p2p.h input.h packet_info.h
-OBJDIR/party.o: packet.h desc_client.h desc.h cipher.h
+OBJDIR/party.o: desc_client.h desc.h cipher.h
 OBJDIR/party.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/party.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/party.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -8356,91 +8395,7 @@ OBJDIR/passpod.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/passpod.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/passpod.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/passpod.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/passpod.o: ../../common/item_length.h passpod.h
-OBJDIR/pcbang.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
-OBJDIR/pcbang.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-OBJDIR/pcbang.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-OBJDIR/pcbang.o: /usr/include/machine/_types.h /usr/include/x86/_types.h
-OBJDIR/pcbang.o: /usr/include/machine/_limits.h /usr/include/x86/_limits.h
-OBJDIR/pcbang.o: /usr/include/string.h /usr/include/strings.h
-OBJDIR/pcbang.o: /usr/include/xlocale/_strings.h
-OBJDIR/pcbang.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
-OBJDIR/pcbang.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
-OBJDIR/pcbang.o: /usr/include/errno.h /usr/include/stdlib.h
-OBJDIR/pcbang.o: /usr/include/unistd.h /usr/include/sys/types.h
-OBJDIR/pcbang.o: /usr/include/machine/endian.h /usr/include/x86/endian.h
-OBJDIR/pcbang.o: /usr/include/sys/_endian.h /usr/include/sys/_pthreadtypes.h
-OBJDIR/pcbang.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
-OBJDIR/pcbang.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
-OBJDIR/pcbang.o: /usr/include/sys/timespec.h /usr/include/sys/_timespec.h
-OBJDIR/pcbang.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
-OBJDIR/pcbang.o: /usr/include/assert.h /usr/include/ctype.h
-OBJDIR/pcbang.o: /usr/include/_ctype.h /usr/include/runetype.h
-OBJDIR/pcbang.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
-OBJDIR/pcbang.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-OBJDIR/pcbang.o: /usr/include/dirent.h /usr/include/sys/dirent.h
-OBJDIR/pcbang.o: /usr/include/sys/time.h /usr/include/sys/_clock_id.h
-OBJDIR/pcbang.o: /usr/include/time.h /usr/include/xlocale/_time.h
-OBJDIR/pcbang.o: /usr/include/sys/stat.h /usr/include/netinet/in.h
-OBJDIR/pcbang.o: /usr/include/sys/_sockaddr_storage.h
-OBJDIR/pcbang.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-OBJDIR/pcbang.o: /usr/include/netdb.h /usr/include/sys/socket.h
-OBJDIR/pcbang.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
-OBJDIR/pcbang.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-OBJDIR/pcbang.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
-OBJDIR/pcbang.o: /usr/include/sys/wait.h /usr/include/pthread.h
-OBJDIR/pcbang.o: /usr/include/sched.h /usr/include/sys/sched.h
-OBJDIR/pcbang.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
-OBJDIR/pcbang.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
-OBJDIR/pcbang.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
-OBJDIR/pcbang.o: /usr/include/sys/event.h /usr/include/sys/queue.h typedef.h
-OBJDIR/pcbang.o: ../../libthecore/include/heart.h
-OBJDIR/pcbang.o: ../../libthecore/include/fdwatch.h
-OBJDIR/pcbang.o: ../../libthecore/include/socket.h
-OBJDIR/pcbang.o: ../../libthecore/include/kstbl.h
-OBJDIR/pcbang.o: ../../libthecore/include/hangul.h
-OBJDIR/pcbang.o: ../../libthecore/include/buffer.h
-OBJDIR/pcbang.o: ../../libthecore/include/signal.h log.h
-OBJDIR/pcbang.o: ../../libsql/AsyncSQL.h ../../libthecore/include/stdafx.h
-OBJDIR/pcbang.o: ../../libthecore/include/log.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/mysql.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/mariadb_com.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/mariadb_version.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/ma_list.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/mariadb_ctype.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/mariadb_stmt.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/errmsg.h
-OBJDIR/pcbang.o: /usr/local/include/mysql/mysqld_error.h
-OBJDIR/pcbang.o: ../../libsql/Semaphore.h any_function.h any_function.inc
-OBJDIR/pcbang.o: ../../libthecore/include/main.h utils.h /usr/include/math.h
-OBJDIR/pcbang.o: ../../libthecore/include/crypt.h
-OBJDIR/pcbang.o: ../../libthecore/include/memcpy.h ../../common/singleton.h
-OBJDIR/pcbang.o: ../../common/utils.h ../../common/service.h
-OBJDIR/pcbang.o: /usr/include/float.h /usr/include/x86/float.h locale.hpp
-OBJDIR/pcbang.o: event.h ../../../extern/include/boost/intrusive_ptr.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/user.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/compiler/gcc.hpp
-OBJDIR/pcbang.o: /usr/include/stddef.h
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/platform/bsd.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/detail/posix_features.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/detail/suffix.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/helper_macros.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/assert.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/detail/workaround.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/workaround.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
-OBJDIR/pcbang.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/pcbang.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/pcbang.o: ../../common/item_length.h config.h locale_service.h db.h
-OBJDIR/pcbang.o: pcbang.h
+OBJDIR/passpod.o: ../../common/service.h ../../common/item_length.h passpod.h
 OBJDIR/polymorph.o: stdafx.h debug_allocator.h
 OBJDIR/polymorph.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/polymorph.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -8526,9 +8481,10 @@ OBJDIR/polymorph.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/polymorph.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/polymorph.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/polymorph.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/polymorph.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/polymorph.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/polymorph.o: mob_manager.h item.h polymorph.h
+OBJDIR/polymorph.o: ../../common/length.h ../../common/service.h
+OBJDIR/polymorph.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/polymorph.o: affect_flag.h cube.h mining.h packet.h mob_manager.h
+OBJDIR/polymorph.o: item.h polymorph.h
 OBJDIR/priv_manager.o: stdafx.h debug_allocator.h
 OBJDIR/priv_manager.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/priv_manager.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -8620,11 +8576,12 @@ OBJDIR/priv_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcep
 OBJDIR/priv_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/priv_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/priv_manager.o: constants.h ../../common/tables.h
-OBJDIR/priv_manager.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/priv_manager.o: priv_manager.h char.h ../../common/stl.h entity.h
-OBJDIR/priv_manager.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/priv_manager.o: affect_flag.h cube.h mining.h desc_client.h desc.h
-OBJDIR/priv_manager.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/priv_manager.o: ../../common/length.h ../../common/service.h
+OBJDIR/priv_manager.o: ../../common/item_length.h priv_manager.h char.h
+OBJDIR/priv_manager.o: ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/priv_manager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/priv_manager.o: cube.h mining.h packet.h desc_client.h desc.h input.h
+OBJDIR/priv_manager.o: packet_info.h cipher.h
 OBJDIR/priv_manager.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/priv_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/priv_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -8712,8 +8669,8 @@ OBJDIR/pvp.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/pvp.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/pvp.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/pvp.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/pvp.o: ../../common/item_length.h pvp.h crc32.h packet.h desc.h
-OBJDIR/pvp.o: input.h packet_info.h cipher.h
+OBJDIR/pvp.o: ../../common/service.h ../../common/item_length.h pvp.h crc32.h
+OBJDIR/pvp.o: packet.h desc.h input.h packet_info.h cipher.h
 OBJDIR/pvp.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/pvp.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/pvp.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
@@ -8808,11 +8765,11 @@ OBJDIR/questevent.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/questevent.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questevent.o: config.h char.h ../../common/stl.h entity.h FSM.h
 OBJDIR/questevent.o: state.h horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questevent.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/questevent.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/questevent.o: char_manager.h ../../common/length.h questmanager.h
-OBJDIR/questevent.o: questnpc.h questpc.h quest.h lua_incl.h
-OBJDIR/questevent.o: ../../liblua/include/lua.h
+OBJDIR/questevent.o: ../../common/length.h ../../common/service.h
+OBJDIR/questevent.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questevent.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/questevent.o: ../../common/length.h questmanager.h questnpc.h
+OBJDIR/questevent.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/questevent.o: ../../liblua/include/lauxlib.h
 OBJDIR/questevent.o: ../../liblua/include/lualib.h questevent.h
 OBJDIR/questlua.o: stdafx.h debug_allocator.h
@@ -8901,9 +8858,9 @@ OBJDIR/questlua.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/questlua.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/questlua.o: ../../liblua/include/lualib.h questlua.h buffer_manager.h
 OBJDIR/questlua.o: config.h desc.h constants.h ../../common/tables.h
-OBJDIR/questlua.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/questlua.o: packet_info.h packet.h cipher.h
-OBJDIR/questlua.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/questlua.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/questlua.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/questlua.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questlua.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/questlua.o: /usr/include/x86/_stdint.h
@@ -9018,8 +8975,9 @@ OBJDIR/questlua_affect.o: ../../liblua/include/lualib.h sectree_manager.h
 OBJDIR/questlua_affect.o: sectree.h entity.h char.h ../../common/stl.h FSM.h
 OBJDIR/questlua_affect.o: state.h horse_rider.h constants.h
 OBJDIR/questlua_affect.o: ../../common/tables.h ../../common/length.h
-OBJDIR/questlua_affect.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_affect.o: affect_flag.h cube.h mining.h db.h
+OBJDIR/questlua_affect.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/questlua_affect.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/questlua_affect.o: packet.h db.h
 OBJDIR/questlua_arena.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_arena.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_arena.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -9119,8 +9077,9 @@ OBJDIR/questlua_arena.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_arena.o: ../../liblua/include/lualib.h char.h
 OBJDIR/questlua_arena.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_arena.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_arena.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_arena.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/questlua_arena.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_arena.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questlua_arena.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/questlua_arena.o: char_manager.h ../../common/length.h arena.h
 OBJDIR/questlua_ba.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_ba.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -9322,8 +9281,9 @@ OBJDIR/questlua_building.o: ../../liblua/include/lualib.h sectree_manager.h
 OBJDIR/questlua_building.o: sectree.h entity.h char.h ../../common/stl.h
 OBJDIR/questlua_building.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/questlua_building.o: ../../common/tables.h ../../common/length.h
-OBJDIR/questlua_building.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_building.o: affect_flag.h cube.h mining.h guild.h skill.h
+OBJDIR/questlua_building.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/questlua_building.o: cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/questlua_building.o: mining.h packet.h guild.h skill.h
 OBJDIR/questlua_building.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/questlua_building.o: db.h building.h ../../common/building.h
 OBJDIR/questlua_danceevent.o: stdafx.h debug_allocator.h
@@ -9440,8 +9400,9 @@ OBJDIR/questlua_danceevent.o: ../../liblua/include/lualib.h sectree_manager.h
 OBJDIR/questlua_danceevent.o: sectree.h entity.h char.h ../../common/stl.h
 OBJDIR/questlua_danceevent.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/questlua_danceevent.o: ../../common/tables.h ../../common/length.h
+OBJDIR/questlua_danceevent.o: ../../common/service.h
 OBJDIR/questlua_danceevent.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_danceevent.o: affect_flag.h cube.h mining.h
+OBJDIR/questlua_danceevent.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/questlua_dungeon.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_dungeon.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_dungeon.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -9542,18 +9503,18 @@ OBJDIR/questlua_dungeon.o: ../../../extern/include/boost/smart_ptr/detail/sp_noe
 OBJDIR/questlua_dungeon.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/questlua_dungeon.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questlua_dungeon.o: constants.h ../../common/tables.h
-OBJDIR/questlua_dungeon.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_dungeon.o: questmanager.h questnpc.h questpc.h quest.h
-OBJDIR/questlua_dungeon.o: lua_incl.h ../../liblua/include/lua.h
+OBJDIR/questlua_dungeon.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_dungeon.o: ../../common/item_length.h questmanager.h
+OBJDIR/questlua_dungeon.o: questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/questlua_dungeon.o: ../../liblua/include/lua.h
 OBJDIR/questlua_dungeon.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_dungeon.o: ../../liblua/include/lualib.h questlua.h
 OBJDIR/questlua_dungeon.o: buffer_manager.h dungeon.h sectree_manager.h
 OBJDIR/questlua_dungeon.o: sectree.h entity.h char.h ../../common/stl.h FSM.h
 OBJDIR/questlua_dungeon.o: state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/questlua_dungeon.o: affect_flag.h cube.h mining.h party.h
-OBJDIR/questlua_dungeon.o: char_manager.h ../../common/length.h packet.h
-OBJDIR/questlua_dungeon.o: desc_client.h desc.h input.h packet_info.h
-OBJDIR/questlua_dungeon.o: cipher.h
+OBJDIR/questlua_dungeon.o: affect_flag.h cube.h mining.h packet.h party.h
+OBJDIR/questlua_dungeon.o: char_manager.h ../../common/length.h desc_client.h
+OBJDIR/questlua_dungeon.o: desc.h input.h packet_info.h cipher.h
 OBJDIR/questlua_dungeon.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/questlua_dungeon.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questlua_dungeon.o: /usr/include/stdint.h
@@ -9665,10 +9626,10 @@ OBJDIR/questlua_forked.o: ../../liblua/include/lualib.h buffer_manager.h
 OBJDIR/questlua_forked.o: questmanager.h questnpc.h questpc.h char.h entity.h
 OBJDIR/questlua_forked.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/questlua_forked.o: ../../common/tables.h ../../common/length.h
-OBJDIR/questlua_forked.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_forked.o: affect_flag.h cube.h mining.h dungeon.h
-OBJDIR/questlua_forked.o: sectree_manager.h sectree.h p2p.h input.h
-OBJDIR/questlua_forked.o: packet_info.h packet.h locale_service.h
+OBJDIR/questlua_forked.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/questlua_forked.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/questlua_forked.o: packet.h dungeon.h sectree_manager.h sectree.h
+OBJDIR/questlua_forked.o: p2p.h input.h packet_info.h locale_service.h
 OBJDIR/questlua_game.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_game.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_game.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -9768,8 +9729,9 @@ OBJDIR/questlua_game.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_game.o: ../../liblua/include/lualib.h buffer_manager.h
 OBJDIR/questlua_game.o: questmanager.h questnpc.h questpc.h desc_client.h
 OBJDIR/questlua_game.o: desc.h constants.h ../../common/tables.h
-OBJDIR/questlua_game.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_game.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/questlua_game.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_game.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/questlua_game.o: packet.h cipher.h
 OBJDIR/questlua_game.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/questlua_game.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questlua_game.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -9876,10 +9838,11 @@ OBJDIR/questlua_global.o: ../../../extern/include/boost/smart_ptr/detail/sp_noex
 OBJDIR/questlua_global.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/questlua_global.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questlua_global.o: constants.h ../../common/tables.h
-OBJDIR/questlua_global.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_global.o: char.h ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/questlua_global.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_global.o: ../../common/item_length.h char.h
+OBJDIR/questlua_global.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_global.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/questlua_global.o: cube.h mining.h char_manager.h
+OBJDIR/questlua_global.o: cube.h mining.h packet.h char_manager.h
 OBJDIR/questlua_global.o: ../../common/length.h questmanager.h questnpc.h
 OBJDIR/questlua_global.o: questpc.h quest.h lua_incl.h
 OBJDIR/questlua_global.o: ../../liblua/include/lua.h
@@ -9887,10 +9850,10 @@ OBJDIR/questlua_global.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_global.o: ../../liblua/include/lualib.h questlua.h
 OBJDIR/questlua_global.o: buffer_manager.h questevent.h config.h fishing.h
 OBJDIR/questlua_global.o: item.h priv_manager.h p2p.h input.h packet_info.h
-OBJDIR/questlua_global.o: packet.h item_manager.h mob_manager.h
-OBJDIR/questlua_global.o: start_position.h locale_service.h over9refine.h
-OBJDIR/questlua_global.o: OXEvent.h regen.h dungeon.h sectree_manager.h
-OBJDIR/questlua_global.o: sectree.h guild.h skill.h ../../libpoly/Poly.h
+OBJDIR/questlua_global.o: item_manager.h mob_manager.h start_position.h
+OBJDIR/questlua_global.o: locale_service.h over9refine.h OXEvent.h regen.h
+OBJDIR/questlua_global.o: dungeon.h sectree_manager.h sectree.h guild.h
+OBJDIR/questlua_global.o: skill.h ../../libpoly/Poly.h
 OBJDIR/questlua_global.o: ../../libpoly/SymTable.h guild_manager.h
 OBJDIR/questlua_guild.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_guild.o: ../../libthecore/include/stdafx.h
@@ -9991,8 +9954,9 @@ OBJDIR/questlua_guild.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_guild.o: ../../liblua/include/lualib.h buffer_manager.h
 OBJDIR/questlua_guild.o: questmanager.h questnpc.h questpc.h desc_client.h
 OBJDIR/questlua_guild.o: desc.h constants.h ../../common/tables.h
-OBJDIR/questlua_guild.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_guild.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/questlua_guild.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_guild.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/questlua_guild.o: packet.h cipher.h
 OBJDIR/questlua_guild.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/questlua_guild.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questlua_guild.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -10104,8 +10068,9 @@ OBJDIR/questlua_horse.o: questmanager.h questnpc.h questpc.h
 OBJDIR/questlua_horse.o: horsename_manager.h char.h ../../common/stl.h
 OBJDIR/questlua_horse.o: entity.h FSM.h state.h horse_rider.h constants.h
 OBJDIR/questlua_horse.o: ../../common/tables.h ../../common/length.h
-OBJDIR/questlua_horse.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_horse.o: affect_flag.h cube.h mining.h config.h
+OBJDIR/questlua_horse.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/questlua_horse.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/questlua_horse.o: packet.h config.h
 OBJDIR/questlua_pet.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_pet.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/questlua_pet.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -10204,8 +10169,9 @@ OBJDIR/questlua_pet.o: questmanager.h questnpc.h questpc.h
 OBJDIR/questlua_pet.o: horsename_manager.h char.h ../../common/stl.h entity.h
 OBJDIR/questlua_pet.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/questlua_pet.o: ../../common/tables.h ../../common/length.h
-OBJDIR/questlua_pet.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_pet.o: affect_flag.h cube.h mining.h config.h PetSystem.h
+OBJDIR/questlua_pet.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/questlua_pet.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/questlua_pet.o: packet.h config.h PetSystem.h
 OBJDIR/questlua_item.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_item.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_item.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -10305,9 +10271,10 @@ OBJDIR/questlua_item.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_item.o: ../../liblua/include/lualib.h char.h
 OBJDIR/questlua_item.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_item.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_item.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_item.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/questlua_item.o: item.h item_manager.h over9refine.h
+OBJDIR/questlua_item.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_item.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questlua_item.o: affect_flag.h cube.h mining.h packet.h item.h
+OBJDIR/questlua_item.o: item_manager.h over9refine.h
 OBJDIR/questlua_marriage.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_marriage.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_marriage.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -10412,12 +10379,12 @@ OBJDIR/questlua_marriage.o: ../../../extern/include/boost/config/no_tr1/function
 OBJDIR/questlua_marriage.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questlua_marriage.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_marriage.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_marriage.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_marriage.o: cmd.h vid.h affect.h affect_flag.h cube.h
-OBJDIR/questlua_marriage.o: mining.h char_manager.h ../../common/length.h
-OBJDIR/questlua_marriage.o: wedding.h marriage.h questmanager.h questnpc.h
-OBJDIR/questlua_marriage.o: questpc.h quest.h lua_incl.h
-OBJDIR/questlua_marriage.o: ../../liblua/include/lua.h
+OBJDIR/questlua_marriage.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_marriage.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questlua_marriage.o: affect_flag.h cube.h mining.h packet.h
+OBJDIR/questlua_marriage.o: char_manager.h ../../common/length.h wedding.h
+OBJDIR/questlua_marriage.o: marriage.h questmanager.h questnpc.h questpc.h
+OBJDIR/questlua_marriage.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/questlua_marriage.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_marriage.o: ../../liblua/include/lualib.h config.h
 OBJDIR/questlua_mgmt.o: stdafx.h debug_allocator.h
@@ -10514,9 +10481,10 @@ OBJDIR/questlua_mgmt.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexce
 OBJDIR/questlua_mgmt.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/questlua_mgmt.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questlua_mgmt.o: constants.h ../../common/tables.h
-OBJDIR/questlua_mgmt.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_mgmt.o: questmanager.h questnpc.h questpc.h quest.h
-OBJDIR/questlua_mgmt.o: lua_incl.h ../../liblua/include/lua.h
+OBJDIR/questlua_mgmt.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_mgmt.o: ../../common/item_length.h questmanager.h questnpc.h
+OBJDIR/questlua_mgmt.o: questpc.h quest.h lua_incl.h
+OBJDIR/questlua_mgmt.o: ../../liblua/include/lua.h
 OBJDIR/questlua_mgmt.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_mgmt.o: ../../liblua/include/lualib.h monarch.h desc_client.h
 OBJDIR/questlua_mgmt.o: desc.h input.h packet_info.h packet.h cipher.h
@@ -10630,9 +10598,9 @@ OBJDIR/questlua_monarch.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_monarch.o: ../../liblua/include/lualib.h buffer_manager.h
 OBJDIR/questlua_monarch.o: questmanager.h questnpc.h questpc.h monarch.h
 OBJDIR/questlua_monarch.o: ../../common/tables.h ../../common/length.h
-OBJDIR/questlua_monarch.o: ../../common/item_length.h desc_client.h desc.h
-OBJDIR/questlua_monarch.o: constants.h input.h packet_info.h packet.h
-OBJDIR/questlua_monarch.o: cipher.h
+OBJDIR/questlua_monarch.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/questlua_monarch.o: desc_client.h desc.h constants.h input.h
+OBJDIR/questlua_monarch.o: packet_info.h packet.h cipher.h
 OBJDIR/questlua_monarch.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/questlua_monarch.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questlua_monarch.o: /usr/include/stdint.h
@@ -10743,8 +10711,9 @@ OBJDIR/questlua_npc.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_npc.o: ../../liblua/include/lualib.h char.h
 OBJDIR/questlua_npc.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_npc.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_npc.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/questlua_npc.o: vid.h affect.h affect_flag.h cube.h mining.h party.h
+OBJDIR/questlua_npc.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_npc.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questlua_npc.o: affect_flag.h cube.h mining.h packet.h party.h
 OBJDIR/questlua_npc.o: xmas_event.h char_manager.h ../../common/length.h
 OBJDIR/questlua_npc.o: shop_manager.h guild.h skill.h ../../libpoly/Poly.h
 OBJDIR/questlua_npc.o: ../../libpoly/SymTable.h
@@ -10853,8 +10822,9 @@ OBJDIR/questlua_oxevent.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_oxevent.o: ../../liblua/include/lualib.h char.h
 OBJDIR/questlua_oxevent.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_oxevent.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_oxevent.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_oxevent.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/questlua_oxevent.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_oxevent.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questlua_oxevent.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/questlua_oxevent.o: char_manager.h ../../common/length.h OXEvent.h
 OBJDIR/questlua_oxevent.o: config.h locale_service.h
 OBJDIR/questlua_party.o: stdafx.h debug_allocator.h
@@ -10951,8 +10921,9 @@ OBJDIR/questlua_party.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexc
 OBJDIR/questlua_party.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/questlua_party.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questlua_party.o: desc.h constants.h ../../common/tables.h
-OBJDIR/questlua_party.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_party.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/questlua_party.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_party.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/questlua_party.o: packet.h cipher.h
 OBJDIR/questlua_party.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/questlua_party.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questlua_party.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -11058,15 +11029,15 @@ OBJDIR/questlua_pc.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_pc.o: ../../liblua/include/lualib.h sectree_manager.h
 OBJDIR/questlua_pc.o: sectree.h entity.h char.h ../../common/stl.h FSM.h
 OBJDIR/questlua_pc.o: state.h horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_pc.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/questlua_pc.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/questlua_pc.o: char_manager.h ../../common/length.h item.h
-OBJDIR/questlua_pc.o: item_manager.h guild_manager.h war_map.h guild.h
-OBJDIR/questlua_pc.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/questlua_pc.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_pc.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questlua_pc.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/questlua_pc.o: ../../common/length.h item.h item_manager.h
+OBJDIR/questlua_pc.o: guild_manager.h war_map.h guild.h skill.h
+OBJDIR/questlua_pc.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/questlua_pc.o: start_position.h locale_service.h marriage.h p2p.h
-OBJDIR/questlua_pc.o: input.h packet_info.h packet.h polymorph.h
-OBJDIR/questlua_pc.o: desc_client.h desc.h cipher.h
-OBJDIR/questlua_pc.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/questlua_pc.o: input.h packet_info.h polymorph.h desc_client.h desc.h
+OBJDIR/questlua_pc.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/questlua_pc.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questlua_pc.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/questlua_pc.o: /usr/include/x86/_stdint.h
@@ -11273,8 +11244,9 @@ OBJDIR/questlua_target.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_target.o: ../../liblua/include/lualib.h char.h
 OBJDIR/questlua_target.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_target.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_target.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questlua_target.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/questlua_target.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_target.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/questlua_target.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/questlua_target.o: sectree_manager.h sectree.h target.h
 OBJDIR/questmanager.o: stdafx.h debug_allocator.h
 OBJDIR/questmanager.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -11367,9 +11339,9 @@ OBJDIR/questmanager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcep
 OBJDIR/questmanager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/questmanager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questmanager.o: constants.h ../../common/tables.h
-OBJDIR/questmanager.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/questmanager.o: buffer_manager.h packet.h desc_client.h desc.h input.h
-OBJDIR/questmanager.o: packet_info.h cipher.h
+OBJDIR/questmanager.o: ../../common/length.h ../../common/service.h
+OBJDIR/questmanager.o: ../../common/item_length.h buffer_manager.h packet.h
+OBJDIR/questmanager.o: desc_client.h desc.h input.h packet_info.h cipher.h
 OBJDIR/questmanager.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/questmanager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questmanager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -11472,8 +11444,8 @@ OBJDIR/questnpc.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/questnpc.o: ../../liblua/include/lualib.h profiler.h config.h char.h
 OBJDIR/questnpc.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
 OBJDIR/questnpc.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/questnpc.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questnpc.o: affect_flag.h cube.h mining.h
+OBJDIR/questnpc.o: ../../common/service.h ../../common/item_length.h cmd.h
+OBJDIR/questnpc.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
 OBJDIR/questpc.o: stdafx.h debug_allocator.h
 OBJDIR/questpc.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/questpc.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -11556,9 +11528,9 @@ OBJDIR/questpc.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/questpc.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/questpc.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/questpc.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/questpc.o: ../../common/item_length.h questmanager.h questnpc.h
-OBJDIR/questpc.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
-OBJDIR/questpc.o: ../../liblua/include/lauxlib.h
+OBJDIR/questpc.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/questpc.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/questpc.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/questpc.o: ../../liblua/include/lualib.h packet.h buffer_manager.h
 OBJDIR/questpc.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questpc.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
@@ -11650,7 +11622,8 @@ OBJDIR/refine.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/refine.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/refine.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/refine.o: refine.h constants.h ../../common/tables.h
-OBJDIR/refine.o: ../../common/length.h ../../common/item_length.h
+OBJDIR/refine.o: ../../common/length.h ../../common/service.h
+OBJDIR/refine.o: ../../common/item_length.h
 OBJDIR/regen.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/regen.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/regen.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -11734,10 +11707,10 @@ OBJDIR/regen.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/regen.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/regen.o: config.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/regen.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/regen.o: ../../common/length.h ../../common/item_length.h cmd.h vid.h
-OBJDIR/regen.o: affect.h affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/regen.o: ../../common/length.h regen.h dungeon.h sectree_manager.h
-OBJDIR/regen.o: sectree.h mob_manager.h
+OBJDIR/regen.o: ../../common/length.h ../../common/service.h
+OBJDIR/regen.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/regen.o: cube.h mining.h packet.h char_manager.h ../../common/length.h
+OBJDIR/regen.o: regen.h dungeon.h sectree_manager.h sectree.h mob_manager.h
 OBJDIR/safebox.o: stdafx.h debug_allocator.h
 OBJDIR/safebox.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/safebox.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -11821,12 +11794,12 @@ OBJDIR/safebox.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/safebox.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/safebox.o: ../../libgame/include/grid.h constants.h
 OBJDIR/safebox.o: ../../common/tables.h ../../common/length.h
-OBJDIR/safebox.o: ../../common/item_length.h safebox.h packet.h char.h
-OBJDIR/safebox.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/safebox.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/safebox.o: desc_client.h desc.h input.h packet_info.h cipher.h
-OBJDIR/safebox.o: ../../../extern/include/cryptopp/cryptlib.h config.h
-OBJDIR/safebox.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/safebox.o: ../../common/service.h ../../common/item_length.h safebox.h
+OBJDIR/safebox.o: packet.h char.h ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/safebox.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/safebox.o: mining.h desc_client.h desc.h input.h packet_info.h
+OBJDIR/safebox.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/safebox.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/safebox.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/safebox.o: /usr/include/x86/_stdint.h
 OBJDIR/safebox.o: ../../../extern/include/cryptopp/trap.h item.h
@@ -11915,10 +11888,11 @@ OBJDIR/sectree.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.h
 OBJDIR/sectree.o: ../../libgame/include/attribute.h sectree_manager.h
 OBJDIR/sectree.o: sectree.h entity.h char.h ../../common/stl.h FSM.h state.h
 OBJDIR/sectree.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/sectree.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/sectree.o: vid.h affect.h affect_flag.h cube.h mining.h char_manager.h
+OBJDIR/sectree.o: ../../common/length.h ../../common/service.h
+OBJDIR/sectree.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/sectree.o: affect_flag.h cube.h mining.h packet.h char_manager.h
 OBJDIR/sectree.o: ../../common/length.h item.h item_manager.h desc_manager.h
-OBJDIR/sectree.o: IFileMonitor.h packet.h
+OBJDIR/sectree.o: IFileMonitor.h
 OBJDIR/sectree_manager.o: stdafx.h debug_allocator.h
 OBJDIR/sectree_manager.o: ../../libthecore/include/stdafx.h
 OBJDIR/sectree_manager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -12021,8 +11995,9 @@ OBJDIR/sectree_manager.o: ../../libgame/include/attribute.h config.h
 OBJDIR/sectree_manager.o: sectree_manager.h sectree.h entity.h regen.h
 OBJDIR/sectree_manager.o: dungeon.h lzo_manager.h minilzo.h lzo/lzoconf.h
 OBJDIR/sectree_manager.o: desc.h constants.h ../../common/tables.h
-OBJDIR/sectree_manager.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/sectree_manager.o: input.h packet_info.h packet.h cipher.h
+OBJDIR/sectree_manager.o: ../../common/length.h ../../common/service.h
+OBJDIR/sectree_manager.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/sectree_manager.o: packet.h cipher.h
 OBJDIR/sectree_manager.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/sectree_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/sectree_manager.o: /usr/include/stdint.h
@@ -12199,8 +12174,9 @@ OBJDIR/shop.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/shop.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/shop.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/shop.o: ../../libgame/include/grid.h constants.h ../../common/tables.h
-OBJDIR/shop.o: ../../common/length.h ../../common/item_length.h config.h
-OBJDIR/shop.o: shop.h desc.h input.h packet_info.h packet.h cipher.h
+OBJDIR/shop.o: ../../common/length.h ../../common/service.h
+OBJDIR/shop.o: ../../common/item_length.h config.h shop.h desc.h input.h
+OBJDIR/shop.o: packet_info.h packet.h cipher.h
 OBJDIR/shop.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/shop.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/shop.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -12295,10 +12271,11 @@ OBJDIR/skill.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/skill.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/skill.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/skill.o: ../../common/stl.h constants.h ../../common/tables.h
-OBJDIR/skill.o: ../../common/length.h ../../common/item_length.h skill.h
-OBJDIR/skill.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h char.h entity.h
-OBJDIR/skill.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/skill.o: affect_flag.h cube.h mining.h
+OBJDIR/skill.o: ../../common/length.h ../../common/service.h
+OBJDIR/skill.o: ../../common/item_length.h skill.h ../../libpoly/Poly.h
+OBJDIR/skill.o: ../../libpoly/SymTable.h char.h entity.h FSM.h state.h
+OBJDIR/skill.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/skill.o: mining.h packet.h
 OBJDIR/start_position.o: stdafx.h debug_allocator.h
 OBJDIR/start_position.o: ../../libthecore/include/stdafx.h
 OBJDIR/start_position.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -12480,10 +12457,11 @@ OBJDIR/target.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
 OBJDIR/target.o: sectree_manager.h sectree.h entity.h char.h
 OBJDIR/target.o: ../../common/stl.h FSM.h state.h horse_rider.h constants.h
 OBJDIR/target.o: ../../common/tables.h ../../common/length.h
-OBJDIR/target.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/target.o: affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/target.o: ../../common/length.h desc.h input.h packet_info.h packet.h
-OBJDIR/target.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/target.o: ../../common/service.h ../../common/item_length.h cmd.h
+OBJDIR/target.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/target.o: char_manager.h ../../common/length.h desc.h input.h
+OBJDIR/target.o: packet_info.h cipher.h
+OBJDIR/target.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/target.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/target.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/target.o: /usr/include/x86/_stdint.h
@@ -12673,9 +12651,10 @@ OBJDIR/trigger.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/trigger.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/trigger.o: config.h char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/trigger.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/trigger.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/trigger.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/trigger.o: sectree_manager.h sectree.h battle.h shop_manager.h
+OBJDIR/trigger.o: ../../common/length.h ../../common/service.h
+OBJDIR/trigger.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/trigger.o: affect_flag.h cube.h mining.h packet.h sectree_manager.h
+OBJDIR/trigger.o: sectree.h battle.h shop_manager.h
 OBJDIR/utils.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/utils.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/utils.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -12921,13 +12900,14 @@ OBJDIR/war_map.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/war_map.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/war_map.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/war_map.o: war_map.h constants.h ../../common/tables.h
-OBJDIR/war_map.o: ../../common/length.h ../../common/item_length.h guild.h
-OBJDIR/war_map.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/war_map.o: ../../common/length.h ../../common/service.h
+OBJDIR/war_map.o: ../../common/item_length.h guild.h skill.h
+OBJDIR/war_map.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/war_map.o: sectree_manager.h sectree.h entity.h char.h
 OBJDIR/war_map.o: ../../common/stl.h FSM.h state.h horse_rider.h cmd.h vid.h
-OBJDIR/war_map.o: affect.h affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/war_map.o: ../../common/length.h item.h config.h desc.h input.h
-OBJDIR/war_map.o: packet_info.h packet.h cipher.h
+OBJDIR/war_map.o: affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/war_map.o: char_manager.h ../../common/length.h item.h config.h desc.h
+OBJDIR/war_map.o: input.h packet_info.h cipher.h
 OBJDIR/war_map.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/war_map.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/war_map.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -13017,10 +12997,10 @@ OBJDIR/wedding.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/wedding.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/wedding.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/wedding.o: desc_client.h desc.h constants.h ../../common/tables.h
-OBJDIR/wedding.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/wedding.o: packet_info.h packet.h cipher.h
-OBJDIR/wedding.o: ../../../extern/include/cryptopp/cryptlib.h config.h
-OBJDIR/wedding.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/wedding.o: ../../common/length.h ../../common/service.h
+OBJDIR/wedding.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/wedding.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/wedding.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/wedding.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/wedding.o: /usr/include/x86/_stdint.h
 OBJDIR/wedding.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
@@ -13115,8 +13095,8 @@ OBJDIR/xmas_event.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/xmas_event.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/xmas_event.o: config.h xmas_event.h desc.h constants.h
 OBJDIR/xmas_event.o: ../../common/tables.h ../../common/length.h
-OBJDIR/xmas_event.o: ../../common/item_length.h input.h packet_info.h
-OBJDIR/xmas_event.o: packet.h cipher.h
+OBJDIR/xmas_event.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/xmas_event.o: input.h packet_info.h packet.h cipher.h
 OBJDIR/xmas_event.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/xmas_event.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/xmas_event.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -13215,10 +13195,10 @@ OBJDIR/panama.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/panama.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/panama.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/panama.o: desc.h constants.h ../../common/tables.h
-OBJDIR/panama.o: ../../common/length.h ../../common/item_length.h input.h
-OBJDIR/panama.o: packet_info.h packet.h cipher.h
-OBJDIR/panama.o: ../../../extern/include/cryptopp/cryptlib.h config.h
-OBJDIR/panama.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/panama.o: ../../common/length.h ../../common/service.h
+OBJDIR/panama.o: ../../common/item_length.h input.h packet_info.h packet.h
+OBJDIR/panama.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/panama.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/panama.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/panama.o: /usr/include/x86/_stdint.h
 OBJDIR/panama.o: ../../../extern/include/cryptopp/trap.h
@@ -13314,11 +13294,12 @@ OBJDIR/threeway_war.o: ../../../extern/include/boost/config/no_tr1/functional.hp
 OBJDIR/threeway_war.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/threeway_war.o: threeway_war.h ../../common/stl.h
 OBJDIR/threeway_war.o: ../../common/length.h ../../common/tables.h
-OBJDIR/threeway_war.o: ../../common/length.h ../../common/item_length.h p2p.h
-OBJDIR/threeway_war.o: input.h packet_info.h packet.h locale_service.h char.h
-OBJDIR/threeway_war.o: entity.h FSM.h state.h horse_rider.h constants.h cmd.h
-OBJDIR/threeway_war.o: vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/threeway_war.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/threeway_war.o: ../../common/length.h ../../common/service.h
+OBJDIR/threeway_war.o: ../../common/item_length.h p2p.h input.h packet_info.h
+OBJDIR/threeway_war.o: packet.h locale_service.h char.h entity.h FSM.h
+OBJDIR/threeway_war.o: state.h horse_rider.h constants.h cmd.h vid.h affect.h
+OBJDIR/threeway_war.o: affect_flag.h cube.h mining.h questmanager.h
+OBJDIR/threeway_war.o: questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/threeway_war.o: ../../liblua/include/lua.h
 OBJDIR/threeway_war.o: ../../liblua/include/lauxlib.h
 OBJDIR/threeway_war.o: ../../liblua/include/lualib.h questlua.h
@@ -13593,10 +13574,10 @@ OBJDIR/BlueDragon.o: ../../../extern/include/boost/smart_ptr/detail/operator_boo
 OBJDIR/BlueDragon.o: BlueDragon.h vector.h char.h ../../common/stl.h entity.h
 OBJDIR/BlueDragon.o: FSM.h state.h horse_rider.h constants.h
 OBJDIR/BlueDragon.o: ../../common/tables.h ../../common/length.h
-OBJDIR/BlueDragon.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/BlueDragon.o: affect_flag.h cube.h mining.h mob_manager.h
-OBJDIR/BlueDragon.o: sectree_manager.h sectree.h battle.h BlueDragon_Binder.h
-OBJDIR/BlueDragon.o: BlueDragon_Skill.h packet.h motion.h
+OBJDIR/BlueDragon.o: ../../common/service.h ../../common/item_length.h cmd.h
+OBJDIR/BlueDragon.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/BlueDragon.o: mob_manager.h sectree_manager.h sectree.h battle.h
+OBJDIR/BlueDragon.o: BlueDragon_Binder.h BlueDragon_Skill.h motion.h
 OBJDIR/BlueDragon.o: ../../common/d3dtype.h
 OBJDIR/BlueDragon_Binder.o: stdafx.h debug_allocator.h
 OBJDIR/BlueDragon_Binder.o: ../../libthecore/include/stdafx.h
@@ -13792,9 +13773,10 @@ OBJDIR/DragonLair.o: ../../../extern/include/boost/smart_ptr/detail/operator_boo
 OBJDIR/DragonLair.o: DragonLair.h ../../common/stl.h entity.h
 OBJDIR/DragonLair.o: sectree_manager.h sectree.h char.h FSM.h state.h
 OBJDIR/DragonLair.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/DragonLair.o: ../../common/length.h ../../common/item_length.h cmd.h
-OBJDIR/DragonLair.o: vid.h affect.h affect_flag.h cube.h mining.h guild.h
-OBJDIR/DragonLair.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/DragonLair.o: ../../common/length.h ../../common/service.h
+OBJDIR/DragonLair.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/DragonLair.o: affect_flag.h cube.h mining.h packet.h guild.h skill.h
+OBJDIR/DragonLair.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/DragonLair.o: locale_service.h regen.h dungeon.h
 OBJDIR/questlua_dragonlair.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_dragonlair.o: ../../libthecore/include/stdafx.h
@@ -13910,9 +13892,11 @@ OBJDIR/questlua_dragonlair.o: ../../liblua/include/lualib.h DragonLair.h
 OBJDIR/questlua_dragonlair.o: ../../common/stl.h char.h entity.h FSM.h
 OBJDIR/questlua_dragonlair.o: state.h horse_rider.h constants.h
 OBJDIR/questlua_dragonlair.o: ../../common/tables.h ../../common/length.h
+OBJDIR/questlua_dragonlair.o: ../../common/service.h
 OBJDIR/questlua_dragonlair.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_dragonlair.o: affect_flag.h cube.h mining.h guild.h skill.h
-OBJDIR/questlua_dragonlair.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/questlua_dragonlair.o: affect_flag.h cube.h mining.h packet.h guild.h
+OBJDIR/questlua_dragonlair.o: skill.h ../../libpoly/Poly.h
+OBJDIR/questlua_dragonlair.o: ../../libpoly/SymTable.h
 OBJDIR/skill_power.o: stdafx.h debug_allocator.h
 OBJDIR/skill_power.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/skill_power.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -14304,103 +14288,6 @@ OBJDIR/questlua_speedserver.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/questlua_speedserver.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_speedserver.o: ../../liblua/include/lualib.h buffer_manager.h
 OBJDIR/questlua_speedserver.o: questmanager.h questnpc.h questpc.h
-OBJDIR/auction_manager.o: stdafx.h debug_allocator.h
-OBJDIR/auction_manager.o: ../../libthecore/include/stdafx.h
-OBJDIR/auction_manager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-OBJDIR/auction_manager.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-OBJDIR/auction_manager.o: /usr/include/machine/_types.h
-OBJDIR/auction_manager.o: /usr/include/x86/_types.h
-OBJDIR/auction_manager.o: /usr/include/machine/_limits.h
-OBJDIR/auction_manager.o: /usr/include/x86/_limits.h /usr/include/string.h
-OBJDIR/auction_manager.o: /usr/include/strings.h
-OBJDIR/auction_manager.o: /usr/include/xlocale/_strings.h
-OBJDIR/auction_manager.o: /usr/include/xlocale/_string.h
-OBJDIR/auction_manager.o: /usr/include/stdarg.h /usr/include/x86/stdarg.h
-OBJDIR/auction_manager.o: /usr/include/sys/_stdarg.h /usr/include/errno.h
-OBJDIR/auction_manager.o: /usr/include/stdlib.h /usr/include/unistd.h
-OBJDIR/auction_manager.o: /usr/include/sys/types.h
-OBJDIR/auction_manager.o: /usr/include/machine/endian.h
-OBJDIR/auction_manager.o: /usr/include/x86/endian.h
-OBJDIR/auction_manager.o: /usr/include/sys/_endian.h
-OBJDIR/auction_manager.o: /usr/include/sys/_pthreadtypes.h
-OBJDIR/auction_manager.o: /usr/include/sys/_stdint.h
-OBJDIR/auction_manager.o: /usr/include/sys/select.h
-OBJDIR/auction_manager.o: /usr/include/sys/_sigset.h
-OBJDIR/auction_manager.o: /usr/include/sys/_timeval.h
-OBJDIR/auction_manager.o: /usr/include/sys/timespec.h
-OBJDIR/auction_manager.o: /usr/include/sys/_timespec.h
-OBJDIR/auction_manager.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
-OBJDIR/auction_manager.o: /usr/include/assert.h /usr/include/ctype.h
-OBJDIR/auction_manager.o: /usr/include/_ctype.h /usr/include/runetype.h
-OBJDIR/auction_manager.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
-OBJDIR/auction_manager.o: /usr/include/sys/limits.h
-OBJDIR/auction_manager.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
-OBJDIR/auction_manager.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
-OBJDIR/auction_manager.o: /usr/include/sys/_clock_id.h /usr/include/time.h
-OBJDIR/auction_manager.o: /usr/include/xlocale/_time.h
-OBJDIR/auction_manager.o: /usr/include/sys/stat.h /usr/include/netinet/in.h
-OBJDIR/auction_manager.o: /usr/include/sys/_sockaddr_storage.h
-OBJDIR/auction_manager.o: /usr/include/netinet6/in6.h
-OBJDIR/auction_manager.o: /usr/include/arpa/inet.h /usr/include/netdb.h
-OBJDIR/auction_manager.o: /usr/include/sys/socket.h /usr/include/sys/_iovec.h
-OBJDIR/auction_manager.o: /usr/include/machine/_align.h
-OBJDIR/auction_manager.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-OBJDIR/auction_manager.o: /usr/include/machine/signal.h
-OBJDIR/auction_manager.o: /usr/include/x86/signal.h /usr/include/sys/wait.h
-OBJDIR/auction_manager.o: /usr/include/pthread.h /usr/include/sched.h
-OBJDIR/auction_manager.o: /usr/include/sys/sched.h /usr/include/sys/cpuset.h
-OBJDIR/auction_manager.o: /usr/include/sys/_cpuset.h
-OBJDIR/auction_manager.o: /usr/include/sys/_bitset.h
-OBJDIR/auction_manager.o: /usr/include/sys/bitset.h /usr/include/semaphore.h
-OBJDIR/auction_manager.o: /usr/include/sys/_umtx.h /usr/include/sys/event.h
-OBJDIR/auction_manager.o: /usr/include/sys/queue.h typedef.h
-OBJDIR/auction_manager.o: ../../libthecore/include/heart.h
-OBJDIR/auction_manager.o: ../../libthecore/include/fdwatch.h
-OBJDIR/auction_manager.o: ../../libthecore/include/socket.h
-OBJDIR/auction_manager.o: ../../libthecore/include/kstbl.h
-OBJDIR/auction_manager.o: ../../libthecore/include/hangul.h
-OBJDIR/auction_manager.o: ../../libthecore/include/buffer.h
-OBJDIR/auction_manager.o: ../../libthecore/include/signal.h log.h
-OBJDIR/auction_manager.o: ../../libsql/AsyncSQL.h
-OBJDIR/auction_manager.o: ../../libthecore/include/stdafx.h
-OBJDIR/auction_manager.o: ../../libthecore/include/log.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/mysql.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/mariadb_com.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/mariadb_version.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/ma_list.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/mariadb_ctype.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/mariadb_stmt.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/errmsg.h
-OBJDIR/auction_manager.o: /usr/local/include/mysql/mysqld_error.h
-OBJDIR/auction_manager.o: ../../libsql/Semaphore.h any_function.h
-OBJDIR/auction_manager.o: any_function.inc ../../libthecore/include/main.h
-OBJDIR/auction_manager.o: utils.h /usr/include/math.h
-OBJDIR/auction_manager.o: ../../libthecore/include/crypt.h
-OBJDIR/auction_manager.o: ../../libthecore/include/memcpy.h
-OBJDIR/auction_manager.o: ../../common/singleton.h ../../common/utils.h
-OBJDIR/auction_manager.o: ../../common/service.h /usr/include/float.h
-OBJDIR/auction_manager.o: /usr/include/x86/float.h locale.hpp event.h
-OBJDIR/auction_manager.o: ../../../extern/include/boost/intrusive_ptr.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/user.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/compiler/gcc.hpp
-OBJDIR/auction_manager.o: /usr/include/stddef.h
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/platform/bsd.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/detail/posix_features.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/detail/suffix.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/helper_macros.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/assert.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/detail/workaround.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/workaround.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
-OBJDIR/auction_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/FileMonitor_FreeBSD.o: stdafx.h debug_allocator.h
 OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/stdafx.h
 OBJDIR/FileMonitor_FreeBSD.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -14864,10 +14751,11 @@ OBJDIR/buff_on_attributes.o: ../../../extern/include/boost/smart_ptr/detail/sp_n
 OBJDIR/buff_on_attributes.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/buff_on_attributes.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/buff_on_attributes.o: ../../common/tables.h ../../common/length.h
+OBJDIR/buff_on_attributes.o: ../../common/service.h
 OBJDIR/buff_on_attributes.o: ../../common/item_length.h item.h entity.h
 OBJDIR/buff_on_attributes.o: char.h ../../common/stl.h FSM.h state.h
 OBJDIR/buff_on_attributes.o: horse_rider.h constants.h cmd.h vid.h affect.h
-OBJDIR/buff_on_attributes.o: affect_flag.h cube.h mining.h
+OBJDIR/buff_on_attributes.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/buff_on_attributes.o: buff_on_attributes.h
 OBJDIR/check_server.o: check_server.h ../../libserverkey/CheckServerKey.h
 OBJDIR/check_server.o: ../../libserverkey/SIM.h /usr/include/string.h
@@ -15002,7 +14890,8 @@ OBJDIR/dragon_soul_table.o: ../../../extern/include/boost/smart_ptr/detail/sp_no
 OBJDIR/dragon_soul_table.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/dragon_soul_table.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/dragon_soul_table.o: constants.h ../../common/tables.h
-OBJDIR/dragon_soul_table.o: ../../common/length.h ../../common/item_length.h
+OBJDIR/dragon_soul_table.o: ../../common/length.h ../../common/service.h
+OBJDIR/dragon_soul_table.o: ../../common/item_length.h
 OBJDIR/dragon_soul_table.o: group_text_parse_tree.h ../../common/d3dtype.h
 OBJDIR/dragon_soul_table.o: ../../common/pool.h file_loader.h
 OBJDIR/dragon_soul_table.o: dragon_soul_table.h item_manager.h
@@ -15545,9 +15434,9 @@ OBJDIR/DragonSoul.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.
 OBJDIR/DragonSoul.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/DragonSoul.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/DragonSoul.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/DragonSoul.o: ../../common/item_length.h item.h entity.h
-OBJDIR/DragonSoul.o: item_manager.h unique_item.h packet.h desc.h input.h
-OBJDIR/DragonSoul.o: packet_info.h cipher.h
+OBJDIR/DragonSoul.o: ../../common/service.h ../../common/item_length.h item.h
+OBJDIR/DragonSoul.o: entity.h item_manager.h unique_item.h packet.h desc.h
+OBJDIR/DragonSoul.o: input.h packet_info.h cipher.h
 OBJDIR/DragonSoul.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/DragonSoul.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/DragonSoul.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -16221,10 +16110,10 @@ OBJDIR/char_dragonsoul.o: ../../../extern/include/boost/config/no_tr1/functional
 OBJDIR/char_dragonsoul.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/char_dragonsoul.o: char.h ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/char_dragonsoul.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/char_dragonsoul.o: ../../common/length.h ../../common/item_length.h
-OBJDIR/char_dragonsoul.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/char_dragonsoul.o: item.h desc.h input.h packet_info.h packet.h
-OBJDIR/char_dragonsoul.o: cipher.h
+OBJDIR/char_dragonsoul.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_dragonsoul.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/char_dragonsoul.o: affect_flag.h cube.h mining.h packet.h item.h
+OBJDIR/char_dragonsoul.o: desc.h input.h packet_info.h cipher.h
 OBJDIR/char_dragonsoul.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/char_dragonsoul.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_dragonsoul.o: /usr/include/stdint.h
@@ -16345,9 +16234,9 @@ OBJDIR/questlua_dragonsoul.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_dragonsoul.o: ../../liblua/include/lualib.h char.h
 OBJDIR/questlua_dragonsoul.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_dragonsoul.o: horse_rider.h constants.h ../../common/tables.h
-OBJDIR/questlua_dragonsoul.o: ../../common/length.h
+OBJDIR/questlua_dragonsoul.o: ../../common/length.h ../../common/service.h
 OBJDIR/questlua_dragonsoul.o: ../../common/item_length.h cmd.h vid.h affect.h
-OBJDIR/questlua_dragonsoul.o: affect_flag.h cube.h mining.h
+OBJDIR/questlua_dragonsoul.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/shop_manager.o: stdafx.h debug_allocator.h
 OBJDIR/shop_manager.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/shop_manager.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -16440,9 +16329,9 @@ OBJDIR/shop_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hp
 OBJDIR/shop_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/shop_manager.o: ../../libgame/include/grid.h constants.h
 OBJDIR/shop_manager.o: ../../common/tables.h ../../common/length.h
-OBJDIR/shop_manager.o: ../../common/item_length.h config.h shop.h desc.h
-OBJDIR/shop_manager.o: input.h packet_info.h packet.h cipher.h
-OBJDIR/shop_manager.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/shop_manager.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/shop_manager.o: config.h shop.h desc.h input.h packet_info.h packet.h
+OBJDIR/shop_manager.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/shop_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/shop_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/shop_manager.o: /usr/include/x86/_stdint.h
@@ -16844,8 +16733,8 @@ OBJDIR/shopEx.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/shopEx.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/shopEx.o: ../../libgame/include/grid.h constants.h
 OBJDIR/shopEx.o: ../../common/tables.h ../../common/length.h
-OBJDIR/shopEx.o: ../../common/item_length.h config.h shop.h desc.h input.h
-OBJDIR/shopEx.o: packet_info.h packet.h cipher.h
+OBJDIR/shopEx.o: ../../common/service.h ../../common/item_length.h config.h
+OBJDIR/shopEx.o: shop.h desc.h input.h packet_info.h packet.h cipher.h
 OBJDIR/shopEx.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/shopEx.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/shopEx.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
@@ -16985,11 +16874,12 @@ OBJDIR/item_manager_read_tables.o: config.h char.h ../../common/stl.h
 OBJDIR/item_manager_read_tables.o: entity.h FSM.h state.h horse_rider.h
 OBJDIR/item_manager_read_tables.o: constants.h ../../common/tables.h
 OBJDIR/item_manager_read_tables.o: ../../common/length.h
+OBJDIR/item_manager_read_tables.o: ../../common/service.h
 OBJDIR/item_manager_read_tables.o: ../../common/item_length.h cmd.h vid.h
 OBJDIR/item_manager_read_tables.o: affect.h affect_flag.h cube.h mining.h
-OBJDIR/item_manager_read_tables.o: char_manager.h ../../common/length.h
-OBJDIR/item_manager_read_tables.o: desc_client.h desc.h input.h packet_info.h
-OBJDIR/item_manager_read_tables.o: packet.h cipher.h
+OBJDIR/item_manager_read_tables.o: packet.h char_manager.h
+OBJDIR/item_manager_read_tables.o: ../../common/length.h desc_client.h desc.h
+OBJDIR/item_manager_read_tables.o: input.h packet_info.h cipher.h
 OBJDIR/item_manager_read_tables.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/item_manager_read_tables.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/item_manager_read_tables.o: /usr/include/stdint.h
@@ -17107,16 +16997,16 @@ OBJDIR/main.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/main.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/main.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/main.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/main.o: ../../common/item_length.h config.h minilzo.h lzo/lzoconf.h
-OBJDIR/main.o: packet.h desc_manager.h ../../common/stl.h
-OBJDIR/main.o: ../../common/length.h IFileMonitor.h item_manager.h char.h
-OBJDIR/main.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/main.o: affect_flag.h cube.h mining.h char_manager.h mob_manager.h
-OBJDIR/main.o: motion.h ../../common/d3dtype.h sectree_manager.h sectree.h
-OBJDIR/main.o: shop_manager.h regen.h dungeon.h text_file_loader.h
-OBJDIR/main.o: ../../common/pool.h file_loader.h skill.h ../../libpoly/Poly.h
-OBJDIR/main.o: ../../libpoly/SymTable.h pvp.h party.h questmanager.h
-OBJDIR/main.o: questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/main.o: ../../common/service.h ../../common/item_length.h config.h
+OBJDIR/main.o: minilzo.h lzo/lzoconf.h packet.h desc_manager.h
+OBJDIR/main.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
+OBJDIR/main.o: item_manager.h char.h entity.h FSM.h state.h horse_rider.h
+OBJDIR/main.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/main.o: char_manager.h mob_manager.h motion.h ../../common/d3dtype.h
+OBJDIR/main.o: sectree_manager.h sectree.h shop_manager.h regen.h dungeon.h
+OBJDIR/main.o: text_file_loader.h ../../common/pool.h file_loader.h skill.h
+OBJDIR/main.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h pvp.h party.h
+OBJDIR/main.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/main.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/main.o: ../../liblua/include/lualib.h profiler.h lzo_manager.h
 OBJDIR/main.o: messenger_manager.h db.h p2p.h input.h packet_info.h
@@ -17131,11 +17021,10 @@ OBJDIR/main.o: ../../../extern/include/cryptopp/trap.h target.h marriage.h
 OBJDIR/main.o: wedding.h fishing.h item.h item_addon.h TrafficProfiler.h
 OBJDIR/main.o: locale_service.h arena.h OXEvent.h monarch.h polymorph.h
 OBJDIR/main.o: blend_item.h castle.h passpod.h ani.h BattleArena.h
-OBJDIR/main.o: over9refine.h horsename_manager.h pcbang.h MarkManager.h
-OBJDIR/main.o: MarkImage.h ../../../extern/include/IL/il.h spam.h panama.h
-OBJDIR/main.o: threeway_war.h auth_brazil.h DragonLair.h skill_power.h
-OBJDIR/main.o: SpeedServer.h DragonSoul.h
-OBJDIR/main.o: ../../../extern/include/boost/bind.hpp
+OBJDIR/main.o: over9refine.h horsename_manager.h MarkManager.h MarkImage.h
+OBJDIR/main.o: ../../../extern/include/IL/il.h spam.h panama.h threeway_war.h
+OBJDIR/main.o: auth_brazil.h DragonLair.h skill_power.h SpeedServer.h
+OBJDIR/main.o: DragonSoul.h ../../../extern/include/boost/bind.hpp
 OBJDIR/main.o: ../../../extern/include/boost/bind/bind.hpp
 OBJDIR/main.o: ../../../extern/include/boost/ref.hpp
 OBJDIR/main.o: ../../../extern/include/boost/core/ref.hpp
