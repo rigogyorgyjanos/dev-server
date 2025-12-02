@@ -1291,8 +1291,8 @@ OBJDIR/building.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/building.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/building.o: /usr/include/x86/_stdint.h
 OBJDIR/building.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/building.o: IFileMonitor.h desc_client.h questmanager.h questnpc.h
-OBJDIR/building.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/building.o: desc_client.h questmanager.h questnpc.h questpc.h quest.h
+OBJDIR/building.o: lua_incl.h ../../liblua/include/lua.h
 OBJDIR/building.o: ../../liblua/include/lauxlib.h
 OBJDIR/building.o: ../../liblua/include/lualib.h building.h
 OBJDIR/building.o: ../../common/building.h
@@ -1478,7 +1478,7 @@ OBJDIR/char.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char.o: /usr/include/x86/_stdint.h
 OBJDIR/char.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/char.o: IFileMonitor.h buffer_manager.h item_manager.h motion.h
+OBJDIR/char.o: buffer_manager.h item_manager.h motion.h
 OBJDIR/char.o: ../../common/d3dtype.h vector.h fishing.h item.h exchange.h
 OBJDIR/char.o: battle.h shop.h shop_manager.h safebox.h regen.h dungeon.h
 OBJDIR/char.o: sectree_manager.h sectree.h pvp.h party.h start_position.h
@@ -1693,18 +1693,18 @@ OBJDIR/char_battle.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_battle.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char_battle.o: /usr/include/x86/_stdint.h
 OBJDIR/char_battle.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/char_battle.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/char_battle.o: char_manager.h vid.h item.h entity.h item_manager.h
-OBJDIR/char_battle.o: mob_manager.h battle.h char.h FSM.h state.h
-OBJDIR/char_battle.o: horse_rider.h cmd.h affect.h affect_flag.h cube.h
-OBJDIR/char_battle.o: mining.h pvp.h skill.h ../../libpoly/Poly.h
-OBJDIR/char_battle.o: ../../libpoly/SymTable.h start_position.h
-OBJDIR/char_battle.o: locale_service.h profiler.h dungeon.h sectree_manager.h
-OBJDIR/char_battle.o: sectree.h unique_item.h priv_manager.h db.h vector.h
-OBJDIR/char_battle.o: marriage.h arena.h ../../liblua/include/lua.h regen.h
-OBJDIR/char_battle.o: monarch.h exchange.h shop_manager.h castle.h dev_log.h
-OBJDIR/char_battle.o: ani.h BattleArena.h party.h guild.h guild_manager.h
-OBJDIR/char_battle.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/char_battle.o: ../../common/stl.h ../../common/length.h char_manager.h
+OBJDIR/char_battle.o: vid.h item.h entity.h item_manager.h mob_manager.h
+OBJDIR/char_battle.o: battle.h char.h FSM.h state.h horse_rider.h cmd.h
+OBJDIR/char_battle.o: affect.h affect_flag.h cube.h mining.h pvp.h skill.h
+OBJDIR/char_battle.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/char_battle.o: start_position.h locale_service.h profiler.h dungeon.h
+OBJDIR/char_battle.o: sectree_manager.h sectree.h unique_item.h
+OBJDIR/char_battle.o: priv_manager.h db.h vector.h marriage.h arena.h
+OBJDIR/char_battle.o: ../../liblua/include/lua.h regen.h monarch.h exchange.h
+OBJDIR/char_battle.o: shop_manager.h castle.h dev_log.h ani.h BattleArena.h
+OBJDIR/char_battle.o: party.h guild.h guild_manager.h questmanager.h
+OBJDIR/char_battle.o: questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/char_battle.o: ../../liblua/include/lauxlib.h
 OBJDIR/char_battle.o: ../../liblua/include/lualib.h questlua.h
 OBJDIR/char_battle.o: buffer_manager.h threeway_war.h BlueDragon.h
@@ -2013,11 +2013,11 @@ OBJDIR/char_item.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_item.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char_item.o: /usr/include/x86/_stdint.h
 OBJDIR/char_item.o: ../../../extern/include/cryptopp/trap.h desc_client.h
-OBJDIR/char_item.o: desc_manager.h IFileMonitor.h skill.h
-OBJDIR/char_item.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
-OBJDIR/char_item.o: start_position.h locale_service.h mob_manager.h db.h
-OBJDIR/char_item.o: vector.h buffer_manager.h questmanager.h questnpc.h
-OBJDIR/char_item.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/char_item.o: desc_manager.h skill.h ../../libpoly/Poly.h
+OBJDIR/char_item.o: ../../libpoly/SymTable.h start_position.h
+OBJDIR/char_item.o: locale_service.h mob_manager.h db.h vector.h
+OBJDIR/char_item.o: buffer_manager.h questmanager.h questnpc.h questpc.h
+OBJDIR/char_item.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/char_item.o: ../../liblua/include/lauxlib.h
 OBJDIR/char_item.o: ../../liblua/include/lualib.h fishing.h item.h party.h
 OBJDIR/char_item.o: dungeon.h sectree_manager.h sectree.h refine.h
@@ -2262,8 +2262,7 @@ OBJDIR/char_quickslot.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_quickslot.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char_quickslot.o: /usr/include/x86/_stdint.h
 OBJDIR/char_quickslot.o: ../../../extern/include/cryptopp/trap.h
-OBJDIR/char_quickslot.o: desc_manager.h ../../common/length.h IFileMonitor.h
-OBJDIR/char_quickslot.o: item.h
+OBJDIR/char_quickslot.o: desc_manager.h ../../common/length.h item.h
 OBJDIR/char_resist.o: stdafx.h debug_allocator.h
 OBJDIR/char_resist.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/char_resist.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -2453,8 +2452,8 @@ OBJDIR/char_skill.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_skill.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char_skill.o: /usr/include/x86/_stdint.h
 OBJDIR/char_skill.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/char_skill.o: IFileMonitor.h item.h sectree_manager.h sectree.h
-OBJDIR/char_skill.o: mob_manager.h start_position.h locale_service.h party.h
+OBJDIR/char_skill.o: item.h sectree_manager.h sectree.h mob_manager.h
+OBJDIR/char_skill.o: start_position.h locale_service.h party.h
 OBJDIR/char_skill.o: buffer_manager.h guild.h skill.h ../../libpoly/Poly.h
 OBJDIR/char_skill.o: ../../libpoly/SymTable.h unique_item.h questmanager.h
 OBJDIR/char_skill.o: questnpc.h questpc.h quest.h lua_incl.h
@@ -2932,8 +2931,8 @@ OBJDIR/cmd_general.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/cmd_general.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/cmd_general.o: /usr/include/x86/_stdint.h
 OBJDIR/cmd_general.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/cmd_general.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/cmd_general.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/cmd_general.o: ../../common/stl.h ../../common/length.h char.h
+OBJDIR/cmd_general.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
 OBJDIR/cmd_general.o: affect.h affect_flag.h cube.h mining.h char_manager.h
 OBJDIR/cmd_general.o: motion.h ../../common/d3dtype.h pvp.h start_position.h
 OBJDIR/cmd_general.o: locale_service.h party.h guild_manager.h p2p.h
@@ -3036,11 +3035,11 @@ OBJDIR/cmd_gm.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/cmd_gm.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/cmd_gm.o: /usr/include/x86/_stdint.h
 OBJDIR/cmd_gm.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/cmd_gm.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/cmd_gm.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
-OBJDIR/cmd_gm.o: affect.h affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/cmd_gm.o: item_manager.h sectree_manager.h sectree.h mob_manager.h
-OBJDIR/cmd_gm.o: regen.h dungeon.h guild.h skill.h ../../libpoly/Poly.h
+OBJDIR/cmd_gm.o: ../../common/stl.h ../../common/length.h char.h entity.h
+OBJDIR/cmd_gm.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/cmd_gm.o: affect_flag.h cube.h mining.h char_manager.h item_manager.h
+OBJDIR/cmd_gm.o: sectree_manager.h sectree.h mob_manager.h regen.h dungeon.h
+OBJDIR/cmd_gm.o: guild.h skill.h ../../libpoly/Poly.h
 OBJDIR/cmd_gm.o: ../../libpoly/SymTable.h guild_manager.h p2p.h
 OBJDIR/cmd_gm.o: buffer_manager.h fishing.h item.h questmanager.h questnpc.h
 OBJDIR/cmd_gm.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
@@ -3236,12 +3235,12 @@ OBJDIR/config.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/config.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/config.o: /usr/include/x86/_stdint.h
 OBJDIR/config.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/config.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/config.o: item_manager.h p2p.h char.h entity.h FSM.h state.h
-OBJDIR/config.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
-OBJDIR/config.o: mining.h ip_ban.h war_map.h guild.h skill.h
-OBJDIR/config.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
-OBJDIR/config.o: locale_service.h dev_log.h db.h skill_power.h check_server.h
+OBJDIR/config.o: ../../common/stl.h ../../common/length.h item_manager.h
+OBJDIR/config.o: p2p.h char.h entity.h FSM.h state.h horse_rider.h cmd.h
+OBJDIR/config.o: vid.h affect.h affect_flag.h cube.h mining.h ip_ban.h
+OBJDIR/config.o: war_map.h guild.h skill.h ../../libpoly/Poly.h
+OBJDIR/config.o: ../../libpoly/SymTable.h locale_service.h dev_log.h db.h
+OBJDIR/config.o: skill_power.h check_server.h
 OBJDIR/config.o: ../../libserverkey/CheckServerKey.h ../../libserverkey/SIM.h
 OBJDIR/config.o: ../../libserverkey/base64_ssl.h
 OBJDIR/config.o: ../../libserverkey/PublicKey.Gen.h
@@ -3588,8 +3587,8 @@ OBJDIR/db.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/db.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/db.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
 OBJDIR/db.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/db.o: ../../common/stl.h IFileMonitor.h char.h entity.h FSM.h state.h
-OBJDIR/db.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/db.o: ../../common/stl.h char.h entity.h FSM.h state.h horse_rider.h
+OBJDIR/db.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
 OBJDIR/db.o: char_manager.h item.h item_manager.h p2p.h matrix_card.h
 OBJDIR/db.o: login_data.h locale_service.h spam.h
 OBJDIR/desc.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
@@ -3680,13 +3679,13 @@ OBJDIR/desc.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/desc.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/desc.o: /usr/include/x86/_stdint.h
 OBJDIR/desc.o: ../../../extern/include/cryptopp/trap.h desc_client.h
-OBJDIR/desc.o: desc_manager.h ../../common/stl.h ../../common/length.h
-OBJDIR/desc.o: IFileMonitor.h char.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/desc.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h protocol.h
-OBJDIR/desc.o: messenger_manager.h db.h sectree_manager.h sectree.h p2p.h
-OBJDIR/desc.o: buffer_manager.h sequence.h guild.h skill.h
-OBJDIR/desc.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h guild_manager.h
-OBJDIR/desc.o: TrafficProfiler.h locale_service.h
+OBJDIR/desc.o: desc_manager.h ../../common/stl.h ../../common/length.h char.h
+OBJDIR/desc.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/desc.o: affect_flag.h cube.h mining.h protocol.h messenger_manager.h
+OBJDIR/desc.o: db.h sectree_manager.h sectree.h p2p.h buffer_manager.h
+OBJDIR/desc.o: sequence.h guild.h skill.h ../../libpoly/Poly.h
+OBJDIR/desc.o: ../../libpoly/SymTable.h guild_manager.h TrafficProfiler.h
+OBJDIR/desc.o: locale_service.h
 OBJDIR/desc_client.o: stdafx.h debug_allocator.h
 OBJDIR/desc_client.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/desc_client.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -3783,8 +3782,8 @@ OBJDIR/desc_client.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/desc_client.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/desc_client.o: /usr/include/x86/_stdint.h
 OBJDIR/desc_client.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/desc_client.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/desc_client.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/desc_client.o: ../../common/stl.h ../../common/length.h char.h
+OBJDIR/desc_client.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
 OBJDIR/desc_client.o: affect.h affect_flag.h cube.h mining.h protocol.h p2p.h
 OBJDIR/desc_client.o: buffer_manager.h guild_manager.h db.h party.h
 OBJDIR/desc_manager.o: stdafx.h debug_allocator.h
@@ -3887,11 +3886,10 @@ OBJDIR/desc_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/desc_manager.o: /usr/include/x86/_stdint.h
 OBJDIR/desc_manager.o: ../../../extern/include/cryptopp/trap.h desc_p2p.h
 OBJDIR/desc_manager.o: desc_client.h desc_manager.h ../../common/stl.h
-OBJDIR/desc_manager.o: ../../common/length.h IFileMonitor.h char.h entity.h
-OBJDIR/desc_manager.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/desc_manager.o: affect_flag.h cube.h mining.h protocol.h
-OBJDIR/desc_manager.o: messenger_manager.h db.h p2p.h ip_ban.h dev_log.h
-OBJDIR/desc_manager.o: ClientPackageCryptInfo.h
+OBJDIR/desc_manager.o: ../../common/length.h char.h entity.h FSM.h state.h
+OBJDIR/desc_manager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/desc_manager.o: cube.h mining.h protocol.h messenger_manager.h db.h
+OBJDIR/desc_manager.o: p2p.h ip_ban.h dev_log.h ClientPackageCryptInfo.h
 OBJDIR/desc_p2p.o: stdafx.h debug_allocator.h
 OBJDIR/desc_p2p.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/desc_p2p.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -5599,11 +5597,11 @@ OBJDIR/input.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input.o: /usr/include/x86/_stdint.h
 OBJDIR/input.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/input.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
-OBJDIR/input.o: affect.h affect_flag.h cube.h mining.h buffer_manager.h
-OBJDIR/input.o: profiler.h p2p.h db.h questmanager.h questnpc.h questpc.h
-OBJDIR/input.o: quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/input.o: ../../common/stl.h ../../common/length.h char.h entity.h
+OBJDIR/input.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/input.o: affect_flag.h cube.h mining.h buffer_manager.h profiler.h
+OBJDIR/input.o: p2p.h db.h questmanager.h questnpc.h questpc.h quest.h
+OBJDIR/input.o: lua_incl.h ../../liblua/include/lua.h
 OBJDIR/input.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
 OBJDIR/input.o: login_sim.h desc_client.h fishing.h item.h TrafficProfiler.h
 OBJDIR/input.o: priv_manager.h castle.h dev_log.h limit_time.h
@@ -5700,8 +5698,8 @@ OBJDIR/input_auth.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_auth.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_auth.o: /usr/include/x86/_stdint.h
 OBJDIR/input_auth.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/input_auth.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input_auth.o: protocol.h matrix_card.h passpod.h locale_service.h db.h
+OBJDIR/input_auth.o: ../../common/stl.h ../../common/length.h protocol.h
+OBJDIR/input_auth.o: matrix_card.h passpod.h locale_service.h db.h
 OBJDIR/input_auth.o: limit_time.h
 OBJDIR/input_db.o: stdafx.h debug_allocator.h
 OBJDIR/input_db.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -5788,9 +5786,9 @@ OBJDIR/input_db.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.
 OBJDIR/input_db.o: constants.h ../../common/tables.h ../../common/length.h
 OBJDIR/input_db.o: ../../common/service.h ../../common/item_length.h config.h
 OBJDIR/input_db.o: desc_manager.h ../../common/stl.h ../../common/length.h
-OBJDIR/input_db.o: IFileMonitor.h char.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/input_db.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/input_db.o: packet.h char_manager.h item.h item_manager.h protocol.h
+OBJDIR/input_db.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/input_db.o: affect.h affect_flag.h cube.h mining.h packet.h
+OBJDIR/input_db.o: char_manager.h item.h item_manager.h protocol.h
 OBJDIR/input_db.o: mob_manager.h shop_manager.h sectree_manager.h sectree.h
 OBJDIR/input_db.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/input_db.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
@@ -5904,8 +5902,8 @@ OBJDIR/input_login.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_login.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_login.o: /usr/include/x86/_stdint.h
 OBJDIR/input_login.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/input_login.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input_login.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/input_login.o: ../../common/stl.h ../../common/length.h char.h
+OBJDIR/input_login.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
 OBJDIR/input_login.o: affect.h affect_flag.h cube.h mining.h char_manager.h
 OBJDIR/input_login.o: buffer_manager.h protocol.h pvp.h start_position.h
 OBJDIR/input_login.o: locale_service.h messenger_manager.h db.h
@@ -6013,7 +6011,7 @@ OBJDIR/input_main.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_main.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_main.o: /usr/include/x86/_stdint.h
 OBJDIR/input_main.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/input_main.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
+OBJDIR/input_main.o: ../../common/stl.h ../../common/length.h
 OBJDIR/input_main.o: buffer_manager.h protocol.h char.h entity.h FSM.h
 OBJDIR/input_main.o: state.h horse_rider.h cmd.h vid.h affect.h affect_flag.h
 OBJDIR/input_main.o: cube.h mining.h char_manager.h item.h item_manager.h
@@ -6121,10 +6119,10 @@ OBJDIR/input_p2p.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_p2p.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_p2p.o: /usr/include/x86/_stdint.h
 OBJDIR/input_p2p.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/input_p2p.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input_p2p.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
-OBJDIR/input_p2p.o: affect.h affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/input_p2p.o: p2p.h guild.h skill.h ../../libpoly/Poly.h
+OBJDIR/input_p2p.o: ../../common/stl.h ../../common/length.h char.h entity.h
+OBJDIR/input_p2p.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/input_p2p.o: affect_flag.h cube.h mining.h char_manager.h p2p.h
+OBJDIR/input_p2p.o: guild.h skill.h ../../libpoly/Poly.h
 OBJDIR/input_p2p.o: ../../libpoly/SymTable.h guild_manager.h party.h
 OBJDIR/input_p2p.o: messenger_manager.h db.h empire_text_convert.h
 OBJDIR/input_p2p.o: unique_item.h xmas_event.h castle.h dev_log.h
@@ -6223,8 +6221,8 @@ OBJDIR/input_udp.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/input_udp.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_udp.o: /usr/include/x86/_stdint.h
 OBJDIR/input_udp.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/input_udp.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input_udp.o: item_manager.h char_manager.h vid.h protocol.h
+OBJDIR/input_udp.o: ../../common/stl.h ../../common/length.h item_manager.h
+OBJDIR/input_udp.o: char_manager.h vid.h protocol.h
 OBJDIR/ip_ban.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/ip_ban.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/ip_ban.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -8675,10 +8673,10 @@ OBJDIR/pvp.o: ../../../extern/include/cryptopp/cryptlib.h config.h
 OBJDIR/pvp.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/pvp.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
 OBJDIR/pvp.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/pvp.o: ../../common/stl.h ../../common/length.h IFileMonitor.h char.h
-OBJDIR/pvp.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/pvp.o: affect_flag.h cube.h mining.h char_manager.h sectree_manager.h
-OBJDIR/pvp.o: sectree.h buffer_manager.h locale_service.h
+OBJDIR/pvp.o: ../../common/stl.h ../../common/length.h char.h entity.h FSM.h
+OBJDIR/pvp.o: state.h horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/pvp.o: mining.h char_manager.h sectree_manager.h sectree.h
+OBJDIR/pvp.o: buffer_manager.h locale_service.h
 OBJDIR/questevent.o: stdafx.h debug_allocator.h
 OBJDIR/questevent.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/questevent.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -9521,7 +9519,7 @@ OBJDIR/questlua_dungeon.o: /usr/include/stdint.h
 OBJDIR/questlua_dungeon.o: /usr/include/machine/_stdint.h
 OBJDIR/questlua_dungeon.o: /usr/include/x86/_stdint.h
 OBJDIR/questlua_dungeon.o: ../../../extern/include/cryptopp/trap.h
-OBJDIR/questlua_dungeon.o: desc_manager.h IFileMonitor.h
+OBJDIR/questlua_dungeon.o: desc_manager.h
 OBJDIR/questlua_forked.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_forked.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_forked.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -11347,11 +11345,10 @@ OBJDIR/questmanager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/questmanager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/questmanager.o: /usr/include/x86/_stdint.h
 OBJDIR/questmanager.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/questmanager.o: ../../common/stl.h ../../common/length.h
-OBJDIR/questmanager.o: IFileMonitor.h char.h entity.h FSM.h state.h
-OBJDIR/questmanager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/questmanager.o: cube.h mining.h char_manager.h questmanager.h
-OBJDIR/questmanager.o: questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/questmanager.o: ../../common/stl.h ../../common/length.h char.h
+OBJDIR/questmanager.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/questmanager.o: affect.h affect_flag.h cube.h mining.h char_manager.h
+OBJDIR/questmanager.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/questmanager.o: ../../liblua/include/lua.h
 OBJDIR/questmanager.o: ../../liblua/include/lauxlib.h
 OBJDIR/questmanager.o: ../../liblua/include/lualib.h lzo_manager.h minilzo.h
@@ -11892,7 +11889,6 @@ OBJDIR/sectree.o: ../../common/length.h ../../common/service.h
 OBJDIR/sectree.o: ../../common/item_length.h cmd.h vid.h affect.h
 OBJDIR/sectree.o: affect_flag.h cube.h mining.h packet.h char_manager.h
 OBJDIR/sectree.o: ../../common/length.h item.h item_manager.h desc_manager.h
-OBJDIR/sectree.o: IFileMonitor.h
 OBJDIR/sectree_manager.o: stdafx.h debug_allocator.h
 OBJDIR/sectree_manager.o: ../../libthecore/include/stdafx.h
 OBJDIR/sectree_manager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -12005,9 +12001,9 @@ OBJDIR/sectree_manager.o: /usr/include/machine/_stdint.h
 OBJDIR/sectree_manager.o: /usr/include/x86/_stdint.h
 OBJDIR/sectree_manager.o: ../../../extern/include/cryptopp/trap.h
 OBJDIR/sectree_manager.o: desc_manager.h ../../common/stl.h
-OBJDIR/sectree_manager.o: ../../common/length.h IFileMonitor.h char.h FSM.h
-OBJDIR/sectree_manager.o: state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/sectree_manager.o: affect_flag.h cube.h mining.h char_manager.h item.h
+OBJDIR/sectree_manager.o: ../../common/length.h char.h FSM.h state.h
+OBJDIR/sectree_manager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/sectree_manager.o: cube.h mining.h char_manager.h item.h
 OBJDIR/sectree_manager.o: item_manager.h buffer_manager.h start_position.h
 OBJDIR/sectree_manager.o: locale_service.h dev_log.h
 OBJDIR/sequence.o: stdafx.h debug_allocator.h
@@ -12182,11 +12178,11 @@ OBJDIR/shop.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/shop.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/shop.o: /usr/include/x86/_stdint.h
 OBJDIR/shop.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/shop.o: ../../common/stl.h ../../common/length.h IFileMonitor.h char.h
-OBJDIR/shop.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
-OBJDIR/shop.o: affect_flag.h cube.h mining.h char_manager.h item.h
-OBJDIR/shop.o: item_manager.h buffer_manager.h db.h questmanager.h questnpc.h
-OBJDIR/shop.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/shop.o: ../../common/stl.h ../../common/length.h char.h entity.h FSM.h
+OBJDIR/shop.o: state.h horse_rider.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/shop.o: cube.h mining.h char_manager.h item.h item_manager.h
+OBJDIR/shop.o: buffer_manager.h db.h questmanager.h questnpc.h questpc.h
+OBJDIR/shop.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/shop.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
 OBJDIR/shop.o: monarch.h mob_manager.h locale_service.h
 OBJDIR/skill.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
@@ -12913,8 +12909,7 @@ OBJDIR/war_map.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/war_map.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/war_map.o: /usr/include/x86/_stdint.h
 OBJDIR/war_map.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/war_map.o: IFileMonitor.h guild_manager.h buffer_manager.h db.h
-OBJDIR/war_map.o: locale_service.h
+OBJDIR/war_map.o: guild_manager.h buffer_manager.h db.h locale_service.h
 OBJDIR/wedding.o: stdafx.h debug_allocator.h
 OBJDIR/wedding.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/wedding.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -13004,11 +12999,11 @@ OBJDIR/wedding.o: config.h ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/wedding.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/wedding.o: /usr/include/x86/_stdint.h
 OBJDIR/wedding.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/wedding.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/wedding.o: char_manager.h vid.h sectree_manager.h sectree.h entity.h
-OBJDIR/wedding.o: char.h FSM.h state.h horse_rider.h cmd.h affect.h
-OBJDIR/wedding.o: affect_flag.h cube.h mining.h wedding.h marriage.h regen.h
-OBJDIR/wedding.o: dungeon.h locale_service.h
+OBJDIR/wedding.o: ../../common/stl.h ../../common/length.h char_manager.h
+OBJDIR/wedding.o: vid.h sectree_manager.h sectree.h entity.h char.h FSM.h
+OBJDIR/wedding.o: state.h horse_rider.h cmd.h affect.h affect_flag.h cube.h
+OBJDIR/wedding.o: mining.h wedding.h marriage.h regen.h dungeon.h
+OBJDIR/wedding.o: locale_service.h
 OBJDIR/xmas_event.o: stdafx.h debug_allocator.h
 OBJDIR/xmas_event.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/xmas_event.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -13102,7 +13097,7 @@ OBJDIR/xmas_event.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/xmas_event.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/xmas_event.o: /usr/include/x86/_stdint.h
 OBJDIR/xmas_event.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/xmas_event.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
+OBJDIR/xmas_event.o: ../../common/stl.h ../../common/length.h
 OBJDIR/xmas_event.o: sectree_manager.h sectree.h entity.h char.h FSM.h
 OBJDIR/xmas_event.o: state.h horse_rider.h cmd.h vid.h affect.h affect_flag.h
 OBJDIR/xmas_event.o: cube.h mining.h char_manager.h questmanager.h questnpc.h
@@ -14198,115 +14193,6 @@ OBJDIR/questlua_speedserver.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/questlua_speedserver.o: ../../liblua/include/lauxlib.h
 OBJDIR/questlua_speedserver.o: ../../liblua/include/lualib.h buffer_manager.h
 OBJDIR/questlua_speedserver.o: questmanager.h questnpc.h questpc.h
-OBJDIR/FileMonitor_FreeBSD.o: stdafx.h debug_allocator.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/stdafx.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_null.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_types.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/machine/_types.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/x86/_types.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/machine/_limits.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/x86/_limits.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/string.h /usr/include/strings.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/xlocale/_strings.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/xlocale/_string.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/stdarg.h /usr/include/x86/stdarg.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_stdarg.h /usr/include/errno.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/stdlib.h /usr/include/unistd.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/types.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/machine/endian.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/x86/endian.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_endian.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_pthreadtypes.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_stdint.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/select.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_sigset.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_timeval.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/timespec.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_timespec.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/assert.h /usr/include/ctype.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/_ctype.h /usr/include/runetype.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/xlocale/_ctype.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/limits.h /usr/include/sys/limits.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/syslimits.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/dirent.h /usr/include/sys/dirent.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/time.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_clock_id.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/time.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/xlocale/_time.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/stat.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/netinet/in.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_sockaddr_storage.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/netinet6/in6.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/arpa/inet.h /usr/include/netdb.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/socket.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_iovec.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/machine/_align.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/x86/_align.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/signal.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/machine/signal.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/x86/signal.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/wait.h /usr/include/pthread.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sched.h /usr/include/sys/sched.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/cpuset.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_cpuset.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_bitset.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/bitset.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/semaphore.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/_umtx.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/event.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/sys/queue.h typedef.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/heart.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/fdwatch.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/socket.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/kstbl.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/hangul.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/buffer.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/signal.h log.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libsql/AsyncSQL.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/stdafx.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/log.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/mysql.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/mariadb_com.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/mariadb_version.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/ma_list.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/mariadb_ctype.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/mariadb_stmt.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/errmsg.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/local/include/mysql/mysqld_error.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libsql/Semaphore.h any_function.h
-OBJDIR/FileMonitor_FreeBSD.o: any_function.inc
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/main.h utils.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/math.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/crypt.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/memcpy.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../common/singleton.h ../../common/utils.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../common/service.h /usr/include/float.h
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/x86/float.h locale.hpp event.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/intrusive_ptr.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/user.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/compiler/gcc.hpp
-OBJDIR/FileMonitor_FreeBSD.o: /usr/include/stddef.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/platform/bsd.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/detail/posix_features.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/detail/suffix.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/helper_macros.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/assert.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/detail/workaround.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/workaround.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
-OBJDIR/FileMonitor_FreeBSD.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/FileMonitor_FreeBSD.o: FileMonitor_FreeBSD.h IFileMonitor.h
-OBJDIR/FileMonitor_FreeBSD.o: ../../libthecore/include/log.h
 OBJDIR/ClientPackageCryptInfo.o: stdafx.h debug_allocator.h
 OBJDIR/ClientPackageCryptInfo.o: ../../libthecore/include/stdafx.h
 OBJDIR/ClientPackageCryptInfo.o: /usr/include/stdio.h
@@ -16246,12 +16132,11 @@ OBJDIR/shop_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/shop_manager.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/shop_manager.o: /usr/include/x86/_stdint.h
 OBJDIR/shop_manager.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/shop_manager.o: ../../common/stl.h ../../common/length.h
-OBJDIR/shop_manager.o: IFileMonitor.h char.h entity.h FSM.h state.h
-OBJDIR/shop_manager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/shop_manager.o: cube.h mining.h char_manager.h item.h item_manager.h
-OBJDIR/shop_manager.o: buffer_manager.h db.h questmanager.h questnpc.h
-OBJDIR/shop_manager.o: questpc.h quest.h lua_incl.h
+OBJDIR/shop_manager.o: ../../common/stl.h ../../common/length.h char.h
+OBJDIR/shop_manager.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/shop_manager.o: affect.h affect_flag.h cube.h mining.h char_manager.h
+OBJDIR/shop_manager.o: item.h item_manager.h buffer_manager.h db.h
+OBJDIR/shop_manager.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/shop_manager.o: ../../liblua/include/lua.h
 OBJDIR/shop_manager.o: ../../liblua/include/lauxlib.h
 OBJDIR/shop_manager.o: ../../liblua/include/lualib.h monarch.h mob_manager.h
@@ -16650,9 +16535,9 @@ OBJDIR/shopEx.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/shopEx.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/shopEx.o: /usr/include/x86/_stdint.h
 OBJDIR/shopEx.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/shopEx.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/shopEx.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
-OBJDIR/shopEx.o: affect.h affect_flag.h cube.h mining.h char_manager.h item.h
+OBJDIR/shopEx.o: ../../common/stl.h ../../common/length.h char.h entity.h
+OBJDIR/shopEx.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/shopEx.o: affect_flag.h cube.h mining.h char_manager.h item.h
 OBJDIR/shopEx.o: item_manager.h buffer_manager.h db.h questmanager.h
 OBJDIR/shopEx.o: questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/shopEx.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
@@ -16909,14 +16794,14 @@ OBJDIR/main.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/main.o: constants.h ../../common/tables.h ../../common/length.h
 OBJDIR/main.o: ../../common/service.h ../../common/item_length.h config.h
 OBJDIR/main.o: minilzo.h lzo/lzoconf.h packet.h desc_manager.h
-OBJDIR/main.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/main.o: item_manager.h char.h entity.h FSM.h state.h horse_rider.h
-OBJDIR/main.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
-OBJDIR/main.o: char_manager.h mob_manager.h motion.h ../../common/d3dtype.h
-OBJDIR/main.o: sectree_manager.h sectree.h shop_manager.h regen.h dungeon.h
-OBJDIR/main.o: text_file_loader.h ../../common/pool.h file_loader.h skill.h
-OBJDIR/main.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h pvp.h party.h
-OBJDIR/main.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/main.o: ../../common/stl.h ../../common/length.h item_manager.h char.h
+OBJDIR/main.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/main.o: affect_flag.h cube.h mining.h char_manager.h mob_manager.h
+OBJDIR/main.o: motion.h ../../common/d3dtype.h sectree_manager.h sectree.h
+OBJDIR/main.o: shop_manager.h regen.h dungeon.h text_file_loader.h
+OBJDIR/main.o: ../../common/pool.h file_loader.h skill.h ../../libpoly/Poly.h
+OBJDIR/main.o: ../../libpoly/SymTable.h pvp.h party.h questmanager.h
+OBJDIR/main.o: questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/main.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/main.o: ../../liblua/include/lualib.h profiler.h lzo_manager.h
 OBJDIR/main.o: messenger_manager.h db.h p2p.h input.h packet_info.h

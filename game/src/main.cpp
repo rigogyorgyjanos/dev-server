@@ -64,12 +64,6 @@
 	#include "limit_time.h"
 #endif
 
-//#define __FILEMONITOR__
-
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
-	#include "FileMonitor_FreeBSD.h"
-#endif
-
 // #ifndef __WIN32__
 // #include <gtest/gtest.h>
 // #endif
@@ -298,13 +292,6 @@ void heartbeat(LPHEART ht, int pulse)
 	if (!(pulse % (passes_per_sec + 4)))
 		CHARACTER_MANAGER::instance().ProcessDelayedSave();
 
-	//4초 마다
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
-	if (!(pulse % (passes_per_sec * 5)))
-	{
-		FileMonitorFreeBSD::Instance().Update(pulse); 
-	}
-#endif
 
 	// 약 5.08초마다
 	if (!(pulse % (passes_per_sec * 5 + 2)))
@@ -537,11 +524,6 @@ int main(int argc, char **argv)
 	{
 		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());	
 	}
-
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
-	PFN_FileChangeListener pPackageNotifyFunc =  &(DESC_MANAGER::NotifyClientPackageFileChanged);
-	//FileMonitorFreeBSD::Instance().AddWatch( strPackageCryptInfoName, pPackageNotifyFunc );
-#endif
 
 	while (idle());
 
