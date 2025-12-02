@@ -1462,7 +1462,6 @@ OBJDIR/char.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
 OBJDIR/char.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/char.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/char.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/char.o: ../../common/teen_packet.h ../../common/VnumHelper.h char.h
 OBJDIR/char.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
 OBJDIR/char.o: constants.h ../../common/tables.h ../../common/length.h
 OBJDIR/char.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
@@ -5870,7 +5869,6 @@ OBJDIR/input_login.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/input_login.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_login.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/input_login.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/input_login.o: ../../common/item_length.h ../../common/teen_packet.h
 OBJDIR/input_login.o: config.h input.h packet_info.h packet.h desc_client.h
 OBJDIR/input_login.o: desc.h cipher.h
 OBJDIR/input_login.o: ../../../extern/include/cryptopp/cryptlib.h
@@ -6104,102 +6102,6 @@ OBJDIR/input_p2p.o: locale_service.h questmanager.h questnpc.h questpc.h
 OBJDIR/input_p2p.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/input_p2p.o: ../../liblua/include/lauxlib.h
 OBJDIR/input_p2p.o: ../../liblua/include/lualib.h pcbang.h threeway_war.h
-OBJDIR/input_teen.o: stdafx.h debug_allocator.h
-OBJDIR/input_teen.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
-OBJDIR/input_teen.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
-OBJDIR/input_teen.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
-OBJDIR/input_teen.o: /usr/include/x86/_types.h /usr/include/machine/_limits.h
-OBJDIR/input_teen.o: /usr/include/x86/_limits.h /usr/include/string.h
-OBJDIR/input_teen.o: /usr/include/strings.h /usr/include/xlocale/_strings.h
-OBJDIR/input_teen.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
-OBJDIR/input_teen.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
-OBJDIR/input_teen.o: /usr/include/errno.h /usr/include/stdlib.h
-OBJDIR/input_teen.o: /usr/include/unistd.h /usr/include/sys/types.h
-OBJDIR/input_teen.o: /usr/include/machine/endian.h /usr/include/x86/endian.h
-OBJDIR/input_teen.o: /usr/include/sys/_endian.h
-OBJDIR/input_teen.o: /usr/include/sys/_pthreadtypes.h
-OBJDIR/input_teen.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
-OBJDIR/input_teen.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
-OBJDIR/input_teen.o: /usr/include/sys/timespec.h /usr/include/sys/_timespec.h
-OBJDIR/input_teen.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
-OBJDIR/input_teen.o: /usr/include/assert.h /usr/include/ctype.h
-OBJDIR/input_teen.o: /usr/include/_ctype.h /usr/include/runetype.h
-OBJDIR/input_teen.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
-OBJDIR/input_teen.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-OBJDIR/input_teen.o: /usr/include/dirent.h /usr/include/sys/dirent.h
-OBJDIR/input_teen.o: /usr/include/sys/time.h /usr/include/sys/_clock_id.h
-OBJDIR/input_teen.o: /usr/include/time.h /usr/include/xlocale/_time.h
-OBJDIR/input_teen.o: /usr/include/sys/stat.h /usr/include/netinet/in.h
-OBJDIR/input_teen.o: /usr/include/sys/_sockaddr_storage.h
-OBJDIR/input_teen.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-OBJDIR/input_teen.o: /usr/include/netdb.h /usr/include/sys/socket.h
-OBJDIR/input_teen.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
-OBJDIR/input_teen.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-OBJDIR/input_teen.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
-OBJDIR/input_teen.o: /usr/include/sys/wait.h /usr/include/pthread.h
-OBJDIR/input_teen.o: /usr/include/sched.h /usr/include/sys/sched.h
-OBJDIR/input_teen.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
-OBJDIR/input_teen.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
-OBJDIR/input_teen.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
-OBJDIR/input_teen.o: /usr/include/sys/event.h /usr/include/sys/queue.h
-OBJDIR/input_teen.o: typedef.h ../../libthecore/include/heart.h
-OBJDIR/input_teen.o: ../../libthecore/include/fdwatch.h
-OBJDIR/input_teen.o: ../../libthecore/include/socket.h
-OBJDIR/input_teen.o: ../../libthecore/include/kstbl.h
-OBJDIR/input_teen.o: ../../libthecore/include/hangul.h
-OBJDIR/input_teen.o: ../../libthecore/include/buffer.h
-OBJDIR/input_teen.o: ../../libthecore/include/signal.h log.h
-OBJDIR/input_teen.o: ../../libsql/AsyncSQL.h
-OBJDIR/input_teen.o: ../../libthecore/include/stdafx.h
-OBJDIR/input_teen.o: ../../libthecore/include/log.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/mysql.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/mariadb_com.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/mariadb_version.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/ma_list.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/mariadb_ctype.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/mariadb_stmt.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/errmsg.h
-OBJDIR/input_teen.o: /usr/local/include/mysql/mysqld_error.h
-OBJDIR/input_teen.o: ../../libsql/Semaphore.h any_function.h any_function.inc
-OBJDIR/input_teen.o: ../../libthecore/include/main.h utils.h
-OBJDIR/input_teen.o: /usr/include/math.h ../../libthecore/include/crypt.h
-OBJDIR/input_teen.o: ../../libthecore/include/memcpy.h
-OBJDIR/input_teen.o: ../../common/singleton.h ../../common/utils.h
-OBJDIR/input_teen.o: ../../common/service.h /usr/include/float.h
-OBJDIR/input_teen.o: /usr/include/x86/float.h locale.hpp event.h
-OBJDIR/input_teen.o: ../../../extern/include/boost/intrusive_ptr.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/user.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/compiler/gcc.hpp
-OBJDIR/input_teen.o: /usr/include/stddef.h
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/platform/bsd.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/detail/posix_features.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/detail/suffix.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/helper_macros.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/assert.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/detail/workaround.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/workaround.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
-OBJDIR/input_teen.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/input_teen.o: constants.h ../../common/tables.h ../../common/length.h
-OBJDIR/input_teen.o: ../../common/item_length.h ../../common/teen_packet.h
-OBJDIR/input_teen.o: input.h packet_info.h packet.h desc.h cipher.h
-OBJDIR/input_teen.o: ../../../extern/include/cryptopp/cryptlib.h config.h
-OBJDIR/input_teen.o: ../../../extern/include/cryptopp/stdcpp.h
-OBJDIR/input_teen.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-OBJDIR/input_teen.o: /usr/include/x86/_stdint.h
-OBJDIR/input_teen.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/input_teen.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input_teen.o: db.h protocol.h char.h entity.h FSM.h state.h
-OBJDIR/input_teen.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
-OBJDIR/input_teen.o: mining.h dev_log.h
 OBJDIR/input_udp.o: stdafx.h debug_allocator.h
 OBJDIR/input_udp.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/input_udp.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
