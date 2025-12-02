@@ -122,14 +122,8 @@ bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" �
 bool            g_noticeBattleZone      = false;        // 중립지대에 입장하면 안내메세지를 알려줌
 
 int gPlayerMaxLevel = 99;
-
 bool g_BlockCharCreation = false;
 
-
-//OPENID
-int		openid_server = 0;
-char	openid_host[256];
-char	openid_uri[256];
 
 bool is_string_true(const char * string)
 {
@@ -517,24 +511,6 @@ void config_init(const string& st_localeServiceName)
 
 			char buf[1024];
 			snprintf(buf, sizeof(buf), "LOG_SQL: %s %s %s %s %d", log_host, log_user, log_pwd, log_db, log_port);
-			continue;
-		}
-
-		
-		//OPENID		
-		TOKEN("WEB_AUTH")
-		{
-			const char * line = two_arguments(value_string, openid_host, sizeof(openid_host), openid_uri, sizeof(openid_uri));
-
-			if (!*openid_host || !*openid_uri)
-			{
-				fprintf(stderr, "WEB_AUTH syntax error (ex: WEB_AUTH <host(metin2.co.kr) uri(/kyw/gameauth.php)>\n");
-				exit(1);
-			}
-
-			char buf[1024];
-			openid_server = 1;
-			snprintf(buf, sizeof(buf), "WEB_AUTH: %s %s", openid_host, openid_uri);
 			continue;
 		}
 	}
