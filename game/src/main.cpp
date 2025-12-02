@@ -72,10 +72,6 @@
 	#include "FileMonitor_FreeBSD.h"
 #endif
 
-#ifdef __AUCTION__
-#include "auction_manager.h"
-#endif
-
 // #ifndef __WIN32__
 // #include <gtest/gtest.h>
 // #endif
@@ -147,9 +143,7 @@ int g_shutdown_core_pulse;
 bool g_bShutdown=false;
 
 extern int speed_server;
-#ifdef __AUCTION__
-extern int auction_server;
-#endif
+
 extern void CancelReloadSpamEvent();
 
 void ContinueOnFatalError()
@@ -511,10 +505,6 @@ int main(int argc, char **argv)
 
 	CSpeedServerManager SSManager;
 	DSManager dsManager;
-
-#ifdef __AUCTION__
-	AuctionManager auctionManager;
-#endif
 
 	if (!start(argc, argv)) {
 		CleanUpForEarlyExit();

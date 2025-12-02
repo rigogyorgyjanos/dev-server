@@ -12,9 +12,7 @@
 #include "Monarch.h"
 #include "BlockCountry.h"
 #include "ItemIDRangeManager.h"
-#ifdef __AUCTION__
-#include "AuctionManager.h"
-#endif
+
 #include <signal.h>
 #undef __FreeBSD__
 void SetPlayerDBName(const char* c_pszPlayerDBName);
@@ -82,9 +80,7 @@ int main()
 	CMonarch Monarch;
 	CBlockCountry	BlockCountry;
 	CItemIDRangeManager ItemIDRangeManager;
-#ifdef __AUCTION__
-	AuctionManager auctionManager;
-#endif
+
 	if (!Start())
 		return 1;
 
@@ -92,9 +88,7 @@ int main()
 	MarriageManager.Initialize();
 	BlockCountry.Load();
 	ItemIDRangeManager.Build();
-#ifdef __AUCTION__
-	AuctionManager::instance().Initialize();
-#endif
+
 	sys_log(0, "Metin2DBCacheServer Start\n");
 
 	CClientManager::instance().MainLoop();

@@ -106,7 +106,6 @@
 .obj/NetBase.o: ../../common/length.h ../../common/singleton.h
 .obj/NetBase.o: ../../common/utils.h ../../common/stl.h
 .obj/NetBase.o: ../../common/service.h NetBase.h Config.h ClientManager.h
-.obj/NetBase.o: ../../common/building.h ../../common/auction_table.h
 .obj/NetBase.o: ../../common/tables.h Peer.h PeerBase.h DBManager.h
 .obj/NetBase.o: /usr/local/include/mysql/mysql.h
 .obj/NetBase.o: /usr/local/include/mysql/mariadb_com.h
@@ -281,7 +280,6 @@
 .obj/Main.o: /usr/local/include/mysql/errmsg.h
 .obj/Main.o: /usr/local/include/mysql/mysqld_error.h ../../libsql/Semaphore.h
 .obj/Main.o: ClientManager.h ../../common/building.h
-.obj/Main.o: ../../common/auction_table.h ../../common/tables.h LoginData.h
 .obj/Main.o: GuildManager.h ../../libsql/libsql.h ../../libsql/AsyncSQL.h
 .obj/Main.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h ItemAwardManager.h
 .obj/Main.o: HB.h PrivManager.h MoneyLog.h Marriage.h Monarch.h
@@ -402,7 +400,6 @@
 .obj/DBManager.o: /usr/local/include/mysql/errmsg.h
 .obj/DBManager.o: /usr/local/include/mysql/mysqld_error.h
 .obj/DBManager.o: ../../libsql/Semaphore.h ClientManager.h
-.obj/DBManager.o: ../../common/building.h ../../common/auction_table.h
 .obj/DBManager.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
 .obj/DBManager.o: LoginData.h
 .obj/Cache.o: stdafx.h ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -456,7 +453,6 @@
 .obj/Cache.o: ../../common/item_length.h ../../common/tables.h
 .obj/Cache.o: ../../common/length.h ../../common/singleton.h
 .obj/Cache.o: ../../common/utils.h ../../common/stl.h ../../common/service.h
-.obj/Cache.o: Cache.h ../../common/cache.h ../../common/auction_table.h
 .obj/Cache.o: ../../common/tables.h QID.h ClientManager.h
 .obj/Cache.o: ../../common/building.h Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/Cache.o: /usr/local/include/mysql/mysql.h
@@ -524,7 +520,6 @@
 .obj/LoginData.o: ../../common/length.h ../../common/singleton.h
 .obj/LoginData.o: ../../common/utils.h ../../common/stl.h
 .obj/LoginData.o: ../../common/service.h LoginData.h ClientManager.h
-.obj/LoginData.o: ../../common/building.h ../../common/auction_table.h
 .obj/LoginData.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
 .obj/LoginData.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/LoginData.o: /usr/local/include/mysql/mariadb_com.h
@@ -595,7 +590,6 @@
 .obj/ClientManager.o: ../../common/service.h ../../common/billing.h
 .obj/ClientManager.o: ../../common/building.h ../../common/VnumHelper.h
 .obj/ClientManager.o: ../../libgame/include/grid.h ClientManager.h
-.obj/ClientManager.o: ../../common/auction_table.h ../../common/tables.h
 .obj/ClientManager.o: Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/ClientManager.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManager.o: /usr/local/include/mysql/mariadb_com.h
@@ -686,7 +680,6 @@
 .obj/ClientManagerPlayer.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerPlayer.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManagerPlayer.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerPlayer.o: ../../common/auction_table.h
 .obj/ClientManagerPlayer.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
 .obj/ClientManagerPlayer.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/ClientManagerPlayer.o: /usr/local/include/mysql/mariadb_com.h
@@ -771,7 +764,6 @@
 .obj/ClientManagerLogin.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerLogin.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManagerLogin.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerLogin.o: ../../common/auction_table.h ../../common/tables.h
 .obj/ClientManagerLogin.o: Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/ClientManagerLogin.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerLogin.o: /usr/local/include/mysql/mariadb_com.h
@@ -853,7 +845,6 @@
 .obj/ClientManagerBoot.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerBoot.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManagerBoot.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerBoot.o: ../../common/auction_table.h ../../common/tables.h
 .obj/ClientManagerBoot.o: Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/ClientManagerBoot.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerBoot.o: /usr/local/include/mysql/mariadb_com.h
@@ -937,7 +928,6 @@
 .obj/ClientManagerParty.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerParty.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManagerParty.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerParty.o: ../../common/auction_table.h ../../common/tables.h
 .obj/ClientManagerParty.o: Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/ClientManagerParty.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerParty.o: /usr/local/include/mysql/mariadb_com.h
@@ -1021,7 +1011,6 @@
 .obj/ClientManagerGuild.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerGuild.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManagerGuild.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerGuild.o: ../../common/auction_table.h ../../common/tables.h
 .obj/ClientManagerGuild.o: Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/ClientManagerGuild.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerGuild.o: /usr/local/include/mysql/mariadb_com.h
@@ -1096,7 +1085,6 @@
 .obj/GuildManager.o: NetBase.h ../../libsql/libsql.h ../../libsql/AsyncSQL.h
 .obj/GuildManager.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h Main.h
 .obj/GuildManager.o: ClientManager.h ../../common/building.h
-.obj/GuildManager.o: ../../common/auction_table.h ../../common/tables.h
 .obj/GuildManager.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/GuildManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/GuildManager.o: /usr/local/include/mysql/mariadb_version.h
@@ -1222,7 +1210,6 @@
 .obj/PrivManager.o: ../../common/utils.h ../../common/stl.h
 .obj/PrivManager.o: ../../common/service.h PrivManager.h Peer.h PeerBase.h
 .obj/PrivManager.o: NetBase.h ClientManager.h ../../common/building.h
-.obj/PrivManager.o: ../../common/auction_table.h ../../common/tables.h
 .obj/PrivManager.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/PrivManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/PrivManager.o: /usr/local/include/mysql/mariadb_version.h
@@ -1288,7 +1275,6 @@
 .obj/MoneyLog.o: ../../common/length.h ../../common/singleton.h
 .obj/MoneyLog.o: ../../common/utils.h ../../common/stl.h
 .obj/MoneyLog.o: ../../common/service.h MoneyLog.h ClientManager.h
-.obj/MoneyLog.o: ../../common/building.h ../../common/auction_table.h
 .obj/MoneyLog.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
 .obj/MoneyLog.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/MoneyLog.o: /usr/local/include/mysql/mariadb_com.h
@@ -1376,7 +1362,6 @@
 .obj/ItemAwardManager.o: /usr/local/include/mysql/mysqld_error.h
 .obj/ItemAwardManager.o: ../../libsql/Semaphore.h ItemAwardManager.h Peer.h
 .obj/ItemAwardManager.o: PeerBase.h NetBase.h ClientManager.h
-.obj/ItemAwardManager.o: ../../common/building.h ../../common/auction_table.h
 .obj/ItemAwardManager.o: ../../common/tables.h LoginData.h
 .obj/ClientManagerEventFlag.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/ClientManagerEventFlag.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -1458,7 +1443,6 @@
 .obj/ClientManagerEventFlag.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerEventFlag.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManagerEventFlag.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerEventFlag.o: ../../common/auction_table.h
 .obj/ClientManagerEventFlag.o: ../../common/tables.h Peer.h PeerBase.h
 .obj/ClientManagerEventFlag.o: NetBase.h DBManager.h
 .obj/ClientManagerEventFlag.o: /usr/local/include/mysql/mysql.h
@@ -1540,7 +1524,6 @@
 .obj/Marriage.o: /usr/local/include/mysql/errmsg.h
 .obj/Marriage.o: /usr/local/include/mysql/mysqld_error.h
 .obj/Marriage.o: ../../libsql/Semaphore.h ClientManager.h
-.obj/Marriage.o: ../../common/building.h ../../common/auction_table.h
 .obj/Marriage.o: ../../common/tables.h LoginData.h
 .obj/Monarch.o: Monarch.h ../../libthecore/include/stdafx.h
 .obj/Monarch.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -1595,7 +1578,6 @@
 .obj/Monarch.o: ../../common/tables.h ../../common/length.h
 .obj/Monarch.o: ../../common/utils.h Main.h ClientManager.h
 .obj/Monarch.o: ../../common/stl.h ../../common/building.h
-.obj/Monarch.o: ../../common/auction_table.h ../../common/tables.h Peer.h
 .obj/Monarch.o: PeerBase.h NetBase.h DBManager.h
 .obj/Monarch.o: /usr/local/include/mysql/mysql.h
 .obj/Monarch.o: /usr/local/include/mysql/mariadb_com.h
@@ -1757,7 +1739,6 @@
 .obj/ItemIDRangeManager.o: /usr/local/include/mysql/mysqld_error.h
 .obj/ItemIDRangeManager.o: ../../libsql/Semaphore.h ClientManager.h
 .obj/ItemIDRangeManager.o: ../../common/building.h
-.obj/ItemIDRangeManager.o: ../../common/auction_table.h ../../common/tables.h
 .obj/ItemIDRangeManager.o: Peer.h PeerBase.h NetBase.h LoginData.h
 .obj/ClientManagerHorseName.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/ClientManagerHorseName.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -1839,7 +1820,6 @@
 .obj/ClientManagerHorseName.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerHorseName.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManagerHorseName.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerHorseName.o: ../../common/auction_table.h
 .obj/ClientManagerHorseName.o: ../../common/tables.h Peer.h PeerBase.h
 .obj/ClientManagerHorseName.o: NetBase.h DBManager.h
 .obj/ClientManagerHorseName.o: /usr/local/include/mysql/mysql.h
@@ -1859,65 +1839,6 @@
 .obj/version.o: /usr/include/machine/_types.h /usr/include/x86/_types.h
 .obj/version.o: /usr/include/machine/_limits.h /usr/include/x86/_limits.h
 .obj/version.o: /usr/include/stdlib.h
-.obj/AuctionManager.o: stdafx.h ../../libthecore/include/stdafx.h
-.obj/AuctionManager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-.obj/AuctionManager.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-.obj/AuctionManager.o: /usr/include/machine/_types.h
-.obj/AuctionManager.o: /usr/include/x86/_types.h
-.obj/AuctionManager.o: /usr/include/machine/_limits.h
-.obj/AuctionManager.o: /usr/include/x86/_limits.h /usr/include/string.h
-.obj/AuctionManager.o: /usr/include/strings.h /usr/include/xlocale/_strings.h
-.obj/AuctionManager.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
-.obj/AuctionManager.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
-.obj/AuctionManager.o: /usr/include/errno.h /usr/include/stdlib.h
-.obj/AuctionManager.o: /usr/include/unistd.h /usr/include/sys/types.h
-.obj/AuctionManager.o: /usr/include/machine/endian.h
-.obj/AuctionManager.o: /usr/include/x86/endian.h /usr/include/sys/_endian.h
-.obj/AuctionManager.o: /usr/include/sys/_pthreadtypes.h
-.obj/AuctionManager.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
-.obj/AuctionManager.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
-.obj/AuctionManager.o: /usr/include/sys/timespec.h
-.obj/AuctionManager.o: /usr/include/sys/_timespec.h /usr/include/sys/unistd.h
-.obj/AuctionManager.o: /usr/include/fcntl.h /usr/include/assert.h
-.obj/AuctionManager.o: /usr/include/ctype.h /usr/include/_ctype.h
-.obj/AuctionManager.o: /usr/include/runetype.h /usr/include/xlocale/_ctype.h
-.obj/AuctionManager.o: /usr/include/limits.h /usr/include/sys/limits.h
-.obj/AuctionManager.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
-.obj/AuctionManager.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
-.obj/AuctionManager.o: /usr/include/sys/_clock_id.h /usr/include/time.h
-.obj/AuctionManager.o: /usr/include/xlocale/_time.h /usr/include/sys/stat.h
-.obj/AuctionManager.o: /usr/include/netinet/in.h
-.obj/AuctionManager.o: /usr/include/sys/_sockaddr_storage.h
-.obj/AuctionManager.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-.obj/AuctionManager.o: /usr/include/netdb.h /usr/include/sys/socket.h
-.obj/AuctionManager.o: /usr/include/sys/_iovec.h
-.obj/AuctionManager.o: /usr/include/machine/_align.h
-.obj/AuctionManager.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-.obj/AuctionManager.o: /usr/include/machine/signal.h
-.obj/AuctionManager.o: /usr/include/x86/signal.h /usr/include/sys/wait.h
-.obj/AuctionManager.o: /usr/include/pthread.h /usr/include/sched.h
-.obj/AuctionManager.o: /usr/include/sys/sched.h /usr/include/sys/cpuset.h
-.obj/AuctionManager.o: /usr/include/sys/_cpuset.h /usr/include/sys/_bitset.h
-.obj/AuctionManager.o: /usr/include/sys/bitset.h /usr/include/semaphore.h
-.obj/AuctionManager.o: /usr/include/sys/_umtx.h /usr/include/sys/event.h
-.obj/AuctionManager.o: /usr/include/sys/queue.h
-.obj/AuctionManager.o: ../../libthecore/include/typedef.h
-.obj/AuctionManager.o: ../../libthecore/include/heart.h
-.obj/AuctionManager.o: ../../libthecore/include/fdwatch.h
-.obj/AuctionManager.o: ../../libthecore/include/socket.h
-.obj/AuctionManager.o: ../../libthecore/include/kstbl.h
-.obj/AuctionManager.o: ../../libthecore/include/hangul.h
-.obj/AuctionManager.o: ../../libthecore/include/buffer.h
-.obj/AuctionManager.o: ../../libthecore/include/signal.h
-.obj/AuctionManager.o: ../../libthecore/include/log.h
-.obj/AuctionManager.o: ../../libthecore/include/main.h
-.obj/AuctionManager.o: ../../libthecore/include/utils.h
-.obj/AuctionManager.o: ../../libthecore/include/crypt.h
-.obj/AuctionManager.o: ../../libthecore/include/memcpy.h
-.obj/AuctionManager.o: ../../common/length.h ../../common/item_length.h
-.obj/AuctionManager.o: ../../common/tables.h ../../common/length.h
-.obj/AuctionManager.o: ../../common/singleton.h ../../common/utils.h
-.obj/AuctionManager.o: ../../common/stl.h ../../common/service.h
 .obj/ProtoReader.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/ProtoReader.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/ProtoReader.o: /usr/include/sys/_null.h /usr/include/sys/_types.h

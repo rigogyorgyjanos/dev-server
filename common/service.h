@@ -5,7 +5,6 @@
 #define ENABLE_PROXY_IP
 #define ENABLE_PORT_SECURITY
 #define _IMPROVED_PACKET_ENCRYPTION_ // 패킷 암호화 개선
-//#define __AUCTION__
 #define __PET_SYSTEM__
 #define __UDP_BLOCK__
 
@@ -22,7 +21,5 @@
 #	define __VIEW_TARGET_PLAYER_HP__ // View Player Target HP
 #endif
 #define __IMPROVED_LOGOUT_POINTS__ // Improved Logout Points 
-//#define __MULTI_LANGUAGE_SYSTEM__ // Multi Language System
-//#define __LOCALE_CLIENT__ // Locale Client
 
 #endif
