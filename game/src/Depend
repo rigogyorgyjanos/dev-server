@@ -3591,7 +3591,7 @@ OBJDIR/db.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/db.o: ../../common/stl.h IFileMonitor.h char.h entity.h FSM.h state.h
 OBJDIR/db.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h mining.h
 OBJDIR/db.o: char_manager.h item.h item_manager.h p2p.h matrix_card.h
-OBJDIR/db.o: login_data.h locale_service.h spam.h auth_brazil.h
+OBJDIR/db.o: login_data.h locale_service.h spam.h
 OBJDIR/desc.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/desc.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/desc.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -5701,8 +5701,8 @@ OBJDIR/input_auth.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_auth.o: /usr/include/x86/_stdint.h
 OBJDIR/input_auth.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/input_auth.o: ../../common/stl.h ../../common/length.h IFileMonitor.h
-OBJDIR/input_auth.o: protocol.h matrix_card.h passpod.h locale_service.h
-OBJDIR/input_auth.o: auth_brazil.h db.h limit_time.h
+OBJDIR/input_auth.o: protocol.h matrix_card.h passpod.h locale_service.h db.h
+OBJDIR/input_auth.o: limit_time.h
 OBJDIR/input_db.o: stdafx.h debug_allocator.h
 OBJDIR/input_db.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/input_db.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -13397,96 +13397,6 @@ OBJDIR/map_location.o: ../../../extern/include/boost/config/no_tr1/functional.hp
 OBJDIR/map_location.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/map_location.o: map_location.h ../../common/stl.h sectree_manager.h
 OBJDIR/map_location.o: sectree.h entity.h
-OBJDIR/auth_brazil.o: stdafx.h debug_allocator.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
-OBJDIR/auth_brazil.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
-OBJDIR/auth_brazil.o: /usr/include/x86/_types.h
-OBJDIR/auth_brazil.o: /usr/include/machine/_limits.h
-OBJDIR/auth_brazil.o: /usr/include/x86/_limits.h /usr/include/string.h
-OBJDIR/auth_brazil.o: /usr/include/strings.h /usr/include/xlocale/_strings.h
-OBJDIR/auth_brazil.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
-OBJDIR/auth_brazil.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
-OBJDIR/auth_brazil.o: /usr/include/errno.h /usr/include/stdlib.h
-OBJDIR/auth_brazil.o: /usr/include/unistd.h /usr/include/sys/types.h
-OBJDIR/auth_brazil.o: /usr/include/machine/endian.h /usr/include/x86/endian.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_endian.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_pthreadtypes.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
-OBJDIR/auth_brazil.o: /usr/include/sys/timespec.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_timespec.h /usr/include/sys/unistd.h
-OBJDIR/auth_brazil.o: /usr/include/fcntl.h /usr/include/assert.h
-OBJDIR/auth_brazil.o: /usr/include/ctype.h /usr/include/_ctype.h
-OBJDIR/auth_brazil.o: /usr/include/runetype.h /usr/include/xlocale/_ctype.h
-OBJDIR/auth_brazil.o: /usr/include/limits.h /usr/include/sys/limits.h
-OBJDIR/auth_brazil.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
-OBJDIR/auth_brazil.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_clock_id.h /usr/include/time.h
-OBJDIR/auth_brazil.o: /usr/include/xlocale/_time.h /usr/include/sys/stat.h
-OBJDIR/auth_brazil.o: /usr/include/netinet/in.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_sockaddr_storage.h
-OBJDIR/auth_brazil.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-OBJDIR/auth_brazil.o: /usr/include/netdb.h /usr/include/sys/socket.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
-OBJDIR/auth_brazil.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-OBJDIR/auth_brazil.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
-OBJDIR/auth_brazil.o: /usr/include/sys/wait.h /usr/include/pthread.h
-OBJDIR/auth_brazil.o: /usr/include/sched.h /usr/include/sys/sched.h
-OBJDIR/auth_brazil.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
-OBJDIR/auth_brazil.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
-OBJDIR/auth_brazil.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
-OBJDIR/auth_brazil.o: /usr/include/sys/event.h /usr/include/sys/queue.h
-OBJDIR/auth_brazil.o: typedef.h ../../libthecore/include/heart.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/fdwatch.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/socket.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/kstbl.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/hangul.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/buffer.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/signal.h log.h
-OBJDIR/auth_brazil.o: ../../libsql/AsyncSQL.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/stdafx.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/log.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/mysql.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/mariadb_com.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/mariadb_version.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/ma_list.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/mariadb_ctype.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/mariadb_stmt.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/errmsg.h
-OBJDIR/auth_brazil.o: /usr/local/include/mysql/mysqld_error.h
-OBJDIR/auth_brazil.o: ../../libsql/Semaphore.h any_function.h
-OBJDIR/auth_brazil.o: any_function.inc ../../libthecore/include/main.h
-OBJDIR/auth_brazil.o: utils.h /usr/include/math.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/crypt.h
-OBJDIR/auth_brazil.o: ../../libthecore/include/memcpy.h
-OBJDIR/auth_brazil.o: ../../common/singleton.h ../../common/utils.h
-OBJDIR/auth_brazil.o: ../../common/service.h /usr/include/float.h
-OBJDIR/auth_brazil.o: /usr/include/x86/float.h locale.hpp event.h
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/intrusive_ptr.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/user.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/compiler/gcc.hpp
-OBJDIR/auth_brazil.o: /usr/include/stddef.h
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/platform/bsd.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/detail/posix_features.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/detail/suffix.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/helper_macros.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/assert.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/detail/workaround.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/workaround.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
-OBJDIR/auth_brazil.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/auth_brazil.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-OBJDIR/auth_brazil.o: /usr/include/x86/_stdint.h /usr/include/md5.h
-OBJDIR/auth_brazil.o: /usr/include/sys/md5.h auth_brazil.h
 OBJDIR/BlueDragon.o: stdafx.h debug_allocator.h
 OBJDIR/BlueDragon.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/BlueDragon.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -17023,8 +16933,8 @@ OBJDIR/main.o: locale_service.h arena.h OXEvent.h monarch.h polymorph.h
 OBJDIR/main.o: blend_item.h castle.h passpod.h ani.h BattleArena.h
 OBJDIR/main.o: over9refine.h horsename_manager.h MarkManager.h MarkImage.h
 OBJDIR/main.o: ../../../extern/include/IL/il.h spam.h panama.h threeway_war.h
-OBJDIR/main.o: auth_brazil.h DragonLair.h skill_power.h SpeedServer.h
-OBJDIR/main.o: DragonSoul.h ../../../extern/include/boost/bind.hpp
+OBJDIR/main.o: DragonLair.h skill_power.h SpeedServer.h DragonSoul.h
+OBJDIR/main.o: ../../../extern/include/boost/bind.hpp
 OBJDIR/main.o: ../../../extern/include/boost/bind/bind.hpp
 OBJDIR/main.o: ../../../extern/include/boost/ref.hpp
 OBJDIR/main.o: ../../../extern/include/boost/core/ref.hpp
