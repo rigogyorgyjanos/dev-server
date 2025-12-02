@@ -3580,11 +3580,11 @@ OBJDIR/db.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
 OBJDIR/db.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/db.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/db.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/db.o: ../../common/billing.h ../../common/length.h db.h config.h
-OBJDIR/db.o: desc_client.h desc.h constants.h ../../common/tables.h
-OBJDIR/db.o: ../../common/length.h ../../common/service.h
-OBJDIR/db.o: ../../common/item_length.h input.h packet_info.h packet.h
-OBJDIR/db.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/db.o: ../../common/length.h db.h config.h desc_client.h desc.h
+OBJDIR/db.o: constants.h ../../common/tables.h ../../common/length.h
+OBJDIR/db.o: ../../common/service.h ../../common/item_length.h input.h
+OBJDIR/db.o: packet_info.h packet.h cipher.h
+OBJDIR/db.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/db.o: ../../../extern/include/cryptopp/stdcpp.h /usr/include/stdint.h
 OBJDIR/db.o: /usr/include/machine/_stdint.h /usr/include/x86/_stdint.h
 OBJDIR/db.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
@@ -6112,8 +6112,8 @@ OBJDIR/input_p2p.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.
 OBJDIR/input_p2p.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
 OBJDIR/input_p2p.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/input_p2p.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/input_p2p.o: ../../common/billing.h config.h desc_client.h desc.h
-OBJDIR/input_p2p.o: constants.h ../../common/tables.h ../../common/length.h
+OBJDIR/input_p2p.o: config.h desc_client.h desc.h constants.h
+OBJDIR/input_p2p.o: ../../common/tables.h ../../common/length.h
 OBJDIR/input_p2p.o: ../../common/service.h ../../common/item_length.h input.h
 OBJDIR/input_p2p.o: packet_info.h packet.h cipher.h
 OBJDIR/input_p2p.o: ../../../extern/include/cryptopp/cryptlib.h

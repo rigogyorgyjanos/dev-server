@@ -48,10 +48,10 @@
 .obj/Config.o: ../../libthecore/include/utils.h
 .obj/Config.o: ../../libthecore/include/crypt.h
 .obj/Config.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/Config.o: ../../common/item_length.h ../../common/tables.h
-.obj/Config.o: ../../common/length.h ../../common/singleton.h
-.obj/Config.o: ../../common/utils.h ../../common/stl.h ../../common/service.h
-.obj/Config.o: Config.h
+.obj/Config.o: ../../common/service.h ../../common/item_length.h
+.obj/Config.o: ../../common/tables.h ../../common/length.h
+.obj/Config.o: ../../common/singleton.h ../../common/utils.h
+.obj/Config.o: ../../common/stl.h ../../common/service.h Config.h
 .obj/NetBase.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/NetBase.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/NetBase.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -102,12 +102,12 @@
 .obj/NetBase.o: ../../libthecore/include/utils.h
 .obj/NetBase.o: ../../libthecore/include/crypt.h
 .obj/NetBase.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/NetBase.o: ../../common/item_length.h ../../common/tables.h
-.obj/NetBase.o: ../../common/length.h ../../common/singleton.h
-.obj/NetBase.o: ../../common/utils.h ../../common/stl.h
-.obj/NetBase.o: ../../common/service.h NetBase.h Config.h ClientManager.h
-.obj/NetBase.o: ../../common/tables.h Peer.h PeerBase.h DBManager.h
-.obj/NetBase.o: /usr/local/include/mysql/mysql.h
+.obj/NetBase.o: ../../common/service.h ../../common/item_length.h
+.obj/NetBase.o: ../../common/tables.h ../../common/length.h
+.obj/NetBase.o: ../../common/singleton.h ../../common/utils.h
+.obj/NetBase.o: ../../common/stl.h ../../common/service.h NetBase.h Config.h
+.obj/NetBase.o: ClientManager.h ../../common/building.h Peer.h PeerBase.h
+.obj/NetBase.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/NetBase.o: /usr/local/include/mysql/mariadb_com.h
 .obj/NetBase.o: /usr/local/include/mysql/mariadb_version.h
 .obj/NetBase.o: /usr/local/include/mysql/ma_list.h
@@ -163,10 +163,11 @@
 .obj/Peer.o: ../../libthecore/include/main.h ../../libthecore/include/utils.h
 .obj/Peer.o: ../../libthecore/include/crypt.h
 .obj/Peer.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/Peer.o: ../../common/item_length.h ../../common/tables.h
-.obj/Peer.o: ../../common/length.h ../../common/singleton.h
-.obj/Peer.o: ../../common/utils.h ../../common/stl.h ../../common/service.h
-.obj/Peer.o: Peer.h PeerBase.h NetBase.h ItemIDRangeManager.h
+.obj/Peer.o: ../../common/service.h ../../common/item_length.h
+.obj/Peer.o: ../../common/tables.h ../../common/length.h
+.obj/Peer.o: ../../common/singleton.h ../../common/utils.h ../../common/stl.h
+.obj/Peer.o: ../../common/service.h Peer.h PeerBase.h NetBase.h
+.obj/Peer.o: ItemIDRangeManager.h
 .obj/PeerBase.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/PeerBase.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/PeerBase.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -217,10 +218,11 @@
 .obj/PeerBase.o: ../../libthecore/include/utils.h
 .obj/PeerBase.o: ../../libthecore/include/crypt.h
 .obj/PeerBase.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/PeerBase.o: ../../common/item_length.h ../../common/tables.h
-.obj/PeerBase.o: ../../common/length.h ../../common/singleton.h
-.obj/PeerBase.o: ../../common/utils.h ../../common/stl.h
-.obj/PeerBase.o: ../../common/service.h PeerBase.h NetBase.h
+.obj/PeerBase.o: ../../common/service.h ../../common/item_length.h
+.obj/PeerBase.o: ../../common/tables.h ../../common/length.h
+.obj/PeerBase.o: ../../common/singleton.h ../../common/utils.h
+.obj/PeerBase.o: ../../common/stl.h ../../common/service.h PeerBase.h
+.obj/PeerBase.o: NetBase.h
 .obj/Main.o: stdafx.h ../../libthecore/include/stdafx.h /usr/include/stdio.h
 .obj/Main.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
 .obj/Main.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
@@ -266,11 +268,11 @@
 .obj/Main.o: ../../libthecore/include/main.h ../../libthecore/include/utils.h
 .obj/Main.o: ../../libthecore/include/crypt.h
 .obj/Main.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/Main.o: ../../common/item_length.h ../../common/tables.h
-.obj/Main.o: ../../common/length.h ../../common/singleton.h
-.obj/Main.o: ../../common/utils.h ../../common/stl.h ../../common/service.h
-.obj/Main.o: Config.h Peer.h PeerBase.h NetBase.h DBManager.h
-.obj/Main.o: /usr/local/include/mysql/mysql.h
+.obj/Main.o: ../../common/service.h ../../common/item_length.h
+.obj/Main.o: ../../common/tables.h ../../common/length.h
+.obj/Main.o: ../../common/singleton.h ../../common/utils.h ../../common/stl.h
+.obj/Main.o: ../../common/service.h Config.h Peer.h PeerBase.h NetBase.h
+.obj/Main.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/Main.o: /usr/local/include/mysql/mariadb_com.h
 .obj/Main.o: /usr/local/include/mysql/mariadb_version.h
 .obj/Main.o: /usr/local/include/mysql/ma_list.h
@@ -279,7 +281,7 @@
 .obj/Main.o: ../../libthecore/include/stdafx.h ../../libthecore/include/log.h
 .obj/Main.o: /usr/local/include/mysql/errmsg.h
 .obj/Main.o: /usr/local/include/mysql/mysqld_error.h ../../libsql/Semaphore.h
-.obj/Main.o: ClientManager.h ../../common/building.h
+.obj/Main.o: ClientManager.h ../../common/building.h LoginData.h
 .obj/Main.o: GuildManager.h ../../libsql/libsql.h ../../libsql/AsyncSQL.h
 .obj/Main.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h ItemAwardManager.h
 .obj/Main.o: HB.h PrivManager.h MoneyLog.h Marriage.h Monarch.h
@@ -331,10 +333,10 @@
 .obj/Lock.o: ../../libthecore/include/main.h ../../libthecore/include/utils.h
 .obj/Lock.o: ../../libthecore/include/crypt.h
 .obj/Lock.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/Lock.o: ../../common/item_length.h ../../common/tables.h
-.obj/Lock.o: ../../common/length.h ../../common/singleton.h
-.obj/Lock.o: ../../common/utils.h ../../common/stl.h ../../common/service.h
-.obj/Lock.o: Lock.h
+.obj/Lock.o: ../../common/service.h ../../common/item_length.h
+.obj/Lock.o: ../../common/tables.h ../../common/length.h
+.obj/Lock.o: ../../common/singleton.h ../../common/utils.h ../../common/stl.h
+.obj/Lock.o: ../../common/service.h Lock.h
 .obj/DBManager.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/DBManager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/DBManager.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -385,10 +387,10 @@
 .obj/DBManager.o: ../../libthecore/include/utils.h
 .obj/DBManager.o: ../../libthecore/include/crypt.h
 .obj/DBManager.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/DBManager.o: ../../common/item_length.h ../../common/tables.h
-.obj/DBManager.o: ../../common/length.h ../../common/singleton.h
-.obj/DBManager.o: ../../common/utils.h ../../common/stl.h
-.obj/DBManager.o: ../../common/service.h DBManager.h
+.obj/DBManager.o: ../../common/service.h ../../common/item_length.h
+.obj/DBManager.o: ../../common/tables.h ../../common/length.h
+.obj/DBManager.o: ../../common/singleton.h ../../common/utils.h
+.obj/DBManager.o: ../../common/stl.h ../../common/service.h DBManager.h
 .obj/DBManager.o: /usr/local/include/mysql/mysql.h
 .obj/DBManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/DBManager.o: /usr/local/include/mysql/mariadb_version.h
@@ -400,7 +402,7 @@
 .obj/DBManager.o: /usr/local/include/mysql/errmsg.h
 .obj/DBManager.o: /usr/local/include/mysql/mysqld_error.h
 .obj/DBManager.o: ../../libsql/Semaphore.h ClientManager.h
-.obj/DBManager.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
+.obj/DBManager.o: ../../common/building.h Peer.h PeerBase.h NetBase.h
 .obj/DBManager.o: LoginData.h
 .obj/Cache.o: stdafx.h ../../libthecore/include/stdafx.h /usr/include/stdio.h
 .obj/Cache.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -450,10 +452,11 @@
 .obj/Cache.o: ../../libthecore/include/utils.h
 .obj/Cache.o: ../../libthecore/include/crypt.h
 .obj/Cache.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/Cache.o: ../../common/item_length.h ../../common/tables.h
-.obj/Cache.o: ../../common/length.h ../../common/singleton.h
-.obj/Cache.o: ../../common/utils.h ../../common/stl.h ../../common/service.h
-.obj/Cache.o: ../../common/tables.h QID.h ClientManager.h
+.obj/Cache.o: ../../common/service.h ../../common/item_length.h
+.obj/Cache.o: ../../common/tables.h ../../common/length.h
+.obj/Cache.o: ../../common/singleton.h ../../common/utils.h
+.obj/Cache.o: ../../common/stl.h ../../common/service.h Cache.h
+.obj/Cache.o: ../../common/cache.h QID.h ClientManager.h
 .obj/Cache.o: ../../common/building.h Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/Cache.o: /usr/local/include/mysql/mysql.h
 .obj/Cache.o: /usr/local/include/mysql/mariadb_com.h
@@ -516,12 +519,12 @@
 .obj/LoginData.o: ../../libthecore/include/utils.h
 .obj/LoginData.o: ../../libthecore/include/crypt.h
 .obj/LoginData.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/LoginData.o: ../../common/item_length.h ../../common/tables.h
-.obj/LoginData.o: ../../common/length.h ../../common/singleton.h
-.obj/LoginData.o: ../../common/utils.h ../../common/stl.h
-.obj/LoginData.o: ../../common/service.h LoginData.h ClientManager.h
-.obj/LoginData.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
-.obj/LoginData.o: DBManager.h /usr/local/include/mysql/mysql.h
+.obj/LoginData.o: ../../common/service.h ../../common/item_length.h
+.obj/LoginData.o: ../../common/tables.h ../../common/length.h
+.obj/LoginData.o: ../../common/singleton.h ../../common/utils.h
+.obj/LoginData.o: ../../common/stl.h ../../common/service.h LoginData.h
+.obj/LoginData.o: ClientManager.h ../../common/building.h Peer.h PeerBase.h
+.obj/LoginData.o: NetBase.h DBManager.h /usr/local/include/mysql/mysql.h
 .obj/LoginData.o: /usr/local/include/mysql/mariadb_com.h
 .obj/LoginData.o: /usr/local/include/mysql/mariadb_version.h
 .obj/LoginData.o: /usr/local/include/mysql/ma_list.h
@@ -584,13 +587,13 @@
 .obj/ClientManager.o: ../../libthecore/include/utils.h
 .obj/ClientManager.o: ../../libthecore/include/crypt.h
 .obj/ClientManager.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/ClientManager.o: ../../common/item_length.h ../../common/tables.h
-.obj/ClientManager.o: ../../common/length.h ../../common/singleton.h
-.obj/ClientManager.o: ../../common/utils.h ../../common/stl.h
-.obj/ClientManager.o: ../../common/service.h ../../common/billing.h
+.obj/ClientManager.o: ../../common/service.h ../../common/item_length.h
+.obj/ClientManager.o: ../../common/tables.h ../../common/length.h
+.obj/ClientManager.o: ../../common/singleton.h ../../common/utils.h
+.obj/ClientManager.o: ../../common/stl.h ../../common/service.h
 .obj/ClientManager.o: ../../common/building.h ../../common/VnumHelper.h
-.obj/ClientManager.o: ../../libgame/include/grid.h ClientManager.h
-.obj/ClientManager.o: Peer.h PeerBase.h NetBase.h DBManager.h
+.obj/ClientManager.o: ../../libgame/include/grid.h ClientManager.h Peer.h
+.obj/ClientManager.o: PeerBase.h NetBase.h DBManager.h
 .obj/ClientManager.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManager.o: /usr/local/include/mysql/mariadb_version.h
@@ -675,13 +678,14 @@
 .obj/ClientManagerPlayer.o: ../../libthecore/include/utils.h
 .obj/ClientManagerPlayer.o: ../../libthecore/include/crypt.h
 .obj/ClientManagerPlayer.o: ../../libthecore/include/memcpy.h
-.obj/ClientManagerPlayer.o: ../../common/length.h ../../common/item_length.h
-.obj/ClientManagerPlayer.o: ../../common/tables.h ../../common/length.h
-.obj/ClientManagerPlayer.o: ../../common/singleton.h ../../common/utils.h
-.obj/ClientManagerPlayer.o: ../../common/stl.h ../../common/service.h
-.obj/ClientManagerPlayer.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerPlayer.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
-.obj/ClientManagerPlayer.o: DBManager.h /usr/local/include/mysql/mysql.h
+.obj/ClientManagerPlayer.o: ../../common/length.h ../../common/service.h
+.obj/ClientManagerPlayer.o: ../../common/item_length.h ../../common/tables.h
+.obj/ClientManagerPlayer.o: ../../common/length.h ../../common/singleton.h
+.obj/ClientManagerPlayer.o: ../../common/utils.h ../../common/stl.h
+.obj/ClientManagerPlayer.o: ../../common/service.h ClientManager.h
+.obj/ClientManagerPlayer.o: ../../common/building.h Peer.h PeerBase.h
+.obj/ClientManagerPlayer.o: NetBase.h DBManager.h
+.obj/ClientManagerPlayer.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerPlayer.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManagerPlayer.o: /usr/local/include/mysql/mariadb_version.h
 .obj/ClientManagerPlayer.o: /usr/local/include/mysql/ma_list.h
@@ -759,12 +763,13 @@
 .obj/ClientManagerLogin.o: ../../libthecore/include/utils.h
 .obj/ClientManagerLogin.o: ../../libthecore/include/crypt.h
 .obj/ClientManagerLogin.o: ../../libthecore/include/memcpy.h
-.obj/ClientManagerLogin.o: ../../common/length.h ../../common/item_length.h
-.obj/ClientManagerLogin.o: ../../common/tables.h ../../common/length.h
-.obj/ClientManagerLogin.o: ../../common/singleton.h ../../common/utils.h
-.obj/ClientManagerLogin.o: ../../common/stl.h ../../common/service.h
-.obj/ClientManagerLogin.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerLogin.o: Peer.h PeerBase.h NetBase.h DBManager.h
+.obj/ClientManagerLogin.o: ../../common/length.h ../../common/service.h
+.obj/ClientManagerLogin.o: ../../common/item_length.h ../../common/tables.h
+.obj/ClientManagerLogin.o: ../../common/length.h ../../common/singleton.h
+.obj/ClientManagerLogin.o: ../../common/utils.h ../../common/stl.h
+.obj/ClientManagerLogin.o: ../../common/service.h ClientManager.h
+.obj/ClientManagerLogin.o: ../../common/building.h Peer.h PeerBase.h
+.obj/ClientManagerLogin.o: NetBase.h DBManager.h
 .obj/ClientManagerLogin.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerLogin.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManagerLogin.o: /usr/local/include/mysql/mariadb_version.h
@@ -840,13 +845,13 @@
 .obj/ClientManagerBoot.o: ../../libthecore/include/utils.h
 .obj/ClientManagerBoot.o: ../../libthecore/include/crypt.h
 .obj/ClientManagerBoot.o: ../../libthecore/include/memcpy.h
-.obj/ClientManagerBoot.o: ../../common/length.h ../../common/item_length.h
-.obj/ClientManagerBoot.o: ../../common/tables.h ../../common/length.h
-.obj/ClientManagerBoot.o: ../../common/singleton.h ../../common/utils.h
-.obj/ClientManagerBoot.o: ../../common/stl.h ../../common/service.h
-.obj/ClientManagerBoot.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerBoot.o: Peer.h PeerBase.h NetBase.h DBManager.h
-.obj/ClientManagerBoot.o: /usr/local/include/mysql/mysql.h
+.obj/ClientManagerBoot.o: ../../common/length.h ../../common/service.h
+.obj/ClientManagerBoot.o: ../../common/item_length.h ../../common/tables.h
+.obj/ClientManagerBoot.o: ../../common/length.h ../../common/singleton.h
+.obj/ClientManagerBoot.o: ../../common/utils.h ../../common/stl.h
+.obj/ClientManagerBoot.o: ../../common/service.h ClientManager.h
+.obj/ClientManagerBoot.o: ../../common/building.h Peer.h PeerBase.h NetBase.h
+.obj/ClientManagerBoot.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/ClientManagerBoot.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManagerBoot.o: /usr/local/include/mysql/mariadb_version.h
 .obj/ClientManagerBoot.o: /usr/local/include/mysql/ma_list.h
@@ -923,12 +928,13 @@
 .obj/ClientManagerParty.o: ../../libthecore/include/utils.h
 .obj/ClientManagerParty.o: ../../libthecore/include/crypt.h
 .obj/ClientManagerParty.o: ../../libthecore/include/memcpy.h
-.obj/ClientManagerParty.o: ../../common/length.h ../../common/item_length.h
-.obj/ClientManagerParty.o: ../../common/tables.h ../../common/length.h
-.obj/ClientManagerParty.o: ../../common/singleton.h ../../common/utils.h
-.obj/ClientManagerParty.o: ../../common/stl.h ../../common/service.h
-.obj/ClientManagerParty.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerParty.o: Peer.h PeerBase.h NetBase.h DBManager.h
+.obj/ClientManagerParty.o: ../../common/length.h ../../common/service.h
+.obj/ClientManagerParty.o: ../../common/item_length.h ../../common/tables.h
+.obj/ClientManagerParty.o: ../../common/length.h ../../common/singleton.h
+.obj/ClientManagerParty.o: ../../common/utils.h ../../common/stl.h
+.obj/ClientManagerParty.o: ../../common/service.h ClientManager.h
+.obj/ClientManagerParty.o: ../../common/building.h Peer.h PeerBase.h
+.obj/ClientManagerParty.o: NetBase.h DBManager.h
 .obj/ClientManagerParty.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerParty.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManagerParty.o: /usr/local/include/mysql/mariadb_version.h
@@ -1006,12 +1012,13 @@
 .obj/ClientManagerGuild.o: ../../libthecore/include/utils.h
 .obj/ClientManagerGuild.o: ../../libthecore/include/crypt.h
 .obj/ClientManagerGuild.o: ../../libthecore/include/memcpy.h
-.obj/ClientManagerGuild.o: ../../common/length.h ../../common/item_length.h
-.obj/ClientManagerGuild.o: ../../common/tables.h ../../common/length.h
-.obj/ClientManagerGuild.o: ../../common/singleton.h ../../common/utils.h
-.obj/ClientManagerGuild.o: ../../common/stl.h ../../common/service.h
-.obj/ClientManagerGuild.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerGuild.o: Peer.h PeerBase.h NetBase.h DBManager.h
+.obj/ClientManagerGuild.o: ../../common/length.h ../../common/service.h
+.obj/ClientManagerGuild.o: ../../common/item_length.h ../../common/tables.h
+.obj/ClientManagerGuild.o: ../../common/length.h ../../common/singleton.h
+.obj/ClientManagerGuild.o: ../../common/utils.h ../../common/stl.h
+.obj/ClientManagerGuild.o: ../../common/service.h ClientManager.h
+.obj/ClientManagerGuild.o: ../../common/building.h Peer.h PeerBase.h
+.obj/ClientManagerGuild.o: NetBase.h DBManager.h
 .obj/ClientManagerGuild.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerGuild.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManagerGuild.o: /usr/local/include/mysql/mariadb_version.h
@@ -1078,14 +1085,15 @@
 .obj/GuildManager.o: ../../libthecore/include/utils.h
 .obj/GuildManager.o: ../../libthecore/include/crypt.h
 .obj/GuildManager.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/GuildManager.o: ../../common/item_length.h ../../common/tables.h
-.obj/GuildManager.o: ../../common/length.h ../../common/singleton.h
-.obj/GuildManager.o: ../../common/utils.h ../../common/stl.h
-.obj/GuildManager.o: ../../common/service.h GuildManager.h Peer.h PeerBase.h
-.obj/GuildManager.o: NetBase.h ../../libsql/libsql.h ../../libsql/AsyncSQL.h
-.obj/GuildManager.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h Main.h
-.obj/GuildManager.o: ClientManager.h ../../common/building.h
-.obj/GuildManager.o: DBManager.h /usr/local/include/mysql/mysql.h
+.obj/GuildManager.o: ../../common/service.h ../../common/item_length.h
+.obj/GuildManager.o: ../../common/tables.h ../../common/length.h
+.obj/GuildManager.o: ../../common/singleton.h ../../common/utils.h
+.obj/GuildManager.o: ../../common/stl.h ../../common/service.h GuildManager.h
+.obj/GuildManager.o: Peer.h PeerBase.h NetBase.h ../../libsql/libsql.h
+.obj/GuildManager.o: ../../libsql/AsyncSQL.h ../../libpoly/Poly.h
+.obj/GuildManager.o: ../../libpoly/SymTable.h Main.h ClientManager.h
+.obj/GuildManager.o: ../../common/building.h DBManager.h
+.obj/GuildManager.o: /usr/local/include/mysql/mysql.h
 .obj/GuildManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/GuildManager.o: /usr/local/include/mysql/mariadb_version.h
 .obj/GuildManager.o: /usr/local/include/mysql/ma_list.h
@@ -1141,11 +1149,11 @@
 .obj/HB.o: ../../libthecore/include/signal.h ../../libthecore/include/log.h
 .obj/HB.o: ../../libthecore/include/main.h ../../libthecore/include/utils.h
 .obj/HB.o: ../../libthecore/include/crypt.h ../../libthecore/include/memcpy.h
-.obj/HB.o: ../../common/length.h ../../common/item_length.h
-.obj/HB.o: ../../common/tables.h ../../common/length.h
-.obj/HB.o: ../../common/singleton.h ../../common/utils.h ../../common/stl.h
-.obj/HB.o: ../../common/service.h HB.h Main.h DBManager.h
-.obj/HB.o: /usr/local/include/mysql/mysql.h
+.obj/HB.o: ../../common/length.h ../../common/service.h
+.obj/HB.o: ../../common/item_length.h ../../common/tables.h
+.obj/HB.o: ../../common/length.h ../../common/singleton.h
+.obj/HB.o: ../../common/utils.h ../../common/stl.h ../../common/service.h
+.obj/HB.o: HB.h Main.h DBManager.h /usr/local/include/mysql/mysql.h
 .obj/HB.o: /usr/local/include/mysql/mariadb_com.h
 .obj/HB.o: /usr/local/include/mysql/mariadb_version.h
 .obj/HB.o: /usr/local/include/mysql/ma_list.h
@@ -1205,12 +1213,13 @@
 .obj/PrivManager.o: ../../libthecore/include/utils.h
 .obj/PrivManager.o: ../../libthecore/include/crypt.h
 .obj/PrivManager.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/PrivManager.o: ../../common/item_length.h ../../common/tables.h
-.obj/PrivManager.o: ../../common/length.h ../../common/singleton.h
-.obj/PrivManager.o: ../../common/utils.h ../../common/stl.h
-.obj/PrivManager.o: ../../common/service.h PrivManager.h Peer.h PeerBase.h
-.obj/PrivManager.o: NetBase.h ClientManager.h ../../common/building.h
-.obj/PrivManager.o: DBManager.h /usr/local/include/mysql/mysql.h
+.obj/PrivManager.o: ../../common/service.h ../../common/item_length.h
+.obj/PrivManager.o: ../../common/tables.h ../../common/length.h
+.obj/PrivManager.o: ../../common/singleton.h ../../common/utils.h
+.obj/PrivManager.o: ../../common/stl.h ../../common/service.h PrivManager.h
+.obj/PrivManager.o: Peer.h PeerBase.h NetBase.h ClientManager.h
+.obj/PrivManager.o: ../../common/building.h DBManager.h
+.obj/PrivManager.o: /usr/local/include/mysql/mysql.h
 .obj/PrivManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/PrivManager.o: /usr/local/include/mysql/mariadb_version.h
 .obj/PrivManager.o: /usr/local/include/mysql/ma_list.h
@@ -1271,12 +1280,12 @@
 .obj/MoneyLog.o: ../../libthecore/include/utils.h
 .obj/MoneyLog.o: ../../libthecore/include/crypt.h
 .obj/MoneyLog.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/MoneyLog.o: ../../common/item_length.h ../../common/tables.h
-.obj/MoneyLog.o: ../../common/length.h ../../common/singleton.h
-.obj/MoneyLog.o: ../../common/utils.h ../../common/stl.h
-.obj/MoneyLog.o: ../../common/service.h MoneyLog.h ClientManager.h
-.obj/MoneyLog.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h
-.obj/MoneyLog.o: DBManager.h /usr/local/include/mysql/mysql.h
+.obj/MoneyLog.o: ../../common/service.h ../../common/item_length.h
+.obj/MoneyLog.o: ../../common/tables.h ../../common/length.h
+.obj/MoneyLog.o: ../../common/singleton.h ../../common/utils.h
+.obj/MoneyLog.o: ../../common/stl.h ../../common/service.h MoneyLog.h
+.obj/MoneyLog.o: ClientManager.h ../../common/building.h Peer.h PeerBase.h
+.obj/MoneyLog.o: NetBase.h DBManager.h /usr/local/include/mysql/mysql.h
 .obj/MoneyLog.o: /usr/local/include/mysql/mariadb_com.h
 .obj/MoneyLog.o: /usr/local/include/mysql/mariadb_version.h
 .obj/MoneyLog.o: /usr/local/include/mysql/ma_list.h
@@ -1345,11 +1354,12 @@
 .obj/ItemAwardManager.o: ../../libthecore/include/utils.h
 .obj/ItemAwardManager.o: ../../libthecore/include/crypt.h
 .obj/ItemAwardManager.o: ../../libthecore/include/memcpy.h
-.obj/ItemAwardManager.o: ../../common/length.h ../../common/item_length.h
-.obj/ItemAwardManager.o: ../../common/tables.h ../../common/length.h
-.obj/ItemAwardManager.o: ../../common/singleton.h ../../common/utils.h
-.obj/ItemAwardManager.o: ../../common/stl.h ../../common/service.h QID.h
-.obj/ItemAwardManager.o: DBManager.h /usr/local/include/mysql/mysql.h
+.obj/ItemAwardManager.o: ../../common/length.h ../../common/service.h
+.obj/ItemAwardManager.o: ../../common/item_length.h ../../common/tables.h
+.obj/ItemAwardManager.o: ../../common/length.h ../../common/singleton.h
+.obj/ItemAwardManager.o: ../../common/utils.h ../../common/stl.h
+.obj/ItemAwardManager.o: ../../common/service.h QID.h DBManager.h
+.obj/ItemAwardManager.o: /usr/local/include/mysql/mysql.h
 .obj/ItemAwardManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ItemAwardManager.o: /usr/local/include/mysql/mariadb_version.h
 .obj/ItemAwardManager.o: /usr/local/include/mysql/ma_list.h
@@ -1362,7 +1372,7 @@
 .obj/ItemAwardManager.o: /usr/local/include/mysql/mysqld_error.h
 .obj/ItemAwardManager.o: ../../libsql/Semaphore.h ItemAwardManager.h Peer.h
 .obj/ItemAwardManager.o: PeerBase.h NetBase.h ClientManager.h
-.obj/ItemAwardManager.o: ../../common/tables.h LoginData.h
+.obj/ItemAwardManager.o: ../../common/building.h LoginData.h
 .obj/ClientManagerEventFlag.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/ClientManagerEventFlag.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/ClientManagerEventFlag.o: /usr/include/sys/_null.h
@@ -1437,14 +1447,13 @@
 .obj/ClientManagerEventFlag.o: ../../libthecore/include/utils.h
 .obj/ClientManagerEventFlag.o: ../../libthecore/include/crypt.h
 .obj/ClientManagerEventFlag.o: ../../libthecore/include/memcpy.h
-.obj/ClientManagerEventFlag.o: ../../common/length.h
+.obj/ClientManagerEventFlag.o: ../../common/length.h ../../common/service.h
 .obj/ClientManagerEventFlag.o: ../../common/item_length.h
 .obj/ClientManagerEventFlag.o: ../../common/tables.h ../../common/length.h
 .obj/ClientManagerEventFlag.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerEventFlag.o: ../../common/stl.h ../../common/service.h
-.obj/ClientManagerEventFlag.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerEventFlag.o: ../../common/tables.h Peer.h PeerBase.h
-.obj/ClientManagerEventFlag.o: NetBase.h DBManager.h
+.obj/ClientManagerEventFlag.o: ClientManager.h ../../common/building.h Peer.h
+.obj/ClientManagerEventFlag.o: PeerBase.h NetBase.h DBManager.h
 .obj/ClientManagerEventFlag.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerEventFlag.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManagerEventFlag.o: /usr/local/include/mysql/mariadb_version.h
@@ -1508,11 +1517,11 @@
 .obj/Marriage.o: ../../libthecore/include/utils.h
 .obj/Marriage.o: ../../libthecore/include/crypt.h
 .obj/Marriage.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/Marriage.o: ../../common/item_length.h ../../common/tables.h
-.obj/Marriage.o: ../../common/length.h ../../common/singleton.h
-.obj/Marriage.o: ../../common/utils.h ../../common/stl.h
-.obj/Marriage.o: ../../common/service.h Marriage.h Peer.h PeerBase.h
-.obj/Marriage.o: NetBase.h Main.h DBManager.h
+.obj/Marriage.o: ../../common/service.h ../../common/item_length.h
+.obj/Marriage.o: ../../common/tables.h ../../common/length.h
+.obj/Marriage.o: ../../common/singleton.h ../../common/utils.h
+.obj/Marriage.o: ../../common/stl.h ../../common/service.h Marriage.h Peer.h
+.obj/Marriage.o: PeerBase.h NetBase.h Main.h DBManager.h
 .obj/Marriage.o: /usr/local/include/mysql/mysql.h
 .obj/Marriage.o: /usr/local/include/mysql/mariadb_com.h
 .obj/Marriage.o: /usr/local/include/mysql/mariadb_version.h
@@ -1524,7 +1533,7 @@
 .obj/Marriage.o: /usr/local/include/mysql/errmsg.h
 .obj/Marriage.o: /usr/local/include/mysql/mysqld_error.h
 .obj/Marriage.o: ../../libsql/Semaphore.h ClientManager.h
-.obj/Marriage.o: ../../common/tables.h LoginData.h
+.obj/Marriage.o: ../../common/building.h LoginData.h
 .obj/Monarch.o: Monarch.h ../../libthecore/include/stdafx.h
 .obj/Monarch.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/Monarch.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -1576,9 +1585,9 @@
 .obj/Monarch.o: ../../libthecore/include/crypt.h
 .obj/Monarch.o: ../../libthecore/include/memcpy.h ../../common/singleton.h
 .obj/Monarch.o: ../../common/tables.h ../../common/length.h
-.obj/Monarch.o: ../../common/utils.h Main.h ClientManager.h
-.obj/Monarch.o: ../../common/stl.h ../../common/building.h
-.obj/Monarch.o: PeerBase.h NetBase.h DBManager.h
+.obj/Monarch.o: ../../common/service.h ../../common/utils.h Main.h
+.obj/Monarch.o: ClientManager.h ../../common/stl.h ../../common/building.h
+.obj/Monarch.o: Peer.h PeerBase.h NetBase.h DBManager.h
 .obj/Monarch.o: /usr/local/include/mysql/mysql.h
 .obj/Monarch.o: /usr/local/include/mysql/mariadb_com.h
 .obj/Monarch.o: /usr/local/include/mysql/mariadb_version.h
@@ -1641,11 +1650,12 @@
 .obj/BlockCountry.o: ../../libthecore/include/utils.h
 .obj/BlockCountry.o: ../../libthecore/include/crypt.h
 .obj/BlockCountry.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/BlockCountry.o: ../../common/item_length.h ../../common/tables.h
-.obj/BlockCountry.o: ../../common/length.h ../../common/singleton.h
-.obj/BlockCountry.o: ../../common/utils.h ../../common/stl.h
-.obj/BlockCountry.o: ../../common/service.h BlockCountry.h Peer.h PeerBase.h
-.obj/BlockCountry.o: NetBase.h DBManager.h /usr/local/include/mysql/mysql.h
+.obj/BlockCountry.o: ../../common/service.h ../../common/item_length.h
+.obj/BlockCountry.o: ../../common/tables.h ../../common/length.h
+.obj/BlockCountry.o: ../../common/singleton.h ../../common/utils.h
+.obj/BlockCountry.o: ../../common/stl.h ../../common/service.h BlockCountry.h
+.obj/BlockCountry.o: Peer.h PeerBase.h NetBase.h DBManager.h
+.obj/BlockCountry.o: /usr/local/include/mysql/mysql.h
 .obj/BlockCountry.o: /usr/local/include/mysql/mariadb_com.h
 .obj/BlockCountry.o: /usr/local/include/mysql/mariadb_version.h
 .obj/BlockCountry.o: /usr/local/include/mysql/ma_list.h
@@ -1721,12 +1731,12 @@
 .obj/ItemIDRangeManager.o: ../../libthecore/include/utils.h
 .obj/ItemIDRangeManager.o: ../../libthecore/include/crypt.h
 .obj/ItemIDRangeManager.o: ../../libthecore/include/memcpy.h
-.obj/ItemIDRangeManager.o: ../../common/length.h ../../common/item_length.h
-.obj/ItemIDRangeManager.o: ../../common/tables.h ../../common/length.h
-.obj/ItemIDRangeManager.o: ../../common/singleton.h ../../common/utils.h
-.obj/ItemIDRangeManager.o: ../../common/stl.h ../../common/service.h
-.obj/ItemIDRangeManager.o: ItemIDRangeManager.h Main.h DBManager.h
-.obj/ItemIDRangeManager.o: /usr/local/include/mysql/mysql.h
+.obj/ItemIDRangeManager.o: ../../common/length.h ../../common/service.h
+.obj/ItemIDRangeManager.o: ../../common/item_length.h ../../common/tables.h
+.obj/ItemIDRangeManager.o: ../../common/length.h ../../common/singleton.h
+.obj/ItemIDRangeManager.o: ../../common/utils.h ../../common/stl.h
+.obj/ItemIDRangeManager.o: ../../common/service.h ItemIDRangeManager.h Main.h
+.obj/ItemIDRangeManager.o: DBManager.h /usr/local/include/mysql/mysql.h
 .obj/ItemIDRangeManager.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ItemIDRangeManager.o: /usr/local/include/mysql/mariadb_version.h
 .obj/ItemIDRangeManager.o: /usr/local/include/mysql/ma_list.h
@@ -1738,8 +1748,8 @@
 .obj/ItemIDRangeManager.o: /usr/local/include/mysql/errmsg.h
 .obj/ItemIDRangeManager.o: /usr/local/include/mysql/mysqld_error.h
 .obj/ItemIDRangeManager.o: ../../libsql/Semaphore.h ClientManager.h
-.obj/ItemIDRangeManager.o: ../../common/building.h
-.obj/ItemIDRangeManager.o: Peer.h PeerBase.h NetBase.h LoginData.h
+.obj/ItemIDRangeManager.o: ../../common/building.h Peer.h PeerBase.h
+.obj/ItemIDRangeManager.o: NetBase.h LoginData.h
 .obj/ClientManagerHorseName.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/ClientManagerHorseName.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/ClientManagerHorseName.o: /usr/include/sys/_null.h
@@ -1814,14 +1824,13 @@
 .obj/ClientManagerHorseName.o: ../../libthecore/include/utils.h
 .obj/ClientManagerHorseName.o: ../../libthecore/include/crypt.h
 .obj/ClientManagerHorseName.o: ../../libthecore/include/memcpy.h
-.obj/ClientManagerHorseName.o: ../../common/length.h
+.obj/ClientManagerHorseName.o: ../../common/length.h ../../common/service.h
 .obj/ClientManagerHorseName.o: ../../common/item_length.h
 .obj/ClientManagerHorseName.o: ../../common/tables.h ../../common/length.h
 .obj/ClientManagerHorseName.o: ../../common/singleton.h ../../common/utils.h
 .obj/ClientManagerHorseName.o: ../../common/stl.h ../../common/service.h
-.obj/ClientManagerHorseName.o: ClientManager.h ../../common/building.h
-.obj/ClientManagerHorseName.o: ../../common/tables.h Peer.h PeerBase.h
-.obj/ClientManagerHorseName.o: NetBase.h DBManager.h
+.obj/ClientManagerHorseName.o: ClientManager.h ../../common/building.h Peer.h
+.obj/ClientManagerHorseName.o: PeerBase.h NetBase.h DBManager.h
 .obj/ClientManagerHorseName.o: /usr/local/include/mysql/mysql.h
 .obj/ClientManagerHorseName.o: /usr/local/include/mysql/mariadb_com.h
 .obj/ClientManagerHorseName.o: /usr/local/include/mysql/mariadb_version.h
@@ -1890,11 +1899,11 @@
 .obj/ProtoReader.o: ../../libthecore/include/utils.h
 .obj/ProtoReader.o: ../../libthecore/include/crypt.h
 .obj/ProtoReader.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/ProtoReader.o: ../../common/item_length.h ../../common/tables.h
-.obj/ProtoReader.o: ../../common/length.h ../../common/singleton.h
-.obj/ProtoReader.o: ../../common/utils.h ../../common/stl.h
-.obj/ProtoReader.o: ../../common/service.h /usr/include/math.h ProtoReader.h
-.obj/ProtoReader.o: CsvReader.h
+.obj/ProtoReader.o: ../../common/service.h ../../common/item_length.h
+.obj/ProtoReader.o: ../../common/tables.h ../../common/length.h
+.obj/ProtoReader.o: ../../common/singleton.h ../../common/utils.h
+.obj/ProtoReader.o: ../../common/stl.h ../../common/service.h
+.obj/ProtoReader.o: /usr/include/math.h ProtoReader.h CsvReader.h
 .obj/CsvReader.o: stdafx.h ../../libthecore/include/stdafx.h
 .obj/CsvReader.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 .obj/CsvReader.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -1945,7 +1954,7 @@
 .obj/CsvReader.o: ../../libthecore/include/utils.h
 .obj/CsvReader.o: ../../libthecore/include/crypt.h
 .obj/CsvReader.o: ../../libthecore/include/memcpy.h ../../common/length.h
-.obj/CsvReader.o: ../../common/item_length.h ../../common/tables.h
-.obj/CsvReader.o: ../../common/length.h ../../common/singleton.h
-.obj/CsvReader.o: ../../common/utils.h ../../common/stl.h
-.obj/CsvReader.o: ../../common/service.h CsvReader.h
+.obj/CsvReader.o: ../../common/service.h ../../common/item_length.h
+.obj/CsvReader.o: ../../common/tables.h ../../common/length.h
+.obj/CsvReader.o: ../../common/singleton.h ../../common/utils.h
+.obj/CsvReader.o: ../../common/stl.h ../../common/service.h CsvReader.h
