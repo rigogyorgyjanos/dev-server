@@ -8,3 +8,6 @@
 
 # A .gitignore maradjon verziókezelve
 !.gitignore
+
+/db/src/.obj/
+/game/src/OBJDIR/
