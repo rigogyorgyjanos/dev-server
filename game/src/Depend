@@ -1005,102 +1005,6 @@ OBJDIR/blend_item.o: ../../../extern/include/boost/smart_ptr/detail/operator_boo
 OBJDIR/blend_item.o: constants.h ../../common/tables.h ../../common/length.h
 OBJDIR/blend_item.o: ../../common/service.h ../../common/item_length.h
 OBJDIR/blend_item.o: dev_log.h locale_service.h item.h entity.h blend_item.h
-OBJDIR/block_country.o: stdafx.h debug_allocator.h
-OBJDIR/block_country.o: ../../libthecore/include/stdafx.h
-OBJDIR/block_country.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-OBJDIR/block_country.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-OBJDIR/block_country.o: /usr/include/machine/_types.h
-OBJDIR/block_country.o: /usr/include/x86/_types.h
-OBJDIR/block_country.o: /usr/include/machine/_limits.h
-OBJDIR/block_country.o: /usr/include/x86/_limits.h /usr/include/string.h
-OBJDIR/block_country.o: /usr/include/strings.h
-OBJDIR/block_country.o: /usr/include/xlocale/_strings.h
-OBJDIR/block_country.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
-OBJDIR/block_country.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
-OBJDIR/block_country.o: /usr/include/errno.h /usr/include/stdlib.h
-OBJDIR/block_country.o: /usr/include/unistd.h /usr/include/sys/types.h
-OBJDIR/block_country.o: /usr/include/machine/endian.h
-OBJDIR/block_country.o: /usr/include/x86/endian.h /usr/include/sys/_endian.h
-OBJDIR/block_country.o: /usr/include/sys/_pthreadtypes.h
-OBJDIR/block_country.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
-OBJDIR/block_country.o: /usr/include/sys/_sigset.h
-OBJDIR/block_country.o: /usr/include/sys/_timeval.h
-OBJDIR/block_country.o: /usr/include/sys/timespec.h
-OBJDIR/block_country.o: /usr/include/sys/_timespec.h
-OBJDIR/block_country.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
-OBJDIR/block_country.o: /usr/include/assert.h /usr/include/ctype.h
-OBJDIR/block_country.o: /usr/include/_ctype.h /usr/include/runetype.h
-OBJDIR/block_country.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
-OBJDIR/block_country.o: /usr/include/sys/limits.h
-OBJDIR/block_country.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
-OBJDIR/block_country.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
-OBJDIR/block_country.o: /usr/include/sys/_clock_id.h /usr/include/time.h
-OBJDIR/block_country.o: /usr/include/xlocale/_time.h /usr/include/sys/stat.h
-OBJDIR/block_country.o: /usr/include/netinet/in.h
-OBJDIR/block_country.o: /usr/include/sys/_sockaddr_storage.h
-OBJDIR/block_country.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-OBJDIR/block_country.o: /usr/include/netdb.h /usr/include/sys/socket.h
-OBJDIR/block_country.o: /usr/include/sys/_iovec.h
-OBJDIR/block_country.o: /usr/include/machine/_align.h
-OBJDIR/block_country.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-OBJDIR/block_country.o: /usr/include/machine/signal.h
-OBJDIR/block_country.o: /usr/include/x86/signal.h /usr/include/sys/wait.h
-OBJDIR/block_country.o: /usr/include/pthread.h /usr/include/sched.h
-OBJDIR/block_country.o: /usr/include/sys/sched.h /usr/include/sys/cpuset.h
-OBJDIR/block_country.o: /usr/include/sys/_cpuset.h /usr/include/sys/_bitset.h
-OBJDIR/block_country.o: /usr/include/sys/bitset.h /usr/include/semaphore.h
-OBJDIR/block_country.o: /usr/include/sys/_umtx.h /usr/include/sys/event.h
-OBJDIR/block_country.o: /usr/include/sys/queue.h typedef.h
-OBJDIR/block_country.o: ../../libthecore/include/heart.h
-OBJDIR/block_country.o: ../../libthecore/include/fdwatch.h
-OBJDIR/block_country.o: ../../libthecore/include/socket.h
-OBJDIR/block_country.o: ../../libthecore/include/kstbl.h
-OBJDIR/block_country.o: ../../libthecore/include/hangul.h
-OBJDIR/block_country.o: ../../libthecore/include/buffer.h
-OBJDIR/block_country.o: ../../libthecore/include/signal.h log.h
-OBJDIR/block_country.o: ../../libsql/AsyncSQL.h
-OBJDIR/block_country.o: ../../libthecore/include/stdafx.h
-OBJDIR/block_country.o: ../../libthecore/include/log.h
-OBJDIR/block_country.o: /usr/local/include/mysql/mysql.h
-OBJDIR/block_country.o: /usr/local/include/mysql/mariadb_com.h
-OBJDIR/block_country.o: /usr/local/include/mysql/mariadb_version.h
-OBJDIR/block_country.o: /usr/local/include/mysql/ma_list.h
-OBJDIR/block_country.o: /usr/local/include/mysql/mariadb_ctype.h
-OBJDIR/block_country.o: /usr/local/include/mysql/mariadb_stmt.h
-OBJDIR/block_country.o: /usr/local/include/mysql/errmsg.h
-OBJDIR/block_country.o: /usr/local/include/mysql/mysqld_error.h
-OBJDIR/block_country.o: ../../libsql/Semaphore.h any_function.h
-OBJDIR/block_country.o: any_function.inc ../../libthecore/include/main.h
-OBJDIR/block_country.o: utils.h /usr/include/math.h
-OBJDIR/block_country.o: ../../libthecore/include/crypt.h
-OBJDIR/block_country.o: ../../libthecore/include/memcpy.h
-OBJDIR/block_country.o: ../../common/singleton.h ../../common/utils.h
-OBJDIR/block_country.o: ../../common/service.h /usr/include/float.h
-OBJDIR/block_country.o: /usr/include/x86/float.h locale.hpp event.h
-OBJDIR/block_country.o: ../../../extern/include/boost/intrusive_ptr.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/user.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/compiler/gcc.hpp
-OBJDIR/block_country.o: /usr/include/stddef.h
-OBJDIR/block_country.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/platform/bsd.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/detail/posix_features.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/detail/suffix.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/helper_macros.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/assert.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/detail/workaround.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/workaround.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
-OBJDIR/block_country.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/block_country.o: constants.h ../../common/tables.h
-OBJDIR/block_country.o: ../../common/length.h ../../common/service.h
-OBJDIR/block_country.o: ../../common/item_length.h block_country.h dev_log.h
 OBJDIR/buffer_manager.o: stdafx.h debug_allocator.h
 OBJDIR/buffer_manager.o: ../../libthecore/include/stdafx.h
 OBJDIR/buffer_manager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -5803,7 +5707,7 @@ OBJDIR/input_db.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/input_db.o: /usr/include/x86/_stdint.h
 OBJDIR/input_db.o: ../../../extern/include/cryptopp/trap.h wedding.h
 OBJDIR/input_db.o: marriage.h login_data.h unique_item.h monarch.h castle.h
-OBJDIR/input_db.o: block_country.h motion.h ../../common/d3dtype.h dev_log.h
+OBJDIR/input_db.o: motion.h ../../common/d3dtype.h dev_log.h
 OBJDIR/input_db.o: horsename_manager.h gm.h panama.h map_location.h
 OBJDIR/input_db.o: DragonSoul.h
 OBJDIR/input_login.o: stdafx.h debug_allocator.h
@@ -5915,8 +5819,8 @@ OBJDIR/input_login.o: ../../liblua/include/lua.h
 OBJDIR/input_login.o: ../../liblua/include/lauxlib.h
 OBJDIR/input_login.o: ../../liblua/include/lualib.h building.h
 OBJDIR/input_login.o: ../../common/building.h wedding.h marriage.h arena.h
-OBJDIR/input_login.o: OXEvent.h priv_manager.h block_country.h dev_log.h
-OBJDIR/input_login.o: horsename_manager.h MarkManager.h MarkImage.h
+OBJDIR/input_login.o: OXEvent.h priv_manager.h dev_log.h horsename_manager.h
+OBJDIR/input_login.o: MarkManager.h MarkImage.h
 OBJDIR/input_login.o: ../../../extern/include/IL/il.h minilzo.h lzo/lzoconf.h
 OBJDIR/input_main.o: stdafx.h debug_allocator.h
 OBJDIR/input_main.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
