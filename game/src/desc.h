@@ -7,7 +7,6 @@
 #include "cipher.h"
 #endif
 
-#define MAX_ALLOW_USER                  4096
 //#define MAX_INPUT_LEN			2048
 #define MAX_INPUT_LEN			65536
 

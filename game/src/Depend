@@ -3237,8 +3237,8 @@ OBJDIR/config.o: /usr/include/x86/_stdint.h
 OBJDIR/config.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/config.o: ../../common/stl.h ../../common/length.h item_manager.h
 OBJDIR/config.o: p2p.h char.h entity.h FSM.h state.h horse_rider.h cmd.h
-OBJDIR/config.o: vid.h affect.h affect_flag.h cube.h mining.h ip_ban.h
-OBJDIR/config.o: war_map.h guild.h skill.h ../../libpoly/Poly.h
+OBJDIR/config.o: vid.h affect.h affect_flag.h cube.h mining.h war_map.h
+OBJDIR/config.o: guild.h skill.h ../../libpoly/Poly.h
 OBJDIR/config.o: ../../libpoly/SymTable.h locale_service.h dev_log.h db.h
 OBJDIR/config.o: skill_power.h check_server.h
 OBJDIR/config.o: ../../libserverkey/CheckServerKey.h ../../libserverkey/SIM.h
@@ -3889,7 +3889,7 @@ OBJDIR/desc_manager.o: desc_client.h desc_manager.h ../../common/stl.h
 OBJDIR/desc_manager.o: ../../common/length.h char.h entity.h FSM.h state.h
 OBJDIR/desc_manager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
 OBJDIR/desc_manager.o: cube.h mining.h protocol.h messenger_manager.h db.h
-OBJDIR/desc_manager.o: p2p.h ip_ban.h dev_log.h ClientPackageCryptInfo.h
+OBJDIR/desc_manager.o: p2p.h dev_log.h ClientPackageCryptInfo.h
 OBJDIR/desc_p2p.o: stdafx.h debug_allocator.h
 OBJDIR/desc_p2p.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/desc_p2p.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -6223,88 +6223,6 @@ OBJDIR/input_udp.o: /usr/include/x86/_stdint.h
 OBJDIR/input_udp.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/input_udp.o: ../../common/stl.h ../../common/length.h item_manager.h
 OBJDIR/input_udp.o: char_manager.h vid.h protocol.h
-OBJDIR/ip_ban.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
-OBJDIR/ip_ban.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-OBJDIR/ip_ban.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-OBJDIR/ip_ban.o: /usr/include/machine/_types.h /usr/include/x86/_types.h
-OBJDIR/ip_ban.o: /usr/include/machine/_limits.h /usr/include/x86/_limits.h
-OBJDIR/ip_ban.o: /usr/include/string.h /usr/include/strings.h
-OBJDIR/ip_ban.o: /usr/include/xlocale/_strings.h
-OBJDIR/ip_ban.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
-OBJDIR/ip_ban.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
-OBJDIR/ip_ban.o: /usr/include/errno.h /usr/include/stdlib.h
-OBJDIR/ip_ban.o: /usr/include/unistd.h /usr/include/sys/types.h
-OBJDIR/ip_ban.o: /usr/include/machine/endian.h /usr/include/x86/endian.h
-OBJDIR/ip_ban.o: /usr/include/sys/_endian.h /usr/include/sys/_pthreadtypes.h
-OBJDIR/ip_ban.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
-OBJDIR/ip_ban.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
-OBJDIR/ip_ban.o: /usr/include/sys/timespec.h /usr/include/sys/_timespec.h
-OBJDIR/ip_ban.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
-OBJDIR/ip_ban.o: /usr/include/assert.h /usr/include/ctype.h
-OBJDIR/ip_ban.o: /usr/include/_ctype.h /usr/include/runetype.h
-OBJDIR/ip_ban.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
-OBJDIR/ip_ban.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-OBJDIR/ip_ban.o: /usr/include/dirent.h /usr/include/sys/dirent.h
-OBJDIR/ip_ban.o: /usr/include/sys/time.h /usr/include/sys/_clock_id.h
-OBJDIR/ip_ban.o: /usr/include/time.h /usr/include/xlocale/_time.h
-OBJDIR/ip_ban.o: /usr/include/sys/stat.h /usr/include/netinet/in.h
-OBJDIR/ip_ban.o: /usr/include/sys/_sockaddr_storage.h
-OBJDIR/ip_ban.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-OBJDIR/ip_ban.o: /usr/include/netdb.h /usr/include/sys/socket.h
-OBJDIR/ip_ban.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
-OBJDIR/ip_ban.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-OBJDIR/ip_ban.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
-OBJDIR/ip_ban.o: /usr/include/sys/wait.h /usr/include/pthread.h
-OBJDIR/ip_ban.o: /usr/include/sched.h /usr/include/sys/sched.h
-OBJDIR/ip_ban.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
-OBJDIR/ip_ban.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
-OBJDIR/ip_ban.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
-OBJDIR/ip_ban.o: /usr/include/sys/event.h /usr/include/sys/queue.h typedef.h
-OBJDIR/ip_ban.o: ../../libthecore/include/heart.h
-OBJDIR/ip_ban.o: ../../libthecore/include/fdwatch.h
-OBJDIR/ip_ban.o: ../../libthecore/include/socket.h
-OBJDIR/ip_ban.o: ../../libthecore/include/kstbl.h
-OBJDIR/ip_ban.o: ../../libthecore/include/hangul.h
-OBJDIR/ip_ban.o: ../../libthecore/include/buffer.h
-OBJDIR/ip_ban.o: ../../libthecore/include/signal.h log.h
-OBJDIR/ip_ban.o: ../../libsql/AsyncSQL.h ../../libthecore/include/stdafx.h
-OBJDIR/ip_ban.o: ../../libthecore/include/log.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/mysql.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/mariadb_com.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/mariadb_version.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/ma_list.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/mariadb_ctype.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/mariadb_stmt.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/errmsg.h
-OBJDIR/ip_ban.o: /usr/local/include/mysql/mysqld_error.h
-OBJDIR/ip_ban.o: ../../libsql/Semaphore.h any_function.h any_function.inc
-OBJDIR/ip_ban.o: ../../libthecore/include/main.h utils.h /usr/include/math.h
-OBJDIR/ip_ban.o: ../../libthecore/include/crypt.h
-OBJDIR/ip_ban.o: ../../libthecore/include/memcpy.h ../../common/singleton.h
-OBJDIR/ip_ban.o: ../../common/utils.h ../../common/service.h
-OBJDIR/ip_ban.o: /usr/include/float.h /usr/include/x86/float.h locale.hpp
-OBJDIR/ip_ban.o: event.h ../../../extern/include/boost/intrusive_ptr.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/user.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/compiler/gcc.hpp
-OBJDIR/ip_ban.o: /usr/include/stddef.h
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/platform/bsd.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/detail/posix_features.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/detail/suffix.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/helper_macros.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/assert.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/detail/workaround.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/workaround.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
-OBJDIR/ip_ban.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
-OBJDIR/ip_ban.o: ip_ban.h
 OBJDIR/item.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/item.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/item.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
