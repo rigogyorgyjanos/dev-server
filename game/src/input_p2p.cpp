@@ -220,8 +220,9 @@ struct FuncShout
 
 	void operator () (LPDESC d)
 	{
-		if (!d->GetCharacter() || (d->GetCharacter()->GetGMLevel() == GM_PLAYER && d->GetEmpire() != m_bEmpire))
+		if (!d->GetCharacter())
 			return;
+		
 		d->GetCharacter()->ChatPacket(CHAT_TYPE_SHOUT, "%s", m_str);
 	}
 

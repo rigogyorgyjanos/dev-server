@@ -798,7 +798,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 	if (pinfo->type == CHAT_TYPE_SHOUT)
 	{
-		const int SHOUT_LIMIT_LEVEL = g_iUseLocale ? 15 : 3;
+		const int SHOUT_LIMIT_LEVEL = 15;
 
 		if (ch->GetLevel() < SHOUT_LIMIT_LEVEL)
 		{
@@ -810,16 +810,19 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 			return (iExtraLen);
 
 		ch->SetLastShoutPulse(thecore_heart->pulse);
-
+		
+		const char * ColoredEmpireNames[4] = {"0", "|cFFFF0000[Shinshoo]|r", "|cFFFFFF00[Chunjo]|r", "|cFF0080FF[Jinno]|r",};
+		const char * ColoredTeamName = "|cFFFFC700[Team]|r";
+		len = snprintf(chatbuf, sizeof(chatbuf), "%s %s : %s",
+		ch->GetGMLevel() != GM_PLAYER ? ColoredTeamName : ColoredEmpireNames[ch->GetEmpire()], ch->GetName(), buf);
+		
+		
 		TPacketGGShout p;
-
 		p.bHeader = HEADER_GG_SHOUT;
 		p.bEmpire = ch->GetEmpire();
 		strlcpy(p.szText, chatbuf, sizeof(p.szText));
 		P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGShout));
-		SendShout(chatbuf, ch->GetEmpire()
-
-			);
+		SendShout(chatbuf, ch->GetEmpire());
 
 		return (iExtraLen);
 	}
