@@ -659,7 +659,51 @@ typedef struct SItemTable : public SEntityTable
 	// 현재 구조대로 매번 아이템마다 필요한 경우에 LIMIT_MAX_NUM까지 루프돌면서 체크하는 부하가 커서 미리 저장 해 둠.
 	char		cLimitRealTimeFirstUseIndex;		// 아이템 limit 필드값 중에서 LIMIT_REAL_TIME_FIRST_USE 플래그의 위치 (없으면 -1)
 	char		cLimitTimerBasedOnWearIndex;		// 아이템 limit 필드값 중에서 LIMIT_TIMER_BASED_ON_WEAR 플래그의 위치 (없으면 -1) 
+	
+	BYTE GetType() { return bType; }
+	BYTE GetSubType() { return bSubType; }
+	BYTE GetWeight() { return bWeight; }
+	BYTE GetSize() { return bSize; }
+	
+	DWORD GetAntiFlags() { return dwAntiFlags; }
+	DWORD GetWearFlags() { return dwWearFlags; }
+	DWORD GetImmuneFlags() { return dwImmuneFlag; }
+	
+	long GetValue(unsigned int index) { return alValues[index]; }
+	BYTE GetLimitType(DWORD idx) const { return aLimits[idx].bType; }
+	long GetLimitValue(DWORD idx) const { return aLimits[idx].lValue; }
+	
+	// Weapon
+	bool IsWeapon() { return GetType() == ITEM_WEAPON; }
+	bool IsSword() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_SWORD; }
+	bool IsDagger() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_DAGGER; }
+	bool IsBow() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_BOW; }
+	bool IsTwoHandSword() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_TWO_HANDED; }
+	bool IsBell() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_BELL; }
+	bool IsFan() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_FAN; }
+	bool IsArrow() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_ARROW; }
+	bool IsMountSpear() { return GetType() == ITEM_WEAPON && GetSubType() == WEAPON_MOUNT_SPEAR; }
+	
+	// Armor
+	bool IsArmor() { return GetType() == ITEM_ARMOR; }
+	bool IsArmorBody() { return GetType() == ITEM_ARMOR && GetSubType() == ARMOR_BODY; }
+	bool IsHelmet() { return GetType() == ITEM_ARMOR && GetSubType() == ARMOR_HEAD; }
+	bool IsShield() { return GetType() == ITEM_ARMOR && GetSubType() == ARMOR_SHIELD; }
+	bool IsWrist() { return GetType() == ITEM_ARMOR && GetSubType() == ARMOR_WRIST; }
+	bool IsShoe() { return GetType() == ITEM_ARMOR && GetSubType() == ARMOR_FOOTS; }
+	bool IsNecklace() { return GetType() == ITEM_ARMOR && GetSubType() == ARMOR_NECK; }
+	bool IsEarRing() { return GetType() == ITEM_ARMOR && GetSubType() == ARMOR_EAR; }
 
+	bool IsBelt() { return GetType() == ITEM_BELT; }
+	bool IsRing() { return GetType() == ITEM_RING; }
+	
+	// Costume
+	bool IsCostume() { return GetType() == ITEM_COSTUME; }
+	bool IsCostumeBody() { return GetType() == ITEM_COSTUME && GetSubType() == COSTUME_BODY; }
+	bool IsCostumeHair() { return GetType() == ITEM_COSTUME && GetSubType() == COSTUME_HAIR; }
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+	bool IsCostumeWeapon() { return GetType() == ITEM_COSTUME && GetSubType() == COSTUME_WEAPON; }
+#endif
 } TItemTable;
 
 struct TItemAttrTable

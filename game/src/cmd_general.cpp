@@ -2083,17 +2083,24 @@ static bool FN_hair_affect_string(LPCHARACTER ch, char *buf, size_t bufsiz)
 
 ACMD(do_costume)
 {
-	char buf[512];
+	char buf[1024];
 	const size_t bufferSize = sizeof(buf);
 
 	char arg1[256];
 	one_argument(argument, arg1, sizeof(arg1));
-
-	CItem* pBody = ch->GetWear(WEAR_COSTUME_BODY);
-	CItem* pHair = ch->GetWear(WEAR_COSTUME_HAIR);
-
 	ch->ChatPacket(CHAT_TYPE_INFO, "COSTUME status:");
 
+	CItem* pBody = ch->GetWear(WEAR_COSTUME_BODY);
+	if (pBody)
+	{
+		const char* itemName = pBody->GetName();
+		ch->ChatPacket(CHAT_TYPE_INFO, "  BODY : %s", itemName);
+
+		if (pBody->IsEquipped() && arg1[0] == 'b')
+			ch->UnequipItem(pBody);
+	}
+	
+	CItem* pHair = ch->GetWear(WEAR_COSTUME_HAIR);
 	if (pHair)
 	{
 		const char* itemName = pHair->GetName();
@@ -2112,15 +2119,18 @@ ACMD(do_costume)
 		if (pHair->IsEquipped() && arg1[0] == 'h')
 			ch->UnequipItem(pHair);
 	}
-
-	if (pBody)
+	#if defined(__WEAPON_COSTUME_SYSTEM__)
+	CItem* pWeapon = ch->GetWear(WEAR_COSTUME_WEAPON);
+	if (pWeapon)
 	{
-		const char* itemName = pBody->GetName();
-		ch->ChatPacket(CHAT_TYPE_INFO, "  BODY : %s", itemName);
-
-		if (pBody->IsEquipped() && arg1[0] == 'b')
-			ch->UnequipItem(pBody);
+		const char* itemName = pWeapon->GetName();
+		ch->ChatPacket(CHAT_TYPE_INFO, "   WEAPON : %s", itemName);
+		if (pWeapon->IsEquipped() && arg1[0] == 'w')
+			ch->UnequipItem(pWeapon);
 	}
+#endif
+
+	
 }
 
 ACMD(do_hair)

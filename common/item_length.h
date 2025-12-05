@@ -113,6 +113,9 @@ enum ECostumeSubTypes
 {
 	COSTUME_BODY = ARMOR_BODY,			// [중요!!] ECostumeSubTypes enum value는  종류별로 EArmorSubTypes의 그것과 같아야 함.
 	COSTUME_HAIR = ARMOR_HEAD,			// 이는 코스츔 아이템에 추가 속성을 붙이겠다는 사업부의 요청에 따라서 기존 로직을 활용하기 위함임.
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+	COSTUME_WEAPON,
+#endif
 	COSTUME_NUM_TYPES,
 };
 
@@ -322,6 +325,41 @@ enum EItemWearableFlag
 	WEARABLE_HAIR	= (1 << 10),
 	WEARABLE_ABILITY		= (1 << 11),
 	WEARABLE_COSTUME_BODY	= (1 << 12),
+};
+
+enum EWearPositions
+{
+	WEAR_BODY,		// 0
+	WEAR_HEAD,		// 1
+	WEAR_FOOTS,		// 2
+	WEAR_WRIST,		// 3
+	WEAR_WEAPON,	// 4
+	WEAR_NECK,		// 5
+	WEAR_EAR,		// 6
+	WEAR_UNIQUE1,	// 7
+	WEAR_UNIQUE2,	// 8
+	WEAR_ARROW,		// 9
+	WEAR_SHIELD,	// 10
+    WEAR_ABILITY1,  // 11
+    WEAR_ABILITY2,  // 12
+    WEAR_ABILITY3,  // 13
+    WEAR_ABILITY4,  // 14
+    WEAR_ABILITY5,  // 15
+    WEAR_ABILITY6,  // 16
+    WEAR_ABILITY7,  // 17
+    WEAR_ABILITY8,  // 18
+	WEAR_COSTUME_BODY,	// 19
+	WEAR_COSTUME_HAIR,	// 20
+	#if defined(__WEAPON_COSTUME_SYSTEM__)
+	WEAR_COSTUME_WEAPON,
+#endif
+	
+	WEAR_RING1,			// 21	: 신규 반지슬롯1 (왼쪽)
+	WEAR_RING2,			// 22	: 신규 반지슬롯2 (오른쪽)
+
+	WEAR_BELT,			// 23	: 신규 벨트슬롯
+
+	WEAR_MAX = 32	// 
 };
 
 enum ELimitTypes

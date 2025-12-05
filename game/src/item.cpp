@@ -499,12 +499,20 @@ int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 			return -1;
 		}
 	}
-	else if (GetType() == ITEM_COSTUME)
+	if (GetType() == ITEM_COSTUME)
 	{
-		if (GetSubType() == COSTUME_BODY)
-			return WEAR_COSTUME_BODY;
-		else if (GetSubType() == COSTUME_HAIR)
-			return WEAR_COSTUME_HAIR;
+		switch (GetSubType())
+		{
+			case COSTUME_BODY:
+				return WEAR_COSTUME_BODY;
+			case COSTUME_HAIR:
+				return WEAR_COSTUME_HAIR;
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+			case COSTUME_WEAPON:
+				return WEAR_COSTUME_WEAPON;
+#endif
+		}
+
 	}
 	else if (GetType() == ITEM_RING)
 	{
@@ -699,6 +707,9 @@ void CItem::ModifyPoints(bool bAdd)
 
 		case ITEM_WEAPON:
 			{
+				if (m_pOwner->GetWear(WEAR_COSTUME_WEAPON) != 0)
+					return;
+				
 				if (bAdd)
 				{
 					if (m_wCell == INVENTORY_MAX_NUM + WEAR_WEAPON)
@@ -739,29 +750,37 @@ void CItem::ModifyPoints(bool bAdd)
 			{
 				DWORD toSetValue = this->GetVnum();
 				EParts toSetPart = PART_MAX_NUM;
-
-				// 갑옷 코스츔
-				if (GetSubType() == COSTUME_BODY)
+				
+				switch(GetSubType())
 				{
-					toSetPart = PART_MAIN;
-
-					if (false == bAdd)
+					case COSTUME_BODY:
 					{
-						// 코스츔 갑옷을 벗었을 때 원래 갑옷을 입고 있었다면 그 갑옷으로 look 세팅, 입지 않았다면 default look
-						const CItem* pArmor = m_pOwner->GetWear(WEAR_BODY);
-						toSetValue = (NULL != pArmor) ? pArmor->GetVnum() : m_pOwner->GetOriginalPart(PART_MAIN);						
+						toSetPart = PART_MAIN;
+
+						if (!bAdd)
+						{
+							const CItem* pArmor = m_pOwner->GetWear(WEAR_BODY);
+							toSetValue = (NULL != pArmor) ? pArmor->GetVnum() : m_pOwner->GetOriginalPart(PART_MAIN);
+						}
 					}
-					
-				}
-
-				// 헤어 코스츔
-				else if (GetSubType() == COSTUME_HAIR)
-				{
-					toSetPart = PART_HAIR;
-
-					// 코스츔 헤어는 shape값을 item proto의 value3에 세팅하도록 함. 특별한 이유는 없고 기존 갑옷(ARMOR_BODY)의 shape값이 프로토의 value3에 있어서 헤어도 같이 value3으로 함.
-					// [NOTE] 갑옷은 아이템 vnum을 보내고 헤어는 shape(value3)값을 보내는 이유는.. 기존 시스템이 그렇게 되어있음...
-					toSetValue = (true == bAdd) ? this->GetValue(3) : 0;
+					break;
+					case COSTUME_HAIR:
+					{
+						toSetPart = PART_HAIR;
+						toSetValue = (true == bAdd) ? this->GetValue(3) : 0;
+					}
+					break;
+					case COSTUME_WEAPON: 
+					{
+						toSetPart = PART_WEAPON;
+						
+						if(!bAdd)
+						{
+							const CItem* pWeapon = m_pOwner->GetWear(WEAR_WEAPON);
+							toSetValue = (pWeapon != NULL) ? pWeapon->GetVnum() : m_pOwner->GetOriginalPart(PART_WEAPON);
+						}
+					}
+					break;
 				}
 
 				if (PART_MAX_NUM != toSetPart)
@@ -790,6 +809,10 @@ void CItem::ModifyPoints(bool bAdd)
 			}
 			break;
 	}
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+	if (m_pOwner->GetWear(WEAR_COSTUME_WEAPON) && !m_pOwner->GetWear(WEAR_WEAPON))
+		m_pOwner->SetPart(PART_WEAPON, 0);
+#endif
 }
 
 bool CItem::IsEquipable() const
@@ -1212,12 +1235,14 @@ void CItem::AlterToMagicItem()
 		switch (GetType())
 		{
 			case ITEM_WEAPON:
+			{
 				iSecondPct = 20;
 				iThirdPct = 5;
-				break;
+			}
+			break;
 
 			case ITEM_ARMOR:
-			case ITEM_COSTUME:
+			{
 				if (GetSubType() == ARMOR_BODY)
 				{
 					iSecondPct = 10;
@@ -1228,7 +1253,35 @@ void CItem::AlterToMagicItem()
 					iSecondPct = 10;
 					iThirdPct = 1;
 				}
-				break;
+			}
+			break;
+
+			case ITEM_COSTUME:
+			{
+				if (GetSubType() == COSTUME_BODY)
+				{
+					iSecondPct = 30;
+					iThirdPct = 10;
+				}
+				else if (GetSubType() == COSTUME_HAIR)
+				{
+					iSecondPct = 30;
+					iThirdPct = 10;
+				}
+				#if defined(__WEAPON_COSTUME_SYSTEM__)
+				else if (GetSubType() == COSTUME_WEAPON)
+				{
+					iSecondPct = 30;
+					iThirdPct = 10;
+				}
+				#endif
+				else
+				{
+					iSecondPct = 0;
+					iThirdPct = 0;
+				}
+			}
+			break;
 
 			default:
 				return;

@@ -1,5 +1,4 @@
-#ifndef __INC_METIN_II_LENGTH_H__
-#define __INC_METIN_II_LENGTH_H__
+#pragma once
 
 #define WORD_MAX 0xffff
 
@@ -106,38 +105,6 @@ enum EMatrixCard
 {
 	MATRIX_CODE_MAX_LEN		= 192,
 	MATRIX_ANSWER_MAX_LEN	= 8,
-};
-
-enum EWearPositions
-{
-	WEAR_BODY,		// 0
-	WEAR_HEAD,		// 1
-	WEAR_FOOTS,		// 2
-	WEAR_WRIST,		// 3
-	WEAR_WEAPON,	// 4
-	WEAR_NECK,		// 5
-	WEAR_EAR,		// 6
-	WEAR_UNIQUE1,	// 7
-	WEAR_UNIQUE2,	// 8
-	WEAR_ARROW,		// 9
-	WEAR_SHIELD,	// 10
-    WEAR_ABILITY1,  // 11
-    WEAR_ABILITY2,  // 12
-    WEAR_ABILITY3,  // 13
-    WEAR_ABILITY4,  // 14
-    WEAR_ABILITY5,  // 15
-    WEAR_ABILITY6,  // 16
-    WEAR_ABILITY7,  // 17
-    WEAR_ABILITY8,  // 18
-	WEAR_COSTUME_BODY,	// 19
-	WEAR_COSTUME_HAIR,	// 20
-	
-	WEAR_RING1,			// 21	: 신규 반지슬롯1 (왼쪽)
-	WEAR_RING2,			// 22	: 신규 반지슬롯2 (오른쪽)
-
-	WEAR_BELT,			// 23	: 신규 벨트슬롯
-
-	WEAR_MAX = 32	// 
 };
 
 enum EDragonSoulDeckType
@@ -597,6 +564,13 @@ enum EAttributeSet
 	ATTRIBUTE_SET_HEAD,
 	ATTRIBUTE_SET_SHIELD,
 	ATTRIBUTE_SET_EAR,
+#if defined(__COSTUME_SYSTEM__)
+	ATTRIBUTE_SET_COSTUME_BODY,
+	ATTRIBUTE_SET_COSTUME_HAIR,
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+	ATTRIBUTE_SET_COSTUME_WEAPON,
+#endif
+#endif
 	ATTRIBUTE_SET_MAX_NUM
 };  
 
@@ -780,5 +754,3 @@ typedef enum
 } EShopCoinType;
 
 #pragma pack(pop)
-
-#endif

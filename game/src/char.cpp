@@ -4136,6 +4136,11 @@ WORD CHARACTER::GetOriginalPart(BYTE bPartPos) const
 
 		case PART_HAIR:
 			return GetPart(PART_HAIR);
+		
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+		case PART_WEAPON:
+			return GetWear(WEAR_COSTUME_WEAPON) ? GetPart(PART_WEAPON) : 0;
+#endif
 
 		default:
 			return 0;

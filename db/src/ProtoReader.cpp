@@ -122,7 +122,13 @@ int get_Item_SubType_Value(int type_value, string inputString)
 						"RESOURCE_STONE", "RESOURCE_METIN", "RESOURCE_ORE" };
 	static string arSub16[] = { "UNIQUE_NONE", "UNIQUE_BOOK", "UNIQUE_SPECIAL_RIDE", "UNIQUE_3", "UNIQUE_4", "UNIQUE_5",
 					"UNIQUE_6", "UNIQUE_7", "UNIQUE_8", "UNIQUE_9", "USE_SPECIAL"};
-	static string arSub28[] = { "COSTUME_BODY", "COSTUME_HAIR" };
+	static string arSub28[] = 	{ 
+									"COSTUME_BODY", 
+									"COSTUME_HAIR" 
+									#if defined(__WEAPON_COSTUME_SYSTEM__)
+									,"COSTUME_WEAPON"
+									#endif
+								};
 	static string arSub29[] = { "DS_SLOT1", "DS_SLOT2", "DS_SLOT3", "DS_SLOT4", "DS_SLOT5", "DS_SLOT6" };
 	static string arSub31[] = { "EXTRACT_DRAGON_SOUL", "EXTRACT_DRAGON_HEART" };
 	

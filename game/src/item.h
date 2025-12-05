@@ -71,6 +71,10 @@ class CItem : public CEntity
 		long		GetLimitValue(DWORD idx) const { return m_pProto ? m_pProto->aLimits[idx].lValue : 0;	}
 
 		long		GetValue(DWORD idx);
+		
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+		bool IsCostumeWeapon() { return GetType() == ITEM_COSTUME && GetSubType() == COSTUME_WEAPON; }
+#endif
 
 		void		SetCell(LPCHARACTER ch, WORD pos)	{ m_pOwner = ch, m_wCell = pos;	}
 		WORD		GetCell()				{ return m_wCell;	}

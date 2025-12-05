@@ -572,33 +572,6 @@ bool CClientManager::InitializeQuestItemTable()
 
 bool CClientManager::InitializeItemTable()
 {
-	//================== 함수 설명 ==================//
-	//1. 요약 : 'item_proto.txt', 'item_proto_test.txt', 'item_names.txt' 파일을 읽고,
-	//		<item_table>(TItemTable), <m_map_itemTableByVnum> 오브젝트를 생성한다.
-	//2. 순서
-	//	1) 'item_names.txt' 파일을 읽어서 (a)[localMap](vnum:name) 맵을 만든다.
-	//	2) 'item_proto_text.txt'파일과 (a)[localMap] 맵으로
-	//		(b)[test_map_itemTableByVnum](vnum:TItemTable) 맵을 생성한다.
-	//	3) 'item_proto.txt' 파일과  (a)[localMap] 맵으로
-	//		(!)[item_table], <m_map_itemTableByVnum>을 만든다.
-	//			<참고>
-	//			각 row 들 중, 
-	//			(b)[test_map_itemTableByVnum],(!)[mob_table] 모두에 있는 row는
-	//			(b)[test_map_itemTableByVnum]의 것을 사용한다.
-	//	4) (b)[test_map_itemTableByVnum]의 row중, (!)[item_table]에 없는 것을 추가한다.
-	//3. 테스트
-	//	1)'item_proto.txt' 정보가 item_table에 잘 들어갔는지. -> 완료
-	//	2)'item_names.txt' 정보가 item_table에 잘 들어갔는지.
-	//	3)'item_proto_test.txt' 에서 [겹치는] 정보가 item_table 에 잘 들어갔는지.
-	//	4)'item_proto_test.txt' 에서 [새로운] 정보가 item_table 에 잘 들어갔는지.
-	//	5) (최종) 게임 클라이언트에서 제대로 작동 하는지.
-	//_______________________________________________//
-
-
-
-	//=================================================================================//
-	//	1) 'item_names.txt' 파일을 읽어서 (a)[localMap](vnum:name) 맵을 만든다.
-	//=================================================================================//
 	bool isNameFile = true;
 	map<int,const char*> localMap;
 	cCsvTable nameData;
@@ -970,7 +943,16 @@ bool CClientManager::InitializeItemAttrTable()
 {
 	char query[4096];
 	snprintf(query, sizeof(query),
-			"SELECT apply, apply+0, prob, lv1, lv2, lv3, lv4, lv5, weapon, body, wrist, foots, neck, head, shield, ear FROM item_attr%s ORDER BY apply",
+			"SELECT apply, apply+0, prob, lv1, lv2, lv3, lv4, lv5,"
+			"weapon, body, wrist, foots, neck, head, shield, ear "
+			#if defined(__COSTUME_SYSTEM__)
+				", costume_body"
+				", costume_hair"
+			#if defined(__WEAPON_COSTUME_SYSTEM__)
+				", costume_weapon"
+			#endif
+			#endif
+			" FROM item_attr%s ORDER BY apply",
 			GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
@@ -1016,8 +998,23 @@ bool CClientManager::InitializeItemAttrTable()
 		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_HEAD], data[col++]);
 		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_SHIELD], data[col++]);
 		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_EAR], data[col++]);
+#if defined(__COSTUME_SYSTEM__)
+		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_COSTUME_BODY], data[col++]);
+		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_COSTUME_HAIR], data[col++]);
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_COSTUME_WEAPON], data[col++]);
+#endif
+#endif
 
-		sys_log(0, "ITEM_ATTR: %-20s %4lu { %3d %3d %3d %3d %3d } { %d %d %d %d %d %d %d }",
+		sys_log(0, "ITEM_ATTR: %-20s %4lu { %3d %3d %3d %3d %3d } { %d %d %d %d %d %d %d "
+#if defined(__COSTUME_SYSTEM__)
+			"%d "
+			"%d "
+	#if defined(__WEAPON_COSTUME_SYSTEM__)
+			"%d "
+	#endif
+#endif
+				" }",
 				t.szApply,
 				t.dwProb,
 				t.lValues[0],
@@ -1032,7 +1029,16 @@ bool CClientManager::InitializeItemAttrTable()
 				t.bMaxLevelBySet[ATTRIBUTE_SET_NECK],
 				t.bMaxLevelBySet[ATTRIBUTE_SET_HEAD],
 				t.bMaxLevelBySet[ATTRIBUTE_SET_SHIELD],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_EAR]);
+				t.bMaxLevelBySet[ATTRIBUTE_SET_EAR]
+#if defined(__COSTUME_SYSTEM__)
+				, t.bMaxLevelBySet[ATTRIBUTE_SET_COSTUME_BODY]
+				, t.bMaxLevelBySet[ATTRIBUTE_SET_COSTUME_HAIR]
+	#if defined(__WEAPON_COSTUME_SYSTEM__)
+				, t.bMaxLevelBySet[ATTRIBUTE_SET_COSTUME_WEAPON]
+	#endif
+#endif
+				
+				);
 
 		m_vec_itemAttrTable.push_back(t);
 	}

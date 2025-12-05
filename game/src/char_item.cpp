@@ -5576,8 +5576,24 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 	}
 
 	// 이미 착용중인 아이템을 다른 곳으로 옮기는 경우, '장책 해제' 가능한 지 확인하고 옮김
-	if (Cell.IsEquipPosition() && !CanUnequipNow(item))
-		return false;
+	if (Cell.IsEquipPosition())
+	{
+		if (!CanUnequipNow(item))
+			return false;
+
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+		const int iWearCell = item->FindEquipCell(this);
+		if (iWearCell == WEAR_WEAPON)
+		{
+			LPITEM pkCostumeWeapon = GetWear(WEAR_COSTUME_WEAPON);
+			if (pkCostumeWeapon)
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("If you want to change weapons, you must remove the weapon skin first."));
+				return false;
+			}
+		}
+#endif
+	}
 
 	if (DestCell.IsEquipPosition())
 	{
@@ -6057,6 +6073,17 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 
 bool CHARACTER::UnequipItem(LPITEM item)
 {
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+	if (item->FindEquipCell(this) == WEAR_WEAPON)
+	{
+		LPITEM pCostumeWeapon = GetWear(WEAR_COSTUME_WEAPON);
+		if (pCostumeWeapon)
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("If you want to change weapons, you must remove the weapon skin first."));
+			return false;
+		}
+	}
+#endif
 	int pos;
 
 	if (false == CanUnequipNow(item))
@@ -6138,6 +6165,47 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("가만히 있을 때만 착용할 수 있습니다."));
 		return false;
 	}
+
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+	if (iWearCell == WEAR_WEAPON)
+	{
+		if (item->GetType() == ITEM_WEAPON)
+		{
+			LPITEM pkCostumeWeapon = GetWear(WEAR_COSTUME_WEAPON);
+			if (pkCostumeWeapon && pkCostumeWeapon->GetValue(3) != item->GetSubType())
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("If you want to change weapons, you must remove the weapon skin first."));
+				return false;
+			}
+		}
+		else
+		{
+			LPITEM pkCostumeWeapon = GetWear(WEAR_COSTUME_WEAPON);
+			if (pkCostumeWeapon)
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("If you want to change weapons, you must remove the weapon skin first."));
+				return false;
+			}
+		}
+	}
+	else if (iWearCell == WEAR_COSTUME_WEAPON)
+	{
+		if (item->GetType() == ITEM_COSTUME && item->GetSubType() == COSTUME_WEAPON)
+		{
+			LPITEM pkWeapon = GetWear(WEAR_WEAPON);
+			if (!pkWeapon)
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You need to equip a weapon first."));
+				return false;
+			}
+			else if (pkWeapon->GetType() != ITEM_WEAPON || item->GetValue(3) != pkWeapon->GetSubType())
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot use this costume for this weapon."));
+				return false;
+			}
+		}
+	}
+#endif
 
 	// 용혼석 특수 처리
 	if (item->IsDragonSoul())
@@ -6315,7 +6383,13 @@ void CHARACTER::BuffOnAttr_ValueChange(BYTE bType, BYTE bOldValue, BYTE bNewValu
 				break;
 			case POINT_COSTUME_ATTR_BONUS:
 				{
-					static BYTE abSlot[] = { WEAR_COSTUME_BODY, WEAR_COSTUME_HAIR };
+					static BYTE abSlot[] = {
+						WEAR_COSTUME_BODY,
+						WEAR_COSTUME_HAIR,
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+						WEAR_COSTUME_WEAPON,
+#endif
+					};
 					static std::vector <BYTE> vec_slots (abSlot, abSlot + _countof(abSlot));
 					pBuff = M2_NEW CBuffOnAttributes(this, bType, &vec_slots);
 				}

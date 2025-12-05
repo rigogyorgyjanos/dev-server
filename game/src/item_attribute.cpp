@@ -19,7 +19,7 @@ int CItem::GetAttributeSetIndex()
 		return ATTRIBUTE_SET_WEAPON;
 	}
 
-	if (GetType() == ITEM_ARMOR || GetType() == ITEM_COSTUME)
+	if (GetType() == ITEM_ARMOR)
 	{
 		switch (GetSubType())
 		{
@@ -45,6 +45,22 @@ int CItem::GetAttributeSetIndex()
 
 			case ARMOR_EAR:
 				return ATTRIBUTE_SET_EAR;
+		}
+	}
+	else if(GetType() == ITEM_COSTUME)
+	{
+		switch(GetSubType())
+		{
+			case COSTUME_BODY:
+				return ATTRIBUTE_SET_COSTUME_BODY;
+
+			case COSTUME_HAIR:
+				return ATTRIBUTE_SET_COSTUME_HAIR;
+			
+			#if defined(__WEAPON_COSTUME_SYSTEM__)
+			case COSTUME_WEAPON:
+				return ATTRIBUTE_SET_COSTUME_WEAPON;
+			#endif
 		}
 	}
 
