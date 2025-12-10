@@ -802,6 +802,13 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		return false;
 	}
 	
+	DWORD pos = GetEmptyInventory(item->GetSize());
+
+	if (-1 == pos){
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+		return false;
+	}
+	
 	//개량 시간제한 : upgrade_refine_scroll.quest 에서 개량후 5분이내에 일반 개량을 
 	//진행할수 없음
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
@@ -924,10 +931,19 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 			// DETAIL_REFINE_LOG
 			NotifyRefineSuccess(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 			DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -cost);
-			ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE SUCCESS)");
-			// END_OF_DETAIL_REFINE_LOG
+			DWORD dwStonesVnum = item->GetVnum();
 
-			pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, bCell)); 
+			if (dwStonesVnum >= 28000 && dwStonesVnum <= 29000) {
+				item->SetCount(item->GetCount() - 1);
+				pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, pos));
+				ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
+			}
+			else {
+				ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE SUCCESS)");
+				ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
+				pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, bCell)); 
+			}
+			
 			ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
 
 			sys_log(0, "Refine Success %d", cost);
@@ -952,9 +968,8 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -cost);
 		NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 		item->AttrLog();
-		ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE FAIL)");
+		item->SetCount(item->GetCount() - 1);
 
-		//PointChange(POINT_GOLD, -cost);
 		PayRefineFee(cost);
 	}
 
@@ -977,6 +992,12 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	if (!CanHandleItem(true))
 	{
 		ClearRefineMode();
+		return false;
+	}
+	
+	DWORD pos = GetEmptyInventory(item->GetSize());
+	if (-1 == pos){
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
 		return false;
 	}
 
@@ -1196,9 +1217,19 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 			NotifyRefineSuccess(this, item, szRefineType);
 			DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -prt->cost);
-			ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE SUCCESS)");
-
-			pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, bCell)); 
+			
+			DWORD dwStonesVnum = item->GetVnum();
+			if (dwStonesVnum >= 28000 && dwStonesVnum <= 29000) {
+				item->SetCount(item->GetCount() - 1);
+				pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, pos));
+				ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
+			}
+			else {
+				ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE SUCCESS)");
+				ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
+				pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, bCell)); 
+			}
+			
 			ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
 			pkNewItem->AttrLog();
 			//PointChange(POINT_GOLD, -prt->cost);
@@ -1225,9 +1256,18 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 			DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -prt->cost);
 			NotifyRefineFail(this, item, szRefineType, -1);
-			ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE FAIL)");
+			DWORD dwStonesVnum = item->GetVnum();
 
-			pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, bCell)); 
+			if (dwStonesVnum >= 28000 && dwStonesVnum <= 29000) {
+				item->SetCount(item->GetCount() - 1);
+				pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, pos));
+				ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
+			}
+			else {
+				ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE FAIL)");
+				ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
+				pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, bCell)); 
+			} 
 			ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
 
 			pkNewItem->AttrLog();
@@ -5040,7 +5080,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						}
 
 						LogManager::instance().ItemLog(this, item2, "SOCKET", item->GetName());
-						ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (METIN)");
+						item->SetCount(item->GetCount() - 1);
 						break;
 					}
 
