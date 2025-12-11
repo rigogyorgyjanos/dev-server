@@ -49,6 +49,21 @@ public:
 
 	/// 라마단 이벤트 보상용 흑마(20119) .. 할로윈 이벤트용 라마단 흑마 클론(스펙은 같음, 20219)
 	static	bool	IsRamadanBlackHorse(DWORD vnum)		{ return 20119 == vnum || 20219 == vnum || 22022 == vnum; }
+	
+	// find better way | temp solution #FixMe
+	static	bool	IsMount(DWORD vnum) {
+		switch (vnum) {
+			case 20030: case 20110: case 20111: case 20112: case 20113: case 20114: case 20115:
+			case 20116: case 20117: case 20118: case 20205: case 20206: case 20207: case 20208:
+			case 20209: case 20210: case 20211: case 20212: case 20119: case 20219: case 20220:
+			case 20221: case 20222: case 20120: case 20121: case 20122: case 20123: case 20124:
+			case 20125: case 20214: case 20215: case 20217: case 20218: case 20224: case 20225:
+			case 20226: case 20227:
+				return true;
+			default:
+				return false;
+		}
+	}
 };
 
 class CVnumHelper

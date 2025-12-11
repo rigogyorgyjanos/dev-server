@@ -11,6 +11,8 @@
 #include "sectree_manager.h"
 #include "buffer_manager.h"
 #include "locale_service.h"
+#include "../../common/VnumHelper.h"
+
 
 using namespace std;
 
@@ -360,59 +362,15 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 	if (pkVictim->IsNPC() && pkChr->IsNPC() && !pkChr->IsGuardNPC())
 		return false;
 
-	if( true == pkChr->IsHorseRiding() )
+	if (pkChr->IsHorseRiding())
 	{
-		if( pkChr->GetHorseLevel() > 0 && 1 == pkChr->GetHorseGrade() ) 
+		if (pkChr->GetHorseLevel() > 0 && 1 == pkChr->GetHorseGrade()) 
 			return false;
 	}
-	else
-	{
-		switch( pkChr->GetMountVnum() )
-		{
-			case 0:
-			case 20030:
-			case 20110:
-			case 20111:
-			case 20112:
-			case 20113:
-			case 20114:
-			case 20115:
-			case 20116:
-			case 20117:
-			case 20118:
-				//½Å±Ô Å»°Í °í±Þ
-			case 20205:
-			case 20206:
-			case 20207:
-			case 20208:
-			case 20209:
-			case 20210:
-			case 20211:
-			case 20212:
-			case 20119:		// ¶ó¸¶´Ü Èæ¸¶
-			case 20219:		// ¶ó¸¶´Ü Èæ¸¶ Å¬·Ð (ÇÒ·ÎÀ©¿ë)
-			case 20220:		// Å©¸®½º¸¶½º Å»°Í
-			case 20221:		// Àü°© ¹é¿õ
-			case 20222:		// Àü°© ÆÒ´õ
-			case 20120:
-			case 20121:
-			case 20122:
-			case 20123:
-			case 20124:
-			case 20125:
-			case 20214:		// ³­ÆøÇÑ Àü°©¼ø¼ø·Ï	
-			case 20215:		// ¿ë¸ÍÇÑ Àü°©¼ø¼ø·Ï	
-			case 20217:		// ³­ÆøÇÑ Àü°©¾Ï¼ø·Ï	
-			case 20218:		// ¿ë¸ÍÇÑ Àü°©¾Ï¼ø·Ï	
-			case 20224:
-			case 20229:
-			case 20225:
-			case 20230:
-				break;
-
-			default:
-				return false;
-		}
+	else {
+		const auto mountVnum = pkChr->GetMountVnum();
+		if (mountVnum != 0 && !CMobVnumHelper::IsMount(mountVnum))
+			return false;
 	}
 
 	if (pkVictim->IsNPC() || pkChr->IsNPC())

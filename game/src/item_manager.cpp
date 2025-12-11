@@ -397,7 +397,7 @@ LPITEM ITEM_MANAGER::CreateItem(DWORD vnum, DWORD count, DWORD id, bool bTryMagi
 			}
 		}
 	}
-	else if (item->GetType() == ITEM_UNIQUE)
+	else if (item->GetType() == ITEM_UNIQUE || item->GetSubType() == COSTUME_MOUNT)
 	{
 		for (itertype (m_map_pkSpecialItemGroup) it = m_map_pkSpecialItemGroup.begin(); it != m_map_pkSpecialItemGroup.end(); it++)
 		{
@@ -510,6 +510,12 @@ void ITEM_MANAGER::RemoveItem(LPITEM item, const char * c_pszReason)
 		// END_OF_SAFEBOX_TIME_LIMIT_ITEM_BUG_FIX
 		else
 		{
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+			if (o->GetWear(WEAR_COSTUME_MOUNT) && item == o->GetWear(WEAR_COSTUME_MOUNT)) {
+				o->StopRiding();
+				o->HorseSummon(false);
+			}
+#endif
 			o->SyncQuickslot(QUICKSLOT_TYPE_ITEM, item->GetCell(), 255);
 			item->RemoveFromCharacter();
 		}

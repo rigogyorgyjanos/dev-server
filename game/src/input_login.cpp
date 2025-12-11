@@ -576,10 +576,11 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 			ch->GetName(), ch->GetX(), ch->GetY(), ch->GetZ(), d->GetHostName(), ch->GetMapIndex());
 
 	if (ch->GetHorseLevel() > 0)
-	{
 		ch->EnterHorse();
-	}
 
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	ch->CheckEnterMount();
+#endif
 	// 플레이시간 레코딩 시작
 	ch->ResetPlayTime();
 

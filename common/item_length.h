@@ -116,6 +116,7 @@ enum ECostumeSubTypes
 #if defined(__WEAPON_COSTUME_SYSTEM__)
 	COSTUME_WEAPON,
 #endif
+	COSTUME_MOUNT,
 	COSTUME_NUM_TYPES,
 };
 
@@ -350,9 +351,10 @@ enum EWearPositions
     WEAR_ABILITY8,  // 18
 	WEAR_COSTUME_BODY,	// 19
 	WEAR_COSTUME_HAIR,	// 20
-	#if defined(__WEAPON_COSTUME_SYSTEM__)
+#if defined(__WEAPON_COSTUME_SYSTEM__)
 	WEAR_COSTUME_WEAPON,
 #endif
+	WEAR_COSTUME_MOUNT,
 	
 	WEAR_RING1,			// 21	: 신규 반지슬롯1 (왼쪽)
 	WEAR_RING2,			// 22	: 신규 반지슬롯2 (오른쪽)

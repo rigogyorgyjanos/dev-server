@@ -1132,6 +1132,14 @@ void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 			SyncQuickslot(QUICKSLOT_TYPE_ITEM, WEAR_UNIQUE2, 255);
 			vec_item.push_back(std::make_pair(pkItem->RemoveFromCharacter(), EQUIPMENT));
 		}
+		
+		pkItem = GetWear(WEAR_COSTUME_MOUNT);
+
+		if (pkItem && pkItem->GetVnum() == UNIQUE_ITEM_SKIP_ITEM_DROP_PENALTY)
+		{
+			SyncQuickslot(QUICKSLOT_TYPE_ITEM, WEAR_COSTUME_MOUNT, 255);
+			vec_item.push_back(std::make_pair(pkItem->RemoveFromCharacter(), EQUIPMENT));
+		}
 	}
 
 	{
@@ -1208,6 +1216,19 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		else if (GetMountVnum())
 		{
 			RemoveAffect(AFFECT_MOUNT_BONUS);
+			LPITEM item = GetWear(WEAR_UNIQUE1);
+			LPITEM item2 = GetWear(WEAR_UNIQUE2);
+			LPITEM item3 = GetWear(WEAR_COSTUME_MOUNT);
+
+			if (item && item->IsRideItem())
+				UnequipItem(item);
+
+			if (item2 && item2->IsRideItem())
+				UnequipItem(item2);
+
+			if (item3 && item3->IsRideItem())
+				UnequipItem(item3);
+
 			m_dwMountVnum = 0;
 			UnEquipSpecialRideUniqueItem();
 

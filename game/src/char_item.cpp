@@ -479,6 +479,11 @@ void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 		if (IsAffectFlag(AFF_GEOMGYEONG))
 			RemoveAffect(SKILL_GEOMKYUNG);
 	}
+	
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	if (item)
+		CalcMountBonusBySeal(item);
+#endif
 }
 
 void CHARACTER::ClearItem()
@@ -5608,14 +5613,19 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 		return false;
 	}
 
-	// 기획자의 요청으로 벨트 인벤토리에는 특정 타입의 아이템만 넣을 수 있다.
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	if (item->IsMount() && item->IsEquipped() && DestCell.IsDefaultInventoryPosition()) {
+		StopRiding();
+		HorseSummon(false);
+	}
+#endif
+
 	if (DestCell.IsBeltInventoryPosition() && false == CBeltInventoryHelper::CanMoveIntoBeltInventory(item))
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 아이템은 벨트 인벤토리로 옮길 수 없습니다."));			
 		return false;
 	}
 
-	// 이미 착용중인 아이템을 다른 곳으로 옮기는 경우, '장책 해제' 가능한 지 확인하고 옮김
 	if (Cell.IsEquipPosition())
 	{
 		if (!CanUnequipNow(item))
@@ -6107,6 +6117,11 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 		item1->AddToCharacter(this, TItemPos(INVENTORY, bCell2));
 		item2->AddToCharacter(this, TItemPos(INVENTORY, bCell1));
 	}
+	
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	if (item1->IsMount() && item2->IsMount() && destCell.IsEquipPosition())
+		HorseSummon(true);
+#endif
 
 	return true;
 }
@@ -6128,6 +6143,13 @@ bool CHARACTER::UnequipItem(LPITEM item)
 
 	if (false == CanUnequipNow(item))
 		return false;
+
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	if (item->IsMount()) {
+		StopRiding();
+		HorseSummon(false);
+	}
+#endif
 
 	if (item->IsDragonSoul())
 		pos = GetEmptyDragonSoulInventory(item);
@@ -6353,9 +6375,18 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 		if (UNIQUE_SPECIAL_RIDE == item->GetSubType() && IS_SET(item->GetFlag(), ITEM_FLAG_QUEST_USE))
 		{
+			if (COSTUME_MOUNT == item->GetSubType())
+			{
+				quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);
+			}
 			quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);
 		}
 	}
+	
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	if (item->IsMount())
+		HorseSummon(true);
+#endif
 
 	return true;
 }
@@ -6429,6 +6460,7 @@ void CHARACTER::BuffOnAttr_ValueChange(BYTE bType, BYTE bOldValue, BYTE bNewValu
 #if defined(__WEAPON_COSTUME_SYSTEM__)
 						WEAR_COSTUME_WEAPON,
 #endif
+						WEAR_COSTUME_MOUNT,
 					};
 					static std::vector <BYTE> vec_slots (abSlot, abSlot + _countof(abSlot));
 					pBuff = M2_NEW CBuffOnAttributes(this, bType, &vec_slots);
@@ -7078,8 +7110,13 @@ bool CHARACTER::IsEquipUniqueItem(DWORD dwItemVnum) const
 		if (u && u->GetVnum() == dwItemVnum)
 			return true;
 	}
+	{
+		LPITEM u = GetWear(WEAR_COSTUME_MOUNT);
 
-	// 언어반지인 경우 언어반지(견본) 인지도 체크한다.
+		if (u && u->GetVnum() == dwItemVnum)
+			return true;
+	}
+
 	if (dwItemVnum == UNIQUE_ITEM_RING_OF_LANGUAGE)
 		return IsEquipUniqueItem(UNIQUE_ITEM_RING_OF_LANGUAGE_SAMPLE);
 
@@ -7100,6 +7137,13 @@ bool CHARACTER::IsEquipUniqueGroup(DWORD dwGroupVnum) const
 		LPITEM u = GetWear(WEAR_UNIQUE2);
 
 		if (u && u->GetSpecialGroup() == (int) dwGroupVnum)
+			return true;
+	}
+	
+	{
+		LPITEM u = GetWear(WEAR_COSTUME_MOUNT);
+
+		if (u && u->GetSpecialGroup() == (int)dwGroupVnum)
 			return true;
 	}
 
@@ -7399,6 +7443,7 @@ bool CHARACTER::UnEquipSpecialRideUniqueItem()
 {
 	LPITEM Unique1 = GetWear(WEAR_UNIQUE1);
 	LPITEM Unique2 = GetWear(WEAR_UNIQUE2);
+	LPITEM Unique3 = GetWear(WEAR_COSTUME_MOUNT);
 
 	if( NULL != Unique1 )
 	{
@@ -7413,6 +7458,14 @@ bool CHARACTER::UnEquipSpecialRideUniqueItem()
 		if( UNIQUE_GROUP_SPECIAL_RIDE == Unique2->GetSpecialGroup() )
 		{
 			return UnequipItem(Unique2);
+		}
+	}
+	
+	if (NULL != Unique3)
+	{
+		if (UNIQUE_GROUP_SPECIAL_RIDE == Unique3->GetSpecialGroup())
+		{
+			return UnequipItem(Unique3);
 		}
 	}
 
@@ -7642,7 +7695,9 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 	if (item->GetWearFlag() & WEARABLE_UNIQUE)
 	{
 		if ((GetWear(WEAR_UNIQUE1) && GetWear(WEAR_UNIQUE1)->IsSameSpecialGroup(item)) ||
-			(GetWear(WEAR_UNIQUE2) && GetWear(WEAR_UNIQUE2)->IsSameSpecialGroup(item)))
+			(GetWear(WEAR_UNIQUE2) && GetWear(WEAR_UNIQUE2)->IsSameSpecialGroup(item)) ||
+			(GetWear(WEAR_COSTUME_MOUNT) && GetWear(WEAR_COSTUME_MOUNT)->IsSameSpecialGroup(item))
+			)
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("같은 종류의 유니크 아이템 두 개를 동시에 장착할 수 없습니다."));
 			return false;

@@ -748,7 +748,6 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	else if (GetMountVnum())
 	{
 		RemoveAffect(AFFECT_MOUNT);
-		RemoveAffect(AFFECT_MOUNT_BONUS);
 	}
 	//if (!LC_IsNewCIBN())
 		SetPolymorph(30000, true);
@@ -1955,6 +1954,9 @@ void CHARACTER::SetProto(const CMob * pkMob)
 			GetRaceNum() == 20107 ||
 			GetRaceNum() == 20108 ||
 			GetRaceNum() == 20109
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+		|| CMobVnumHelper::IsMount(GetRaceNum())
+#endif
 	  )
 	{
 		m_stateIdle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateHorse, &CHARACTER::EndStateEmpty);
@@ -6448,12 +6450,8 @@ void CHARACTER::MountVnum(DWORD vnum)
 	if (m_bIsObserver)
 		return;
 
-	//NOTE : Mount한다고 해서 Client Side의 객체를 삭제하진 않는다.
-	//그리고 서버Side에서 탔을때 위치 이동은 하지 않는다. 왜냐하면 Client Side에서 Coliision Adjust를 할수 있는데
-	//객체를 소멸시켰다가 서버위치로 이동시키면 이때 collision check를 하지는 않으므로 배경에 끼거나 뚫고 나가는 문제가 존재한다.
 	m_posDest.x = m_posStart.x = GetX();
 	m_posDest.y = m_posStart.y = GetY();
-	//EncodeRemovePacket(this);
 	EncodeInsertPacket(this);
 
 	ENTITY_MAP::iterator it = m_map_view.begin();
@@ -6462,17 +6460,17 @@ void CHARACTER::MountVnum(DWORD vnum)
 	{
 		LPENTITY entity = (it++)->first;
 
-		//Mount한다고 해서 Client Side의 객체를 삭제하진 않는다.
-		//EncodeRemovePacket(entity);
-		//if (!m_bIsObserver)
 		EncodeInsertPacket(entity);
 
-		//if (!entity->IsObserverMode())
-		//	entity->EncodeInsertPacket(this);
 	}
 
 	SetValidComboInterval(0);
 	SetComboSequence(0);
+
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	// if (const auto pMountItem = GetWear(WEAR_COSTUME_MOUNT))
+		// CalcMountBonusBySeal(pMountItem);
+#endif
 
 	ComputePoints();
 }

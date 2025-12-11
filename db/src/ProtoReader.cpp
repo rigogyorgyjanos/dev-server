@@ -128,6 +128,7 @@ int get_Item_SubType_Value(int type_value, string inputString)
 									#if defined(__WEAPON_COSTUME_SYSTEM__)
 									,"COSTUME_WEAPON"
 									#endif
+									,"COSTUME_MOUNT"
 								};
 	static string arSub29[] = { "DS_SLOT1", "DS_SLOT2", "DS_SLOT3", "DS_SLOT4", "DS_SLOT5", "DS_SLOT6" };
 	static string arSub31[] = { "EXTRACT_DRAGON_SOUL", "EXTRACT_DRAGON_HEART" };
@@ -305,7 +306,7 @@ int get_Item_WearFlag_Value(string inputString)
 {
 
 	string arWearrFlag[] = {"WEAR_BODY", "WEAR_HEAD", "WEAR_FOOTS", "WEAR_WRIST", "WEAR_WEAPON", "WEAR_NECK", "WEAR_EAR", "WEAR_SHIELD", "WEAR_UNIQUE",
-					"WEAR_ARROW", "WEAR_HAIR", "WEAR_ABILITY"};
+					"WEAR_ARROW", "WEAR_HAIR", "WEAR_ABILITY",  "WEAR_COSTUME_MOUNT"};
 
 
 	int retValue = 0;

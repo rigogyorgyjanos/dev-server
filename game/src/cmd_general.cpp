@@ -1331,6 +1331,19 @@ ACMD(do_setblockmode)
 
 ACMD(do_unmount)
 {
+	LPITEM item = ch->GetWear(WEAR_UNIQUE1);
+	LPITEM item2 = ch->GetWear(WEAR_UNIQUE2);
+	LPITEM item3 = ch->GetWear(WEAR_COSTUME_MOUNT);
+
+	if (item && item->IsRideItem())
+		ch->UnequipItem(item);
+
+	if (item2 && item2->IsRideItem())
+		ch->UnequipItem(item2);
+
+	if (item3 && item3->IsRideItem())
+		ch->UnequipItem(item3);
+
 	if (true == ch->UnEquipSpecialRideUniqueItem())
 	{
 		ch->RemoveAffect(AFFECT_MOUNT);
@@ -1338,7 +1351,7 @@ ACMD(do_unmount)
 
 		if (ch->IsHorseRiding())
 		{
-			ch->StopRiding(); 
+			ch->StopRiding();
 		}
 	}
 	else
@@ -2454,75 +2467,66 @@ ACMD(do_ride)
     if (ch->IsDead() || ch->IsStun())
 	return;
 
-    // 내리기
     {
-	if (ch->IsHorseRiding())
-	{
-	    dev_log(LOG_DEB0, "[DO_RIDE] stop riding");
-	    ch->StopRiding(); 
-	    return;
-	}
+		if (ch->IsHorseRiding())
+		{
+			dev_log(LOG_DEB0, "[DO_RIDE] stop riding");
+			ch->StopRiding(); 
+			return;
+		}
 
-	if (ch->GetMountVnum())
-	{
-	    dev_log(LOG_DEB0, "[DO_RIDE] unmount");
-	    do_unmount(ch, NULL, 0, 0);
-	    return;
-	}
+		if (ch->GetMountVnum())
+		{
+			dev_log(LOG_DEB0, "[DO_RIDE] unmount");
+			do_unmount(ch, NULL, 0, 0);
+			return;
+		}
     }
 
-    // 타기
     {
-	if (ch->GetHorse() != NULL)
-	{
-	    dev_log(LOG_DEB0, "[DO_RIDE] start riding");
-	    ch->StartRiding();
-	    return;
-	}
-
-	for (BYTE i=0; i<INVENTORY_MAX_NUM; ++i)
-	{
-	    LPITEM item = ch->GetInventoryItem(i);
-	    if (NULL == item)
-		continue;
-
-	    // 유니크 탈것 아이템
-		if (item->IsRideItem())
+		if (ch->GetHorse() != NULL)
 		{
-			if (NULL==ch->GetWear(WEAR_UNIQUE1) || NULL==ch->GetWear(WEAR_UNIQUE2))
+			dev_log(LOG_DEB0, "[DO_RIDE] start riding");
+			ch->StartRiding();
+			return;
+		}
+
+		for (BYTE i=0; i<INVENTORY_MAX_NUM; ++i)
+		{
+			LPITEM item = ch->GetInventoryItem(i);
+			if (NULL == item)
+				continue;
+
+			if (item->IsRideItem())
 			{
-				dev_log(LOG_DEB0, "[DO_RIDE] USE UNIQUE ITEM");
-				//ch->EquipItem(item);
+				if (NULL==ch->GetWear(WEAR_UNIQUE1) || NULL==ch->GetWear(WEAR_UNIQUE2) || NULL==ch->GetWear(WEAR_COSTUME_MOUNT))
+				{
+					dev_log(LOG_DEB0, "[DO_RIDE] USE UNIQUE ITEM");
+					ch->UseItem(TItemPos (INVENTORY, i));
+					return;
+				}
+			}
+
+			switch (item->GetVnum())
+			{
+				case 71114:
+				case 71116:
+				case 71118:
+				case 71120:
+					dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
+					ch->UseItem(TItemPos (INVENTORY, i));
+					return;
+			}
+
+			if ( (item->GetVnum() > 52000) && (item->GetVnum() < 52091) ){
+				dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
 				ch->UseItem(TItemPos (INVENTORY, i));
 				return;
 			}
 		}
-
-	    // 일반 탈것 아이템
-	    // TODO : 탈것용 SubType 추가
-	    switch (item->GetVnum())
-	    {
-		case 71114:	// 저신이용권
-		case 71116:	// 산견신이용권
-		case 71118:	// 투지범이용권
-		case 71120:	// 사자왕이용권
-		    dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
-		    ch->UseItem(TItemPos (INVENTORY, i));
-		    return;
-	    }
-
-		// GF mantis #113524, 52001~52090 번 탈것
-		if( (item->GetVnum() > 52000) && (item->GetVnum() < 52091) )	{
-			dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
-			ch->UseItem(TItemPos (INVENTORY, i));
-		    return;
-		}
 	}
-    }
 
-
-    // 타거나 내릴 수 없을때
-    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말을 먼저 소환해주세요."));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말을 먼저 소환해주세요."));
 }
 
 // ACMD(do_remove_affect)

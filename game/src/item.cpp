@@ -511,6 +511,8 @@ int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 			case COSTUME_WEAPON:
 				return WEAR_COSTUME_WEAPON;
 #endif
+			case COSTUME_MOUNT:
+				return WEAR_COSTUME_MOUNT;
 		}
 
 	}
@@ -1750,6 +1752,8 @@ bool CItem::IsRideItem()
 	if (ITEM_UNIQUE == GetType() && UNIQUE_SPECIAL_RIDE == GetSubType())
 		return true;
 	if (ITEM_UNIQUE == GetType() && UNIQUE_SPECIAL_MOUNT_RIDE == GetSubType())
+		return true;
+	if (ITEM_COSTUME == GetType() && COSTUME_MOUNT == GetSubType())
 		return true;
 	return false;
 }

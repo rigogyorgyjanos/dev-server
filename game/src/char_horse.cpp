@@ -27,7 +27,6 @@ bool CHARACTER::StartRiding()
 		return false;
 	}
 
-	// 턱시도 입은 상태의 말 타기 금지
 	LPITEM armor = GetWear(WEAR_BODY);
 
 	if (armor && (armor->GetVnum() >= 11901 && armor->GetVnum() <= 11904))
@@ -42,8 +41,13 @@ bool CHARACTER::StartRiding()
 			return false;
 	}
 
-
 	DWORD dwMountVnum = m_chHorse ? m_chHorse->GetRaceNum() : GetMyHorseVnum();
+
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	if (const LPITEM pMountItem = GetWear(WEAR_COSTUME_MOUNT))
+		if (CMobVnumHelper::IsMount(pMountItem->GetValue(1)))
+			dwMountVnum = pMountItem->GetValue(1);
+#endif
 
 	if (false == CHorseRider::StartRiding())
 	{
@@ -93,7 +97,9 @@ bool CHARACTER::StopRiding()
 		PointChange(POINT_DX, 0);
 		PointChange(POINT_HT, 0);
 		PointChange(POINT_IQ, 0);
-
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+		// RemoveAffect(AFFECT_MOUNT_BONUS);
+#endif
 		return true;
 	}
 
@@ -138,16 +144,25 @@ LPCHARACTER CHARACTER::GetRider() const
 
 void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const char* pPetName)
 {
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	if (const LPITEM pMountItem = GetWear(WEAR_COSTUME_MOUNT))
+		if (CMobVnumHelper::IsMount(pMountItem->GetValue(1)))
+			dwVnum = pMountItem->GetValue(1);
+#endif
+
 	if ( bSummon )
 	{
-		//NOTE : summon했는데 이미 horse가 있으면 아무것도 안한다.
 		if( m_chHorse != NULL )
+		{
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+			if (GetMountVnum() != dwVnum)
+				m_chHorse->SetPolymorph(dwVnum);
+#endif
 			return;
-
+		}
 		if (GetHorseLevel() <= 0)
 			return;
 
-		// 무언가를 타고 있다면 실패
 		if (IsRiding())
 			return;
 
@@ -204,7 +219,11 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 		else
 		{
 			m_chHorse->m_stName = GetName();
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+			m_chHorse->m_stName += LC_TEXT(CMobVnumHelper::IsMount(dwVnum) ? "'s Mount" : "님의 말");
+#else
 			m_chHorse->m_stName += LC_TEXT("님의 말");
+#endif
 		}
 
 		if (!m_chHorse->Show(GetMapIndex(), x, y, GetZ()))
@@ -384,4 +403,29 @@ void CHARACTER::SetHorseLevel(int iLevel)
 	CHorseRider::SetHorseLevel(iLevel);
 	SetSkillLevel(SKILL_HORSE, GetHorseLevel());
 }
+
+
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+void CHARACTER::CheckEnterMount()
+{
+	if (GetHorse()) // If is already summoned, do nothing
+		return;
+
+	if (const auto pMountItem = GetWear(WEAR_COSTUME_MOUNT))
+		HorseSummon(true, false, pMountItem->GetValue(1));
+}
+
+void CHARACTER::CalcMountBonusBySeal(const LPITEM pMountItem)
+{
+	if (!GetMountVnum() || !pMountItem || !pMountItem->IsMount())
+		return;
+
+	RemoveAffect(AFFECT_MOUNT_BONUS);
+	for (int i = 0; i < ITEM_APPLY_MAX_NUM; ++i) {
+		if (pMountItem->GetProto()->aApplies[i].bType == APPLY_NONE || pMountItem->GetValue(1) == 0)
+			continue;
+		AddAffect(AFFECT_MOUNT_BONUS, aApplyInfo[pMountItem->GetProto()->aApplies[i].bType].bPointType, pMountItem->GetProto()->aApplies[i].lValue, AFF_NONE, INFINITE_AFFECT_DURATION, 0, false);
+	}
+}
+#endif
 

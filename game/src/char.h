@@ -2073,6 +2073,13 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	protected:
 		int m_iLastPMPulse;
 		int m_iPMCounter;
+	
+#ifdef ENABLE_MOUNT_LIKE_HORSE
+	public:
+		void CheckEnterMount();
+		void CalcMountBonusBySeal(const LPITEM pMountItem);
+#endif
+
 };
 
 ESex GET_SEX(LPCHARACTER ch);

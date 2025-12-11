@@ -2514,6 +2514,7 @@ teleport_area:
 		{
 			LPITEM Unique1 = pChar->GetWear(WEAR_UNIQUE1);
 			LPITEM Unique2 = pChar->GetWear(WEAR_UNIQUE2);
+			LPITEM Unique3 = pChar->GetWear(WEAR_COSTUME_MOUNT);
 
 			if (NULL != Unique1)
 			{
@@ -2531,6 +2532,15 @@ teleport_area:
 				{
 					lua_pushnumber(L, Unique2->GetVnum());
 					lua_pushnumber(L, Unique2->GetSocket(2));
+					return 2;
+				}
+			}
+			if (NULL != Unique3)
+			{
+				if (UNIQUE_GROUP_SPECIAL_RIDE == Unique3->GetSpecialGroup())
+				{
+					lua_pushnumber(L, Unique3->GetVnum());
+					lua_pushnumber(L, Unique3->GetSocket(2));
 					return 2;
 				}
 			}

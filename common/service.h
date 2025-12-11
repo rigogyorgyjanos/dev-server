@@ -23,5 +23,5 @@
 #define __IMPROVED_LOGOUT_POINTS__ // Improved Logout Points 
 #define __COSTUME_SYSTEM__ // Costume System
 #define __WEAPON_COSTUME_SYSTEM__ // Weapon Costume System
-
+#define ENABLE_MOUNT_LIKE_HORSE // Mitachi
 #endif

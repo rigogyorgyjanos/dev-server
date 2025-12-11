@@ -317,6 +317,9 @@ class CItem : public CEntity
 		{
 			return m_dwSIGVnum;
 		}
+// #ifdef ENABLE_MOUNT_COSTUME
+		const bool	IsMount() { return GetType() == ITEM_COSTUME && GetSubType() == COSTUME_MOUNT; }
+// #endif
 };
 
 EVENTINFO(item_event_info)
