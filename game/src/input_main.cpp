@@ -286,52 +286,8 @@ void GetTextTagInfo(const char * src, int src_len, int & hyperlinks, bool & colo
 
 int ProcessTextTag(LPCHARACTER ch, const char * c_pszText, size_t len)
 {
-	//2012.05.17 김용욱
-	//0 : 정상적으로 사용
-	//1 : 금강경 부족
-	//2 : 금강경이 있으나, 개인상점에서 사용중
-	//3 : 교환중
-	//4 : 에러
-	int hyperlinks;
-	bool colored;
-	
-	GetTextTagInfo(c_pszText, len, hyperlinks, colored);
-
-	if (colored == true && hyperlinks == 0)
-		return 4;
-
-	if (ch->GetExchange())
-	{
-		if (hyperlinks == 0)
-			return 0;
-		else
-			return 3;
-	}
-
-	int nPrismCount = ch->CountSpecifyItem(ITEM_PRISM);
-
-	if (nPrismCount < hyperlinks)
-		return 1;
-
-
-	if (!ch->GetMyShop())
-	{
-		ch->RemoveSpecifyItem(ITEM_PRISM, hyperlinks);
-		return 0;
-	} else
-	{
-		int sellingNumber = ch->GetMyShop()->GetNumberByVnum(ITEM_PRISM);
-		if(nPrismCount - sellingNumber < hyperlinks)
-		{
-			return 2;
-		} else
-		{
-			ch->RemoveSpecifyItem(ITEM_PRISM, hyperlinks);
-			return 0;
-		}
-	}
-	
-	return 4;
+	// no prisma for link item or anything
+	return 0;
 }
 
 int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
