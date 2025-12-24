@@ -1051,6 +1051,11 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 
 	return 0;
 }
+typedef struct fckOFF
+{
+	BYTE		bySlot;
+	WORD		byCount;
+} TfckOFF;
 
 int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 {
@@ -1097,15 +1102,15 @@ int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 		case SHOP_SUBHEADER_CG_SELL2:
 			{
-				if (uiBytes < sizeof(BYTE) + sizeof(BYTE))
+				if (uiBytes < sizeof(TfckOFF))
 					return -1;
-
-				BYTE pos = *(c_pData++);
-				BYTE count = *(c_pData);
+				TfckOFF*p2 = (TfckOFF*)c_pData;
+				/*BYTE pos = *(c_pData++);
+				WORD count = *(c_pData);*/
 
 				sys_log(0, "INPUT: %s SHOP: SELL2", ch->GetName());
-				CShopManager::instance().Sell(ch, pos, count);
-				return sizeof(BYTE) + sizeof(BYTE);
+				CShopManager::instance().Sell(ch, p2->bySlot, p2->byCount);
+				return sizeof(TfckOFF);
 			}
 
 		default:
@@ -1115,7 +1120,6 @@ int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 	return 0;
 }
-
 void CInputMain::OnClick(LPCHARACTER ch, const char * data)
 {
 	struct command_on_click *	pinfo = (struct command_on_click *) data;

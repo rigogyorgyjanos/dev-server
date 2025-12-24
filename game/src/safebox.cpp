@@ -166,7 +166,7 @@ LPITEM CSafebox::GetItem(BYTE bCell)
 	return m_pkItems[bCell];
 }
 
-bool CSafebox::MoveItem(BYTE bCell, BYTE bDestCell, BYTE count)
+bool CSafebox::MoveItem(BYTE bCell, BYTE bDestCell, WORD count)
 {
 	LPITEM item;
 
@@ -189,7 +189,7 @@ bool CSafebox::MoveItem(BYTE bCell, BYTE bDestCell, BYTE count)
 
 		if ((item2 = GetItem(bDestCell)) && item != item2 && item2->IsStackable() &&
 				!IS_SET(item2->GetAntiFlag(), ITEM_ANTIFLAG_STACK) &&
-				item2->GetVnum() == item->GetVnum()) // 합칠 수 있는 아이템의 경우
+				item2->GetVnum() == item->GetVnum()) 
 		{
 			for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 				if (item2->GetSocket(i) != item->GetSocket(i))
@@ -198,7 +198,7 @@ bool CSafebox::MoveItem(BYTE bCell, BYTE bDestCell, BYTE count)
 			if (count == 0)
 				count = item->GetCount();
 
-			count = MIN(200 - item2->GetCount(), count);
+			count = MIN(ITEM_MAX_COUNT - item2->GetCount(), count);
 
 			if (item->GetCount() >= count)
 				Remove(bCell);

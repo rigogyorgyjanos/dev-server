@@ -255,7 +255,7 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 	}
 }
 
-void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
+void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, WORD bCount)
 {
 	if (!ch->GetShop())
 		return;

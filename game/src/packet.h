@@ -712,7 +712,7 @@ typedef struct command_item_drop2
 	BYTE 	header;
 	TItemPos 	Cell;
 	DWORD	gold;
-	BYTE	count;
+	WORD	count;
 } TPacketCGItemDrop2;
 
 typedef struct command_item_destroy
@@ -734,7 +734,7 @@ typedef struct command_item_move
 	BYTE 	header;
 	TItemPos	Cell;
 	TItemPos	CellTo;
-	BYTE	count;
+	WORD	count;
 } TPacketCGItemMove;
 
 typedef struct command_item_pickup
@@ -1137,7 +1137,7 @@ typedef struct packet_item_set
 	BYTE	header;
 	TItemPos Cell;
 	DWORD	vnum;
-	BYTE	count;
+	WORD	count;
 	DWORD	flags;
 	DWORD	anti_flags;
 	bool	highlight;
@@ -1171,7 +1171,7 @@ typedef struct packet_item_update
 {
 	BYTE	header;
 	TItemPos Cell;
-	BYTE	count;
+	WORD	count;
 	long	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 } TPacketGCItemUpdate;
@@ -1245,7 +1245,7 @@ struct packet_shop_item
 {   
 	DWORD       vnum;
 	DWORD       price;
-	BYTE        count;
+	WORD        count;
 	BYTE		display_pos;
 	long	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
@@ -2088,7 +2088,7 @@ typedef struct pakcet_view_equip
 	DWORD vid;
 	struct {
 		DWORD	vnum;
-		BYTE	count;
+		WORD	count;
 		long	alSockets[ITEM_SOCKET_MAX_NUM];
 		TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 	} equips[WEAR_MAX_NUM];

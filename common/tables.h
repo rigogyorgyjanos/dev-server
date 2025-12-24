@@ -585,9 +585,9 @@ typedef struct SSkillTable
 typedef struct SShopItemTable
 {
 	DWORD		vnum;
-	BYTE		count;
+	WORD		count;
 
-    TItemPos	pos;			// PC 상점에만 이용
+	TItemPos	pos;			// PC 상점에만 이용
 	DWORD		price;	// PC, shop_table_ex.txt 상점에만 이용
 	BYTE		display_pos; // PC, shop_table_ex.txt 상점에만 이용, 보일 위치.
 } TShopItemTable;
