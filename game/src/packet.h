@@ -1239,16 +1239,26 @@ enum EPacketShopSubHeaders
 	SHOP_SUBHEADER_GC_SOLD_OUT,
 	SHOP_SUBHEADER_GC_START_EX,
 	SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX,
+	SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM,
+	SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP,
 };
 
 struct packet_shop_item
 {   
-	DWORD       vnum;
-	DWORD       price;
-	WORD        count;
+	DWORD		vnum;
+	DWORD		price;
+	BYTE		price_type;
+	WORD		count;
 	BYTE		display_pos;
 	long	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
+	TShopPriceItem price_items[5]; // itemmel vasarlas max 5
+
+	packet_shop_item() : price_type(SHOPEX_GOLD) {
+		memset(&alSockets, 0, sizeof(alSockets));
+		memset(&aAttr, 0, sizeof(aAttr));
+		memset(&price_items, 0, sizeof(TShopPriceItem));
+	}
 };
 
 typedef struct packet_shop_start

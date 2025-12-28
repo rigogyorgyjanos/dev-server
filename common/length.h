@@ -24,7 +24,7 @@ enum EMisc
 
 	GUILD_NAME_MAX_LEN		= 12,
 
-	SHOP_HOST_ITEM_MAX_NUM	= 80,	/* 호스트의 최대 아이템 개수 */
+	SHOP_HOST_ITEM_MAX_NUM	= 80,	
 	SHOP_GUEST_ITEM_MAX_NUM = 18,	/* 게스트의 최대 아이템 개수 */
 
 	SHOP_PRICELIST_MAX_NUM	= 80,	///< 개인상점 가격정보 리스트에서 유지할 가격정보의 최대 갯수

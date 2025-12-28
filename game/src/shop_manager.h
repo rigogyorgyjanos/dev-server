@@ -14,6 +14,7 @@ public:
 	virtual ~CShopManager();
 
 	bool	Initialize(TShopTable * table, int size);
+	bool	InitializeShopEX(TShopTable* table, int size);
 	void	Destroy();
 
 	LPSHOP	Get(DWORD dwVnum);

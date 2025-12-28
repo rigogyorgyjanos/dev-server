@@ -45,6 +45,8 @@ CClientManager::CClientManager() :
 	m_bChinaEventServer(false),
 	m_iShopTableSize(0),
 	m_pShopTable(NULL),
+	m_pShopEXTable(NULL),
+	m_iShopEXTableSize(0),
 	m_iRefineTableSize(0),
 	m_pRefineTable(NULL),
 	m_bShutdowned(FALSE),
@@ -260,6 +262,7 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 		sizeof(WORD) + sizeof(WORD) + sizeof(TMobTable) * m_vec_mobTable.size() +
 		sizeof(WORD) + sizeof(WORD) + sizeof(TItemTable) * m_vec_itemTable.size() +
 		sizeof(WORD) + sizeof(WORD) + sizeof(TShopTable) * m_iShopTableSize +
+		sizeof(WORD) + sizeof(WORD) + sizeof(TShopTable) * m_iShopEXTableSize +
 		sizeof(WORD) + sizeof(WORD) + sizeof(TSkillTable) * m_vec_skillTable.size() +
 		sizeof(WORD) + sizeof(WORD) + sizeof(TRefineTable) * m_iRefineTableSize +
 		sizeof(WORD) + sizeof(WORD) + sizeof(TItemAttrTable) * m_vec_itemAttrTable.size() +
@@ -313,6 +316,10 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 	peer->EncodeWORD(sizeof(TShopTable));
 	peer->EncodeWORD(m_iShopTableSize);
 	peer->Encode(m_pShopTable, sizeof(TShopTable) * m_iShopTableSize);
+
+	peer->EncodeWORD(sizeof(TShopTable));
+	peer->EncodeWORD(m_iShopEXTableSize);
+	peer->Encode(m_pShopEXTable, sizeof(TShopTable) * m_iShopEXTableSize);
 
 	peer->EncodeWORD(sizeof(TSkillTable));
 	peer->EncodeWORD(m_vec_skillTable.size());

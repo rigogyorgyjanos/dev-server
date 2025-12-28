@@ -582,14 +582,44 @@ typedef struct SSkillTable
 	DWORD	dwTargetRange;
 } TSkillTable;
 
+
+enum STableExTypes
+{
+	SHOPEX_GOLD = 1,
+	SHOPEX_SECONDARY,
+	SHOPEX_ITEM,
+	SHOPEX_EXP,
+	SHOPEX_MAX,
+};
+
+typedef struct TShopPriceItem
+{
+	DWORD vnum;
+	DWORD count;
+	
+	TShopPriceItem() : vnum(0), count(0) {}
+};
+
 typedef struct SShopItemTable
 {
 	DWORD		vnum;
 	WORD		count;
 
-	TItemPos	pos;			// PC 상점에만 이용
-	DWORD		price;	// PC, shop_table_ex.txt 상점에만 이용
-	BYTE		display_pos; // PC, shop_table_ex.txt 상점에만 이용, 보일 위치.
+	TItemPos	pos;
+	DWORD		price;
+	BYTE 		price_type;
+	BYTE		display_pos;
+	#if defined(ENABLE_RENEWAL_SHOPEX)
+	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	TPlayerItemAttribute	aAttr[ITEM_ATTRIBUTE_MAX_NUM];
+	TShopPriceItem price_items[5]; // max 5 itemmel vasarlas
+	
+	SShopItemTable() : price_type(SHOPEX_GOLD) {
+		memset(&alSockets, 0, sizeof(alSockets));
+		memset(&aAttr, 0, sizeof(aAttr));
+		memset(&price_items, 0, sizeof(TShopPriceItem));
+	}
+#endif
 } TShopItemTable;
 
 typedef struct SShopTable
@@ -599,6 +629,9 @@ typedef struct SShopTable
 
 	BYTE		byItemCount;
 	TShopItemTable	items[SHOP_HOST_ITEM_MAX_NUM];
+#if defined(ENABLE_RENEWAL_SHOPEX)
+	char szShopName[SHOP_TAB_NAME_MAX + 1];
+#endif
 } TShopTable;
 
 #define QUEST_NAME_MAX_LEN	32

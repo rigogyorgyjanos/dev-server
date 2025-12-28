@@ -69,9 +69,9 @@ bool CShopEx::AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire)
 	
 	pack2.owner_vid = owner_vid;
 	pack2.shop_tab_count = m_vec_shopTabs.size();
-	char temp[8096]; // ÃÖ´ë 1728 * 3
-	char* buf = &temp[0];
-	size_t size = 0;
+	
+	TEMP_BUFFER buf(16 * 1024 * SHOP_TAB_COUNT_MAX);
+	
 	for (itertype(m_vec_shopTabs) it = m_vec_shopTabs.begin(); it != m_vec_shopTabs.end(); it++)
 	{
 		const TShopTableEx& shop_tab = *it;
@@ -83,7 +83,8 @@ bool CShopEx::AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire)
 		{
 			pack_tab.items[i].vnum = shop_tab.items[i].vnum;
 			pack_tab.items[i].count = shop_tab.items[i].count;
-			switch(shop_tab.coinType)
+			
+			switch (shop_tab.coinType)
 			{
 			case SHOP_COIN_TYPE_GOLD:
 				if (bOtherEmpire) // no empire price penalty for pc shop
@@ -95,20 +96,26 @@ bool CShopEx::AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire)
 				pack_tab.items[i].price = shop_tab.items[i].price;
 				break;
 			}
-			memset(pack_tab.items[i].aAttr, 0, sizeof(pack_tab.items[i].aAttr));
-			memset(pack_tab.items[i].alSockets, 0, sizeof(pack_tab.items[i].alSockets));
+			
+			pack_tab.items[i].price_type = shop_tab.items[i].price_type;
+			pack_tab.items[i].price = shop_tab.items[i].price;
+			if (bOtherEmpire && pack_tab.items[i].price_type == SHOPEX_GOLD)
+				pack_tab.items[i].price *= 3;
+			thecore_memcpy(pack_tab.items[i].price_items, shop_tab.items[i].price_items, sizeof(pack_tab.items[i].price_items)); // na ez érdekes
+			thecore_memcpy(pack_tab.items[i].aAttr, shop_tab.items[i].aAttr, sizeof(pack_tab.items[i].aAttr));
+			thecore_memcpy(pack_tab.items[i].alSockets, shop_tab.items[i].alSockets, sizeof(pack_tab.items[i].alSockets));
+
 		}
 
-		memcpy(buf, &pack_tab, sizeof(pack_tab));
-		buf += sizeof(pack_tab);
-		size += sizeof(pack_tab);
+		buf.write(&pack_tab, sizeof(pack_tab));
 	}
 
-	pack.size = sizeof(pack) + sizeof(pack2) + size;
+
+	pack.size = sizeof(pack) + sizeof(pack2) + buf.size();
 
 	ch->GetDesc()->BufferedPacket(&pack, sizeof(TPacketGCShop));
 	ch->GetDesc()->BufferedPacket(&pack2, sizeof(TPacketGCShopStartEx));
-	ch->GetDesc()->Packet(temp, size);
+	ch->GetDesc()->Packet(buf.read_peek(), buf.size());
 
 	return true;
 }
@@ -133,7 +140,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	TShopTableEx& shopTab = m_vec_shopTabs[tabIdx];
 	TShopItemTable& r_item = shopTab.items[slotPos];
 
-	if (r_item.price <= 0)
+	if (r_item.price <= 0 && (r_item.price_type != SHOPEX_ITEM) )
 	{
 		LogManager::instance().HackLog("SHOP_BUY_GOLD_OVERFLOW", ch);
 		return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
@@ -141,30 +148,33 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 
 	DWORD dwPrice = r_item.price;
 
-	switch (shopTab.coinType)
+	switch (r_item.price_type)
 	{
-	case SHOP_COIN_TYPE_GOLD:
-		if (it->second)	// if other empire, price is triple
-			dwPrice *= 3;
-
-		if (ch->GetGold() < (int) dwPrice)
-		{
-			sys_log(1, "ShopEx::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), dwPrice);
-			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
-		}
-		break;
-	case SHOP_COIN_TYPE_SECONDARY_COIN:
-		{
-			int count = ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN);
-			if (count < dwPrice)
-			{
-				sys_log(1, "ShopEx::Buy : Not enough myeongdojun : %s has %d, price %d", ch->GetName(), count, dwPrice);
+		case SHOPEX_GOLD:
+			if (it->second)
+				dwPrice *= 3;
+			if (ch->GetGold() < static_cast<int>(dwPrice))
+				return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+			break;
+			
+		case SHOPEX_SECONDARY:
+			if (ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN) < static_cast<int>(dwPrice))
 				return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
-			}
-		}
+			break;
+			
+		case SHOPEX_ITEM:
+			// if (ch->CountSpecifyItem(r_item.price_vnum) < static_cast<int>(dwPrice))
+				for (BYTE i = 0; i < 5; ++i){
+					if (ch->CountSpecifyItem(r_item.price_items[i].vnum) < static_cast<int>(r_item.price_items[i].count) )
+						return SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM;
+				}
+			break;
+		case SHOPEX_EXP:
+			if (ch->GetExp() < dwPrice)
+				return SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP;
 		break;
 	}
-	
+
 	LPITEM item;
 
 	item = ITEM_MANAGER::instance().CreateItem(r_item.vnum, r_item.count);
@@ -189,16 +199,32 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 		return SHOP_SUBHEADER_GC_INVENTORY_FULL;
 	}
 
-	switch (shopTab.coinType)
+	switch (r_item.price_type)
 	{
-	case SHOP_COIN_TYPE_GOLD:
-		ch->PointChange(POINT_GOLD, -dwPrice, false);
-		break;
-	case SHOP_COIN_TYPE_SECONDARY_COIN:
-		ch->RemoveSpecifyTypeItem(ITEM_SECONDARY_COIN, dwPrice);
+		case SHOPEX_GOLD:
+			ch->PointChange(POINT_GOLD, -static_cast<int>(dwPrice), false);
+			break;
+		case SHOPEX_SECONDARY:
+			ch->RemoveSpecifyTypeItem(ITEM_SECONDARY_COIN, dwPrice);
+			break;
+		case SHOPEX_ITEM:
+			for( BYTE i = 0; i < 5; ++i)
+				ch->RemoveSpecifyItem(r_item.price_items[i].vnum, r_item.price_items[i].count );
+			
+			break;
+		case SHOPEX_EXP:
+			ch->PointChange(POINT_EXP, -static_cast<int>(dwPrice), false);
 		break;
 	}
+	{
+		/*Attr*/
+		item->SetAttributes(r_item.aAttr);
 
+		/*Socket*/
+		for (BYTE i = 0; i < ITEM_SOCKET_MAX_NUM; i++)
+			if (r_item.alSockets[i] != 0)
+				item->SetSocket(i, r_item.alSockets[i]);
+	}
 
 	if (item->IsDragonSoul())
 		item->AddToCharacter(ch, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyPos));

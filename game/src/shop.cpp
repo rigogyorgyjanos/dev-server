@@ -454,6 +454,7 @@ bool CShop::AddGuest(LPCHARACTER ch, DWORD owner_vid, bool bOtherEmpire)
 			pack2.items[i].price = item.price;
 
 		pack2.items[i].count = item.count;
+		pack2.items[i].price_type = SHOPEX_GOLD;
 
 		if (item.pkItem)
 		{

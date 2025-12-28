@@ -170,6 +170,7 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
     private:
 	bool		InitializeTables();
 	bool		InitializeShopTable();
+	bool		InitializeShopEXTable();
 	bool		InitializeMobTable();
 	bool		InitializeItemTable();
 	bool		InitializeQuestItemTable();
@@ -409,7 +410,9 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	std::map<DWORD, TItemTable *>		m_map_itemTableByVnum;
 
 	int					m_iShopTableSize;
-	TShopTable *				m_pShopTable;
+	TShopTable*			m_pShopTable;
+	TShopTable*			m_pShopEXTable;
+	int					m_iShopEXTableSize;
 
 	int					m_iRefineTableSize;
 	TRefineTable*				m_pRefineTable;
