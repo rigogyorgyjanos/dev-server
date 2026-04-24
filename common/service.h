@@ -25,4 +25,5 @@
 #define __WEAPON_COSTUME_SYSTEM__ // Weapon Costume System
 #define ENABLE_MOUNT_LIKE_HORSE // Mitachi
 #define ENABLE_RENEWAL_SHOPEX
+#define __BL_SKILL_BOOK_NEXT_READ_TIME__
 #endif

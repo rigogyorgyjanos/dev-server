@@ -108,6 +108,9 @@ enum
 
 	HEADER_CG_DRAGON_SOUL_REFINE			= 205,
 	HEADER_CG_STATE_CHECKER					= 206,
+	#if defined(__BL_SKILL_BOOK_NEXT_READ_TIME__)
+	HEADER_GC_SKILL_BOOK_NEXT_READ_TIME		= 207,
+#endif
 	#if defined(__BL_MOVE_CHANNEL__)
 	HEADER_CG_MOVE_CHANNEL = 229,
 #endif
@@ -1100,6 +1103,15 @@ typedef struct packet_skill_level
 	BYTE		bHeader;
 	TPlayerSkill	skills[SKILL_MAX_NUM];
 } TPacketGCSkillLevel;
+
+#if defined(__BL_SKILL_BOOK_NEXT_READ_TIME__)
+typedef struct packet_skill_book_next_read_time
+{
+	BYTE	header;
+	DWORD	dwVnum;
+	time_t	tNextRead;
+} TPacketGCSkillBookNextReadTime;
+#endif
 
 typedef struct packet_point_change
 {

@@ -72,8 +72,6 @@ struct FFindStone
 	}
 };
 
-
-//±ÍÈ¯ºÎ, ±ÍÈ¯±â¾ïºÎ, °áÈ¥¹ÝÁö
 static bool IS_SUMMON_ITEM(int vnum)
 {
 	switch (vnum)
@@ -6375,11 +6373,11 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 		if (UNIQUE_SPECIAL_RIDE == item->GetSubType() && IS_SET(item->GetFlag(), ITEM_FLAG_QUEST_USE))
 		{
-			if (COSTUME_MOUNT == item->GetSubType())
-			{
-				quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);
-			}
-			quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);
+			// if (COSTUME_MOUNT == item->GetSubType())
+			// {
+				// quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);
+			// }
+			// quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);
 		}
 	}
 	

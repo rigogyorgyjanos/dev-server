@@ -3499,7 +3499,7 @@ struct FuncPullMonster
 	}
 };
 
-void CHARACTER::ForgetMyAttacker()
+void CHARACTER::ForgetMyAttacker(bool revive)
 {
 	LPSECTREE pSec = GetSectree();
 	if (pSec)
@@ -3507,7 +3507,9 @@ void CHARACTER::ForgetMyAttacker()
 		FuncForgetMyAttacker f(this);
 		pSec->ForEachAround(f);
 	}
-	ReviveInvisible(5);
+	
+	if (revive)
+		ReviveInvisible(5);
 }
 
 void CHARACTER::AggregateMonster()

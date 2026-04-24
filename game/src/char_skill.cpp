@@ -56,10 +56,22 @@ time_t CHARACTER::GetSkillNextReadTime(DWORD dwVnum) const
 
 void CHARACTER::SetSkillNextReadTime(DWORD dwVnum, time_t time)
 {
+#if defined(__BL_SKILL_BOOK_NEXT_READ_TIME__)
+	if (m_pSkillLevels && dwVnum < SKILL_MAX_NUM)
+	{
+		m_pSkillLevels[dwVnum].tNextRead = time;
+
+		TPacketGCSkillBookNextReadTime p;
+		p.header = HEADER_GC_SKILL_BOOK_NEXT_READ_TIME;
+		p.dwVnum = dwVnum;
+		p.tNextRead = time;
+		GetDesc()->Packet(&p, sizeof(TPacketGCSkillBookNextReadTime));
+	}
+#else
 	if (m_pSkillLevels && dwVnum < SKILL_MAX_NUM)
 		m_pSkillLevels[dwVnum].tNextRead = time;
+#endif
 }
-
 bool TSkillUseInfo::HitOnce(DWORD dwVnum)
 {
 	// 쓰지도않았으면 때리지도 못한다.
@@ -2117,6 +2129,10 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 	}
 	// END_OF_ADD_GRANDMASTER_SKILL
 
+	//Ninja Stealth improve
+	if (IsPC() && pkSk->dwVnum == SKILL_EUNHYUNG)
+		ForgetMyAttacker(false);
+	
 	//sys_log(0, "XXX SKILL Calc %d Amount %d", dwVnum, iAmount);
 
 	// REMOVE_BAD_AFFECT_BUG_FIX
