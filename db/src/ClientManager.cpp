@@ -1014,7 +1014,7 @@ void CClientManager::QUERY_EMPIRE_SELECT(CPeer * pkPeer, DWORD dwHandle, TEmpire
 	sys_log(0, "EmpireSelect: %s", szQuery);
 	{
 		snprintf(szQuery, sizeof(szQuery),
-				"SELECT pid1, pid2, pid3, pid4 FROM player_index%s WHERE id=%u", GetTablePostfix(), p->dwAccountID);
+			"SELECT pid1, pid2, pid3, pid4, pid5 FROM player_index%s WHERE id=%u", GetTablePostfix(), p->dwAccountID);
 
 		std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
 
@@ -1025,7 +1025,7 @@ void CClientManager::QUERY_EMPIRE_SELECT(CPeer * pkPeer, DWORD dwHandle, TEmpire
 			sys_log(0, "EMPIRE %lu", pRes->uiNumRows);
 
 			MYSQL_ROW row = mysql_fetch_row(pRes->pSQLResult);
-			DWORD pids[3];
+			DWORD pids[PLAYER_PER_ACCOUNT]{};
 
 			UINT g_start_map[4] =
 			{
@@ -1039,12 +1039,12 @@ void CClientManager::QUERY_EMPIRE_SELECT(CPeer * pkPeer, DWORD dwHandle, TEmpire
 			DWORD g_start_position[4][2]=
 			{
 				{      0,      0 },
-				{ 469300, 964200 }, // 신수국
-				{  55700, 157900 }, // 천조국
-				{ 969600, 278400 }  // 진노국
+				{ 469300, 964200 }, // Shinso
+				{  55700, 157900 }, // Chunjo
+				{ 969600, 278400 }  // Jinno
 			};
 
-			for (int i = 0; i < 3; ++i)
+			for (int i = 0; i < PLAYER_PER_ACCOUNT; ++i)
 			{
 				str_to_number(pids[i], row[i]);
 				sys_log(0, "EMPIRE PIDS[%d]", pids[i]);
@@ -3963,11 +3963,20 @@ void CClientManager::RMMonarch(CPeer * peer, DWORD dwHandle, const char * data)
 void CClientManager::ChangeMonarchLord(CPeer * peer, DWORD dwHandle, TPacketChangeMonarchLord* info)
 {
 	char szQuery[1024];
-	snprintf(szQuery, sizeof(szQuery), 
+		snprintf(szQuery, sizeof(szQuery),
 			"SELECT a.name, NOW() FROM player%s AS a, player_index%s AS b WHERE (a.account_id=b.id AND a.id=%u AND b.empire=%u) AND "
-		    "(b.pid1=%u OR b.pid2=%u OR b.pid3=%u OR b.pid4=%u)", 
+#ifdef ENABLE_PLAYER_PER_ACCOUNT5
+		    "(b.pid1=%u OR b.pid2=%u OR b.pid3=%u OR b.pid4=%u OR b.pid5=%u)",
+#else
+		    "(b.pid1=%u OR b.pid2=%u OR b.pid3=%u OR b.pid4=%u)",
+#endif
 			GetTablePostfix(), GetTablePostfix(), info->dwPID, info->bEmpire,
+#ifdef ENABLE_PLAYER_PER_ACCOUNT5
+		   	info->dwPID, info->dwPID, info->dwPID, info->dwPID, info->dwPID);
+#else
 		   	info->dwPID, info->dwPID, info->dwPID, info->dwPID);
+#endif
+
 
 	SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 

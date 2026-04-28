@@ -26,4 +26,10 @@
 #define ENABLE_MOUNT_LIKE_HORSE // Mitachi
 #define ENABLE_RENEWAL_SHOPEX
 #define __BL_SKILL_BOOK_NEXT_READ_TIME__
+#define ENABLE_TAX_CHANGES
+#if defined(ENABLE_TAX_CHANGES)
+	#define NEW_TAX_VARIABLE 4				// New tax for the bought items in normal shops
+#endif
+#define ENABLE_PLAYER_PER_ACCOUNT5				// 5 characters per account
+
 #endif

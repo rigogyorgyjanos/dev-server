@@ -23,14 +23,13 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 
 	char szQuery[1024+1];
 	DWORD dwAID;
-	DWORD dwPID[4];
+	DWORD dwPID[PLAYER_PER_ACCOUNT];
 	memset(dwPID, 0, sizeof(dwPID));
 
 	{
-		// 1. 내 계정의 모든 pid를 얻어 온다
-		snprintf(szQuery, sizeof(szQuery), 
-				"SELECT id, pid1, pid2, pid3, pid4 FROM player_index%s WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u AND empire=%u", 
-				get_table_postfix(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
+		snprintf(szQuery, sizeof(szQuery),
+			"SELECT id, pid1, pid2, pid3, pid4, pid5 FROM player_index%s WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u OR pid5=%u AND empire=%u",
+			get_table_postfix(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
 
 		std::unique_ptr<SQLMsg> msg(DBManager::instance().DirectQuery(szQuery));
 
@@ -42,19 +41,15 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 		MYSQL_ROW row = mysql_fetch_row(msg->Get()->pSQLResult);
 
 		str_to_number(dwAID, row[0]);
-		str_to_number(dwPID[0], row[1]);
-		str_to_number(dwPID[1], row[2]);
-		str_to_number(dwPID[2], row[3]);
-		str_to_number(dwPID[3], row[4]);
+		for (int i = 0; i < PLAYER_PER_ACCOUNT; i++)
+			str_to_number(dwPID[i], row[i + 1]);
 	}
 
-	const int loop = 4;
+	const int loop = PLAYER_PER_ACCOUNT;
 
 	{
-		// 2. 각 캐릭터의 길드 정보를 얻어온다.
-		//   한 캐릭터라도 길드에 가입 되어 있다면, 제국 이동을 할 수 없다.
-		DWORD dwGuildID[4];
-		CGuild * pGuild[4];
+		DWORD dwGuildID[PLAYER_PER_ACCOUNT];
+		CGuild * pGuild[PLAYER_PER_ACCOUNT];
 		SQLMsg * pMsg = NULL;
 		
 		for (int i = 0; i < loop; ++i)
@@ -91,8 +86,6 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	}
 
 	{
-		// 3. 각 캐릭터의 결혼 정보를 얻어온다.
-		//   한 캐릭터라도 결혼 상태라면 제국 이동을 할 수 없다.
 		for (int i = 0; i < loop; ++i)
 		{
 			if (marriage::CManager::instance().IsEngagedOrMarried(dwPID[i]) == true)
@@ -101,15 +94,13 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	}
 	
 	{
-		// 4. db의 제국 정보를 업데이트 한다.
-		snprintf(szQuery, sizeof(szQuery), "UPDATE player_index%s SET empire=%u WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u AND empire=%u", 
-				get_table_postfix(), empire, GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
+		snprintf(szQuery, sizeof(szQuery), "UPDATE player_index%s SET empire=%u WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u OR pid5=%u AND empire=%u",
+			get_table_postfix(), empire, GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
 
 		std::unique_ptr<SQLMsg> msg(DBManager::instance().DirectQuery(szQuery));
 
 		if (msg->Get()->uiAffectedRows > 0)
 		{
-			// 5. 제국 변경 이력을 추가한다.
 			SetChangeEmpireCount();
 
 			return 999;
@@ -181,8 +172,8 @@ DWORD CHARACTER::GetAID() const
 	char szQuery[1024+1];
 	DWORD dwAID = 0;
 
-	snprintf(szQuery, sizeof(szQuery), "SELECT id FROM player_index%s WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u AND empire=%u", 
-			get_table_postfix(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
+	snprintf(szQuery, sizeof(szQuery), "SELECT id FROM player_index%s WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u OR pid5=%u AND empire=%u",
+		get_table_postfix(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
 
 	SQLMsg* pMsg = DBManager::instance().DirectQuery(szQuery);
 

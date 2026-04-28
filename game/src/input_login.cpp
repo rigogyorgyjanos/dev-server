@@ -431,7 +431,6 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 		return;
 	}
 
-	// 사용할 수 없는 이름이거나, 잘못된 평상복이면 생설 실패
 	if (!check_name(pinfo->name) || pinfo->shape > 1)
 	{
 		if (LC_IsCanada() == true)

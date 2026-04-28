@@ -1034,7 +1034,7 @@ static void __LocaleService_Init_Taiwan()
 
 static void __CheckPlayerSlot(const std::string& service_name)
 {
-	if (PLAYER_PER_ACCOUNT != 4)
+	if (PLAYER_PER_ACCOUNT != 5)
 	{
 		printf("<ERROR> PLAYER_PER_ACCOUNT = %d\n", PLAYER_PER_ACCOUNT);
 		exit(0);

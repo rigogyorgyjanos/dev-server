@@ -305,22 +305,12 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, WORD bCount)
 	else
 		dwPrice *= bCount;
 
-	dwPrice /= 5;
-	
-	//세금 계산
 	DWORD dwTax = 0;
-	int iVal = 3;
+	int iVal = NEW_TAX_VARIABLE;
 	
-	if (LC_IsYMIR() ||  LC_IsKorea())
-	{
-		dwTax = dwPrice * iVal / 100;
-		dwPrice -= dwTax;
-	}
-	else
-	{
-		dwTax = dwPrice * iVal/100;
-		dwPrice -= dwTax;
-	}
+	
+	dwTax = dwPrice * iVal/100;
+	dwPrice -= dwTax;
 
 	if (test_server)
 		sys_log(0, "Sell Item price id %d %s itemid %d", ch->GetPlayerID(), ch->GetName(), item->GetID());
