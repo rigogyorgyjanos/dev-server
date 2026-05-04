@@ -1,13 +1,14 @@
-# Mindent ignoráljunk a gyökérben
+# Mindent ignoráljunk
 /*
 
-# Ezek a mappák és a bennük lévő tartalom KIVÉTELT képeznek
-!/common/
-!/db/
-!/game/
+# Kivételek (rekurzívan!)
+!/common/**
+!/db/**
+!/game/**
 
-# A .gitignore maradjon verziókezelve
+# A .gitignore maradjon
 !.gitignore
 
+# Build/output mappák kizárása
 /db/src/.obj/
 /game/src/OBJDIR/
