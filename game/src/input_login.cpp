@@ -560,7 +560,6 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 	CGuildManager::instance().LoginMember(ch);
 
-	// 캐릭터를 맵에 추가 
 	ch->Show(ch->GetMapIndex(), pos.x, pos.y, pos.z);
 
 	SECTREE_MANAGER::instance().SendNPCPosition(ch);
@@ -568,8 +567,8 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 	d->SetPhase(PHASE_GAME);
 
-	if(ch->GetItemAward_cmd())																		//게임페이즈 들어가면
-		quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager 호출
+	if(ch->GetItemAward_cmd())
+		quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());
 	
 	sys_log(0, "ENTERGAME: %s %dx%dx%d %s map_index %d", 
 			ch->GetName(), ch->GetX(), ch->GetY(), ch->GetZ(), d->GetHostName(), ch->GetMapIndex());
@@ -580,12 +579,13 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 #ifdef ENABLE_MOUNT_LIKE_HORSE
 	ch->CheckEnterMount();
 #endif
-	// 플레이시간 레코딩 시작
 	ch->ResetPlayTime();
 
-	// 자동 저장 이벤트 추가
 	ch->StartSaveEvent();
 	ch->StartRecoveryEvent();
+#if defined(__MISSION_BOOKS__)
+	ch->LoadMissionData();
+#endif
 	ch->StartCheckSpeedHackEvent();
 
 	CPVPManager::instance().Connect(ch);

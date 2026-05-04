@@ -15,6 +15,7 @@ ACMD(do_slow);
 ACMD(do_stun);
 // END_OF_ADD_COMMAND_SLOW_STUN
 
+
 ACMD(do_warp);
 ACMD(do_goto);
 ACMD(do_item);
@@ -250,6 +251,10 @@ ACMD (do_use_item);
 ACMD (do_dragon_soul);
 ACMD (do_ds_list);
 ACMD (do_clear_affect);
+#if defined(__MISSION_BOOKS__)
+ACMD(do_missionbooks);
+#endif
+
 
 // ACMD(do_remove_affect);
 
@@ -542,6 +547,9 @@ struct command_info cmd_info[] =
 	{ "do_clear_affect", do_clear_affect, 	0, POS_DEAD,		GM_LOW_WIZARD},
 	///
 	// { "remove_affect",	do_remove_affect,	0, POS_DEAD,		GM_PLAYER },
+#if defined(__MISSION_BOOKS__)
+	{ "mission_books",	do_missionbooks,		0,		POS_DEAD,	GM_PLAYER },
+#endif
 	
 	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}  /* 반드시 이 것이 마지막이어야 한다. */
 };

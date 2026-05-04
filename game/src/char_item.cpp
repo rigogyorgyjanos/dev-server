@@ -1772,6 +1772,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			return ItemProcess_Polymorph(item);
 
 		case ITEM_QUEST:
+#if defined(__MISSION_BOOKS__)
+		if (item->GetVnum() >= 50307 && item->GetVnum() <= 50310)
+		{
+			CHARACTER_MANAGER::Instance().GiveNewMission(item, this);
+			return true;
+		}
+#endif
 			if (GetArena() != NULL || IsObserverMode() == true)
 			{
 				if (item->GetVnum() == 50051 || item->GetVnum() == 50052 || item->GetVnum() == 50053)

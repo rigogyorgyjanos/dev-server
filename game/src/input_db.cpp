@@ -1025,6 +1025,10 @@ void CInputDB::Boot(const char* data)
 
 	signal_timer_enable(30);
 
+#if defined(__MISSION_BOOKS__)
+	CHARACTER_MANAGER::Instance().LoadMissionBook();
+#endif
+
 	if (test_server)
 	{
 		CMobManager::instance().DumpRegenCount("mob_count");

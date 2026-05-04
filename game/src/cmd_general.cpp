@@ -2545,4 +2545,30 @@ ACMD(do_ride)
 	// if(ch->FindAffect(affect))
 		// ch->RemoveAffect(affect);
 // }
+#if defined(__MISSION_BOOKS__)
+ACMD(do_missionbooks)
+{
+	std::vector<std::string> vecArgs;
+	split_argument(argument, vecArgs);
+	if (vecArgs.size() < 1) { return; }
+	else if (vecArgs[0] == "load")
+	{
+		ch->SendMissionData();
+	}
+	else if (vecArgs[0] == "delete")
+	{
+		if (vecArgs.size() < 2) { return; }
+		WORD missionID;
+		str_to_number(missionID, vecArgs[1].c_str());
+		ch->DeleteBookMission(missionID);
+	}
+	else if (vecArgs[0] == "reward")
+	{
+		if (vecArgs.size() < 2) { return; }
+		WORD missionID;
+		str_to_number(missionID, vecArgs[1].c_str());
+		ch->RewardMissionBook(missionID);
+	}
+}
+#endif
 

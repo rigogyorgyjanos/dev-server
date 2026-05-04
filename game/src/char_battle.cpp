@@ -1239,7 +1239,17 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	if (!pkKiller && m_dwKillerPID)
 		pkKiller = CHARACTER_MANAGER::instance().FindByPID(m_dwKillerPID);
 
-	m_dwKillerPID = 0; // 반드시 초기화 해야함 DO NOT DELETE THIS LINE UNLESS YOU ARE 1000000% SURE
+	m_dwKillerPID = 0; 
+
+#if defined(__MISSION_BOOKS__)
+	if (pkKiller)
+	{
+		if (IsStone())
+			pkKiller->SetMissionBook(MISSION_BOOK_TYPE_METINSTONE, 1, GetRaceNum(), GetLevel());
+		else if (!IsPC())
+			pkKiller->SetMissionBook(GetMobRank() >= MOB_RANK_KING ? MISSION_BOOK_TYPE_BOSS : MISSION_BOOK_TYPE_MONSTER, 1, GetRaceNum(), GetLevel());
+	}
+#endif
 
 	bool isAgreedPVP = false;
 	bool isUnderGuildWar = false;

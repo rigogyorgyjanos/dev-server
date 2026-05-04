@@ -7,7 +7,9 @@
 
 #include "../../common/stl.h"
 #include "../../common/length.h"
-
+#include "../../common/tables.h"
+#include "item.h"
+#include "item_manager.h"
 #include "vid.h"
 
 class CDungeon;
@@ -141,6 +143,15 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 #ifdef M2_USE_POOL
 		ObjectPool<CHARACTER> pool_;
 #endif
+	#if defined(__MISSION_BOOKS__)
+	public:
+		void	LoadMissionBook();
+		void	GiveNewMission(LPITEM missionBook, LPCHARACTER ch);
+		const TMissionBookData* GetMissionData(WORD id);
+	protected:
+		std::map<WORD, TMissionBookData> m_mapMissionData;
+	#endif
+
 };
 
 	template<class Func>	

@@ -31,5 +31,7 @@
 	#define NEW_TAX_VARIABLE 4				// New tax for the bought items in normal shops
 #endif
 #define ENABLE_PLAYER_PER_ACCOUNT5				// 5 characters per account
+#define __MISSION_BOOKS__
+
 
 #endif

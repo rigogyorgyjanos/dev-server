@@ -4,6 +4,8 @@
 
 #include <math.h>
 #include <string>
+#include <vector>
+#include <string_view>
 
 #define IS_SET(flag, bit)		((flag) & (bit))
 #define SET_BIT(var, bit)		((var) |= (bit))
@@ -56,6 +58,8 @@ extern size_t str_lower(const char * src, char * dest, size_t dest_size);
 
 extern void	skip_spaces(char **string);
 
+extern std::vector<std::string> split_arguments(std::string_view stArg);
+extern void split_argument(std::string_view stArg, std::vector<std::string>& vecArgs);
 extern const char *	one_argument(const char *argument, char *first_arg, size_t first_size);
 extern const char *	two_arguments(const char *argument, char *first_arg, size_t first_size, char *second_arg, size_t second_size);
 extern const char *	first_cmd(const char *argument, char *first_arg, size_t first_arg_size, size_t *first_arg_len_result);
@@ -67,6 +71,9 @@ extern float gauss_random(float avg = 0, float sigma = 1);
 extern int parse_time_str(const char* str);
 
 extern bool WildCaseCmp(const char *w, const char *s);
+
+extern bool LEVEL_DELTA(int iLevel, int yLevel, int iDifLev);
+
 
 #endif /* __INC_METIN_II_UTILS_H__ */
 

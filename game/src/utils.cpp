@@ -279,3 +279,28 @@ bool WildCaseCmp(const char *w, const char *s)
 	return false;
 }
 
+bool LEVEL_DELTA(int iLevel, int yLevel, int iDifLev)
+{
+	return ((iLevel - iDifLev <= yLevel) && (iLevel + iDifLev >= yLevel));
+}
+std::vector<std::string> split_arguments(std::string_view stArg)
+{
+	std::vector<std::string> vecArgs;
+	std::string_view argument = stArg;
+	while (true)
+	{
+		char first_arg[256]{};
+		argument = one_argument(argument.data(), first_arg, sizeof(first_arg));
+		vecArgs.emplace_back(first_arg);
+		if (argument.empty() || argument[0] == '\0')
+			break;
+	}
+	return vecArgs;
+}
+
+void split_argument(std::string_view stArg, std::vector<std::string> & vecArgs) // backward function for lazy people
+{
+	vecArgs = split_arguments(stArg);
+}
+
+
