@@ -1,14 +1,38 @@
-# Mindent ignoráljunk
-/*
+# Objektum fájlok
+*.o
+*.obj
 
-# Kivételek (rekurzívan!)
-!/common/**
-!/db/**
-!/game/**
+# Fordítási output
+*.out
+*.app
+*.exe
 
-# A .gitignore maradjon
-!.gitignore
+# Könyvtárak
+*.a
+*.so
+*.dll
+*.dylib
 
-# Build/output mappák kizárása
-/db/src/.obj/
-/game/src/OBJDIR/
+# Debug / symbol fájlok
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# CMake / build rendszerek
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+Makefile
+
+# Egyéb build mappák
+build/
+bin/
+out/
+
+# IDE / editor
+.vscode/
+.idea/
+
+db/src/.obj/
+game/src/OBJDIR/
