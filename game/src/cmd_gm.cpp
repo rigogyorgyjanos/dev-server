@@ -404,6 +404,9 @@ ACMD(do_warp)
 	}
 
 	int x = 0, y = 0;
+#ifdef ENABLE_CMD_WARP_IN_DUNGEON
+	int mapIndex = 0;
+#endif
 
 	if (isnhdigit(*arg1) && isnhdigit(*arg2))
 	{
@@ -439,14 +442,22 @@ ACMD(do_warp)
 		{
 			x = tch->GetX() / 100;
 			y = tch->GetY() / 100;
+			#ifdef ENABLE_CMD_WARP_IN_DUNGEON
+			mapIndex = tch->GetMapIndex();
+#endif
 		}
 	}
 
 	x *= 100;
 	y *= 100;
 
+#ifdef ENABLE_CMD_WARP_IN_DUNGEON
+	ch->ChatPacket(CHAT_TYPE_INFO, "You warp to ( %d, %d, %d )", x, y, mapIndex);
+	ch->WarpSet(x, y, mapIndex);
+#else
 	ch->ChatPacket(CHAT_TYPE_INFO, "You warp to ( %d, %d )", x, y);
 	ch->WarpSet(x, y);
+#endif
 	ch->Stop();
 }
 

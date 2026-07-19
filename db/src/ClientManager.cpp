@@ -3376,7 +3376,7 @@ bool CClientManager::InitializeLocalization()
 				if (g_stLocale != locale.szValue)
 					sys_log(0, "Changed g_stLocale %s to %s", g_stLocale.c_str(), "euckr");
 
-				g_stLocale = "latin2";
+				g_stLocale = "utf8";
 				g_stLocaleNameColumn = "locale_name";
 			}
 			else if (strcmp(locale.szValue, "romania") == 0)

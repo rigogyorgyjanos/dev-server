@@ -292,13 +292,20 @@ void CInputP2P::FindPosition(LPDESC d, const char* c_pData)
 {
 	TPacketGGFindPosition* p = (TPacketGGFindPosition*) c_pData;
 	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(p->dwTargetPID);
+#ifdef ENABLE_CMD_WARP_IN_DUNGEON
+	if (ch)
+#else
 	if (ch && ch->GetMapIndex() < 10000)
+#endif
 	{
 		TPacketGGWarpCharacter pw;
 		pw.header = HEADER_GG_WARP_CHARACTER;
 		pw.pid = p->dwFromPID;
 		pw.x = ch->GetX();
 		pw.y = ch->GetY();
+		#ifdef ENABLE_CMD_WARP_IN_DUNGEON
+		pw.mapIndex = (ch->GetMapIndex() < 10000) ? 0 : ch->GetMapIndex();
+#endif
 		d->Packet(&pw, sizeof(pw));
 	}
 }
@@ -307,10 +314,13 @@ void CInputP2P::WarpCharacter(const char* c_pData)
 {
 	TPacketGGWarpCharacter* p = (TPacketGGWarpCharacter*) c_pData;
 	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(p->pid);
+	#ifdef ENABLE_CMD_WARP_IN_DUNGEON
 	if (ch)
-	{
+		ch->WarpSet(p->x, p->y, p->mapIndex);
+#else
+	if (ch)
 		ch->WarpSet(p->x, p->y);
-	}
+#endif
 }
 
 void CInputP2P::GuildWarZoneMapIndex(const char* c_pData)

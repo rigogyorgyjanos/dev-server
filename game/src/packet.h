@@ -496,6 +496,9 @@ typedef struct SPacketGGWarpCharacter
 	DWORD pid;
 	long x;
 	long y;
+	#ifdef ENABLE_CMD_WARP_IN_DUNGEON
+	int mapIndex;
+#endif
 } TPacketGGWarpCharacter;
 
 //  HEADER_GG_GUILD_WAR_ZONE_MAP_INDEX	    = 15,

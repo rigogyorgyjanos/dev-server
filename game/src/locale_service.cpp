@@ -335,6 +335,92 @@ int check_name_alphabet(const char * str)
 	return check_name_independent(str);
 }
 // DISABLE_SPECIAL_CHAR_NAMING
+
+int DecodeUtf8CodePoint(const char** pp, const char* end)
+{
+	const unsigned char* p = (const unsigned char*)*pp;
+	if (p >= (const unsigned char*)end)
+		return -1;
+
+	int codePoint;
+	int extraBytes;
+
+	if ((p[0] & 0x80) == 0x00) { codePoint = p[0]; extraBytes = 0; }
+	else if ((p[0] & 0xE0) == 0xC0) { codePoint = p[0] & 0x1F; extraBytes = 1; }
+	else if ((p[0] & 0xF0) == 0xE0) { codePoint = p[0] & 0x0F; extraBytes = 2; }
+	else if ((p[0] & 0xF8) == 0xF0) { codePoint = p[0] & 0x07; extraBytes = 3; }
+	else return -1;
+
+	if (p + extraBytes >= (const unsigned char*)end + 1)
+		return -1;
+
+	for (int i = 1; i <= extraBytes; ++i)
+	{
+		if ((p[i] & 0xC0) != 0x80)
+			return -1;
+		codePoint = (codePoint << 6) | (p[i] & 0x3F);
+	}
+
+	*pp = (const char*)(p + extraBytes + 1);
+	return codePoint;
+}
+
+bool IsAllowedAccentedLetter(int codePoint)
+{
+	switch (codePoint)
+	{
+		case 0x00E1: case 0x00C1: // a/A
+		case 0x00E9: case 0x00C9: // e/E
+		case 0x00ED: case 0x00CD: // i/I
+		case 0x00F3: case 0x00D3: // o/O
+		case 0x00F6: case 0x00D6: // o/O (umlaut)
+		case 0x0151: case 0x0150: // o/O (double acute)
+		case 0x00FA: case 0x00DA: // u/U
+		case 0x00FC: case 0x00DC: // u/U (umlaut)
+		case 0x0171: case 0x0170: // u/U (double acute)
+			return true;
+		default:
+			return false;
+	}
+}
+
+int check_name_utf8(const char * str)
+{
+	if (!str || !*str)
+		return 0;
+
+	size_t byteLen = strlen(str);
+	if (byteLen < 2 || byteLen > 24)
+		return 0;
+
+	const char* p = str;
+	const char* end = str + byteLen;
+	int charCount = 0;
+
+	while (p < end)
+	{
+		const char* before = p;
+		int codePoint = DecodeUtf8CodePoint(&p, end);
+		if (codePoint < 0)
+			return 0;
+
+		if (codePoint < 128)
+		{
+			if (!isdigit((unsigned char)*before) && !isalpha((unsigned char)*before))
+				return 0;
+		}
+		else if (!IsAllowedAccentedLetter(codePoint))
+		{
+			return 0;
+		}
+		++charCount;
+	}
+
+	if (charCount > 12)
+		return 0;
+
+	return check_name_independent(str);
+}
 bool sjis_is_disable_name_char(const char* src)
 {
 	static const char* sjis_symbols = "?";
@@ -876,7 +962,7 @@ static void __LocaleService_Init_Czech()
 
 static void __LocaleService_Init_Hungary()
 {
-	g_stLocale="latin2";
+	g_stLocale="utf8";
 	g_stServiceBasePath = "locale/hungary";
 	g_stQuestDir = "locale/hungary/quest";
 	g_stServiceMapPath = "locale/hungary/map";
@@ -887,7 +973,7 @@ static void __LocaleService_Init_Hungary()
 
 	g_iUseLocale = TRUE;
 
-	check_name = check_name_alphabet;
+	check_name = check_name_utf8;
 	
 	PK_PROTECT_LEVEL = 15;
 }
