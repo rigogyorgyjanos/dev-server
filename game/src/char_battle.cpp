@@ -2353,12 +2353,18 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	//PROF_UNIT puRest3("Rest3");
 	if (GetHP() <= 0)
 	{
-		Stun();
-
 		if (pAttacker && !pAttacker->IsNPC())
 			m_dwKillerPID = pAttacker->GetPlayerID();
 		else
 			m_dwKillerPID = 0;
+
+		// Monsters/NPCs die the instant their HP reaches 0 - Stun() is a player-only
+		// knockdown grace period before Dead(); applying it to monsters too caused them
+		// to keep standing/attacking for ~1-2s after already being dead.
+		if (IsPC())
+			Stun();
+		else
+			Dead(pAttacker);
 	}
 
 	return false;

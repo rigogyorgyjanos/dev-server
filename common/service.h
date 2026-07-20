@@ -33,5 +33,6 @@
 #define ENABLE_PLAYER_PER_ACCOUNT5				// 5 characters per account
 #define __MISSION_BOOKS__
 #define ENABLE_CMD_WARP_IN_DUNGEON				// Warp in specific Dungeon
+#define __AUTO_QUQUE_ATTACK__				// Auto Metin Farm (queued auto-attack)
 
 #endif

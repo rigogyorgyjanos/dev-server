@@ -189,6 +189,13 @@ void CHARACTER::ClearAffect(bool bSave)
 	{
 		CAffect * pkAff = *it;
 
+#ifdef __AUTO_QUQUE_ATTACK__
+		if (pkAff->dwType == AFFECT_AUTO_METIN_FARM)
+		{
+			++it;
+			continue;
+		}
+#endif
 		if (bSave)
 		{
 			if ( IS_NO_CLEAR_ON_DEATH_AFFECT(pkAff->dwType) || IS_NO_SAVE_AFFECT(pkAff->dwType) )

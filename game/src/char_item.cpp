@@ -1772,6 +1772,30 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			return ItemProcess_Polymorph(item);
 
 		case ITEM_QUEST:
+#ifdef __AUTO_QUQUE_ATTACK__
+			if (item->GetVnum() >= 61400 && item->GetVnum() <= 61405)
+			{
+				if (item->isLocked() || item->IsExchanging())
+					return false;
+
+				long lAddDuration = (item->GetValue(0) == 999) ? INFINITE_AFFECT_DURATION : 60 * 60 * 24 * item->GetValue(0);
+				CAffect* pkExistingAff = FindAffect(AFFECT_AUTO_METIN_FARM);
+				if (pkExistingAff)
+				{
+					pkExistingAff->lDuration += lAddDuration;
+					if (IsPC() && GetDesc())
+						SendAffectAddPacket(GetDesc(), pkExistingAff);
+					ChatPacket(CHAT_TYPE_INFO, "A Metinkő kijelölés ideje meghosszabbodott.");
+				}
+				else
+				{
+					ChatPacket(CHAT_TYPE_INFO, "A Metinkő kijelölés aktiválva.");
+					AddAffect(AFFECT_AUTO_METIN_FARM, 0, 0, AFF_NONE, lAddDuration, 0, false);
+				}
+				item->SetCount(item->GetCount() - 1);
+				return true;
+			}
+#endif
 #if defined(__MISSION_BOOKS__)
 		if (item->GetVnum() >= 50307 && item->GetVnum() <= 50310)
 		{

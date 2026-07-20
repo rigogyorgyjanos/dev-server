@@ -63,6 +63,9 @@
 #ifndef __WIN32__
 	#include "limit_time.h"
 #endif
+#ifndef __WIN32__
+	#include <unistd.h>
+#endif
 
 // #ifndef __WIN32__
 // #include <gtest/gtest.h>
@@ -486,6 +489,12 @@ int main(int argc, char **argv)
 		CleanUpForEarlyExit();
 		return 0;
 	}
+
+#ifndef __WIN32__
+	// Make ps show which channel/port this process is - otherwise every core across
+	// every channel shows up identically as "game", indistinguishable from each other.
+	setproctitle("ch%d:%u", g_bChannel, mother_port);
+#endif
 
 	quest::CQuestManager quest_manager;
 
