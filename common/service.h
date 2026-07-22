@@ -4,7 +4,7 @@
 #define ENABLE_AUTODETECT_INTERNAL_IP
 #define ENABLE_PROXY_IP
 #define ENABLE_PORT_SECURITY
-#define _IMPROVED_PACKET_ENCRYPTION_ // ÆÐÅ¶ ¾ÏÈ£È­ °³¼±
+#define _IMPROVED_PACKET_ENCRYPTION_ // ï¿½ï¿½Å¶ ï¿½ï¿½È£È­ ï¿½ï¿½ï¿½ï¿½
 #define __PET_SYSTEM__
 #define __UDP_BLOCK__
 
@@ -35,5 +35,6 @@
 #define ENABLE_CMD_WARP_IN_DUNGEON				// Warp in specific Dungeon
 #define __AUTO_QUQUE_ATTACK__				// Auto Metin Farm (queued auto-attack)
 #define __FARM_SESSION_SYSTEM__			// Farm session stat tracker
+#define BL_SORT_LASTPLAYTIME			// Character-select sorted by last play time
 
 #endif

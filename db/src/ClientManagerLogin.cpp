@@ -212,13 +212,21 @@ void CClientManager::RESULT_LOGIN_BY_KEY(CPeer * peer, SQLMsg * msg)
 	if (g_stLocale == "gb2312")
 	{
 		snprintf(szQuery, sizeof(szQuery),
+#if defined(BL_SORT_LASTPLAYTIME)
+				"SELECT id, name, job, level, alignment, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name, UNIX_TIMESTAMP(last_play) FROM player%s WHERE account_id=%u",
+#else
 				"SELECT id, name, job, level, alignment, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name FROM player%s WHERE account_id=%u",
+#endif
 				GetTablePostfix(), info->pAccountTable->id);
 	}
 	else
 	{
 		snprintf(szQuery, sizeof(szQuery),
+#if defined(BL_SORT_LASTPLAYTIME)
+				"SELECT id, name, job, level, playtime, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name, UNIX_TIMESTAMP(last_play) FROM player%s WHERE account_id=%u",
+#else
 				"SELECT id, name, job, level, playtime, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name FROM player%s WHERE account_id=%u",
+#endif
 				GetTablePostfix(), info->pAccountTable->id);
 	}
 
@@ -313,6 +321,12 @@ void CreateAccountPlayerDataFromRes(MYSQL_RES * pRes, TAccountTable * pkTab)
 					pkTab->players[j].y				= pt->y;
 					pkTab->players[j].skill_group		= pt->skill_group;
 					pkTab->players[j].bChangeName		= 0;
+#if defined(BL_SORT_LASTPLAYTIME)
+					// Actively cached (online right now) means this is unambiguously
+					// the most-recently-played character - no need to trust a possibly
+					// stale last_play column that a concurrent save hasn't flushed yet.
+					pkTab->players[j].dwLastPlayTime	= (DWORD)time(NULL);
+#endif
 				}
 				else
 				{
@@ -348,6 +362,9 @@ void CreateAccountPlayerDataFromRes(MYSQL_RES * pRes, TAccountTable * pkTab)
 					str_to_number(pkTab->players[j].y, row[col++]);
 					str_to_number(pkTab->players[j].skill_group, row[col++]);
 					str_to_number(pkTab->players[j].bChangeName, row[col++]);
+#if defined(BL_SORT_LASTPLAYTIME)
+					str_to_number(pkTab->players[j].dwLastPlayTime, row[col++]);
+#endif
 				}
 
 				sys_log(0, "%s %lu %lu hair %u",
@@ -390,13 +407,21 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 			if (g_stLocale == "gb2312")
 			{
 				snprintf(queryStr, sizeof(queryStr),
+#if defined(BL_SORT_LASTPLAYTIME)
+						"SELECT id, name, job, level, alignment, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name, UNIX_TIMESTAMP(last_play) FROM player%s WHERE account_id=%u",
+#else
 						"SELECT id, name, job, level, alignment, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name FROM player%s WHERE account_id=%u",
+#endif
 						GetTablePostfix(), info->pAccountTable->id);
 			}
 			else
 			{
 				snprintf(queryStr, sizeof(queryStr),
+#if defined(BL_SORT_LASTPLAYTIME)
+						"SELECT id, name, job, level, playtime, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name, UNIX_TIMESTAMP(last_play) FROM player%s WHERE account_id=%u",
+#else
 						"SELECT id, name, job, level, playtime, st, ht, dx, iq, part_main, part_hair, x, y, skill_group, change_name FROM player%s WHERE account_id=%u",
+#endif
 						GetTablePostfix(), info->pAccountTable->id);
 			}
 
