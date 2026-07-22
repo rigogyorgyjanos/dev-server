@@ -15,6 +15,9 @@
 #include "messenger_manager.h"
 #include "guild_manager.h"
 #include "party.h"
+#ifdef __FARM_SESSION_SYSTEM__
+#include "FarmSessionManager.h"
+#endif
 #include "dungeon.h"
 #include "war_map.h"
 #include "questmanager.h"
@@ -594,6 +597,9 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	MessengerManager::instance().Login(ch->GetName());
 
 	CPartyManager::instance().SetParty(ch);
+#ifdef __FARM_SESSION_SYSTEM__
+	CFarmSessionManager::instance().OnEnterGame(ch);
+#endif
 	CGuildManager::instance().SendGuildWar(ch);
 
 	building::CManager::instance().SendLandList(d, ch->GetMapIndex());

@@ -5,6 +5,9 @@
 #include "char.h"
 #include "char_manager.h"
 #include "p2p.h"
+#ifdef __FARM_SESSION_SYSTEM__
+#include "FarmSessionManager.h"
+#endif
 #include "guild.h"
 #include "guild_manager.h"
 #include "party.h"
@@ -323,6 +326,27 @@ void CInputP2P::WarpCharacter(const char* c_pData)
 #endif
 }
 
+#ifdef __FARM_SESSION_SYSTEM__
+void CInputP2P::FarmSessionState(const char* c_pData)
+{
+	TPacketGGFarmSessionState* p = (TPacketGGFarmSessionState*) c_pData;
+	CFarmSessionManager::instance().TransferInState(p->dwPID, p->isActive ? true : false, p->dwElapsedSec,
+		p->dwKillCountTotal, p->dwStoneKillTotal, p->dwBossKillTotal, p->dwNormalKillTotal,
+		p->dwItemCountTotal, p->lYangGained, p->lYangSpent);
+}
+
+void CInputP2P::FarmSessionKillEntry(const char* c_pData)
+{
+	TPacketGGFarmSessionKillEntry* p = (TPacketGGFarmSessionKillEntry*) c_pData;
+	CFarmSessionManager::instance().TransferInKillEntry(p->dwPID, p->dwMobVnum, p->dwCount);
+}
+
+void CInputP2P::FarmSessionItemEntry(const char* c_pData)
+{
+	TPacketGGFarmSessionItemEntry* p = (TPacketGGFarmSessionItemEntry*) c_pData;
+	CFarmSessionManager::instance().TransferInItemEntry(p->dwPID, p->dwItemVnum, p->dwCount);
+}
+#endif
 void CInputP2P::GuildWarZoneMapIndex(const char* c_pData)
 {
 	TPacketGGGuildWarMapIndex * p = (TPacketGGGuildWarMapIndex*) c_pData;
@@ -496,6 +520,20 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_GG_WARP_CHARACTER:
 			WarpCharacter(c_pData);
 			break;
+
+#ifdef __FARM_SESSION_SYSTEM__
+		case HEADER_GG_FARM_SESSION_STATE:
+			FarmSessionState(c_pData);
+			break;
+
+		case HEADER_GG_FARM_SESSION_KILL_ENTRY:
+			FarmSessionKillEntry(c_pData);
+			break;
+
+		case HEADER_GG_FARM_SESSION_ITEM_ENTRY:
+			FarmSessionItemEntry(c_pData);
+			break;
+#endif
 
 		case HEADER_GG_GUILD_WAR_ZONE_MAP_INDEX:
 			GuildWarZoneMapIndex(c_pData);

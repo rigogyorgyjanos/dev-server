@@ -349,6 +349,11 @@ class CInputP2P : public CInputProcessor
 		void		MessengerMobile(const char * c_pData);
 		void		FindPosition(LPDESC d, const char* c_pData);
 		void		WarpCharacter(const char* c_pData);
+#ifdef __FARM_SESSION_SYSTEM__
+		void		FarmSessionState(const char* c_pData);
+		void		FarmSessionKillEntry(const char* c_pData);
+		void		FarmSessionItemEntry(const char* c_pData);
+#endif
 		void		GuildWarZoneMapIndex(const char* c_pData);
 		void		Transfer(const char * c_pData);
 		void		XmasWarpSanta(const char * c_pData);

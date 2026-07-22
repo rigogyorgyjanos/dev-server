@@ -9,6 +9,9 @@
 #include "protocol.h"
 #include "char.h"
 #include "char_manager.h"
+#ifdef __FARM_SESSION_SYSTEM__
+#include "FarmSessionManager.h"
+#endif
 #include "item.h"
 #include "item_manager.h"
 #include "cmd.h"
@@ -3395,6 +3398,18 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			}
 
 			break;
+
+#ifdef __FARM_SESSION_SYSTEM__
+		case HEADER_CG_FARM_SESSION_CONTROL:
+			{
+				TPacketCGFarmSessionControl* p = reinterpret_cast <TPacketCGFarmSessionControl*>((void*)c_pData);
+				if (p->bStart)
+					CFarmSessionManager::instance().StartSession(ch);
+				else
+					CFarmSessionManager::instance().StopSession(ch);
+			}
+			break;
+#endif
 	}
 	return (iExtraLen);
 }

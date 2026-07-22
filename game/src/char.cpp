@@ -25,6 +25,9 @@
 #include "safebox.h"
 #include "regen.h"
 #include "pvp.h"
+#ifdef __FARM_SESSION_SYSTEM__
+#include "FarmSessionManager.h"
+#endif
 #include "party.h"
 #include "start_position.h"
 #include "questmanager.h"
@@ -1322,6 +1325,9 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 	if (GetArena() != NULL)
 	{
 		GetArena()->OnDisconnect(GetPlayerID());
+#ifdef __FARM_SESSION_SYSTEM__
+		CFarmSessionManager::instance().OnDisconnect(GetPlayerID());
+#endif
 	}
 
 	if (GetParty() != NULL)
@@ -3368,6 +3374,9 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 				}
 
 				SetGold(GetGold() + amount);
+#ifdef __FARM_SESSION_SYSTEM__
+				CFarmSessionManager::instance().OnGoldChange(this, amount);
+#endif
 				val = GetGold();
 			}
 			break;
@@ -5425,6 +5434,10 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 #else
 	p.lAddr = lAddr;
 	p.wPort = wPort;
+#endif
+
+#ifdef __FARM_SESSION_SYSTEM__
+	CFarmSessionManager::instance().TransferOut(this, p.lAddr, p.wPort);
 #endif
 	
 #ifdef ENABLE_PROXY_IP

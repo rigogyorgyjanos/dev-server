@@ -34,5 +34,6 @@
 #define __MISSION_BOOKS__
 #define ENABLE_CMD_WARP_IN_DUNGEON				// Warp in specific Dungeon
 #define __AUTO_QUQUE_ATTACK__				// Auto Metin Farm (queued auto-attack)
+#define __FARM_SESSION_SYSTEM__			// Farm session stat tracker
 
 #endif

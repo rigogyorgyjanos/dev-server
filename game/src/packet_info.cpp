@@ -228,6 +228,9 @@ CPacketInfoCG::CPacketInfoCG()
 
 	Set(HEADER_CG_DRAGON_SOUL_REFINE, sizeof(TPacketCGDragonSoulRefine), "DragonSoulRefine", false);
 	Set(HEADER_CG_STATE_CHECKER, sizeof(BYTE), "ServerStateCheck", false);
+#ifdef __FARM_SESSION_SYSTEM__
+	Set(HEADER_CG_FARM_SESSION_CONTROL, sizeof(TPacketCGFarmSessionControl), "FarmSessionControl", false);
+#endif
 #ifdef __SEND_TARGET_INFO__
 	Set(HEADER_CG_TARGET_INFO_LOAD, sizeof(TPacketCGTargetInfoLoad), "TargetInfoLoad", true);
 #endif
@@ -274,6 +277,11 @@ CPacketInfoGG::CPacketInfoGG()
 	Set(HEADER_GG_CHECK_AWAKENESS,		sizeof(TPacketGGCheckAwakeness),	"CheckAwakeness",		false);
 	#ifdef CROSS_CHANNEL_FRIEND_REQUEST
 	Set(HEADER_GG_MESSENGER_REQUEST_ADD, sizeof(TPacketGGMessengerRequest), "MessengerRequestAdd", false);
+#endif
+#ifdef __FARM_SESSION_SYSTEM__
+	Set(HEADER_GG_FARM_SESSION_STATE,	sizeof(TPacketGGFarmSessionState),	"FarmSessionState", false);
+	Set(HEADER_GG_FARM_SESSION_KILL_ENTRY,	sizeof(TPacketGGFarmSessionKillEntry),	"FarmSessionKillEntry", false);
+	Set(HEADER_GG_FARM_SESSION_ITEM_ENTRY,	sizeof(TPacketGGFarmSessionItemEntry),	"FarmSessionItemEntry", false);
 #endif
 }
 

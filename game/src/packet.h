@@ -46,14 +46,14 @@ enum
 	HEADER_CG_ITEM_USE_TO_ITEM			= 60,
 	HEADER_CG_TARGET			 	= 61,
 
-	HEADER_CG_TEXT				= 64,	// @ ·Î ½ÃÀÛµÇ¸é ÅØ½ºÆ®¸¦ ÆÄ½ÌÇÑ´Ù.
+	HEADER_CG_TEXT				= 64,	// @ ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ¸ï¿½ ï¿½Ø½ï¿½Æ®ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½Ñ´ï¿½.
 	HEADER_CG_WARP				= 65,
 	HEADER_CG_SCRIPT_BUTTON			= 66,
 	HEADER_CG_MESSENGER				= 67,
 
 	HEADER_CG_MALL_CHECKOUT			= 69,
-	HEADER_CG_SAFEBOX_CHECKIN			= 70,	// ¾ÆÀÌÅÛÀ» Ã¢°í¿¡ ³Ö†š´Â´Ù.
-	HEADER_CG_SAFEBOX_CHECKOUT			= 71,	// ¾ÆÀÌÅÛÀ» Ã¢°í·Î ºÎÅÍ »©¿Â´Ù.
+	HEADER_CG_SAFEBOX_CHECKIN			= 70,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½Ö†ï¿½ï¿½Â´ï¿½.
+	HEADER_CG_SAFEBOX_CHECKOUT			= 71,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â´ï¿½.
 
 	HEADER_CG_PARTY_INVITE			= 72,
 	HEADER_CG_PARTY_INVITE_ANSWER		= 73,
@@ -101,10 +101,10 @@ enum
 	//
 	HEADER_CG_PASSPOD_ANSWER		= 202,
 
-	//NOTE : ÀÌ·± °³XXX Á¤¸» ÀÌ°Å Packet¼³°èÇÑ »ç¶÷Àº ´©±¸³Ä. ÀÌ·¸°Ô ÄÚµùÇÏ°í ¹äÀÌ ³Ñ¾î°¡³ª.
-	//enumÀ» º°µµ·Î ±¸º°À» ÇÏ´ø°¡. ¾Æ´Ô namepsace·Î ±¸º°À» ÇÏ´ø°¡..
-	//Á¤¸» packet generator±îÁö´Â ¹Ù¶óÁöµµ ¾Ê´Â´Ù. ÀÌ·± ¾¾XX
-	//ÀÌ·¯´Ù°¡ ¼ýÀÚ °ãÄ¡¸é ´©°¡ Ã¥ÀÓÁö´Âµ¥???
+	//NOTE : ï¿½Ì·ï¿½ ï¿½ï¿½XXX ï¿½ï¿½ï¿½ï¿½ ï¿½Ì°ï¿½ Packetï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Úµï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½.
+	//enumï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ï¿½ï¿½. ï¿½Æ´ï¿½ namepsaceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ï¿½ï¿½..
+	//ï¿½ï¿½ï¿½ï¿½ packet generatorï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½. ï¿½Ì·ï¿½ ï¿½ï¿½XX
+	//ï¿½Ì·ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½???
 
 	HEADER_CG_DRAGON_SOUL_REFINE			= 205,
 	HEADER_CG_STATE_CHECKER					= 206,
@@ -301,6 +301,14 @@ enum
 	HEADER_GC_DRAGON_SOUL_REFINE			= 209,
 	HEADER_GC_RESPOND_CHANNELSTATUS			= 210,
 
+#ifdef __FARM_SESSION_SYSTEM__
+	HEADER_GC_FARM_SESSION_STATE		= 211,
+	HEADER_GC_FARM_SESSION_KILL_ENTRY	= 212,
+	HEADER_GC_FARM_SESSION_ITEM_ENTRY	= 213,
+	HEADER_GC_FARM_SESSION_REPORT_END	= 214,
+	HEADER_CG_FARM_SESSION_CONTROL		= 215,
+#endif
+
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -310,7 +318,7 @@ enum
 	HEADER_GG_NOTICE				= 4,
 	HEADER_GG_SHUTDOWN				= 5,
 	HEADER_GG_GUILD				= 6,
-	HEADER_GG_DISCONNECT			= 7,	// ´©±º°¡ÀÇ Á¢¼ÓÀ» °­Á¦·Î ²÷À» ¶§
+	HEADER_GG_DISCONNECT			= 7,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 	HEADER_GG_SHOUT				= 8,
 	HEADER_GG_SETUP				= 9,
 	HEADER_GG_MESSENGER_ADD                     = 10,
@@ -333,6 +341,12 @@ enum
 
 	HEADER_GG_CHECK_AWAKENESS		= 29,
 	HEADER_GG_MESSENGER_REQUEST_ADD = 30,
+
+#ifdef __FARM_SESSION_SYSTEM__
+	HEADER_GG_FARM_SESSION_STATE		= 31,
+	HEADER_GG_FARM_SESSION_KILL_ENTRY	= 32,
+	HEADER_GG_FARM_SESSION_ITEM_ENTRY	= 33,
+#endif
 };
 
 #pragma pack(1)
@@ -486,8 +500,8 @@ typedef struct SPacketGGMessengerMobile
 typedef struct SPacketGGFindPosition
 {
 	BYTE header;
-	DWORD dwFromPID; // Àú À§Ä¡·Î ¿öÇÁÇÏ·Á´Â »ç¶÷
-	DWORD dwTargetPID; // Ã£´Â »ç¶÷
+	DWORD dwFromPID; // ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	DWORD dwTargetPID; // Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½
 } TPacketGGFindPosition;
 
 typedef struct SPacketGGWarpCharacter
@@ -531,14 +545,14 @@ typedef struct SPacketGGBlockChat
 	long	lBlockDuration;
 } TPacketGGBlockChat;
 
-/* Å¬¶óÀÌ¾ðÆ® Ãø¿¡¼­ º¸³»´Â ÆÐÅ¶ */
+/* Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ */
 
 typedef struct command_text
 {
 	BYTE	bHeader;
 } TPacketCGText;
 
-/* ·Î±×ÀÎ (1) */
+/* ï¿½Î±ï¿½ï¿½ï¿½ (1) */
 typedef struct command_handshake
 {
 	BYTE	bHeader;
@@ -624,7 +638,7 @@ typedef struct command_player_create_success
 	TSimplePlayer	player;
 } TPacketGCPlayerCreateSuccess;
 
-// °ø°Ý
+// ï¿½ï¿½ï¿½ï¿½
 typedef struct command_attack
 {
 	BYTE	bHeader;
@@ -646,7 +660,7 @@ enum EMoveFuncType
 	FUNC_SKILL = 0x80,
 };
 
-// ÀÌµ¿
+// ï¿½Ìµï¿½
 typedef struct command_move
 {
 	BYTE	bHeader;
@@ -665,22 +679,22 @@ typedef struct command_sync_position_element
 	long	lY;
 } TPacketCGSyncPositionElement;
 
-// À§Ä¡ µ¿±âÈ­
-typedef struct command_sync_position	// °¡º¯ ÆÐÅ¶
+// ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½È­
+typedef struct command_sync_position	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶
 {
 	BYTE	bHeader;
 	WORD	wSize;
 } TPacketCGSyncPosition;
 
-/* Ã¤ÆÃ (3) */
-typedef struct command_chat	// °¡º¯ ÆÐÅ¶
+/* Ã¤ï¿½ï¿½ (3) */
+typedef struct command_chat	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶
 {
 	BYTE	header;
 	WORD	size;
 	BYTE	type;
 } TPacketCGChat;
 
-/* ±Ó¼Ó¸» */
+/* ï¿½Ó¼Ó¸ï¿½ */
 typedef struct command_whisper
 {
 	BYTE	bHeader;
@@ -861,7 +875,7 @@ typedef struct command_quest_confirm
 } TPacketCGQuestConfirm;
 
 /*
- * ¼­¹ö Ãø¿¡¼­ º¸³»´Â ÆÐÅ¶ 
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ 
  */
 typedef struct packet_quest_confirm
 {
@@ -987,7 +1001,7 @@ typedef struct packet_add_char
 	BYTE	bAttackSpeed;
 
 	BYTE	bStateFlag;
-	DWORD	dwAffectFlag[2];	// È¿°ú
+	DWORD	dwAffectFlag[2];	// È¿ï¿½ï¿½
 } TPacketGCCharacterAdd;
 
 typedef struct packet_char_additional_info
@@ -1030,7 +1044,7 @@ typedef struct packet_del_char
 	DWORD	id;
 } TPacketGCCharacterDelete;
 
-typedef struct packet_chat	// °¡º¯ ÆÐÅ¶
+typedef struct packet_chat	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶
 {
 	BYTE	header;
 	WORD	size;
@@ -1039,7 +1053,7 @@ typedef struct packet_chat	// °¡º¯ ÆÐÅ¶
 	BYTE	bEmpire;
 } TPacketGCChat;
 
-typedef struct packet_whisper	// °¡º¯ ÆÐÅ¶
+typedef struct packet_whisper	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶
 {
 	BYTE	bHeader;
 	WORD	wSize;
@@ -1136,6 +1150,82 @@ typedef struct packet_dead
 	BYTE	header;
 	DWORD	vid;
 } TPacketGCDead;
+
+#ifdef __FARM_SESSION_SYSTEM__
+typedef struct packet_farm_session_state
+{
+	BYTE	header;
+	BYTE	isActive;
+	DWORD	dwElapsedSec;
+	DWORD	dwKillCountTotal;
+	DWORD	dwStoneKillTotal;
+	DWORD	dwBossKillTotal;
+	DWORD	dwNormalKillTotal;
+	DWORD	dwItemCountTotal;
+	int64_t	lYangGained;
+	int64_t	lYangSpent;
+} TPacketGCFarmSessionState;
+
+typedef struct packet_farm_session_kill_entry
+{
+	BYTE	header;
+	DWORD	dwMobVnum;
+	DWORD	dwCount;
+} TPacketGCFarmSessionKillEntry;
+
+typedef struct packet_farm_session_item_entry
+{
+	BYTE	header;
+	DWORD	dwItemVnum;
+	DWORD	dwCount;
+} TPacketGCFarmSessionItemEntry;
+
+typedef struct packet_farm_session_report_end
+{
+	BYTE	header;
+} TPacketGCFarmSessionReportEnd;
+
+typedef struct packet_farm_session_control
+{
+	BYTE	header;
+	BYTE	bStart;
+} TPacketCGFarmSessionControl;
+
+// Server-to-server only (P2P mesh) - carries an active farm session across a
+// cross-process warp handoff (WarpSet on the origin -> OnEnterGame on the
+// destination), since CFarmSessionManager's map is per-process memory and
+// doesn't otherwise survive the character moving to a different game core.
+typedef struct packet_gg_farm_session_state
+{
+	BYTE	header;
+	DWORD	dwPID;
+	BYTE	isActive;
+	DWORD	dwElapsedSec;
+	DWORD	dwKillCountTotal;
+	DWORD	dwStoneKillTotal;
+	DWORD	dwBossKillTotal;
+	DWORD	dwNormalKillTotal;
+	DWORD	dwItemCountTotal;
+	int64_t	lYangGained;
+	int64_t	lYangSpent;
+} TPacketGGFarmSessionState;
+
+typedef struct packet_gg_farm_session_kill_entry
+{
+	BYTE	header;
+	DWORD	dwPID;
+	DWORD	dwMobVnum;
+	DWORD	dwCount;
+} TPacketGGFarmSessionKillEntry;
+
+typedef struct packet_gg_farm_session_item_entry
+{
+	BYTE	header;
+	DWORD	dwPID;
+	DWORD	dwItemVnum;
+	DWORD	dwCount;
+} TPacketGGFarmSessionItemEntry;
+#endif
 
 struct TPacketGCItemDelDeprecated
 {
@@ -1282,7 +1372,7 @@ typedef struct packet_shop_start
 	struct packet_shop_item	items[SHOP_HOST_ITEM_MAX_NUM];
 } TPacketGCShopStart;
 
-typedef struct packet_shop_start_ex // ´ÙÀ½¿¡ TSubPacketShopTab* shop_tabs ÀÌ µû¶ó¿È.
+typedef struct packet_shop_start_ex // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ TSubPacketShopTab* shop_tabs ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
 {
 	typedef struct sub_packet_shop_tab 
 	{
@@ -1305,7 +1395,7 @@ typedef struct packet_shop_update_price
 	int				iPrice;
 } TPacketGCShopUpdatePrice;
 
-typedef struct packet_shop	// °¡º¯ ÆÐÅ¶
+typedef struct packet_shop	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶
 {
 	BYTE        header;
 	WORD	size; 
@@ -1385,7 +1475,7 @@ typedef struct packet_move
 	DWORD		dwDuration;
 } TPacketGCMove;
 
-// ¼ÒÀ¯±Ç
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 typedef struct packet_ownership
 {
 	BYTE		bHeader;
@@ -1393,7 +1483,7 @@ typedef struct packet_ownership
 	DWORD		dwVictimVID;
 } TPacketGCOwnership;
 
-// À§Ä¡ µ¿±âÈ­ ÆÐÅ¶ÀÇ bCount ¸¸Å­ ºÙ´Â ´ÜÀ§
+// ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½Å¶ï¿½ï¿½ bCount ï¿½ï¿½Å­ ï¿½Ù´ï¿½ ï¿½ï¿½ï¿½ï¿½
 typedef struct packet_sync_position_element
 {
 	DWORD	dwVID;
@@ -1401,11 +1491,11 @@ typedef struct packet_sync_position_element
 	long	lY;
 } TPacketGCSyncPositionElement;
 
-// À§Ä¡ µ¿±âÈ­
-typedef struct packet_sync_position	// °¡º¯ ÆÐÅ¶
+// ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½È­
+typedef struct packet_sync_position	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶
 {
 	BYTE	bHeader;
-	WORD	wSize;	// °³¼ö = (wSize - sizeof(TPacketGCSyncPosition)) / sizeof(TPacketGCSyncPositionElement) 
+	WORD	wSize;	// ï¿½ï¿½ï¿½ï¿½ = (wSize - sizeof(TPacketGCSyncPosition)) / sizeof(TPacketGCSyncPositionElement) 
 } TPacketGCSyncPosition;
 
 typedef struct packet_fly
@@ -1440,7 +1530,7 @@ typedef struct packet_shoot
 typedef struct packet_duel_start
 {
 	BYTE	header;
-	WORD	wSize;	// DWORD°¡ ¸î°³? °³¼ö = (wSize - sizeof(TPacketGCPVPList)) / 4
+	WORD	wSize;	// DWORDï¿½ï¿½ ï¿½î°³? ï¿½ï¿½ï¿½ï¿½ = (wSize - sizeof(TPacketGCPVPList)) / 4
 } TPacketGCDuelStart;
 
 enum EPVPModes
@@ -1456,7 +1546,7 @@ typedef struct packet_pvp
 	BYTE        bHeader;
 	DWORD       dwVIDSrc;
 	DWORD       dwVIDDst;
-	BYTE        bMode;	// 0 ÀÌ¸é ²û, 1ÀÌ¸é ÄÔ
+	BYTE        bMode;	// 0 ï¿½Ì¸ï¿½ ï¿½ï¿½, 1ï¿½Ì¸ï¿½ ï¿½ï¿½
 } TPacketGCPVP;
 
 typedef struct command_use_skill
@@ -1889,7 +1979,7 @@ typedef struct packet_mark_idxlist
 	BYTE    header;
 	DWORD	bufSize;
 	WORD	count;
-	//µÚ¿¡ size * (WORD + WORD)¸¸Å­ µ¥ÀÌÅÍ ºÙÀ½
+	//ï¿½Ú¿ï¿½ size * (WORD + WORD)ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 } TPacketGCMarkIDXList;
 
 typedef struct packet_mark_block
@@ -1898,7 +1988,7 @@ typedef struct packet_mark_block
 	DWORD	bufSize;
 	BYTE	imgIdx;
 	DWORD	count;
-	// µÚ¿¡ 64 x 48 x ÇÈ¼¿Å©±â(4¹ÙÀÌÆ®) = 12288¸¸Å­ µ¥ÀÌÅÍ ºÙÀ½
+	// ï¿½Ú¿ï¿½ 64 x 48 x ï¿½È¼ï¿½Å©ï¿½ï¿½(4ï¿½ï¿½ï¿½ï¿½Æ®) = 12288ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 } TPacketGCMarkBlock;
 
 typedef struct command_symbol_upload
@@ -2043,8 +2133,8 @@ typedef struct SPacketGCRefineInformaion
 	DWORD	src_vnum;
 	DWORD	result_vnum;
 	BYTE	material_count;
-	int		cost; // ¼Ò¿ä ºñ¿ë
-	int		prob; // È®·ü
+	int		cost; // ï¿½Ò¿ï¿½ ï¿½ï¿½ï¿½
+	int		prob; // È®ï¿½ï¿½
 	TRefineMaterial materials[REFINE_MATERIAL_MAX_NUM];
 } TPacketGCRefineInformation;
 
@@ -2265,13 +2355,13 @@ typedef struct SPacketGCPanamaPack
 	BYTE	abIV[32];
 } TPacketGCPanamaPack;
 
-//TODO :  ¾Æ¿ì Â¯³ª..°¡º¯ÆÐÅ¶ »çÀÌÁî ¹Þ¾ÆµéÀÏ¼ö ÀÖ°Ô ÆÐÅ¶ ÇÚµé·¯ Refactoring ÇÏÀÚ. 
+//TODO :  ï¿½Æ¿ï¿½ Â¯ï¿½ï¿½..ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¶ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æµï¿½ï¿½Ï¼ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½Å¶ ï¿½Úµé·¯ Refactoring ï¿½ï¿½ï¿½ï¿½. 
 typedef struct SPacketGCHybridCryptKeys
 {
 	SPacketGCHybridCryptKeys() : m_pStream(NULL) {}
 	~SPacketGCHybridCryptKeys()
 	{
-		//GCC ¿¡¼± NULL delete ÇØµµ ±¦Âú³ª? ÀÏ´Ü ¾ÈÀüÇÏ°Ô NULL Ã¼Å© ÇÏÀÚ. ( ±Ùµ¥ ÀÌ°Å C++ Ç¥ÁØ¾Æ´Ï¾ú³ª --a )
+		//GCC ï¿½ï¿½ï¿½ï¿½ NULL delete ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½? ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ NULL Ã¼Å© ï¿½ï¿½ï¿½ï¿½. ( ï¿½Ùµï¿½ ï¿½Ì°ï¿½ C++ Ç¥ï¿½Ø¾Æ´Ï¾ï¿½ï¿½ï¿½ --a )
 		if( m_pStream )
 		{
 			delete[] m_pStream;
@@ -2304,7 +2394,7 @@ typedef struct SPacketGCHybridCryptKeys
 	}
 
 	BYTE	bHeader;
-	WORD    uDynamicPacketSize; // ºô¾î¸ÔÀ» Å¬¶ó  DynamicPacketHeader ±¸Á¶¶§¹®¿¡ ¸ÂÃçÁà¾ßÇÑ´Ù -_-;
+	WORD    uDynamicPacketSize; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½  DynamicPacketHeader ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ -_-;
 	int		KeyStreamLen;
 	BYTE*   pDataKeyStream;
 
@@ -2352,7 +2442,7 @@ typedef struct SPacketGCPackageSDB
 	}
 
 	BYTE	bHeader;
-	WORD    uDynamicPacketSize; // ºô¾î¸ÔÀ» Å¬¶ó  DynamicPacketHeader ±¸Á¶¶§¹®¿¡ ¸ÂÃçÁà¾ßÇÑ´Ù -_-;
+	WORD    uDynamicPacketSize; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½  DynamicPacketHeader ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ -_-;
 	int		iStreamLen;
 	BYTE*   m_pDataSDBStream;
 
@@ -2388,7 +2478,7 @@ typedef struct SPacketGCSpecificEffect
 	char effect_file[MAX_EFFECT_FILE_NAME];
 } TPacketGCSpecificEffect;
 
-// ¿ëÈ¥¼®
+// ï¿½ï¿½È¥ï¿½ï¿½
 enum EDragonSoulRefineWindowRefineType
 {
 	DragonSoulRefineWindow_UPGRADE,

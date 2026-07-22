@@ -16,6 +16,9 @@
 #include "text_file_loader.h"
 #include "skill.h"
 #include "pvp.h"
+#ifdef __FARM_SESSION_SYSTEM__
+#include "FarmSessionManager.h"
+#endif
 #include "party.h"
 #include "questmanager.h"
 #include "profiler.h"
@@ -445,6 +448,9 @@ int main(int argc, char **argv)
 	CPartyManager	party_manager;
 	CSkillManager	skill_manager;
 	CPVPManager		pvp_manager;
+#ifdef __FARM_SESSION_SYSTEM__
+	CFarmSessionManager	farm_session_manager;
+#endif
 	LZOManager		lzo_manager;
 	DBManager		db_manager;
 	AccountDB 		account_db;

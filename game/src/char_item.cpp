@@ -10,6 +10,9 @@
 #include "desc.h"
 #include "desc_client.h"
 #include "desc_manager.h"
+#ifdef __FARM_SESSION_SYSTEM__
+#include "FarmSessionManager.h"
+#endif
 #include "packet.h"
 #include "affect.h"
 #include "skill.h"
@@ -5923,6 +5926,10 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 				if (item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
 				{
 					WORD bCount = item->GetCount();
+#ifdef __FARM_SESSION_SYSTEM__
+			DWORD dwFarmSessionItemVnum = item->GetOriginalVnum();
+			DWORD dwFarmSessionItemCount = bCount;
+#endif
 
 					for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
 					{
@@ -5953,6 +5960,9 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 								M2_DESTROY_ITEM(item);
 								if (item2->GetType() == ITEM_QUEST)
 									quest::CQuestManager::instance().PickupItem (GetPlayerID(), item2);
+#ifdef __FARM_SESSION_SYSTEM__
+								CFarmSessionManager::instance().OnItemReceived(this, dwFarmSessionItemVnum, dwFarmSessionItemCount);
+#endif
 								return true;
 							}
 						}
@@ -5991,6 +6001,9 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 				char szHint[32+1];
 				snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
 				LogManager::instance().ItemLog(this, item, "GET", szHint);
+#ifdef __FARM_SESSION_SYSTEM__
+			CFarmSessionManager::instance().OnItemReceived(this, item->GetOriginalVnum(), item->GetCount());
+#endif
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), item->GetName());
 
 				if (item->GetType() == ITEM_QUEST)
@@ -6048,6 +6061,9 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 			char szHint[32+1];
 			snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
 			LogManager::instance().ItemLog(owner, item, "GET", szHint);
+#ifdef __FARM_SESSION_SYSTEM__
+			CFarmSessionManager::instance().OnItemReceived(owner, item->GetOriginalVnum(), item->GetCount());
+#endif
 
 			if (owner == this)
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), item->GetName());
