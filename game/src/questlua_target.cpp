@@ -69,7 +69,7 @@ namespace quest
 		return 0;
 	}
 
-	// ÇöÀç Äù½ºÆ®¿¡ µî·ÏµÈ Å¸°ÙÀ» »èÁ¦ ÇÑ´Ù.
+	// í˜„ì¬ í€˜ìŠ¤íŠ¸ì— ë“±ë¡ëœ íƒ€ê²Ÿì„ ì‚­ì œ í•œë‹¤.
 	int target_delete(lua_State* L)
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
@@ -86,7 +86,7 @@ namespace quest
 		return 0;
 	}
 
-	// ÇöÀç Äù½ºÆ® ÀÎµ¦½º·Î µÇ¾îÀÖ´Â Å¸°ÙÀ» ¸ğµÎ »èÁ¦ÇÑ´Ù.
+	// í˜„ì¬ í€˜ìŠ¤íŠ¸ ì¸ë±ìŠ¤ë¡œ ë˜ì–´ìˆëŠ” íƒ€ê²Ÿì„ ëª¨ë‘ ì‚­ì œí•œë‹¤.
 	int target_clear(lua_State* L)
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();

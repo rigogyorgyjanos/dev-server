@@ -1675,7 +1675,7 @@ void COfflineShopManager::Teleport(LPCHARACTER ch, const char* szOwnerName)
 
 #ifdef ENABLE_ANTI_CMD_FLOOD
 	if (!PulseManager::Instance().IncreaseClock(ch->GetPlayerID(), ePulse::SharedRequest, std::chrono::milliseconds(5000)))
-		return ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+		return ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 #endif	
 
 	auto it = m_Map_pkOfflineShopByName.find(szOwnerName);

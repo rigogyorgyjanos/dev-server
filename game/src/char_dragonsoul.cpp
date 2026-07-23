@@ -5,14 +5,14 @@
 #include "DragonSoul.h"
 #include "log.h"
 
-// ¿ëÈ¥¼® ÃÊ±âÈ­
-// ¿ëÈ¥¼® on/off´Â Affect·Î ÀúÀåµÇ±â ¶§¹®¿¡,
-// ¿ëÈ¥¼® Affect°¡ ÀÖ´Ù¸é µ¦¿¡ ÀÖ´Â ¿ëÈ¥¼®À» activateÇØ¾ßÇÑ´Ù.
-// ¶ÇÇÑ ¿ëÈ¥¼® »ç¿ë ÀÚ°ÝÀº QuestFlag·Î ÀúÀåÇØ ³õ¾Ò±â ¶§¹®¿¡, 
-// Äù½ºÆ® Flag¿¡¼­ ¿ëÈ¥¼® »ç¿ë ÀÚ°ÝÀ» ÀÐ¾î¿Â´Ù.
+// ìš©í˜¼ì„ ì´ˆê¸°í™”
+// ìš©í˜¼ì„ on/offëŠ” Affectë¡œ ì €ìž¥ë˜ê¸° ë•Œë¬¸ì—,
+// ìš©í˜¼ì„ Affectê°€ ìžˆë‹¤ë©´ ë±ì— ìžˆëŠ” ìš©í˜¼ì„ì„ activateí•´ì•¼í•œë‹¤.
+// ë˜í•œ ìš©í˜¼ì„ ì‚¬ìš© ìžê²©ì€ QuestFlagë¡œ ì €ìž¥í•´ ë†“ì•˜ê¸° ë•Œë¬¸ì—, 
+// í€˜ìŠ¤íŠ¸ Flagì—ì„œ ìš©í˜¼ì„ ì‚¬ìš© ìžê²©ì„ ì½ì–´ì˜¨ë‹¤.
 
-// Ä³¸¯ÅÍÀÇ affect, quest°¡ load µÇ±â Àü¿¡ DragonSoul_Initialize¸¦ È£ÃâÇÏ¸é ¾ÈµÈ´Ù.
-// affect°¡ °¡Àå ¸¶Áö¸·¿¡ ·ÎµåµÇ¾î LoadAffect¿¡¼­ È£ÃâÇÔ.
+// ìºë¦­í„°ì˜ affect, questê°€ load ë˜ê¸° ì „ì— DragonSoul_Initializeë¥¼ í˜¸ì¶œí•˜ë©´ ì•ˆëœë‹¤.
+// affectê°€ ê°€ìž¥ ë§ˆì§€ë§‰ì— ë¡œë“œë˜ì–´ LoadAffectì—ì„œ í˜¸ì¶œí•¨.
 void CHARACTER::DragonSoul_Initialize()
 {
 	for (int i = INVENTORY_MAX_NUM + WEAR_MAX_NUM; i < DRAGON_SOUL_EQUIP_SLOT_END; i++)
@@ -55,7 +55,7 @@ void CHARACTER::DragonSoul_GiveQualification()
 	}
 	AddAffect(AFFECT_DRAGON_SOUL_QUALIFIED, APPLY_NONE, 0, AFF_NONE, INFINITE_AFFECT_DURATION, 0, false, false);
 	//SetQuestFlag("dragon_soul.is_qualified", 1);
-	//// ÀÚ°ÝÀÖ´Ù¸é POINT_DRAGON_SOUL_IS_QUALIFIED´Â ¹«Á¶°Ç 1
+	//// ìžê²©ìžˆë‹¤ë©´ POINT_DRAGON_SOUL_IS_QUALIFIEDëŠ” ë¬´ì¡°ê±´ 1
 	//PointChange(POINT_DRAGON_SOUL_IS_QUALIFIED, 1 - GetPoint(POINT_DRAGON_SOUL_IS_QUALIFIED));
 }
 
@@ -73,7 +73,7 @@ bool CHARACTER::DragonSoul_ActivateDeck(int deck_idx)
 
 	if (!DragonSoul_IsQualified())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ëÈ¥¼® »óÀÚ°¡ È°¼ºÈ­µÇÁö ¾Ê¾Ò½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìš©í˜¼ì„ ìƒìžê°€ í™œì„±í™”ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 

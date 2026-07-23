@@ -78,7 +78,7 @@
 #include <execinfo.h>
 #endif
 
-// À©µµ¿ì¿¡¼­ Å×½ºÆ®ÇÒ ¶§´Â Ç×»ó ¼­¹öÅ° Ã¼Å©
+// ìœˆë„ìš°ì—ì„œ í…ŒìŠ¤íŠ¸í•  ë•ŒëŠ” í•­ìƒ ì„œë²„í‚¤ Ã¼Å©
 #ifdef _WIN32
 	//#define _USE_SERVER_KEY_
 #endif
@@ -100,10 +100,10 @@ void WriteMallocMessage(const char* p1, const char* p2, const char* p3, const ch
 #endif
 
 // TRAFFIC_PROFILER
-static const DWORD	TRAFFIC_PROFILE_FLUSH_CYCLE = 3600;	///< TrafficProfiler ÀÇ Flush cycle. 1½Ã°£ °£°İ
+static const DWORD	TRAFFIC_PROFILE_FLUSH_CYCLE = 3600;	///< TrafficProfiler ì˜ Flush cycle. 1ì‹œê°„ ê°„ê²©
 // END_OF_TRAFFIC_PROFILER
 
-// °ÔÀÓ°ú ¿¬°áµÇ´Â ¼ÒÄÏ
+// ê²Œì„ê³¼ ì—°ê²°ë˜ëŠ” ì†Œì¼“
 volatile int	num_events_called = 0;
 int             max_bytes_written = 0;
 int             current_bytes_written = 0;
@@ -115,6 +115,114 @@ socket_t	udp_socket = 0;
 socket_t	p2p_socket = 0;
 
 LPFDWATCH	main_fdw = NULL;
+
+#if defined(__BL_HOT_RESTART__)
+static int		g_iOrigArgc = 0;
+static char**	g_ppszOrigArgv = NULL;
+
+// Deep-copies argv before getopt()/setproctitle() can touch it, so /hotrestart can later
+// execve() this exact binary again with the exact same flags it was originally started with.
+static void CaptureOriginalArgv(int argc, char** argv)
+{
+	g_iOrigArgc = argc;
+	g_ppszOrigArgv = new char*[argc + 1];
+
+	for (int i = 0; i < argc; ++i)
+		g_ppszOrigArgv[i] = strdup(argv[i]);
+
+	g_ppszOrigArgv[argc] = NULL;
+}
+
+// Checks whether a listening TCP socket was handed down from a /hotrestart execve() via the
+// given environment variable. Validates it (SO_ACCEPTCONN) before trusting it, so a stray or
+// stale env var can never be mistaken for a real inherited socket.
+static bool AdoptInheritedListenSocket(const char* c_szEnvName, socket_t* pSocket)
+{
+	const char* c_szValue = getenv(c_szEnvName);
+	if (!c_szValue || !*c_szValue)
+		return false;
+
+	socket_t fd = atoi(c_szValue);
+
+	int iAcceptConn = 0;
+	socklen_t len = sizeof(iAcceptConn);
+	if (fd < 0 || getsockopt(fd, SOL_SOCKET, SO_ACCEPTCONN, &iAcceptConn, &len) != 0 || !iAcceptConn)
+	{
+		sys_err("HOTRESTART: %s=%s is not a valid listening socket, will bind a fresh one", c_szEnvName, c_szValue);
+		return false;
+	}
+
+	*pSocket = fd;
+	sys_log(0, "HOTRESTART: adopted inherited listening socket %s=%d", c_szEnvName, fd);
+	return true;
+}
+
+static void TryAdoptInheritedSockets(bool* pbTcp, bool* pbUdp, bool* pbP2p)
+{
+	*pbTcp = AdoptInheritedListenSocket("HOTRESTART_TCP_FD", &tcp_socket);
+	*pbUdp = AdoptInheritedListenSocket("HOTRESTART_UDP_FD", &udp_socket);
+	*pbP2p = AdoptInheritedListenSocket("HOTRESTART_P2P_FD", &p2p_socket);
+
+	unsetenv("HOTRESTART_TCP_FD");
+	unsetenv("HOTRESTART_UDP_FD");
+	unsetenv("HOTRESTART_P2P_FD");
+}
+
+// Saves all online characters/items and self-exec's this same binary (freshly rebuilt on disk)
+// via execve(), keeping the same PID and handing the listening sockets down through env vars so
+// TryAdoptInheritedSockets() can pick them back up - no manual stop/start, no dropped listen port.
+void DoHotRestart_Game()
+{
+	sys_log(0, "HOTRESTART: draining and saving all online characters...");
+	CHARACTER_MANAGER::instance().GracefulShutdown();
+	ITEM_MANAGER::instance().GracefulShutdown();
+
+	// GracefulShutdown() only soft-marks client descs PHASE_CLOSE (queues a close packet,
+	// switches the input processor) - the actual socket_close() normally happens on a *later*
+	// io_loop() pass via DestroyClosed(). We go straight to execve() and never see another
+	// io_loop() pass, so without this, every still-open client socket would leak through the
+	// exec as an orphaned fd the new process knows nothing about (not CLOEXEC) - the client
+	// would look connected (no FIN/RST ever sent) but every packet it sends would go nowhere,
+	// since no DESC/fdwatch entry exists for it in the new process. Force-close them here.
+	const DESC_MANAGER::DESC_SET& descSet = DESC_MANAGER::instance().GetClientSet();
+	for (DESC_MANAGER::DESC_SET::const_iterator it = descSet.begin(); it != descSet.end(); ++it)
+	{
+		LPDESC d = *it;
+		if (d->GetType() == DESC_TYPE_CONNECTOR)	// db_clientdesc - closed separately below
+			continue;
+
+		socket_t sock = d->GetSocket();
+		if (sock != INVALID_SOCKET)
+			socket_close(sock);
+	}
+
+	signal_timer_disable();
+
+	if (db_clientdesc)
+		socket_close(db_clientdesc->GetSocket());
+
+	char szFdBuf[16];
+	snprintf(szFdBuf, sizeof(szFdBuf), "%d", (int)tcp_socket);
+	setenv("HOTRESTART_TCP_FD", szFdBuf, 1);
+#ifndef __UDP_BLOCK__
+	snprintf(szFdBuf, sizeof(szFdBuf), "%d", (int)udp_socket);
+	setenv("HOTRESTART_UDP_FD", szFdBuf, 1);
+#endif
+	snprintf(szFdBuf, sizeof(szFdBuf), "%d", (int)p2p_socket);
+	setenv("HOTRESTART_P2P_FD", szFdBuf, 1);
+
+	sys_log(0, "HOTRESTART: re-executing %s (pid %d stays the same)", g_ppszOrigArgv[0], (int)getpid());
+
+	extern char** environ;
+	execve(g_ppszOrigArgv[0], g_ppszOrigArgv, environ);
+
+	// Only reached if execve() itself failed (bad binary, missing file, permissions, ...).
+	// Players are already disconnected at this point, so don't try to limp along - exit
+	// cleanly through the normal shutdown path and let an external supervisor restart us.
+	sys_err("HOTRESTART: execve(%s) failed, errno=%d (%s) - falling back to normal shutdown", g_ppszOrigArgv[0], errno, strerror(errno));
+	thecore_shutdown();
+}
+#endif
 
 int		io_loop(LPFDWATCH fdw);
 
@@ -176,11 +284,11 @@ void ShutdownOnFatalError()
 		{
 			char buf[256];
 
-			strlcpy(buf, LC_TEXT("¼­¹ö¿¡ Ä¡¸íÀûÀÎ ¿À·ù°¡ ¹ß»ıÇÏ¿© ÀÚµ¿À¸·Î ÀçºÎÆÃµË´Ï´Ù."), sizeof(buf));
+			strlcpy(buf, LC_TEXT("ì„œë²„ì— ì¹˜ëª…ì ì¸ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì—¬ ìë™ìœ¼ë¡œ ì¬ë¶€íŒ…ë©ë‹ˆë‹¤."), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("10ÃÊÈÄ ÀÚµ¿À¸·Î Á¢¼ÓÀÌ Á¾·áµÇ¸ç,"), sizeof(buf));
+			strlcpy(buf, LC_TEXT("10ì´ˆí›„ ìë™ìœ¼ë¡œ ì ‘ì†ì´ ì¢…ë£Œë˜ë©°,"), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("5ºĞ ÈÄ¿¡ Á¤»óÀûÀ¸·Î Á¢¼ÓÇÏ½Ç¼ö ÀÖ½À´Ï´Ù."), sizeof(buf));
+			strlcpy(buf, LC_TEXT("5ë¶„ í›„ì— ì •ìƒì ìœ¼ë¡œ ì ‘ì†í•˜ì‹¤ìˆ˜ ìˆìŠµë‹ˆë‹¤."), sizeof(buf));
 			SendNotice(buf);
 		}
 
@@ -237,7 +345,7 @@ void heartbeat(LPHEART ht, int pulse)
 
 	t = get_dword_time();
 
-	// 1ÃÊ¸¶´Ù
+	// 1ì´ˆë§ˆë‹¤
 	if (!(pulse % ht->passes_per_sec))
 	{
 #ifdef ENABLE_LIMIT_TIME
@@ -291,15 +399,15 @@ void heartbeat(LPHEART ht, int pulse)
 	}
 
 	//
-	// 25 PPS(Pulse per second) ¶ó°í °¡Á¤ÇÒ ¶§
+	// 25 PPS(Pulse per second) ë¼ê³  ê°€ì •í•  ë•Œ
 	//
 
-	// ¾à 1.16ÃÊ¸¶´Ù
+	// ì•½ 1.16ì´ˆë§ˆë‹¤
 	if (!(pulse % (passes_per_sec + 4)))
 		CHARACTER_MANAGER::instance().ProcessDelayedSave();
 
 
-	// ¾à 5.08ÃÊ¸¶´Ù
+	// ì•½ 5.08ì´ˆë§ˆë‹¤
 	if (!(pulse % (passes_per_sec * 5 + 2)))
 	{
 		ITEM_MANAGER::instance().Update();
@@ -358,13 +466,13 @@ void Metin2Server_Check()
 		return;
 
 
-	// ºê¶óÁú ip
+	// ë¸Œë¼ì§ˆ ip
 	if (strncmp (g_szPublicIP, "189.112.1", 9) == 0)
 	{
 		return;
 	}
 
-	// Ä³³ª´Ù ip
+	// ìºë‚˜ë‹¤ ip
 	if (strncmp (g_szPublicIP, "74.200.6", 8) == 0)
 	{
 		return;
@@ -388,7 +496,7 @@ void Metin2Server_Check()
 
 	if (0 > sockConnector)
 	{
-		if (true != LC_IsEurope()) // À¯·´Àº Á¢¼ÓÀ» ÇÏÁö ¸øÇÏ¸é ÀÎÁõµÈ °ÍÀ¸·Î °£ÁÖ
+		if (true != LC_IsEurope()) // ìœ ëŸ½ì€ ì ‘ì†ì„ í•˜ì§€ ëª»í•˜ë©´ ì¸ì¦ëœ ê²ƒìœ¼ë¡œ ê°„ì£¼
 			g_isInvalidServer = true;
 
 		return;
@@ -419,6 +527,10 @@ static void CleanUpForEarlyExit() {
 
 int main(int argc, char **argv)
 {
+#if defined(__BL_HOT_RESTART__)
+	CaptureOriginalArgv(argc, argv);
+#endif
+
 #ifdef DEBUG_ALLOC
 	DebugAllocator::StaticSetUp();
 #endif
@@ -739,7 +851,12 @@ int start(int argc, char **argv)
 	
 	main_fdw = fdwatch_new(4096);
 
-	if ((tcp_socket = socket_tcp_bind(g_szPublicIP, mother_port)) == INVALID_SOCKET)
+	bool bAdoptedTcp = false, bAdoptedUdp = false, bAdoptedP2p = false;
+#if defined(__BL_HOT_RESTART__)
+	TryAdoptInheritedSockets(&bAdoptedTcp, &bAdoptedUdp, &bAdoptedP2p);
+#endif
+
+	if (!bAdoptedTcp && (tcp_socket = socket_tcp_bind(g_szPublicIP, mother_port)) == INVALID_SOCKET)
 	{
 		perror("socket_tcp_bind: tcp_socket");
 		return 0;
@@ -747,7 +864,7 @@ int start(int argc, char **argv)
 
 	
 #ifndef __UDP_BLOCK__
-	if ((udp_socket = socket_udp_bind(g_szPublicIP, mother_port)) == INVALID_SOCKET)
+	if (!bAdoptedUdp && (udp_socket = socket_udp_bind(g_szPublicIP, mother_port)) == INVALID_SOCKET)
 	{
 		perror("socket_udp_bind: udp_socket");
 		return 0;
@@ -756,7 +873,7 @@ int start(int argc, char **argv)
 
 	// if internal ip exists, p2p socket uses internal ip, if not use public ip
 	//if ((p2p_socket = socket_tcp_bind(*g_szInternalIP ? g_szInternalIP : g_szPublicIP, p2p_port)) == INVALID_SOCKET)
-	if ((p2p_socket = socket_tcp_bind(g_szPublicIP, p2p_port)) == INVALID_SOCKET)
+	if (!bAdoptedP2p && (p2p_socket = socket_tcp_bind(g_szPublicIP, p2p_port)) == INVALID_SOCKET)
 	{
 		perror("socket_tcp_bind: p2p_socket");
 		return 0;
@@ -923,7 +1040,7 @@ int io_loop(LPFDWATCH fdw)
 	LPDESC	d;
 	int		num_events, event_idx;
 
-	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSEÀÎ Á¢¼ÓµéÀ» ²÷¾îÁØ´Ù.
+	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSEì¸ ì ‘ì†ë“¤ì„ ëŠì–´ì¤€ë‹¤.
 	DESC_MANAGER::instance().TryConnect();
 
 	if ((num_events = fdwatch(fdw, 0)) < 0)

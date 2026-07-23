@@ -1,8 +1,8 @@
 /*
  *    Filename: queue.c
- * Description: Å¥ Ã³¸®
+ * Description: Å¥ ì²˜ë¦¬
  *
- *      Author: ±èÇÑÁÖ (aka. ºñ¿±, Cronan), ¼Û¿µÁø (aka. myevan, ºøÀÚ·ç)
+ *      Author: ê¹€í•œì£¼ (aka. ë¹„ì—½, Cronan), ì†¡ì˜ì§„ (aka. myevan, ë¹—ìë£¨)
  */
 #include "stdafx.h"
 

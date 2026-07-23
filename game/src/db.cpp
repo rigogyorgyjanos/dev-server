@@ -21,7 +21,7 @@
 extern bool g_bNoPasspod;
 extern std::string g_stBlockDate;
 
-//Áß±¹ passpod Àü¿ë ÇÔ¼ö 
+//ì¤‘êµ­ passpod ì „ìš© í•¨ìˆ˜ 
 bool CheckPasspod(const char * account)
 {
 	char szQuery[1024];
@@ -328,7 +328,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					M2_DELETE(pinfo);
 					break;
 				}
-				//À§Ä¡ º¯°æ - By SeMinZ
+				//ìœ„ì¹˜ ë³€ê²½ - By SeMinZ
 				d->SetLogin(pinfo->login);
 
 				sys_log(0, "QID_AUTH_LOGIN: START %u %p", qi->dwIdent, get_pointer(d));
@@ -454,7 +454,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					if (true == LC_IsBrazil())
 					{
-						nPasswordDiff = 0; // ºê¶óÁú ¹öÀü¿¡¼­´Â ºñ¹Ð¹øÈ£ Ã¼Å©¸¦ ÇÏÁö ¾Ê´Â´Ù.
+						nPasswordDiff = 0; // ë¸Œë¼ì§ˆ ë²„ì „ì—ì„œëŠ” ë¹„ë°€ë²ˆí˜¸ ì²´í¬ë¥¼ í•˜ì§€ ì•ŠëŠ”ë‹¤.
 					}
 
 					if (nPasswordDiff)
@@ -485,7 +485,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					{
 						if (LC_IsEurope())
 						{
-							//stBlockData >= 0 == ³¯Â¥°¡ BlockDate º¸´Ù ¹Ì·¡ 
+							//stBlockData >= 0 == ë‚ ì§œê°€ BlockDate ë³´ë‹¤ ë¯¸ëž˜ 
 							if (strncmp(szCreateDate, g_stBlockDate.c_str(), 8) >= 0)
 							{
 								LoginFailure(d, "BLKLOGIN");
@@ -580,7 +580,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						if (pkItem)
 						{
 							sys_log(0, "GIVE LOTTO SUCCESS TO %s (pid %u)", ch->GetName(), qi->dwIdent);
-							//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), pkItem->GetName());
+							//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s"), pkItem->GetName());
 
 							pkItem->SetSocket(0, pMsg->Get()->uiInsertID);
 							pkItem->SetSocket(1, pdw[2]);
@@ -796,7 +796,7 @@ enum EAccountQID
 	QID_SPAM_DB,
 };
 
-// 10ºÐ¸¶´Ù ¸®·Îµå
+// 10ë¶„ë§ˆë‹¤ ë¦¬ë¡œë“œ
 static LPEVENT s_pkReloadSpamEvent = NULL;
 
 EVENTINFO(reload_spam_event_info)

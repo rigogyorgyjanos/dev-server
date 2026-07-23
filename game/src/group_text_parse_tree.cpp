@@ -200,7 +200,7 @@ bool CGroupNode::GetRow(const std::string & c_rstrRowKey, OUT const CGroupNode::
 	return true;
 }
 
-// Âü°í·Î, idx¶û txt¿¡ ¾²¿©Áø ¼ø¼­¶û °ü°è ¾øÀ½.
+// ì°¸ê³ ë¡œ, idxë‘ txtì— ì“°ì—¬ì§„ ìˆœì„œë‘ ê´€ê³„ ì—†ìŒ.
 bool CGroupNode::GetRow(int idx, OUT const CGroupNode::CGroupNodeRow ** ppRow) const
 {
 	if (idx >= m_map_rows.size())
@@ -223,7 +223,7 @@ bool CGroupNode::GetGroupRow(const std::string& stGroupName, const std::string& 
 		if (pChildGroup->GetRow(stRow, ppRow))
 			return true;
 	}
-	// default groupÀ» »ìÆìº½.
+	// default groupì„ ì‚´í´ë´„.
 	pChildGroup = GetChildNode("default");
 	if (NULL != pChildGroup)
 	{

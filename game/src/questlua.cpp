@@ -450,7 +450,7 @@ namespace quest
 	}
 
 	/**
-	 * @version 05/06/08	Bang2ni - __get_guildid_byname ½ºÅ©¸³Æ® ÇÔ¼ö µî·Ï
+	 * @version 05/06/08	Bang2ni - __get_guildid_byname ìŠ¤í¬ë¦½íŠ¸ í•¨ìˆ˜ ë“±ë¡
 	 */
 	bool CQuestManager::InitializeLua()
 	{
@@ -696,7 +696,7 @@ namespace quest
 
 		if (chReply)
 		{
-			// ½Ã°£ Áö³ª¸é ¾Ë¾Æ¼­ ´İÈû
+			// ì‹œê°„ ì§€ë‚˜ë©´ ì•Œì•„ì„œ ë‹«í˜
 		}
 
 		if (chWait)
@@ -716,12 +716,12 @@ namespace quest
 
 		sys_log(0, "GotoConfirmState vid %u msg '%s', timeout %d", dwVID, szMsg, iTimeout);
 
-		// 1. »ó´ë¹æ¿¡°Ô È®ÀÎÃ¢ ¶ç¿ò
-		// 2. ³ª¿¡°Ô È®ÀÎ ±â´Ù¸°´Ù°í Ç¥½ÃÇÏ´Â Ã¢ ¶ç¿ò
-		// 3. Å¸ÀÓ¾Æ¿ô ¼³Á¤ (Å¸ÀÓ¾Æ¿ô µÇ¸é »ó´ë¹æ Ã¢ ´İ°í ³ª¿¡°Ôµµ Ã¢ ´İÀ¸¶ó°í º¸³¿)
+		// 1. ìƒëŒ€ë°©ì—ê²Œ í™•ì¸ì°½ ë„ì›€
+		// 2. ë‚˜ì—ê²Œ í™•ì¸ ê¸°ë‹¤ë¦°ë‹¤ê³  í‘œì‹œí•˜ëŠ” Ã¢ ë„ì›€
+		// 3. íƒ€ì„ì•„ì›ƒ ì„¤ì • (íƒ€ì„ì•„ì›ƒ ë˜ë©´ ìƒëŒ€ë°© Ã¢ ë‹«ê³  ë‚˜ì—ê²Œë„ Ã¢ ë‹«ìœ¼ë¼ê³  ë³´ëƒ„)
 
 		// 1
-		// »ó´ë¹æÀÌ ¾ø´Â °æ¿ì´Â ±×³É »ó´ë¹æ¿¡°Ô º¸³»Áö ¾Ê´Â´Ù. Å¸ÀÓ¾Æ¿ô¿¡ ÀÇÇØ¼­ ³Ñ¾î°¡°ÔµÊ
+		// ìƒëŒ€ë°©ì´ ì—†ëŠ” ê²½ìš°ëŠ” ê·¸ëƒ¥ ìƒëŒ€ë°©ì—ê²Œ ë³´ë‚´ì§€ ì•ŠëŠ”ë‹¤. íƒ€ì„ì•„ì›ƒì— ì˜í•´ì„œ ë„˜ì–´ê°€ê²Œë¨
 		LPCHARACTER ch = CHARACTER_MANAGER::instance().Find(dwVID);
 		if (ch && ch->IsPC())
 		{
@@ -757,7 +757,7 @@ namespace quest
 		AddScript("[INPUT]");
 		SendScript();
 
-		// ½Ã°£ Á¦ÇÑÀ» °Ë
+		// ì‹œê°„ ì œí•œì„ ê²€
 		//event_create(input_timeout_event, dwEI, PASSES_PER_SEC(iTimeout));
 	}
 

@@ -62,7 +62,7 @@ bool CSafebox::Add(DWORD dwPos, LPITEM pkItem)
 
 	pkItem->SetWindow(m_bWindowMode);
 	pkItem->SetCell(m_pkChrOwner, dwPos);
-	pkItem->Save(); // °­Á¦·Î Save¸¦ ºÒ·¯Áà¾ß ÇÑ´Ù.
+	pkItem->Save(); // ê°•ì œë¡œ Saveë¥¼ ë¶ˆëŸ¬ì¤˜ì•¼ í•œë‹¤.
 	ITEM_MANAGER::instance().FlushDelayedSave(pkItem);
 
 	m_pkGrid->Put(dwPos, 1, pkItem->GetSize());
@@ -141,7 +141,7 @@ bool CSafebox::IsEmpty(DWORD dwPos, BYTE bSize)
 
 void CSafebox::ChangeSize(int iSize)
 {
-	// ÇöÀç »çÀÌÁî°¡ ÀÎÀÚº¸´Ù Å©¸é »çÀÌÁî¸¦ °¡¸¸ µÐ´Ù.
+	// í˜„ìž¬ ì‚¬ì´ì¦ˆê°€ ì¸ìžë³´ë‹¤ í¬ë©´ ì‚¬ì´ì¦ˆë¥¼ ê°€ë§Œ ë‘”ë‹¤.
 	if (m_iSize >= iSize)
 		return;
 

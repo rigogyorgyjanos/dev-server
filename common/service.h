@@ -36,5 +36,7 @@
 #define __AUTO_QUQUE_ATTACK__				// Auto Metin Farm (queued auto-attack)
 #define __FARM_SESSION_SYSTEM__			// Farm session stat tracker
 #define BL_SORT_LASTPLAYTIME			// Character-select sorted by last play time
+#define __BL_ENABLE_PICKUP_ITEM_EFFECT__	// Highlight the inventory slot a freshly picked-up item lands in
+#define __BL_HOT_RESTART__			// /hotrestart GM command: self-exec game+db onto the freshly built binary, no manual stop/start
 
 #endif

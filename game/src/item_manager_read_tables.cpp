@@ -79,7 +79,7 @@ bool ITEM_MANAGER::ReadCommonDropItemFile(const char * c_pszFileName)
 
 			if (!ITEM_MANAGER::instance().GetVnumByOriginalName(d[i].szItemName, dwItemVnum))
 			{
-				// ÀÌ¸§À¸·Î ¸øÃ£À¸¸é ¹øÈ£·Î °Ë»ö
+				// ì´ë¦„ìœ¼ë¡œ ëª»ì°¾ìœ¼ë©´ ë²ˆí˜¸ë¡œ ê²€ìƒ‰
 				str_to_number(dwItemVnum, d[i].szItemName);
 				if (!ITEM_MANAGER::instance().GetTable(dwItemVnum))
 				{
@@ -224,7 +224,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 
 					if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 					{
-						if (name == "°æÇèÄ¡" || name == "exp")
+						if (name == "ê²½í—˜ì¹˜" || name == "exp")
 						{
 							dwVnum = CSpecialItemGroup::EXP;
 						}
@@ -373,7 +373,7 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 
 				if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 				{
-					if (	name == "°æÇèÄ¡" ||
+					if (	name == "ê²½í—˜ì¹˜" ||
 						name == "mob" ||
 						name == "slow" ||
 						name == "drain_hp" ||
@@ -406,7 +406,7 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 					str_to_number(iRarePct, pTok->at(3).c_str());
 				}
 
-				//    1   "±â¼ú ¼ö·Ã¼­"   1   100
+				//    1   "ê¸°ìˆ  ìˆ˜ë ¨ì„œ"   1   100
 				if (0 == dwVnum)
 					fprintf(fp, "	%d	%s	%d	%d\n", k, name.c_str(), iCount, iProb);
 				else

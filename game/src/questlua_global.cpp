@@ -802,7 +802,7 @@ namespace quest
 		return 1;
 	}
 
-	// »õ·Î¿î state¸¦ ¸¸µç´Ù.
+	// ìƒˆë¡œìš´ stateë¥¼ ë§Œë“ ë‹¤.
 	int _set_quest_state(lua_State* L)
 	{
 		if (!lua_isstring(L, 1) || !lua_isstring(L, 2))
@@ -962,7 +962,7 @@ namespace quest
 
 		event_create(warp_all_to_village_event, info, PASSES_PER_SEC(iSec));
 
-		SendNoticeMap(LC_TEXT("Àá½ÃÈÄ ¸ğµÎ ¸¶À»·Î ÀÌµ¿µË´Ï´Ù."), iMapIndex, false);
+		SendNoticeMap(LC_TEXT("ì ì‹œí›„ ëª¨ë‘ ë§ˆì„ë¡œ ì´ë™ë©ë‹ˆë‹¤."), iMapIndex, false);
 
 		return 0;
 	}
@@ -1036,7 +1036,7 @@ namespace quest
 		return 0;
 	}
 
-	//ÁÖÀÇ: ¸÷ ¸®Á¨ÀÌ ¾ÈµÇ´Â ¸Ê¿¡¼­¸¸ »ç¿ë
+	//ì£¼ì˜: ëª¹ ë¦¬ì  ì´ ì•ˆë˜ëŠ” ë§µì—ì„œë§Œ ì‚¬ìš©
 	int _regen_in_map( lua_State * L )
 	{
 		int iMapIndex = static_cast<int>(lua_tonumber(L, 1));

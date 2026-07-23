@@ -444,7 +444,7 @@ namespace quest
 			ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
 			pkNewItem->AttrLog();
 
-			// ¼º°ø!
+			// ì„±ê³µ!
 			lua_pushboolean(L, 1);			
 		}
 

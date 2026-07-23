@@ -317,6 +317,10 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 
 	void		QUERY_RELOAD_PROTO();
 
+#if defined(__BL_HOT_RESTART__)
+	void		QUERY_HOTRESTART();
+#endif
+
 	void		QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDChangeName * p);
 	void		GetPlayerFromRes(TPlayerTable * player_table, MYSQL_RES* res);
 

@@ -9,7 +9,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // QUICKSLOT HANDLING
 /////////////////////////////////////////////////////////////////////////////
-void CHARACTER::SyncQuickslot(BYTE bType, BYTE bOldPos, BYTE bNewPos) // bNewPos == 255 ¸é DELETE
+void CHARACTER::SyncQuickslot(BYTE bType, BYTE bOldPos, BYTE bNewPos) // bNewPos == 255 ë©´ DELETE
 {
 	if (bOldPos == bNewPos)
 		return;
@@ -121,7 +121,7 @@ bool CHARACTER::SwapQuickslot(BYTE a, BYTE b)
 	if (a >= QUICKSLOT_MAX_NUM || b >= QUICKSLOT_MAX_NUM)
 		return false;
 
-	// Äü ½½·Ô ÀÚ¸®¸¦ ¼­·Î ¹Ù²Û´Ù.
+	// í€µ ìŠ¬ë¡¯ ìë¦¬ë¥¼ ì„œë¡œ ë°”ê¾¼ë‹¤.
 	quickslot = m_quickslot[a];
 
 	m_quickslot[a] = m_quickslot[b];

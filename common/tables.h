@@ -142,6 +142,9 @@ enum
 #if defined(__BL_MOVE_CHANNEL__)
 	HEADER_GD_MOVE_CHANNEL = 152,
 #endif
+#if defined(__BL_HOT_RESTART__)
+	HEADER_GD_HOTRESTART = 153,		// game tells db to self-exec onto the freshly built binary
+#endif
 
 	HEADER_GD_SETUP			= 0xff,
 

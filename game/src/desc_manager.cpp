@@ -16,7 +16,7 @@
 DESC_MANAGER::DESC_MANAGER() : m_bDestroyed(false)
 {
 	Initialize();
-	//NOTE : Destroy ³¡¿¡¼­ Initialize ¸¦ ºÎ¸£´Â°Ç ¶Ç ¹«½¼ ÁşÀÌ³Ä..-_-; Á¤¸» 
+	//NOTE : Destroy ëì—ì„œ Initialize ë¥¼ ë¶€ë¥´ëŠ”ê±´ ë˜ ë¬´ìŠ¨ ì§“ì´ëƒ..-_-; ì •ë§ 
 
 	m_pPackageCrypt = new CClientPackageCryptInfo;
 }

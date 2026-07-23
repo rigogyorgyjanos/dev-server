@@ -101,7 +101,7 @@ bool CShopEx::AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire)
 			pack_tab.items[i].price = shop_tab.items[i].price;
 			if (bOtherEmpire && pack_tab.items[i].price_type == SHOPEX_GOLD)
 				pack_tab.items[i].price *= 3;
-			thecore_memcpy(pack_tab.items[i].price_items, shop_tab.items[i].price_items, sizeof(pack_tab.items[i].price_items)); // na ez érdekes
+			thecore_memcpy(pack_tab.items[i].price_items, shop_tab.items[i].price_items, sizeof(pack_tab.items[i].price_items)); // na ez Ã©rdekes
 			thecore_memcpy(pack_tab.items[i].aAttr, shop_tab.items[i].aAttr, sizeof(pack_tab.items[i].aAttr));
 			thecore_memcpy(pack_tab.items[i].alSockets, shop_tab.items[i].alSockets, sizeof(pack_tab.items[i].alSockets));
 

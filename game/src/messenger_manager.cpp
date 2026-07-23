@@ -178,7 +178,7 @@ void MessengerManager::RequestToAdd(LPCHARACTER ch, LPCHARACTER target)
 	
 	if (quest::CQuestManager::instance().GetPCForce(ch->GetPlayerID())->IsRunning() == true)
 	{
-	    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ Ä£±¸ Ãß°¡¸¦ ¹ŞÀ» ¼ö ¾ø´Â »óÅÂÀÔ´Ï´Ù."));
+	    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ì¹œêµ¬ ì¶”ê°€ë¥¼ ë°›ì„ ìˆ˜ ì—†ëŠ” ìƒíƒœì…ë‹ˆë‹¤."));
 	    return;
 	}
 
@@ -257,7 +257,7 @@ void MessengerManager::__AddToList(MessengerManager::keyA account, MessengerMana
 
 	if (d)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<¸Ş½ÅÁ®> %s ´ÔÀ» Ä£±¸·Î Ãß°¡ÇÏ¿´½À´Ï´Ù."), companion.c_str());
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ë©”ì‹ ì ¸> %s ë‹˜ì„ ì¹œêµ¬ë¡œ ì¶”ê°€í•˜ì˜€ìŠµë‹ˆë‹¤."), companion.c_str());
 	}
 
 	LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(companion.c_str());
@@ -307,7 +307,7 @@ void MessengerManager::__RemoveFromList(MessengerManager::keyA account, Messenge
 	LPDESC d = ch ? ch->GetDesc() : NULL;
 
 	if (d)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<¸Ş½ÅÁ®> %s ´ÔÀ» ¸Ş½ÅÀú¿¡¼­ »èÁ¦ÇÏ¿´½À´Ï´Ù."), companion.c_str());
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ë©”ì‹ ì ¸> %s ë‹˜ì„ ë©”ì‹ ì €ì—ì„œ ì‚­ì œí•˜ì˜€ìŠµë‹ˆë‹¤."), companion.c_str());
 }
 
 bool MessengerManager::IsInList(MessengerManager::keyA account, MessengerManager::keyA companion) // Fix
@@ -358,11 +358,11 @@ void MessengerManager::RemoveAllList(keyA account)
 {
 	std::set<keyT>	company(m_Relation[account]);
 
-	/* SQL Data »èÁ¦ */
+	/* SQL Data ì‚­ì œ */
 	DBManager::instance().Query("DELETE FROM messenger_list%s WHERE account='%s' OR companion='%s'",
 			get_table_postfix(), account.c_str(), account.c_str());
 
-	/* ³»°¡ °¡Áö°íÀÖ´Â ¸®½ºÆ® »èÁ¦ */
+	/* ë‚´ê°€ ê°€ì§€ê³ ìˆëŠ” ë¦¬ìŠ¤íŠ¸ ì‚­ì œ */
 	for (std::set<keyT>::iterator iter = company.begin();
 			iter != company.end();
 			iter++ )
@@ -370,7 +370,7 @@ void MessengerManager::RemoveAllList(keyA account)
 		this->RemoveFromList(account, *iter);
 	}
 
-	/* º¹»çÇÑ µ¥ÀÌÅ¸ »èÁ¦ */
+	/* ë³µì‚¬í•œ ë°ì´íƒ€ ì‚­ì œ */
 	for (std::set<keyT>::iterator iter = company.begin();
 			iter != company.end();
 			)

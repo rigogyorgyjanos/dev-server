@@ -28,11 +28,11 @@ bool FN_IS_VALID_LOGIN_STRING(const char *str)
 
 	for (tmp = str; *tmp; ++tmp)
 	{
-		// ¾ËÆÄºª°ú ¼öÀÚ¸¸ Çã¿ë
+		// ì•ŒíŒŒë²³ê³¼ ìˆ˜ìžë§Œ í—ˆìš©
 		if (isdigit(*tmp) || isalpha(*tmp))
 			continue;
 
-		// Ä³³ª´Ù´Â ¸î¸î Æ¯¼ö¹®ÀÚ Çã¿ë
+		// ìºë‚˜ë‹¤ëŠ” ëª‡ëª‡ íŠ¹ìˆ˜ë¬¸ìž í—ˆìš©
 		if (LC_IsCanada())
 		{
 			switch (*tmp)
@@ -128,7 +128,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		return;
 	}
 
-	// string ¹«°á¼ºÀ» À§ÇØ º¹»ç
+	// string ë¬´ê²°ì„±ì„ ìœ„í•´ ë³µì‚¬
 	char login[LOGIN_MAX_LEN + 1];
 	trim_and_lower(pinfo->login, login, sizeof(login));
 

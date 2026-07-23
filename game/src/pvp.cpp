@@ -133,7 +133,7 @@ void CPVP::Win(DWORD dwPID)
 
 	m_bRevenge = true;
 
-	m_players[iSlot].bAgree = true; // ÀÚµ¿À¸·Î µ¿ÀÇ
+	m_players[iSlot].bAgree = true; // ìžë™ìœ¼ë¡œ ë™ì˜
 	m_players[!iSlot].bCanRevenge = true;
 	m_players[!iSlot].bAgree = false;
 
@@ -182,11 +182,11 @@ void CPVPManager::Insert(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 
 	if ((pkPVP = Find(kPVP.m_dwCRC)))
 	{
-		// º¹¼öÇÒ ¼ö ÀÖÀ¸¸é ¹Ù·Î ½Î¿ò!
+		// ë³µìˆ˜í•  ìˆ˜ ìžˆìœ¼ë©´ ë°”ë¡œ ì‹¸ì›€!
 		if (pkPVP->Agree(pkChr->GetPlayerID()))
 		{
-			pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s´Ô°úÀÇ ´ë°á ½ÃÀÛ!"), pkChr->GetName());
-			pkChr->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s´Ô°úÀÇ ´ë°á ½ÃÀÛ!"), pkVictim->GetName());
+			pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%së‹˜ê³¼ì˜ ëŒ€ê²° ì‹œìž‘!"), pkChr->GetName());
+			pkChr->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%së‹˜ê³¼ì˜ ëŒ€ê²° ì‹œìž‘!"), pkVictim->GetName());
 		}
 		return;
 	}
@@ -204,10 +204,10 @@ void CPVPManager::Insert(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 	pkPVP->Packet();
 
 	char msg[CHAT_MAX_LEN + 1];
-	snprintf(msg, sizeof(msg), LC_TEXT("%s´ÔÀÌ ´ë°á½ÅÃ»À» Çß½À´Ï´Ù. ½Â³«ÇÏ·Á¸é ´ë°áµ¿ÀÇ¸¦ ÇÏ¼¼¿ä."), pkChr->GetName());
+	snprintf(msg, sizeof(msg), LC_TEXT("%së‹˜ì´ ëŒ€ê²°ì‹ ì²­ì„ í–ˆìŠµë‹ˆë‹¤. ìŠ¹ë‚™í•˜ë ¤ë©´ ëŒ€ê²°ë™ì˜ë¥¼ í•˜ì„¸ìš”."), pkChr->GetName());
 
 	pkVictim->ChatPacket(CHAT_TYPE_INFO, msg);
-	pkChr->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s¿¡°Ô ´ë°á½ÅÃ»À» Çß½À´Ï´Ù."), pkVictim->GetName());
+	pkChr->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%sì—ê²Œ ëŒ€ê²°ì‹ ì²­ì„ í–ˆìŠµë‹ˆë‹¤."), pkVictim->GetName());
 
 	// NOTIFY_PVP_MESSAGE
 	LPDESC pkVictimDesc = pkVictim->GetDesc();
@@ -301,8 +301,8 @@ void CPVPManager::GiveUp(LPCHARACTER pkChr, DWORD dwKillerPID) // This method is
 	}
 }
 
-// ¸®ÅÏ°ª: 0 = PK, 1 = PVP
-// PVP¸¦ ¸®ÅÏÇÏ¸é °æÇèÄ¡³ª ¾ÆÀÌÅÛÀ» ¶³±¸°í PK¸é ¶³±¸Áö ¾Ê´Â´Ù.
+// ë¦¬í„´ê°’: 0 = PK, 1 = PVP
+// PVPë¥¼ ë¦¬í„´í•˜ë©´ ê²½í—˜ì¹˜ë‚˜ ì•„ì´í…œì„ ë–¨êµ¬ê³  PKë©´ ë–¨êµ¬ì§€ ì•ŠëŠ”ë‹¤.
 bool CPVPManager::Dead(LPCHARACTER pkChr, DWORD dwKillerPID)
 {
 	CPVPSetMap::iterator it = m_map_pkPVPSetByID.find(pkChr->GetPlayerID());
@@ -356,7 +356,7 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 			return false;
 	}
 
-	if (pkChr == pkVictim)  // ³»°¡ ³¯ Ä¥¶ó°í ÇÏ³× -_-
+	if (pkChr == pkVictim)  // ë‚´ê°€ ë‚  ì¹ ë¼ê³  í•˜ë„¤ -_-
 		return false;
 
 	if (pkVictim->IsNPC() && pkChr->IsNPC() && !pkChr->IsGuardNPC())
@@ -422,7 +422,7 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 		{
 		    if (g_protectNormalPlayer)
 		    {
-			// ¹ü¹ýÀÚ´Â ÆòÈ­¸ðµåÀÎ ÂøÇÑ»ç¶÷À» °ø°ÝÇÒ ¼ö ¾ø´Ù.
+			// ë²”ë²•ìžëŠ” í‰í™”ëª¨ë“œì¸ ì°©í•œì‚¬ëžŒì„ ê³µê²©í•  ìˆ˜ ì—†ë‹¤.
 			if (PK_MODE_PEACE == pkVictim->GetPKMode())
 			    return false;
 		    }
@@ -554,7 +554,7 @@ void CPVPManager::SendList(LPDESC d)
 		if (!pkPVP->m_players[0].dwVID || !pkPVP->m_players[1].dwVID)
 			continue;
 
-		// VID°¡ µÑ´Ù ÀÖÀ» °æ¿ì¿¡¸¸ º¸³½´Ù.
+		// VIDê°€ ë‘˜ë‹¤ ìžˆì„ ê²½ìš°ì—ë§Œ ë³´ë‚¸ë‹¤.
 		if (pkPVP->IsFight())
 		{
 			pack.bMode = PVP_MODE_FIGHT;
@@ -609,7 +609,7 @@ void CPVPManager::Process()
 	{
 		CPVP * pvp = (it++)->second;
 
-		if (get_dword_time() - pvp->GetLastFightTime() > 600000) // 10ºÐ ÀÌ»ó ½Î¿òÀÌ ¾ø¾úÀ¸¸é
+		if (get_dword_time() - pvp->GetLastFightTime() > 600000) // 10ë¶„ ì´ìƒ ì‹¸ì›€ì´ ì—†ì—ˆìœ¼ë©´
 		{
 			pvp->Packet(true);
 			Delete(pvp);

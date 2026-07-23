@@ -1665,6 +1665,60 @@ void CClientManager::QUERY_RELOAD_PROTO()
 	}
 }
 
+#if defined(__BL_HOT_RESTART__)
+// Drains pending SQL_PLAYER queries (same wait-loop Main.cpp already runs on normal shutdown),
+// then self-exec's this same db binary via execve() - same PID, freshly rebuilt image.
+void CClientManager::QUERY_HOTRESTART()
+{
+	sys_log(0, "HOTRESTART: draining pending queries before self-exec...");
+
+	signal_timer_disable();
+	CDBManager::instance().Quit();
+
+	int iCount;
+	while (1)
+	{
+		iCount = 0;
+		iCount += CDBManager::instance().CountReturnQuery(SQL_PLAYER);
+		iCount += CDBManager::instance().CountAsyncQuery(SQL_PLAYER);
+
+		if (iCount == 0)
+			break;
+
+		usleep(1000);
+		sys_log(0, "HOTRESTART: WAITING_QUERY_COUNT %d", iCount);
+	}
+
+	// Peer sockets (every game channel's connection to this db) and our own accept socket are
+	// not CLOEXEC, so they'd otherwise leak through execve() as orphaned fds the new process
+	// knows nothing about - any channel that did NOT itself issue /hotrestart would then see
+	// its db link go silently stale (no FIN ever sent) instead of dropping and reconnecting.
+	// Force-close them all here; each game channel's existing 3-second reconnect-retry picks
+	// the fresh db back up on its own once we're back up.
+	for (TPeerList::iterator it = m_peerList.begin(); it != m_peerList.end(); ++it)
+	{
+		socket_t sock = (*it)->GetFd();
+		if (sock != INVALID_SOCKET)
+			socket_close(sock);
+	}
+
+	if (m_fdAccept != INVALID_SOCKET)
+		socket_close(m_fdAccept);
+
+	static const char* c_szBinaryPath = "./db";
+	char* argv[] = { const_cast<char*>(c_szBinaryPath), NULL };
+
+	sys_log(0, "HOTRESTART: re-executing %s (pid %d stays the same)", c_szBinaryPath, (int)getpid());
+
+	extern char** environ;
+	execve(c_szBinaryPath, argv, environ);
+
+	// Only reached if execve() itself failed - log and let the process fall through to a
+	// normal (non-hotrestart) exit rather than hanging in a half-shut-down state.
+	sys_err("HOTRESTART: execve(%s) failed, errno=%d (%s)", c_szBinaryPath, errno, strerror(errno));
+}
+#endif
+
 // ADD_GUILD_PRIV_TIME
 /**
  * @version	05/06/08 Bang2ni - 지속시간 추가
@@ -2324,6 +2378,12 @@ void CClientManager::ProcessPackets(CPeer * peer)
 			case HEADER_GD_RELOAD_PROTO:
 				QUERY_RELOAD_PROTO();
 				break;
+
+#if defined(__BL_HOT_RESTART__)
+			case HEADER_GD_HOTRESTART:
+				QUERY_HOTRESTART();
+				break;
+#endif
 
 			case HEADER_GD_CHANGE_NAME:
 				QUERY_CHANGE_NAME(peer, dwHandle, (TPacketGDChangeName *) data);

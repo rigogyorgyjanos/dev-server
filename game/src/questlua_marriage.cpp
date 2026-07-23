@@ -169,7 +169,7 @@ namespace quest
 		}
 		if (pMarriage->pWeddingInfo)
 		{
-			// °áÈ¥½Ä ³¡³»±â ¿äÃ»
+			// ê²°í˜¼ì‹ ëë‚´ê¸° ìš”ì²­
 			pMarriage->RequestEndWedding();
 		}
 		return 0;

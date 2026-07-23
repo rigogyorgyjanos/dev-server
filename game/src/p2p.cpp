@@ -173,7 +173,7 @@ void P2P_MANAGER::Login(LPDESC d, const TPacketGGLogin * p)
 	CGuildManager::instance().P2PLoginMember(pkCCI->dwPID);
 	CPartyManager::instance().P2PLogin(pkCCI->dwPID, pkCCI->szName);
 
-	// CCI°¡ »ý¼º½Ã¿¡¸¸ ¸Þ½ÅÀú¸¦ ¾÷µ¥ÀÌÆ®ÇÏ¸é µÈ´Ù.
+	// CCIê°€ ìƒì„±ì‹œì—ë§Œ ë©”ì‹ ì €ë¥¼ ì—…ë°ì´íŠ¸í•˜ë©´ ëœë‹¤.
 	if (UpdateP2P) {
 		std::string name(pkCCI->szName);
 	    MessengerManager::instance().P2PLogin(name);

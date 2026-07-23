@@ -14,7 +14,7 @@ TJobInitialPoints JobInitialPoints[JOB_MAX_NUM] =
    }
  */
 {
-	// str con dex int ÃÊ±âHP ÃÊ±âSP  CON/HP INT/SP  HP·£´ý/lv   MP·£´ý/lv  ÃÊ±âstam  stam/con stam/lv
+	// str con dex int ì´ˆê¸°HP ì´ˆê¸°SP  CON/HP INT/SP  HPëžœë¤/lv   MPëžœë¤/lv  ì´ˆê¸°stam  stam/con stam/lv
 	{   6,  4,  3,  3,  600,   200,     40,    20,    36, 44,     18, 22,     800,      5,      1, 3  }, // JOB_WARRIOR  16
 	{   4,  3,  6,  3,  650,   200,     40,    20,    36, 44,     18, 22,     800,      5,      1, 3  }, // JOB_ASSASSIN 16
 	{   5,  3,  3,  5,  650,   200,     40,    20,    36, 44,     18, 22,     800,      5,      1, 3  }, // JOB_SURA	 16
@@ -162,7 +162,7 @@ const DWORD exp_table_euckr[PLAYER_EXP_TABLE_MAX + 1] =
 	1676898443,
 	1844588288,
 	2029047116,
-	2100000000,	//	99		99·¹º§ÀÏ ¶§ ÇÊ¿ä°æÇèÄ¡ (100·¹º§ÀÌ µÇ±â À§ÇÑ)
+	2100000000,	//	99		99ë ˆë²¨ì¼ ë•Œ í•„ìš”ê²½í—˜ì¹˜ (100ë ˆë²¨ì´ ë˜ê¸° ìœ„í•œ)
 	2100000000,	//	100
 	2100000000,		
 	2100000000,		
@@ -287,7 +287,7 @@ const DWORD exp_table_common[PLAYER_EXP_TABLE_MAX + 1] =
 	1676898443,		
 	1844588288,		
 	2029047116,		
-	2050000000,	//	99·¹º§ ÀÏ ¶§ ÇÊ¿ä°æÇèÄ¡ (100·¹º§ÀÌ µÇ±â À§ÇÑ)
+	2050000000,	//	99ë ˆë²¨ ì¼ ë•Œ í•„ìš”ê²½í—˜ì¹˜ (100ë ˆë²¨ì´ ë˜ê¸° ìœ„í•œ)
 	2150000000,	//	100
 	2210000000,		
 	2250000000,		
@@ -412,7 +412,7 @@ const DWORD exp_table_newcibn[PLAYER_EXP_TABLE_MAX + 1 ] =
 	2000000000,
 	2000000000,
 	2000000000,
-	2000000000,	//	99		99·¹º§ÀÏ ¶§ ÇÊ¿ä°æÇèÄ¡ (100·¹º§ÀÌ µÇ±â À§ÇÑ).. ÇöÀç CIBNÀÌ ¾î¶»°Ô ¿î¿µÇÏ°í ÀÖ´Â Áö ¸ð¸£´Ï ½Å±Ô Å×ÀÌºíÀ» ¾²Áö ¾Ê°í ±âÁ¸°ª °è¼Ó ¿¬Àå À¯Áö
+	2000000000,	//	99		99ë ˆë²¨ì¼ ë•Œ í•„ìš”ê²½í—˜ì¹˜ (100ë ˆë²¨ì´ ë˜ê¸° ìœ„í•œ).. í˜„ìž¬ CIBNì´ ì–´ë–»ê²Œ ìš´ì˜í•˜ê³  ìžˆëŠ” ì§€ ëª¨ë¥´ë‹ˆ ì‹ ê·œ í…Œì´ë¸”ì„ ì“°ì§€ ì•Šê³  ê¸°ì¡´ê°’ ê³„ì† ì—°ìž¥ ìœ ì§€
 	2000000000,	//	100
 	2000000000,		
 	2000000000,		
@@ -439,8 +439,8 @@ const DWORD exp_table_newcibn[PLAYER_EXP_TABLE_MAX + 1 ] =
 const int * aiPercentByDeltaLev = NULL;
 const int * aiPercentByDeltaLevForBoss = NULL;
 
-// Àû°ú ³ª¿ÍÀÇ ·¹º§Â÷ÀÌ¿¡ ÀÇÇÑ °è»ê¿¡ »ç¿ëµÇ´Â Å×ÀÌºí
-// MIN(MAX_EXP_DELTA_OF_LEV - 1, (Àû·¾ + 15) - ³»·¾))
+// ì ê³¼ ë‚˜ì™€ì˜ ë ˆë²¨ì°¨ì´ì— ì˜í•œ ê³„ì‚°ì— ì‚¬ìš©ë˜ëŠ” í…Œì´ë¸”
+// MIN(MAX_EXP_DELTA_OF_LEV - 1, (ì ë ™ + 15) - ë‚´ë ™))
 const int aiPercentByDeltaLevForBoss_euckr[MAX_EXP_DELTA_OF_LEV] =
 {
 	1,      // -15  0
@@ -720,7 +720,7 @@ const DWORD guild_exp_table[GUILD_MAX_LEVEL+1] =
 	42000000UL
 };
 
-// INTERNATIONAL_VERSION ±æµå°æÇèÄ¡
+// INTERNATIONAL_VERSION ê¸¸ë“œê²½í—˜ì¹˜
 const DWORD guild_exp_table2[GUILD_MAX_LEVEL+1] =
 {
 	0,	
@@ -745,7 +745,7 @@ const DWORD guild_exp_table2[GUILD_MAX_LEVEL+1] =
 	4000000UL,
 	16800000UL
 };
-// END_OF_INTERNATIONAL_VERSION ±æµå°æÇèÄ¡
+// END_OF_INTERNATIONAL_VERSION ê¸¸ë“œê²½í—˜ì¹˜
 
 const int aiMobEnchantApplyIdx[MOB_ENCHANTS_MAX_NUM] =
 {
@@ -898,16 +898,16 @@ const TApplyInfo aApplyInfo[MAX_APPLY_NUM] =
 	{ POINT_PC_BANG_DROP_BONUS	},		// 76
 	// END_PC_BANG_ITEM_ADD
 
-	{ POINT_NONE,		},				// 77 »ç¿ë½Ã HP ¼Ò¸ð APPLY_EXTRACT_HP_PCT
+	{ POINT_NONE,		},				// 77 ì‚¬ìš©ì‹œ HP ì†Œëª¨ APPLY_EXTRACT_HP_PCT
 
-	{ POINT_RESIST_WARRIOR,		},		// 78 ¹«»ç¿¡°Ô ÀúÇ× APPLY_RESIST_WARRIOR
-	{ POINT_RESIST_ASSASSIN,	},		// 79 ÀÚ°´¿¡°Ô ÀúÇ× APPLY_RESIST_ASSASSIN
-	{ POINT_RESIST_SURA,		},		// 80 ¼ö¶ó¿¡°Ô ÀúÇ× APPLY_RESIST_SURA
-	{ POINT_RESIST_SHAMAN,		},		// 81 ¹«´ç¿¡°Ô ÀúÇ× APPLY_RESIST_SHAMAN
-	{ POINT_ENERGY				},		// 82 ±â·Â 
-	{ POINT_DEF_GRADE			},		// 83 ¹æ¾î·Â. DEF_GRADE_BONUS´Â Å¬¶ó¿¡¼­ µÎ¹è·Î º¸¿©Áö´Â ÀÇµµµÈ ¹ö±×(...)°¡ ÀÖ´Ù.
-	{ POINT_COSTUME_ATTR_BONUS	},		// 84 ÄÚ½ºÆ¬¿¡ ºÙÀº ¼Ó¼º¿¡ ´ëÇØ¼­¸¸ º¸³Ê½º¸¦ ÁÖ´Â ±â·Â
-	{ POINT_MAGIC_ATT_BONUS_PER },			// 85 ¸¶¹ý °ø°Ý·Â +x%
+	{ POINT_RESIST_WARRIOR,		},		// 78 ë¬´ì‚¬ì—ê²Œ ì €í•­ APPLY_RESIST_WARRIOR
+	{ POINT_RESIST_ASSASSIN,	},		// 79 ìžê°ì—ê²Œ ì €í•­ APPLY_RESIST_ASSASSIN
+	{ POINT_RESIST_SURA,		},		// 80 ìˆ˜ë¼ì—ê²Œ ì €í•­ APPLY_RESIST_SURA
+	{ POINT_RESIST_SHAMAN,		},		// 81 ë¬´ë‹¹ì—ê²Œ ì €í•­ APPLY_RESIST_SHAMAN
+	{ POINT_ENERGY				},		// 82 ê¸°ë ¥ 
+	{ POINT_DEF_GRADE			},		// 83 ë°©ì–´ë ¥. DEF_GRADE_BONUSëŠ” í´ë¼ì—ì„œ ë‘ë°°ë¡œ ë³´ì—¬ì§€ëŠ” ì˜ë„ëœ ë²„ê·¸(...)ê°€ ìžˆë‹¤.
+	{ POINT_COSTUME_ATTR_BONUS	},		// 84 ì½”ìŠ¤íŠ¬ì— ë¶™ì€ ì†ì„±ì— ëŒ€í•´ì„œë§Œ ë³´ë„ˆìŠ¤ë¥¼ ì£¼ëŠ” ê¸°ë ¥
+	{ POINT_MAGIC_ATT_BONUS_PER },			// 85 ë§ˆë²• ê³µê²©ë ¥ +x%
 	{ POINT_MELEE_MAGIC_ATT_BONUS_PER		},			// 86 APPLY_MELEE_MAGIC_ATTBONUS_PER
 	{ POINT_RESIST_ICE,			},   // APPLY_RESIST_ICE,	87
 	{ POINT_RESIST_EARTH,		},   // APPLY_RESIST_EARTH,	88
@@ -1077,19 +1077,19 @@ const SStoneDropInfo aStoneDrop[STONE_INFO_MAX_NUM] =
 const char* c_apszEmpireNames[EMPIRE_MAX_NUM] =
 {
 
-	"ÀüÁ¦±¹",
-	"½Å¼ö±¹",
-	"ÃµÁ¶±¹",
-	"Áø³ë±¹"
+	"ì „ì œêµ­",
+	"ì‹ ìˆ˜êµ­",
+	"ì²œì¡°êµ­",
+	"ì§„ë…¸êµ­"
 };
 
 const char* c_apszPrivNames[MAX_PRIV_NUM] =
 {
 	"",
-	"¾ÆÀÌÅÛÀÌ ³ª¿Ã È®·ü",
-	"µ·ÀÌ ³ª¿Ã È®·ü",
-	"µ· ´ë¹ÚÀÌ ³ª¿Ã È®·ü",
-	"°æÇèÄ¡ ¹èÀ²"
+	"ì•„ì´í…œì´ ë‚˜ì˜¬ í™•ë¥ ",
+	"ëˆì´ ë‚˜ì˜¬ í™•ë¥ ",
+	"ëˆ ëŒ€ë°•ì´ ë‚˜ì˜¬ í™•ë¥ ",
+	"ê²½í—˜ì¹˜ ë°°ìœ¨"
 };
 
 const int aiPolymorphPowerByLevel[SKILL_MAX_LEVEL + 1] =
@@ -1154,28 +1154,28 @@ TGuildWarInfo KOR_aGuildWarInfo[GUILD_WAR_TYPE_MAX_NUM] =
 };
 
 //
-// ¾Ç¼¼¼­¸® ¼ÒÄÏ¿ë ¼öÄ¡µé
+// ì•…ì„¸ì„œë¦¬ ì†Œì¼“ìš© ìˆ˜ì¹˜ë“¤
 //
 
-// ´ÙÀÌ¾Æ¸óµå·Î ¼ÒÄÏÀ» Ãß°¡ÇÒ ¶§ È®·ü
+// ë‹¤ì´ì•„ëª¬ë“œë¡œ ì†Œì¼“ì„ ì¶”ê°€í•  ë•Œ í™•ë¥ 
 const int aiAccessorySocketAddPct[ITEM_ACCESSORY_SOCKET_MAX_NUM] =
 {
 	50, 50, 50
 };
 
-// ¾Ç¼¼¼­¸® ¼öÄ¡ °ªÀÇ ¸î%¸¸Å­ÀÇ ¼º´ÉÀ» Ãß°¡ÇÏ´ÂÁö
+// ì•…ì„¸ì„œë¦¬ ìˆ˜ì¹˜ ê°’ì˜ ëª‡%ë§Œí¼ì˜ ì„±ëŠ¥ì„ ì¶”ê°€í•˜ëŠ”ì§€
 const int aiAccessorySocketEffectivePct[ITEM_ACCESSORY_SOCKET_MAX_NUM + 1] = 
 {
 	0, 10, 20, 40
 };
 
-// ¼ÒÄÏ Áö¼Ó½Ã°£ 24, 12, 6
+// ì†Œì¼“ ì§€ì†ì‹œê°„ 24, 12, 6
 const int aiAccessorySocketDegradeTime[ITEM_ACCESSORY_SOCKET_MAX_NUM + 1] =
 {
 	0, 3600 * 24, 3600 * 12, 3600 * 6
 };
 
-// ¼ÒÄÏ ÀåÂø ¼º°ø·ü
+// ì†Œì¼“ ìž¥ì°© ì„±ê³µë¥ 
 const int aiAccessorySocketPutPct[ITEM_ACCESSORY_SOCKET_MAX_NUM + 1] =
 {
 	90, 80, 70, 0
@@ -1273,10 +1273,10 @@ TValueName c_aApplyTypeNames[] =
     { "RESIST_ASSASSIN",	APPLY_RESIST_ASSASSIN},
     { "RESIST_SURA",		APPLY_RESIST_SURA},
     { "RESIST_SHAMAN",	APPLY_RESIST_SHAMAN},
-    // by mhh game/affect.h Á¤ÀÇµÇ¾îÀÖÀ½. INFINITE_AFFECT_DURATION = 0x1FFFFFFF
+    // by mhh game/affect.h ì •ì˜ë˜ì–´ìžˆìŒ. INFINITE_AFFECT_DURATION = 0x1FFFFFFF
     { "INFINITE_AFFECT_DURATION", 0x1FFFFFFF	},
-	{ "ENERGY", APPLY_ENERGY },		//	±â·Â
-	{ "COSTUME_ATTR_BONUS", APPLY_COSTUME_ATTR_BONUS },		//	±â·Â
+	{ "ENERGY", APPLY_ENERGY },		//	ê¸°ë ¥
+	{ "COSTUME_ATTR_BONUS", APPLY_COSTUME_ATTR_BONUS },		//	ê¸°ë ¥
 	{ "MAGIC_ATTBONUS_PER",	APPLY_MAGIC_ATTBONUS_PER	},
     { "MELEE_MAGIC_ATTBONUS_PER",	APPLY_MELEE_MAGIC_ATTBONUS_PER	},
     

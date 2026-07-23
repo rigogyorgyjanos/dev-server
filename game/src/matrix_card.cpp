@@ -1,4 +1,4 @@
-//#define __MATRIX_MAIN_ENABLE__ // define µÇ¾î ÀÖÀ¸¸é main ÇÔ¼ö°¡ Æ÷ÇÔµÈ´Ù. Unit test ½Ã¿¡ »ç¿ë
+//#define __MATRIX_MAIN_ENABLE__ // define ë˜ì–´ ìˆìœ¼ë©´ main í•¨ìˆ˜ê°€ í¬í•¨ëœë‹¤. Unit test ì‹œì— ì‚¬ìš©
 #ifndef __MATRIX_MAIN_ENABLE__
 #include "stdafx.h"
 #else

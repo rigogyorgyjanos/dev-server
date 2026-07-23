@@ -72,7 +72,7 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 	{
 		if (pkChr->IsBlockMode(BLOCK_WHISPER))
 		{
-			// ±Ó¼Ó¸» °ÅºÎ »óÅÂ¿¡¼­ ±Ó¼Ó¸» °ÅºÎ.
+			// ê·“ì†ë§ ê±°ë¶€ ìƒíƒœì—ì„œ ê·“ì†ë§ ê±°ë¶€.
 			return p->lSize;
 		}
 
@@ -80,12 +80,12 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 		memcpy(buf, c_pbData, MIN(p->lSize, sizeof(buf)));
 
 		TPacketGCWhisper* p2 = (TPacketGCWhisper*) buf;
-		// bType »óÀ§ 4ºñÆ®: Empire ¹øÈ£
-		// bType ÇÏÀ§ 4ºñÆ®: EWhisperType
+		// bType ìƒìœ„ 4ë¹„íŠ¸: Empire ë²ˆí˜¸
+		// bType í•˜ìœ„ 4ë¹„íŠ¸: EWhisperType
 		BYTE bToEmpire = (p2->bType >> 4);
 		p2->bType = p2->bType & 0x0F;
 		if(p2->bType == 0x0F) {
-			// ½Ã½ºÅÛ ¸Ş¼¼Áö ±Ó¼Ó¸»Àº bTypeÀÇ »óÀ§ºñÆ®±îÁö ¸ğµÎ »ç¿ëÇÔ.
+			// ì‹œìŠ¤í…œ ë©”ì„¸ì§€ ê·“ì†ë§ì€ bTypeì˜ ìƒìœ„ë¹„íŠ¸ê¹Œì§€ ëª¨ë‘ ì‚¬ìš©í•¨.
 			p2->bType = WHISPER_TYPE_SYSTEM;
 		} else {
 			if (!pkChr->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE))
@@ -387,7 +387,7 @@ void CInputP2P::XmasWarpSanta(const char * c_pData)
 		else
 			iNextSpawnDelay = 50 * 60;
 
-		xmas::SpawnSanta(p->lMapIndex, iNextSpawnDelay); // 50ºĞÀÖ´Ù°¡ »õ·Î¿î »êÅ¸°¡ ³ªÅ¸³² (ÇÑ±¹Àº 20ºĞ)
+		xmas::SpawnSanta(p->lMapIndex, iNextSpawnDelay); // 50ë¶„ìˆë‹¤ê°€ ìƒˆë¡œìš´ ì‚°íƒ€ê°€ ë‚˜íƒ€ë‚¨ (í•œêµ­ì€ 20ë¶„)
 
 		TPacketGGXmasWarpSantaReply pack_reply;
 		pack_reply.bHeader = HEADER_GG_XMAS_WARP_SANTA_REPLY;
