@@ -1067,7 +1067,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			IsItemLoaded() const	{ return m_bItemLoaded; }
 		void			SetItemLoaded()	{ m_bItemLoaded = true; }
 #ifdef ENABLE_SORT_INVEN
-		void			SortInven(BYTE option);
+		void			SortInven(BYTE option, BYTE category = 0);
 		DWORD			GetLastSortTime() const { return m_dwLastSortTime; }
 		void			SetLastSortTime(DWORD time) { m_dwLastSortTime = time; }
 #endif

@@ -7478,24 +7478,38 @@ void CHARACTER::MoveChannel(const TRespondMoveChannel* p)
 #endif
 
 #ifdef ENABLE_SORT_INVEN
-void CHARACTER::SortInven(BYTE option)
+void CHARACTER::SortInven(BYTE option, BYTE category)
 {
-	if (IsDead()) 
+	if (IsDead())
 		return;
 	if (GetLastSortTime() > get_global_time()) {
 		ChatPacket(CHAT_TYPE_INFO, "You need to wait %d sec.", GetLastSortTime() - get_global_time());
 		return;
 	}
 
+	// WJ_SPLIT_INVENTORY_SYSTEM: category picks which tab gets sorted - 0 is the base bag
+	// (unchanged behavior), 1-4 sort only that extended tab across all 3 of its pages.
+	WORD iStart, iEnd;
+	switch (category)
+	{
+	case 1: iStart = SKILL_BOOK_INVENTORY_SLOT_START; iEnd = SKILL_BOOK_INVENTORY_SLOT_END; break;
+	case 2: iStart = UPGRADE_ITEMS_INVENTORY_SLOT_START; iEnd = UPGRADE_ITEMS_INVENTORY_SLOT_END; break;
+	case 3: iStart = STONE_INVENTORY_SLOT_START; iEnd = STONE_INVENTORY_SLOT_END; break;
+	case 4: iStart = SANDIK_INVENTORY_SLOT_START; iEnd = SANDIK_INVENTORY_SLOT_END; break;
+	default: iStart = 0; iEnd = static_cast<WORD>(INVENTORY_MAX_NUM); break;
+	}
+
 	std::vector<LPITEM> all;
 	LPITEM myitems;
-	const auto size = static_cast<WORD>(INVENTORY_MAX_NUM);
 
-	for (WORD i = 0; i < size; ++i) {
+	for (WORD i = iStart; i < iEnd; ++i) {
 		if (myitems = GetInventoryItem(i)) {
 			all.emplace_back(myitems);
 			myitems->RemoveFromCharacter();
-			SyncQuickslot(QUICKSLOT_TYPE_ITEM, static_cast<BYTE>(i), 255);
+			// TQuickslot::pos is a BYTE, so cells >= 256 (the extended tabs) can't be
+			// represented there - only clear quickslot bindings for the base-bag sort.
+			if (category == 0)
+				SyncQuickslot(QUICKSLOT_TYPE_ITEM, static_cast<BYTE>(i), 255);
 		}
 	}
 	if (all.empty())

@@ -2245,7 +2245,7 @@ void CInputMain::SafeboxCheckout(LPCHARACTER ch, const char * c_pData, bool bMal
 void CInputMain::SortInven(LPCHARACTER ch, const char * data)
 {
 	TPacketCGSortInven * pinfo = (TPacketCGSortInven *) data;
-	if (ch) ch->SortInven(pinfo->option);
+	if (ch) ch->SortInven(pinfo->option, pinfo->category);
 }
 #endif
 

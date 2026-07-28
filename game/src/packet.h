@@ -746,8 +746,9 @@ typedef struct sort_inven
 {
 	BYTE	header;
 	BYTE 	option;
+	BYTE	category; // WJ_SPLIT_INVENTORY_SYSTEM: 0=base bag, 1=skillbook, 2=upgrade, 3=stone, 4=sandik
 } TPacketCGSortInven;
-#endif	
+#endif
 
 typedef struct command_item_move
 {
