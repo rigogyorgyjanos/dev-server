@@ -397,7 +397,7 @@ typedef struct character_point_instant
 	WORD			parts[PART_MAX_NUM];
 
 	LPITEM			pItems[INVENTORY_AND_EQUIP_SLOT_MAX];
-	BYTE			bItemGrid[INVENTORY_AND_EQUIP_SLOT_MAX];
+	UINT			bItemGrid[INVENTORY_AND_EQUIP_SLOT_MAX];
 
 	// ��ȥ�� �κ��丮.
 	LPITEM			pDSItems[DRAGON_SOUL_INVENTORY_MAX_NUM];
@@ -1151,6 +1151,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			AutoGiveItem(LPITEM item, bool longOwnerShip = false);
 		
 		int				GetEmptyInventory(BYTE size) const;
+		int				GetEmptySkillBookInventory(BYTE size) const;
+		int				GetEmptyUpgradeItemsInventory(BYTE size) const;
+		int				GetEmptyStoneInventory(BYTE size) const;
+		int				GetEmptySandikInventory(BYTE size) const;
 		int				GetEmptyDragonSoulInventory(LPITEM pItem) const;
 		void			CopyDragonSoulItemGrid(std::vector<WORD>& vDragonSoulItemGrid) const;
 

@@ -1056,7 +1056,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 }
 typedef struct fckOFF
 {
-	BYTE		bySlot;
+	WORD		bySlot;
 	WORD		byCount;
 } TfckOFF;
 

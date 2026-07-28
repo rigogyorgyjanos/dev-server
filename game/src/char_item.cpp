@@ -294,6 +294,37 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 
 			LPITEM pOld = m_pointsInstant.pItems[wCell];
 
+			// WJ_SPLIT_INVENTORY_SYSTEM: these ranges need the same multi-cell footprint
+			// bookkeeping as the base bag below, since (unlike belt/wear/DS-equip, which are
+			// always size-1 by design) items here can legitimately span more than one cell.
+			WORD wRangeStart = 0, wRangeEnd = 0;
+			bool bIsNewTabCell = Cell.IsSkillBookInventoryPosition() || Cell.IsUpgradeItemsInventoryPosition()
+				|| Cell.IsStoneInventoryPosition() || Cell.IsSandikInventoryPosition();
+
+			if (bIsNewTabCell)
+			{
+				if (Cell.IsSkillBookInventoryPosition())
+				{
+					wRangeStart = SKILL_BOOK_INVENTORY_SLOT_START;
+					wRangeEnd = SKILL_BOOK_INVENTORY_SLOT_END;
+				}
+				else if (Cell.IsUpgradeItemsInventoryPosition())
+				{
+					wRangeStart = UPGRADE_ITEMS_INVENTORY_SLOT_START;
+					wRangeEnd = UPGRADE_ITEMS_INVENTORY_SLOT_END;
+				}
+				else if (Cell.IsStoneInventoryPosition())
+				{
+					wRangeStart = STONE_INVENTORY_SLOT_START;
+					wRangeEnd = STONE_INVENTORY_SLOT_END;
+				}
+				else
+				{
+					wRangeStart = SANDIK_INVENTORY_SLOT_START;
+					wRangeEnd = SANDIK_INVENTORY_SLOT_END;
+				}
+			}
+
 			if (pOld)
 			{
 				if (wCell < INVENTORY_MAX_NUM)
@@ -303,6 +334,27 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 						int p = wCell + (i * 5);
 
 						if (p >= INVENTORY_MAX_NUM)
+							continue;
+
+						if (m_pointsInstant.pItems[p] && m_pointsInstant.pItems[p] != pOld)
+							continue;
+
+						m_pointsInstant.bItemGrid[p] = 0;
+					}
+				}
+				else if (bIsNewTabCell)
+				{
+					WORD wPageSize = (wRangeEnd - wRangeStart) / 3;
+					WORD wPage = (wCell - wRangeStart) / wPageSize;
+
+					for (int i = 0; i < pOld->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= wRangeEnd)
+							continue;
+
+						if ((p - wRangeStart) / wPageSize != wPage)
 							continue;
 
 						if (m_pointsInstant.pItems[p] && m_pointsInstant.pItems[p] != pOld)
@@ -328,6 +380,24 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 
 						// wCell + 1 로 하는 것은 빈곳을 체크할 때 같은
 						// 아이템은 예외처리하기 위함
+						m_pointsInstant.bItemGrid[p] = wCell + 1;
+					}
+				}
+				else if (bIsNewTabCell)
+				{
+					WORD wPageSize = (wRangeEnd - wRangeStart) / 3;
+					WORD wPage = (wCell - wRangeStart) / wPageSize;
+
+					for (int i = 0; i < pItem->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= wRangeEnd)
+							continue;
+
+						if ((p - wRangeStart) / wPageSize != wPage)
+							continue;
+
 						m_pointsInstant.bItemGrid[p] = wCell + 1;
 					}
 				}
@@ -444,7 +514,13 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		{
 		case INVENTORY:
 		case EQUIPMENT:
-			if ((wCell < INVENTORY_MAX_NUM) || (BELT_INVENTORY_SLOT_START <= wCell && BELT_INVENTORY_SLOT_END > wCell))
+			// WJ_SPLIT_INVENTORY_SYSTEM: the 4 new tabs are also part of the INVENTORY window,
+			// not EQUIPMENT - without this they got mis-tagged as EQUIPMENT on save (pos computed
+			// as cell-180, a bogus wear-slot number), then failed to re-equip on next load and
+			// silently fell back into the base bag.
+			if ((wCell < INVENTORY_MAX_NUM) || (BELT_INVENTORY_SLOT_START <= wCell && BELT_INVENTORY_SLOT_END > wCell)
+				|| TItemPos(INVENTORY, wCell).IsSkillBookInventoryPosition() || TItemPos(INVENTORY, wCell).IsUpgradeItemsInventoryPosition()
+				|| TItemPos(INVENTORY, wCell).IsStoneInventoryPosition() || TItemPos(INVENTORY, wCell).IsSandikInventoryPosition())
 				pItem->SetWindow(INVENTORY);
 			else
 				pItem->SetWindow(EQUIPMENT);
@@ -536,7 +612,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 	{
 	case INVENTORY:
 		{
-			BYTE bCell = Cell.cell;
+			WORD bCell = Cell.cell;
 
 			// bItemCell은 0이 false임을 나타내기 위해 + 1 해서 처리한다.
 			// 따라서 iExceptionCell에 1을 더해 비교한다.
@@ -563,6 +639,68 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 				if (bSize == 1)
 					return true;
 
+			}
+			// WJ_SPLIT_INVENTORY_SYSTEM: these must be checked (and must return) before the
+			// INVENTORY_MAX_NUM catch-all below, otherwise every new-tab cell (>= INVENTORY_MAX_NUM)
+			// falls into it and every GetEmptyXInventory() call reports "full" forever.
+			else if (Cell.IsSkillBookInventoryPosition() || Cell.IsUpgradeItemsInventoryPosition()
+				|| Cell.IsStoneInventoryPosition() || Cell.IsSandikInventoryPosition())
+			{
+				WORD wRangeStart, wRangeEnd;
+
+				if (Cell.IsSkillBookInventoryPosition())
+				{
+					wRangeStart = SKILL_BOOK_INVENTORY_SLOT_START;
+					wRangeEnd = SKILL_BOOK_INVENTORY_SLOT_END;
+				}
+				else if (Cell.IsUpgradeItemsInventoryPosition())
+				{
+					wRangeStart = UPGRADE_ITEMS_INVENTORY_SLOT_START;
+					wRangeEnd = UPGRADE_ITEMS_INVENTORY_SLOT_END;
+				}
+				else if (Cell.IsStoneInventoryPosition())
+				{
+					wRangeStart = STONE_INVENTORY_SLOT_START;
+					wRangeEnd = STONE_INVENTORY_SLOT_END;
+				}
+				else
+				{
+					wRangeStart = SANDIK_INVENTORY_SLOT_START;
+					wRangeEnd = SANDIK_INVENTORY_SLOT_END;
+				}
+
+				if (m_pointsInstant.bItemGrid[bCell])
+				{
+					if (m_pointsInstant.bItemGrid[bCell] == iExceptionCell)
+						return true;
+
+					return false;
+				}
+
+				if (bSize == 1)
+					return true;
+
+				int j = 1;
+				WORD wPageSize = (wRangeEnd - wRangeStart) / 3;
+				WORD wPage = (bCell - wRangeStart) / wPageSize;
+
+				do
+				{
+					WORD p = bCell + (5 * j);
+
+					if (p >= wRangeEnd)
+						return false;
+
+					if ((p - wRangeStart) / wPageSize != wPage)
+						return false;
+
+					if (m_pointsInstant.bItemGrid[p])
+						if (m_pointsInstant.bItemGrid[p] != iExceptionCell)
+							return false;
+				}
+				while (++j < bSize);
+
+				return true;
 			}
 			else if (bCell >= INVENTORY_MAX_NUM)
 				return false;
@@ -697,6 +835,38 @@ int CHARACTER::GetEmptyInventory(BYTE size) const
 	//		벨트 인벤토리는 특수 인벤토리이므로 검사하지 않도록 한다. (기본 인벤토리: INVENTORY_MAX_NUM 까지만 검사)
 	for ( int i = 0; i < INVENTORY_MAX_NUM; ++i)
 		if (IsEmptyItemGrid(TItemPos (INVENTORY, i), size))
+			return i;
+	return -1;
+}
+
+int CHARACTER::GetEmptySkillBookInventory(BYTE size) const
+{
+	for (int i = SKILL_BOOK_INVENTORY_SLOT_START; i < SKILL_BOOK_INVENTORY_SLOT_END; ++i)
+		if (IsEmptyItemGrid(TItemPos(INVENTORY, i), size))
+			return i;
+	return -1;
+}
+
+int CHARACTER::GetEmptyUpgradeItemsInventory(BYTE size) const
+{
+	for (int i = UPGRADE_ITEMS_INVENTORY_SLOT_START; i < UPGRADE_ITEMS_INVENTORY_SLOT_END; ++i)
+		if (IsEmptyItemGrid(TItemPos(INVENTORY, i), size))
+			return i;
+	return -1;
+}
+
+int CHARACTER::GetEmptyStoneInventory(BYTE size) const
+{
+	for (int i = STONE_INVENTORY_SLOT_START; i < STONE_INVENTORY_SLOT_END; ++i)
+		if (IsEmptyItemGrid(TItemPos(INVENTORY, i), size))
+			return i;
+	return -1;
+}
+
+int CHARACTER::GetEmptySandikInventory(BYTE size) const
+{
+	for (int i = SANDIK_INVENTORY_SLOT_START; i < SANDIK_INVENTORY_SLOT_END; ++i)
+		if (IsEmptyItemGrid(TItemPos(INVENTORY, i), size))
 			return i;
 	return -1;
 }
@@ -5719,15 +5889,36 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, WORD count)
 					return false;
 			}
 		}
-		// 용혼석이 아닌 아이템은 용혼석 인벤에 들어갈 수 없다.
 		else if (DRAGON_SOUL_INVENTORY == DestCell.window_type)
 			return false;
+
+		// WJ_SPLIT_INVENTORY_SYSTEM: only the matching item type may enter each new tab.
+		if (DestCell.IsSkillBookInventoryPosition() && !item->IsSkillBook())
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 물건은 스킬북 보관함에 넣을 수 없습니다."));
+			return false;
+		}
+		else if (DestCell.IsUpgradeItemsInventoryPosition() && !item->IsUpgradeItem())
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 물건은 개발 아이템 보관함에 넣을 수 없습니다."));
+			return false;
+		}
+		else if (DestCell.IsStoneInventoryPosition() && !item->IsStone())
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 물건은 돌 보관함에 넣을 수 없습니다."));
+			return false;
+		}
+		else if (DestCell.IsSandikInventoryPosition() && !item->IsSandik())
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 물건은 상자 보관함에 넣을 수 없습니다."));
+			return false;
+		}
 
 		LPITEM item2;
 
 		if ((item2 = GetItem(DestCell)) && item != item2 && item2->IsStackable() &&
 				!IS_SET(item2->GetAntiFlag(), ITEM_ANTIFLAG_STACK) &&
-				item2->GetVnum() == item->GetVnum()) // 합칠 수 있는 아이템의 경우
+				item2->GetVnum() == item->GetVnum()) 
 		{
 			for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 				if (item2->GetSocket(i) != item->GetSocket(i))
@@ -5766,14 +5957,6 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, WORD count)
 		}
 		else if (count < item->GetCount())
 		{
-			//check non-split items 
-			//if (LC_IsNewCIBN())
-			//{
-			//	if (item->GetVnum() == 71095 || item->GetVnum() == 71050 || item->GetVnum() == 70038)
-			//	{
-			//		return false;
-			//	}
-			//}
 
 			sys_log(0, "%s: ITEM_SPLIT %s (window: %d, cell : %d) -> (window:%d, cell %d) count %d", GetName(), item->GetName(), Cell.window_type, Cell.cell, 
 				DestCell.window_type, DestCell.cell, count);
@@ -5891,18 +6074,13 @@ void CHARACTER::GiveGold(int iAmount)
 
 		PointChange(POINT_GOLD, dwMyAmount, true);
 
-		if (dwMyAmount > 1000) // 천원 이상만 기록한다.
+		if (dwMyAmount > 1000) 
 			LogManager::instance().CharLog(this, dwMyAmount, "GET_GOLD", "");
 	}
 	else
 	{
 		PointChange(POINT_GOLD, iAmount, true);
 
-		// 브라질에 돈이 없어진다는 버그가 있는데,
-		// 가능한 시나리오 중에 하나는,
-		// 메크로나, 핵을 써서 1000원 이하의 돈을 계속 버려 골드를 0으로 만들고, 
-		// 돈이 없어졌다고 복구 신청하는 것일 수도 있다.
-		// 따라서 그런 경우를 잡기 위해 낮은 수치의 골드에 대해서도 로그를 남김.
 		if (LC_IsBrazil() == true)
 		{
 			if (iAmount >= 213)
@@ -5910,7 +6088,7 @@ void CHARACTER::GiveGold(int iAmount)
 		}
 		else
 		{
-			if (iAmount > 1000) // 천원 이상만 기록한다.
+			if (iAmount > 1000) 
 				LogManager::instance().CharLog(this, iAmount, "GET_GOLD", "");
 		}
 	}
@@ -5951,8 +6129,12 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 			DWORD dwFarmSessionItemCount = bCount;
 #endif
 
-					for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
+					// WJ_SPLIT_INVENTORY_SYSTEM: also look for a stackable match in the new tabs, not just the base bag.
+					for (int i = 0; i < SANDIK_INVENTORY_SLOT_END; ++i)
 					{
+						if (i == INVENTORY_MAX_NUM)
+							i = SKILL_BOOK_INVENTORY_SLOT_START;
+
 						LPITEM item2 = GetInventoryItem(i);
 
 						if (!item2)
@@ -5997,6 +6179,39 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 					if ((iEmptyCell = GetEmptyDragonSoulInventory(item)) == -1)
 					{
 						sys_log(0, "No empty ds inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+				// WJ_SPLIT_INVENTORY_SYSTEM: route ground pickups of these categories into their own tab.
+				else if (item->IsSkillBook())
+				{
+					if ((iEmptyCell = GetEmptySkillBookInventory(item->GetSize())) == -1)
+					{
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+				else if (item->IsUpgradeItem())
+				{
+					if ((iEmptyCell = GetEmptyUpgradeItemsInventory(item->GetSize())) == -1)
+					{
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+				else if (item->IsStone())
+				{
+					if ((iEmptyCell = GetEmptyStoneInventory(item->GetSize())) == -1)
+					{
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+				else if (item->IsSandik())
+				{
+					if ((iEmptyCell = GetEmptySandikInventory(item->GetSize())) == -1)
+					{
 						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
 						return false;
 					}
@@ -6051,6 +6266,59 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 					owner = this;
 
 					if ((iEmptyCell = GetEmptyDragonSoulInventory(item)) == -1)
+					{
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+			}
+			// WJ_SPLIT_INVENTORY_SYSTEM
+			else if (item->IsSkillBook())
+			{
+				if (!(owner && (iEmptyCell = owner->GetEmptySkillBookInventory(item->GetSize())) != -1))
+				{
+					owner = this;
+
+					if ((iEmptyCell = GetEmptySkillBookInventory(item->GetSize())) == -1)
+					{
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+			}
+			else if (item->IsUpgradeItem())
+			{
+				if (!(owner && (iEmptyCell = owner->GetEmptyUpgradeItemsInventory(item->GetSize())) != -1))
+				{
+					owner = this;
+
+					if ((iEmptyCell = GetEmptyUpgradeItemsInventory(item->GetSize())) == -1)
+					{
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+			}
+			else if (item->IsStone())
+			{
+				if (!(owner && (iEmptyCell = owner->GetEmptyStoneInventory(item->GetSize())) != -1))
+				{
+					owner = this;
+
+					if ((iEmptyCell = GetEmptyStoneInventory(item->GetSize())) == -1)
+					{
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+			}
+			else if (item->IsSandik())
+			{
+				if (!(owner && (iEmptyCell = owner->GetEmptySandikInventory(item->GetSize())) != -1))
+				{
+					owner = this;
+
+					if ((iEmptyCell = GetEmptySandikInventory(item->GetSize())) == -1)
 					{
 						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
 						return false;
@@ -6571,6 +6839,11 @@ LPITEM CHARACTER::FindSpecifyItem(DWORD vnum) const
 		if (GetInventoryItem(i) && GetInventoryItem(i)->GetVnum() == vnum)
 			return GetInventoryItem(i);
 
+	// WJ_SPLIT_INVENTORY_SYSTEM
+	for (int i = SKILL_BOOK_INVENTORY_SLOT_START; i < SANDIK_INVENTORY_SLOT_END; ++i)
+		if (GetInventoryItem(i) && GetInventoryItem(i)->GetVnum() == vnum)
+			return GetInventoryItem(i);
+
 	return NULL;
 }
 
@@ -6583,6 +6856,13 @@ LPITEM CHARACTER::FindItemByID(DWORD id) const
 	}
 
 	for (int i=BELT_INVENTORY_SLOT_START; i < BELT_INVENTORY_SLOT_END ; ++i)
+	{
+		if (NULL != GetInventoryItem(i) && GetInventoryItem(i)->GetID() == id)
+			return GetInventoryItem(i);
+	}
+
+	// WJ_SPLIT_INVENTORY_SYSTEM
+	for (int i = SKILL_BOOK_INVENTORY_SLOT_START; i < SANDIK_INVENTORY_SLOT_END; ++i)
 	{
 		if (NULL != GetInventoryItem(i) && GetInventoryItem(i)->GetID() == id)
 			return GetInventoryItem(i);
@@ -6613,6 +6893,19 @@ int CHARACTER::CountSpecifyItem(DWORD vnum) const
 		}
 	}
 
+	// WJ_SPLIT_INVENTORY_SYSTEM: also count items parked in the new Skillbook/Upgrade/Stone/Sandik tabs.
+	for (int i = SKILL_BOOK_INVENTORY_SLOT_START; i < SANDIK_INVENTORY_SLOT_END; ++i)
+	{
+		item = GetInventoryItem(i);
+		if (NULL != item && item->GetVnum() == vnum)
+		{
+			if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
+				continue;
+
+			count += item->GetCount();
+		}
+	}
+
 	return count;
 }
 
@@ -6621,37 +6914,46 @@ void CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
 	if (0 == count)
 		return;
 
-	for (UINT i = 0; i < INVENTORY_MAX_NUM; ++i)
+	// WJ_SPLIT_INVENTORY_SYSTEM: base bag range first, then the new Skillbook/Upgrade/Stone/Sandik
+	// tabs — deliberately NOT extended to INVENTORY_AND_EQUIP_SLOT_MAX, since that would also sweep
+	// in worn equipment / DS deck / belt slots, which this function must never touch.
+	for (int iPass = 0; iPass < 2; ++iPass)
 	{
-		if (NULL == GetInventoryItem(i))
-			continue;
+		UINT iStart = (iPass == 0) ? 0 : SKILL_BOOK_INVENTORY_SLOT_START;
+		UINT iEnd = (iPass == 0) ? INVENTORY_MAX_NUM : SANDIK_INVENTORY_SLOT_END;
 
-		if (GetInventoryItem(i)->GetVnum() != vnum)
-			continue;
-
-		//개인 상점에 등록된 물건이면 넘어간다. (개인 상점에서 판매될때 이 부분으로 들어올 경우 문제!)
-		if(m_pkMyShop)
+		for (UINT i = iStart; i < iEnd; ++i)
 		{
-			bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
-			if (isItemSelling)
+			if (NULL == GetInventoryItem(i))
 				continue;
-		}
 
-		if (vnum >= 80003 && vnum <= 80007)
-			LogManager::instance().GoldBarLog(GetPlayerID(), GetInventoryItem(i)->GetID(), QUEST, "RemoveSpecifyItem");
+			if (GetInventoryItem(i)->GetVnum() != vnum)
+				continue;
 
-		if (count >= GetInventoryItem(i)->GetCount())
-		{
-			count -= GetInventoryItem(i)->GetCount();
-			GetInventoryItem(i)->SetCount(0);
+			//개인 상점에 등록된 물건이면 넘어간다. (개인 상점에서 판매될때 이 부분으로 들어올 경우 문제!)
+			if(m_pkMyShop)
+			{
+				bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
+				if (isItemSelling)
+					continue;
+			}
 
-			if (0 == count)
+			if (vnum >= 80003 && vnum <= 80007)
+				LogManager::instance().GoldBarLog(GetPlayerID(), GetInventoryItem(i)->GetID(), QUEST, "RemoveSpecifyItem");
+
+			if (count >= GetInventoryItem(i)->GetCount())
+			{
+				count -= GetInventoryItem(i)->GetCount();
+				GetInventoryItem(i)->SetCount(0);
+
+				if (0 == count)
+					return;
+			}
+			else
+			{
+				GetInventoryItem(i)->SetCount(GetInventoryItem(i)->GetCount() - count);
 				return;
-		}
-		else
-		{
-			GetInventoryItem(i)->SetCount(GetInventoryItem(i)->GetCount() - count);
-			return;
+			}
 		}
 	}
 
@@ -6664,12 +6966,18 @@ int CHARACTER::CountSpecifyTypeItem(BYTE type) const
 {
 	int	count = 0;
 
-	for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
+	for (int iPass = 0; iPass < 2; ++iPass)
 	{
-		LPITEM pItem = GetInventoryItem(i);
-		if (pItem != NULL && pItem->GetType() == type)
+		int iStart = (iPass == 0) ? 0 : SKILL_BOOK_INVENTORY_SLOT_START;
+		int iEnd = (iPass == 0) ? INVENTORY_MAX_NUM : SANDIK_INVENTORY_SLOT_END;
+
+		for (int i = iStart; i < iEnd; ++i)
 		{
-			count += pItem->GetCount();
+			LPITEM pItem = GetInventoryItem(i);
+			if (pItem != NULL && pItem->GetType() == type)
+			{
+				count += pItem->GetCount();
+			}
 		}
 	}
 
@@ -6681,34 +6989,40 @@ void CHARACTER::RemoveSpecifyTypeItem(BYTE type, DWORD count)
 	if (0 == count)
 		return;
 
-	for (UINT i = 0; i < INVENTORY_MAX_NUM; ++i)
+	for (int iPass = 0; iPass < 2; ++iPass)
 	{
-		if (NULL == GetInventoryItem(i))
-			continue;
+		UINT iStart = (iPass == 0) ? 0 : SKILL_BOOK_INVENTORY_SLOT_START;
+		UINT iEnd = (iPass == 0) ? INVENTORY_MAX_NUM : SANDIK_INVENTORY_SLOT_END;
 
-		if (GetInventoryItem(i)->GetType() != type)
-			continue;
-
-		//개인 상점에 등록된 물건이면 넘어간다. (개인 상점에서 판매될때 이 부분으로 들어올 경우 문제!)
-		if(m_pkMyShop)
+		for (UINT i = iStart; i < iEnd; ++i)
 		{
-			bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
-			if (isItemSelling)
+			if (NULL == GetInventoryItem(i))
 				continue;
-		}
 
-		if (count >= GetInventoryItem(i)->GetCount())
-		{
-			count -= GetInventoryItem(i)->GetCount();
-			GetInventoryItem(i)->SetCount(0);
+			if (GetInventoryItem(i)->GetType() != type)
+				continue;
 
-			if (0 == count)
+			//개인 상점에 등록된 물건이면 넘어간다. (개인 상점에서 판매될때 이 부분으로 들어올 경우 문제!)
+			if(m_pkMyShop)
+			{
+				bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
+				if (isItemSelling)
+					continue;
+			}
+
+			if (count >= GetInventoryItem(i)->GetCount())
+			{
+				count -= GetInventoryItem(i)->GetCount();
+				GetInventoryItem(i)->SetCount(0);
+
+				if (0 == count)
+					return;
+			}
+			else
+			{
+				GetInventoryItem(i)->SetCount(GetInventoryItem(i)->GetCount() - count);
 				return;
-		}
-		else
-		{
-			GetInventoryItem(i)->SetCount(GetInventoryItem(i)->GetCount() - count);
-			return;
+			}
 		}
 	}
 }
@@ -6730,6 +7044,23 @@ void CHARACTER::AutoGiveItem(LPITEM item, bool longOwnerShip)
 	if (item->IsDragonSoul())
 	{
 		cell = GetEmptyDragonSoulInventory(item);
+	}
+	// WJ_SPLIT_INVENTORY_SYSTEM
+	else if (item->IsSkillBook())
+	{
+		cell = GetEmptySkillBookInventory(item->GetSize());
+	}
+	else if (item->IsUpgradeItem())
+	{
+		cell = GetEmptyUpgradeItemsInventory(item->GetSize());
+	}
+	else if (item->IsStone())
+	{
+		cell = GetEmptyStoneInventory(item->GetSize());
+	}
+	else if (item->IsSandik())
+	{
+		cell = GetEmptySandikInventory(item->GetSize());
 	}
 	else
 	{
@@ -6780,10 +7111,14 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, WORD bCount, int iRarePct, bool
 
 	DBManager::instance().SendMoneyLog(MONEY_LOG_DROP, dwItemVnum, bCount);
 
-	if (p->dwFlags & ITEM_FLAG_STACKABLE && p->bType != ITEM_BLEND) 
+	if (p->dwFlags & ITEM_FLAG_STACKABLE && p->bType != ITEM_BLEND)
 	{
-		for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
+		// WJ_SPLIT_INVENTORY_SYSTEM: also look for a stackable match in the new tabs.
+		for (int i = 0; i < SANDIK_INVENTORY_SLOT_END; ++i)
 		{
+			if (i == INVENTORY_MAX_NUM)
+				i = SKILL_BOOK_INVENTORY_SLOT_START;
+
 			LPITEM item = GetInventoryItem(i);
 
 			if (!item)
@@ -6851,6 +7186,15 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, WORD bCount, int iRarePct, bool
 	{
 		iEmptyCell = GetEmptyDragonSoulInventory(item);
 	}
+	// WJ_SPLIT_INVENTORY_SYSTEM
+	else if (item->IsSkillBook())
+		iEmptyCell = GetEmptySkillBookInventory(item->GetSize());
+	else if (item->IsUpgradeItem())
+		iEmptyCell = GetEmptyUpgradeItemsInventory(item->GetSize());
+	else if (item->IsStone())
+		iEmptyCell = GetEmptyStoneInventory(item->GetSize());
+	else if (item->IsSandik())
+		iEmptyCell = GetEmptySandikInventory(item->GetSize());
 	else
 		iEmptyCell = GetEmptyInventory(item->GetSize());
 

@@ -24,7 +24,7 @@ public:
 	void	StopShopping(LPCHARACTER ch);
 
 	void	Buy(LPCHARACTER ch, BYTE pos);
-	void	Sell(LPCHARACTER ch, BYTE bCell, WORD bCount=0);
+	void	Sell(LPCHARACTER ch, WORD bCell, WORD bCount=0);
 
 	LPSHOP	CreatePCShop(LPCHARACTER ch, TShopItemTable * pTable, BYTE bItemCount);
 	LPSHOP	FindPCShop(DWORD dwVID);

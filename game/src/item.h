@@ -276,6 +276,12 @@ class CItem : public CEntity
 		int		GiveMoreTime_Per(float fPercent);
 		int		GiveMoreTime_Fix(DWORD dwTime);
 
+		// WJ_SPLIT_INVENTORY_SYSTEM
+		bool		IsSkillBook();
+		bool		IsUpgradeItem();
+		bool		IsStone();
+		bool		IsSandik();
+
 	private:
 		TItemTable const * m_pProto;		// ������ Ÿ��
 

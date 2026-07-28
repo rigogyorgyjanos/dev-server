@@ -187,6 +187,23 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	{
 		iEmptyPos = ch->GetEmptyDragonSoulInventory(item);
 	}
+	// WJ_SPLIT_INVENTORY_SYSTEM
+	else if (item->IsSkillBook())
+	{
+		iEmptyPos = ch->GetEmptySkillBookInventory(item->GetSize());
+	}
+	else if (item->IsUpgradeItem())
+	{
+		iEmptyPos = ch->GetEmptyUpgradeItemsInventory(item->GetSize());
+	}
+	else if (item->IsStone())
+	{
+		iEmptyPos = ch->GetEmptyStoneInventory(item->GetSize());
+	}
+	else if (item->IsSandik())
+	{
+		iEmptyPos = ch->GetEmptySandikInventory(item->GetSize());
+	}
 	else
 	{
 		iEmptyPos = ch->GetEmptyInventory(item->GetSize());

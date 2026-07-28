@@ -296,6 +296,41 @@ bool CExchange::Check(int * piItemCount)
 	return true;
 }
 
+// WJ_SPLIT_INVENTORY_SYSTEM: simple flat-array simulation for the new tabs (mirrors the
+// DragonSoul s_vDSGrid pattern above rather than the base-bag CGrid pattern, since items in
+// these tabs are effectively always size 1 - a lightweight linear scan is enough and avoids
+// building 3 more CGrid pages per category just to replicate multi-cell placement math nobody uses here).
+static int FindAndReserveInCategoryGrid(std::vector<bool> & vGrid, WORD wCategorySlotCount, BYTE bSize)
+{
+	WORD wPageSize = wCategorySlotCount / 3;
+
+	for (WORD wStart = 0; wStart + bSize <= wCategorySlotCount; ++wStart)
+	{
+		if (wStart / wPageSize != (wStart + bSize - 1) / wPageSize)
+			continue; // would cross a page boundary
+
+		bool bFree = true;
+		for (BYTE j = 0; j < bSize; ++j)
+		{
+			if (vGrid[wStart + j])
+			{
+				bFree = false;
+				break;
+			}
+		}
+
+		if (bFree)
+		{
+			for (BYTE j = 0; j < bSize; ++j)
+				vGrid[wStart + j] = true;
+
+			return wStart;
+		}
+	}
+
+	return -1;
+}
+
 bool CExchange::CheckSpace()
 {
 	static CGrid s_grid1(5, INVENTORY_MAX_NUM/5/4);
@@ -332,12 +367,19 @@ bool CExchange::CheckSpace()
 	}
 		//-----------------------------------------------------------
 	
-	// ??... ??¡Æ¢§ ¡Æ©©?¢¥¢©? ¡Æ¡ÆAo¢¬¢¬... ?e???¢ç ?I???¡í ©©e¢¬O ?I?? ?¢¬¡Æi ¥ì?¢Òo ¢¬¢¬¥ìc ©©¡í ?©¬¢¬???¢¥? ¢´©¢¢´©¢
+	// ??... ??ï¿½Æ¢ï¿½ ï¿½Æ©ï¿½?ï¿½ï¿½ï¿½ï¿½? ï¿½Æ¡ï¿½Aoï¿½ï¿½ï¿½ï¿½... ?e???ï¿½ï¿½ ?I???ï¿½ï¿½ ï¿½ï¿½eï¿½ï¿½O ?I?? ?ï¿½ï¿½ï¿½ï¿½i ï¿½ï¿½?ï¿½ï¿½o ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½c ï¿½ï¿½ï¿½ï¿½ ?ï¿½ï¿½ï¿½ï¿½???ï¿½ï¿½? ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	static std::vector <WORD> s_vDSGrid(DRAGON_SOUL_INVENTORY_MAX_NUM);
-	
-	// ??¢¥U ?e???¢ç?¡í ¡¾©©??C?Ao ???¡í ¡Æ¢§¢¥E???? ?¨Ï?C¡¤I, ?e???¢ç ?I?? ??¡íc¢¥A ?e???¢ç?? ?O?¡í ¢Ò¡× C?¥ì¥ì¡¤? C?¢¥?.
+
+	// ??ï¿½ï¿½U ?e???ï¿½ï¿½?ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½??C?Ao ???ï¿½ï¿½ ï¿½Æ¢ï¿½ï¿½ï¿½E???? ?ï¿½ï¿½?Cï¿½ï¿½I, ?e???ï¿½ï¿½ ?I?? ??ï¿½ï¿½cï¿½ï¿½A ?e???ï¿½ï¿½?? ?O?ï¿½ï¿½ ï¿½Ò¡ï¿½ C?ï¿½ï¿½ì¡¤? C?ï¿½ï¿½?.
 	bool bDSInitialized = false;
-	
+
+	// WJ_SPLIT_INVENTORY_SYSTEM
+	static std::vector<bool> s_vSkillBookGrid(SKILL_BOOK_INVENTORY_SLOT_COUNT);
+	static std::vector<bool> s_vUpgradeItemsGrid(UPGRADE_ITEMS_INVENTORY_SLOT_COUNT);
+	static std::vector<bool> s_vStoneGrid(STONE_INVENTORY_SLOT_COUNT);
+	static std::vector<bool> s_vSandikGrid(SANDIK_INVENTORY_SLOT_COUNT);
+	bool bSkillBookInitialized = false, bUpgradeItemsInitialized = false, bStoneInitialized = false, bSandikInitialized = false;
+
 	for (i = 0; i < EXCHANGE_ITEM_MAX_NUM; ++i)
 	{
 		if (!(item = m_apItems[i]))
@@ -393,6 +435,63 @@ bool CExchange::CheckSpace()
 			if (!bExistEmptySpace)
 				return false;
 		}
+		// WJ_SPLIT_INVENTORY_SYSTEM
+		else if (item->IsSkillBook())
+		{
+			if (!bSkillBookInitialized)
+			{
+				bSkillBookInitialized = true;
+				std::fill(s_vSkillBookGrid.begin(), s_vSkillBookGrid.end(), false);
+				for (int c = 0; c < SKILL_BOOK_INVENTORY_SLOT_COUNT; ++c)
+					if (victim->GetInventoryItem(SKILL_BOOK_INVENTORY_SLOT_START + c))
+						s_vSkillBookGrid[c] = true;
+			}
+
+			if (FindAndReserveInCategoryGrid(s_vSkillBookGrid, SKILL_BOOK_INVENTORY_SLOT_COUNT, itemSize) < 0)
+				return false;
+		}
+		else if (item->IsUpgradeItem())
+		{
+			if (!bUpgradeItemsInitialized)
+			{
+				bUpgradeItemsInitialized = true;
+				std::fill(s_vUpgradeItemsGrid.begin(), s_vUpgradeItemsGrid.end(), false);
+				for (int c = 0; c < UPGRADE_ITEMS_INVENTORY_SLOT_COUNT; ++c)
+					if (victim->GetInventoryItem(UPGRADE_ITEMS_INVENTORY_SLOT_START + c))
+						s_vUpgradeItemsGrid[c] = true;
+			}
+
+			if (FindAndReserveInCategoryGrid(s_vUpgradeItemsGrid, UPGRADE_ITEMS_INVENTORY_SLOT_COUNT, itemSize) < 0)
+				return false;
+		}
+		else if (item->IsStone())
+		{
+			if (!bStoneInitialized)
+			{
+				bStoneInitialized = true;
+				std::fill(s_vStoneGrid.begin(), s_vStoneGrid.end(), false);
+				for (int c = 0; c < STONE_INVENTORY_SLOT_COUNT; ++c)
+					if (victim->GetInventoryItem(STONE_INVENTORY_SLOT_START + c))
+						s_vStoneGrid[c] = true;
+			}
+
+			if (FindAndReserveInCategoryGrid(s_vStoneGrid, STONE_INVENTORY_SLOT_COUNT, itemSize) < 0)
+				return false;
+		}
+		else if (item->IsSandik())
+		{
+			if (!bSandikInitialized)
+			{
+				bSandikInitialized = true;
+				std::fill(s_vSandikGrid.begin(), s_vSandikGrid.end(), false);
+				for (int c = 0; c < SANDIK_INVENTORY_SLOT_COUNT; ++c)
+					if (victim->GetInventoryItem(SANDIK_INVENTORY_SLOT_START + c))
+						s_vSandikGrid[c] = true;
+			}
+
+			if (FindAndReserveInCategoryGrid(s_vSandikGrid, SANDIK_INVENTORY_SLOT_COUNT, itemSize) < 0)
+				return false;
+		}
 		else
 		{
 			int iPos = s_grid1.FindBlank(1, itemSize);
@@ -442,6 +541,15 @@ bool CExchange::Done()
 
 		if (item->IsDragonSoul())
 			empty_pos = victim->GetEmptyDragonSoulInventory(item);
+		// WJ_SPLIT_INVENTORY_SYSTEM
+		else if (item->IsSkillBook())
+			empty_pos = victim->GetEmptySkillBookInventory(item->GetSize());
+		else if (item->IsUpgradeItem())
+			empty_pos = victim->GetEmptyUpgradeItemsInventory(item->GetSize());
+		else if (item->IsStone())
+			empty_pos = victim->GetEmptyStoneInventory(item->GetSize());
+		else if (item->IsSandik())
+			empty_pos = victim->GetEmptySandikInventory(item->GetSize());
 		else
 			empty_pos = victim->GetEmptyInventory(item->GetSize());
 

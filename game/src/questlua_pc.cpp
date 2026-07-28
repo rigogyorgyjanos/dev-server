@@ -435,7 +435,20 @@ namespace quest
 			return 1;
 		}
 
-		bool bEnoughInventoryForItem = ch->GetEmptyInventory(pTable->bSize) != -1;
+		bool bEnoughInventoryForItem;
+
+		// WJ_SPLIT_INVENTORY_SYSTEM: route the check to whichever tab pc_give_item would actually place this vnum into.
+		if (pTable->bType == ITEM_SKILLBOOK)
+			bEnoughInventoryForItem = ch->GetEmptySkillBookInventory(pTable->bSize) != -1;
+		else if (pTable->bType == ITEM_UPGRADE)
+			bEnoughInventoryForItem = ch->GetEmptyUpgradeItemsInventory(pTable->bSize) != -1;
+		else if (pTable->bType == ITEM_METIN)
+			bEnoughInventoryForItem = ch->GetEmptyStoneInventory(pTable->bSize) != -1;
+		else if (pTable->bType == ITEM_BOX)
+			bEnoughInventoryForItem = ch->GetEmptySandikInventory(pTable->bSize) != -1;
+		else
+			bEnoughInventoryForItem = ch->GetEmptyInventory(pTable->bSize) != -1;
+
 		lua_pushboolean(L, bEnoughInventoryForItem);
 		return 1;
 	}

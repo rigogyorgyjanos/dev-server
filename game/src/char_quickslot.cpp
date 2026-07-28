@@ -65,7 +65,10 @@ bool CHARACTER::SetQuickslot(BYTE pos, TQuickslot & rSlot)
 	switch (rSlot.type)
 	{
 		case QUICKSLOT_TYPE_ITEM:
-			if (false == srcCell.IsDefaultInventoryPosition() && false == srcCell.IsBeltInventoryPosition())
+			// WJ_SPLIT_INVENTORY_SYSTEM
+			if (false == srcCell.IsDefaultInventoryPosition() && false == srcCell.IsBeltInventoryPosition()
+				&& false == srcCell.IsSkillBookInventoryPosition() && false == srcCell.IsUpgradeItemsInventoryPosition()
+				&& false == srcCell.IsStoneInventoryPosition() && false == srcCell.IsSandikInventoryPosition())
 				return false;
 
 			break;

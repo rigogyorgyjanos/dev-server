@@ -319,7 +319,12 @@ LPITEM CItem::RemoveFromCharacter()
 			{
 				TItemPos cell(INVENTORY, m_wCell);
 
-				if (false == cell.IsDefaultInventoryPosition() && false == cell.IsBeltInventoryPosition()) // 아니면 소지품에?
+				// WJ_SPLIT_INVENTORY_SYSTEM: the 4 new tabs are also valid inventory positions -
+				// without this, items removed from them never got cleared from pItems/bItemGrid,
+				// leaving a stale reference that caused duplication and a double-free on logout.
+				if (false == cell.IsDefaultInventoryPosition() && false == cell.IsBeltInventoryPosition()
+					&& false == cell.IsSkillBookInventoryPosition() && false == cell.IsUpgradeItemsInventoryPosition()
+					&& false == cell.IsStoneInventoryPosition() && false == cell.IsSandikInventoryPosition()) // 아니면 소지품에?
 					sys_err("CItem::RemoveFromCharacter: Invalid Item Position");
 				else
 				{
@@ -559,7 +564,7 @@ int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 			return WEAR_UNIQUE1;		
 	}
 
-	// 수집 퀘스트를 위한 아이템이 박히는곳으로 한번 박히면 절대 �E수 없다.
+	// 수집 퀘스트를 위한 아이템이 박히는곳으로 한번 박히면 절대 �E수 없다.
 	else if (GetWearFlag() & WEARABLE_ABILITY)
 	{
 		if (!ch->GetWear(WEAR_ABILITY1))
@@ -2108,11 +2113,30 @@ int CItem::GiveMoreTime_Fix(DWORD dwTime)
 			return dwTime;
 		}
 	}
-	// 우선 용혼석에 관해서만 하도록 한다.
 	else
 		return 0;
 }
 
+// WJ_SPLIT_INVENTORY_SYSTEM
+bool CItem::IsSkillBook()
+{
+	return GetType() == ITEM_SKILLBOOK;
+}
+
+bool CItem::IsUpgradeItem()
+{
+	return GetType() == ITEM_MATERIAL;
+}
+
+bool CItem::IsStone()
+{
+	return GetType() == ITEM_METIN;
+}
+
+bool CItem::IsSandik()
+{
+	return GetType() == ITEM_GIFTBOX ;
+}
 
 int	CItem::GetDuration()
 {
