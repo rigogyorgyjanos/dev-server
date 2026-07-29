@@ -25,23 +25,23 @@ string trim(const string& str){return trim_left(trim_right(str));}
 
 static string* StringSplit(string strOrigin, string strTok)
 {
-    int     cutAt;                            //ÀÚ¸£´ÂÀ§Ä¡
-    int     index     = 0;                    //¹®ÀÚ¿­ÀÎµ¦½º
-    string* strResult = new string[30];		  //°á°úreturn ÇÒº¯¼ö
+    int     cutAt;                            //ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡
+    int     index     = 0;                    //ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½Îµï¿½ï¿½ï¿½
+    string* strResult = new string[30];		  //ï¿½ï¿½ï¿½return ï¿½Òºï¿½ï¿½ï¿½
 
-    //strTokÀ»Ã£À»¶§±îÁö¹Ýº¹
+    //strTokï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýºï¿½
     while ((cutAt = strOrigin.find_first_of(strTok)) != strOrigin.npos)
     {
-       if (cutAt > 0)  //ÀÚ¸£´ÂÀ§Ä¡°¡0º¸´ÙÅ©¸é(¼º°ø½Ã)
+       if (cutAt > 0)  //ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½0ï¿½ï¿½ï¿½ï¿½Å©ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
        {
-            strResult[index++] = strOrigin.substr(0, cutAt);  //°á°ú¹è¿­¿¡Ãß°¡
+            strResult[index++] = strOrigin.substr(0, cutAt);  //ï¿½ï¿½ï¿½ï¿½è¿­ï¿½ï¿½ï¿½ß°ï¿½
        }
-       strOrigin = strOrigin.substr(cutAt+1);  //¿øº»ÀºÀÚ¸¥ºÎºÐÁ¦¿ÜÇÑ³ª¸ÓÁö
+       strOrigin = strOrigin.substr(cutAt+1);  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½Îºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ³ï¿½ï¿½ï¿½ï¿½ï¿½
     }
 
-    if(strOrigin.length() > 0)  //¿øº»ÀÌ¾ÆÁ÷³²¾ÒÀ¸¸é
+    if(strOrigin.length() > 0)  //ï¿½ï¿½ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     {
-        strResult[index++] = strOrigin.substr(0, cutAt);  //³ª¸ÓÁö¸¦°á°ú¹è¿­¿¡Ãß°¡
+        strResult[index++] = strOrigin.substr(0, cutAt);  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¿­ï¿½ï¿½ï¿½ß°ï¿½
     }
 
 	for( int i=0;i<index;i++)
@@ -49,7 +49,7 @@ static string* StringSplit(string strOrigin, string strTok)
 		strResult[i] = trim(strResult[i]);
 	}
 
-    return strResult;  //°á°úreturn
+    return strResult;  //ï¿½ï¿½ï¿½return
 }
 
 
@@ -60,25 +60,25 @@ int get_Item_Type_Value(string inputString)
 		"ITEM_ARMOR", "ITEM_USE", 
 		"ITEM_AUTOUSE", "ITEM_MATERIAL",
 		"ITEM_SPECIAL", "ITEM_TOOL", 
-		"ITEM_LOTTERY", "ITEM_ELK",					//10°³
+		"ITEM_LOTTERY", "ITEM_ELK",					//10ï¿½ï¿½
 
 		"ITEM_METIN", "ITEM_CONTAINER", 
 		"ITEM_FISH", "ITEM_ROD", 
 		"ITEM_RESOURCE", "ITEM_CAMPFIRE",
 		"ITEM_UNIQUE", "ITEM_SKILLBOOK", 
-		"ITEM_QUEST", "ITEM_POLYMORPH",				//20°³
+		"ITEM_QUEST", "ITEM_POLYMORPH",				//20ï¿½ï¿½
 
 		"ITEM_TREASURE_BOX", "ITEM_TREASURE_KEY",
 		"ITEM_SKILLFORGET", "ITEM_GIFTBOX", 
 		"ITEM_PICK", "ITEM_HAIR", 
 		"ITEM_TOTEM", "ITEM_BLEND", 
-		"ITEM_COSTUME", "ITEM_DS",					//30°³
+		"ITEM_COSTUME", "ITEM_DS",					//30ï¿½ï¿½
 	
 		"ITEM_SPECIAL_DS",	"ITEM_EXTRACT",
-		"ITEM_SECONDARY_COIN",						//33°³
+		"ITEM_SECONDARY_COIN",						//33ï¿½ï¿½
 
 		"ITEM_RING",
-		"ITEM_BELT",								//35°³ (EItemTypes °ªÀ¸·Î Ä¡¸é 34)
+		"ITEM_BELT",								//35ï¿½ï¿½ (EItemTypes ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä¡ï¿½ï¿½ 34)
 	};
 
 	
@@ -166,8 +166,8 @@ int get_Item_SubType_Value(int type_value, string inputString)
 		arSub29,	//30
 		arSub31,	//31
 		0,			//32
-		0,			//33 ¹ÝÁö
-		0,			//34 º§Æ®
+		0,			//33 ï¿½ï¿½ï¿½ï¿½
+		0,			//34 ï¿½ï¿½Æ®
 	};
 	static int arNumberOfSubtype[_countof(arSubType)] = {
 		0,
@@ -203,21 +203,21 @@ int get_Item_SubType_Value(int type_value, string inputString)
 		sizeof(arSub29)/sizeof(arSub29[0]),
 		sizeof(arSub31)/sizeof(arSub31[0]),
 		0, // 32
-		0, // 33 ¹ÝÁö
-		0, // 34 º§Æ®
+		0, // 33 ï¿½ï¿½ï¿½ï¿½
+		0, // 34 ï¿½ï¿½Æ®
 	};
 	
 
 	assert(_countof(arSubType) > type_value && "Subtype rule: Out of range!!");
 
-	// assert ¾È ¸ÔÈ÷´Â µí..
+	// assert ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½..
 	if (_countof(arSubType) <= type_value)
 	{
 		sys_err("SubType : Out of range!! (type_value: %d, count of registered subtype: %d", type_value, _countof(arSubType));
 		return -1;
 	}
 
-	//¾ÆÀÌÅÛ Å¸ÀÔÀÇ ¼­ºêÅ¸ÀÔ ¾î·¹ÀÌ°¡ Á¸ÀçÇÏ´ÂÁö ¾Ë¾Æº¸°í, ¾øÀ¸¸é 0 ¸®ÅÏ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½î·¹ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½Ë¾Æºï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0 ï¿½ï¿½ï¿½ï¿½
 	if (arSubType[type_value]==0) {
 		return 0;
 	}
@@ -253,13 +253,13 @@ int get_Item_AntiFlag_Value(string inputString)
 
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, "|");				//ÇÁ·ÎÅä Á¤º¸ ³»¿ëÀ» ´Ü¾îº°·Î ÂÉ°µ ¹è¿­.
+	string* arInputString = StringSplit(inputString, "|");				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾îº°ï¿½ï¿½ ï¿½É°ï¿½ ï¿½è¿­.
 	for(int i =0;i<sizeof(arAntiFlag)/sizeof(arAntiFlag[0]);i++) {
 		string tempString = arAntiFlag[i];
-		for (int j=0; j<30 ; j++)		//ÃÖ´ë 30°³ ´Ü¾î±îÁö. (ÇÏµåÄÚµù)
+		for (int j=0; j<30 ; j++)		//ï¿½Ö´ï¿½ 30ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½. (ï¿½Ïµï¿½ï¿½Úµï¿½)
 		{
 			string tempString2 = arInputString[j];
-			if (tempString2.compare(tempString)==0) {				//ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ.
+			if (tempString2.compare(tempString)==0) {				//ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 				retValue = retValue + pow((float)2,(float)i);
 			}
 			
@@ -282,13 +282,13 @@ int get_Item_Flag_Value(string inputString)
 
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, "|");				//ÇÁ·ÎÅä Á¤º¸ ³»¿ëÀ» ´Ü¾îº°·Î ÂÉ°µ ¹è¿­.
+	string* arInputString = StringSplit(inputString, "|");				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾îº°ï¿½ï¿½ ï¿½É°ï¿½ ï¿½è¿­.
 	for(int i =0;i<sizeof(arFlag)/sizeof(arFlag[0]);i++) {
 		string tempString = arFlag[i];
-		for (int j=0; j<30 ; j++)		//ÃÖ´ë 30°³ ´Ü¾î±îÁö. (ÇÏµåÄÚµù)
+		for (int j=0; j<30 ; j++)		//ï¿½Ö´ï¿½ 30ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½. (ï¿½Ïµï¿½ï¿½Úµï¿½)
 		{
 			string tempString2 = arInputString[j];
-			if (tempString2.compare(tempString)==0) {				//ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ.
+			if (tempString2.compare(tempString)==0) {				//ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 				retValue = retValue + pow((float)2,(float)i);
 			}
 			
@@ -310,13 +310,13 @@ int get_Item_WearFlag_Value(string inputString)
 
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, "|");				//ÇÁ·ÎÅä Á¤º¸ ³»¿ëÀ» ´Ü¾îº°·Î ÂÉ°µ ¹è¿­.
+	string* arInputString = StringSplit(inputString, "|");				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾îº°ï¿½ï¿½ ï¿½É°ï¿½ ï¿½è¿­.
 	for(int i =0;i<sizeof(arWearrFlag)/sizeof(arWearrFlag[0]);i++) {
 		string tempString = arWearrFlag[i];
-		for (int j=0; j<30 ; j++)		//ÃÖ´ë 30°³ ´Ü¾î±îÁö. (ÇÏµåÄÚµù)
+		for (int j=0; j<30 ; j++)		//ï¿½Ö´ï¿½ 30ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½. (ï¿½Ïµï¿½ï¿½Úµï¿½)
 		{
 			string tempString2 = arInputString[j];
-			if (tempString2.compare(tempString)==0) {				//ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ.
+			if (tempString2.compare(tempString)==0) {				//ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 				retValue = retValue + pow((float)2,(float)i);
 			}
 			
@@ -336,13 +336,13 @@ int get_Item_Immune_Value(string inputString)
 	string arImmune[] = {"PARA","CURSE","STUN","SLEEP","SLOW","POISON","TERROR"};
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, "|");				//ÇÁ·ÎÅä Á¤º¸ ³»¿ëÀ» ´Ü¾îº°·Î ÂÉ°µ ¹è¿­.
+	string* arInputString = StringSplit(inputString, "|");				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾îº°ï¿½ï¿½ ï¿½É°ï¿½ ï¿½è¿­.
 	for(int i =0;i<sizeof(arImmune)/sizeof(arImmune[0]);i++) {
 		string tempString = arImmune[i];
-		for (int j=0; j<30 ; j++)		//ÃÖ´ë 30°³ ´Ü¾î±îÁö. (ÇÏµåÄÚµù)
+		for (int j=0; j<30 ; j++)		//ï¿½Ö´ï¿½ 30ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½. (ï¿½Ïµï¿½ï¿½Úµï¿½)
 		{
 			string tempString2 = arInputString[j];
-			if (tempString2.compare(tempString)==0) {				//ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ.
+			if (tempString2.compare(tempString)==0) {				//ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 				retValue = retValue + pow((float)2,(float)i);
 			}
 			
@@ -421,7 +421,7 @@ int get_Item_ApplyType_Value(string inputString)
 }
 
 
-//¸ó½ºÅÍ ÇÁ·ÎÅäµµ ÀÐ´Â´Ù.
+//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½äµµ ï¿½Ð´Â´ï¿½.
 
 
 int get_Mob_Rank_Value(string inputString) 
@@ -515,13 +515,13 @@ int get_Mob_AIFlag_Value(string inputString)
 
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, ",");				//ÇÁ·ÎÅä Á¤º¸ ³»¿ëÀ» ´Ü¾îº°·Î ÂÉ°µ ¹è¿­.
+	string* arInputString = StringSplit(inputString, ",");				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾îº°ï¿½ï¿½ ï¿½É°ï¿½ ï¿½è¿­.
 	for(int i =0;i<sizeof(arAIFlag)/sizeof(arAIFlag[0]);i++) {
 		string tempString = arAIFlag[i];
-		for (int j=0; j<30 ; j++)		//ÃÖ´ë 30°³ ´Ü¾î±îÁö. (ÇÏµåÄÚµù)
+		for (int j=0; j<30 ; j++)		//ï¿½Ö´ï¿½ 30ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½. (ï¿½Ïµï¿½ï¿½Úµï¿½)
 		{
 			string tempString2 = arInputString[j];
-			if (tempString2.compare(tempString)==0) {				//ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ.
+			if (tempString2.compare(tempString)==0) {				//ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 				retValue = retValue + pow((float)2,(float)i);
 			}
 			
@@ -540,13 +540,13 @@ int get_Mob_RaceFlag_Value(string inputString)
 		"ATT_ELEC","ATT_FIRE","ATT_ICE","ATT_WIND","ATT_EARTH","ATT_DARK"};
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, ",");				//ÇÁ·ÎÅä Á¤º¸ ³»¿ëÀ» ´Ü¾îº°·Î ÂÉ°µ ¹è¿­.
+	string* arInputString = StringSplit(inputString, ",");				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾îº°ï¿½ï¿½ ï¿½É°ï¿½ ï¿½è¿­.
 	for(int i =0;i<sizeof(arRaceFlag)/sizeof(arRaceFlag[0]);i++) {
 		string tempString = arRaceFlag[i];
-		for (int j=0; j<30 ; j++)		//ÃÖ´ë 30°³ ´Ü¾î±îÁö. (ÇÏµåÄÚµù)
+		for (int j=0; j<30 ; j++)		//ï¿½Ö´ï¿½ 30ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½. (ï¿½Ïµï¿½ï¿½Úµï¿½)
 		{
 			string tempString2 = arInputString[j];
-			if (tempString2.compare(tempString)==0) {				//ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ.
+			if (tempString2.compare(tempString)==0) {				//ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 				retValue = retValue + pow((float)2,(float)i);
 			}
 			
@@ -564,13 +564,13 @@ int get_Mob_ImmuneFlag_Value(string inputString)
 	string arImmuneFlag[] = {"STUN","SLOW","FALL","CURSE","POISON","TERROR", "REFLECT"};
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, ",");				//ÇÁ·ÎÅä Á¤º¸ ³»¿ëÀ» ´Ü¾îº°·Î ÂÉ°µ ¹è¿­.
+	string* arInputString = StringSplit(inputString, ",");				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾îº°ï¿½ï¿½ ï¿½É°ï¿½ ï¿½è¿­.
 	for(int i =0;i<sizeof(arImmuneFlag)/sizeof(arImmuneFlag[0]);i++) {
 		string tempString = arImmuneFlag[i];
-		for (int j=0; j<30 ; j++)		//ÃÖ´ë 30°³ ´Ü¾î±îÁö. (ÇÏµåÄÚµù)
+		for (int j=0; j<30 ; j++)		//ï¿½Ö´ï¿½ 30ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½. (ï¿½Ïµï¿½ï¿½Úµï¿½)
 		{
 			string tempString2 = arInputString[j];
-			if (tempString2.compare(tempString)==0) {				//ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ.
+			if (tempString2.compare(tempString)==0) {				//ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 				retValue = retValue + pow((float)2,(float)i);
 			}
 			
@@ -588,14 +588,14 @@ int get_Mob_ImmuneFlag_Value(string inputString)
 
 #ifndef __DUMP_PROTO__
 
-//¸÷ Å×ÀÌºíÀ» ¼ÂÆÃÇØÁØ´Ù.
+//ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½.
 bool Set_Proto_Mob_Table(TMobTable *mobTable, cCsvTable &csvTable,std::map<int,const char*> &nameMap)
 {
 	int col = 0;
 	str_to_number(mobTable->dwVnum, csvTable.AsStringByIndex(col++));
 	strlcpy(mobTable->szName, csvTable.AsStringByIndex(col++), sizeof(mobTable->szName));
 
-	//3. Áö¿ªº° ÀÌ¸§ ³Ö¾îÁÖ±â.
+	//3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½Ö¾ï¿½ï¿½Ö±ï¿½.
 	map<int,const char*>::iterator it;
 	it = nameMap.find(mobTable->dwVnum);
 	if (it != nameMap.end()) {
@@ -700,7 +700,16 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 {
 	int col = 0;
 
-	int dataArray[33];
+	// Apply pairs occupy columns [APPLY_COL_START, APPLY_COL_START + ITEM_APPLY_MAX_NUM*2), each
+	// pair being (type, value). Values/Specular/GainSocketPct/AddonType are read right after them,
+	// so their column offsets must shift whenever ITEM_APPLY_MAX_NUM changes.
+	const int APPLY_COL_START = 18;
+	const int VALUES_COL_START = APPLY_COL_START + ITEM_APPLY_MAX_NUM * 2;
+	const int SPECULAR_COL = VALUES_COL_START + ITEM_VALUES_MAX_NUM;
+	const int GAIN_SOCKET_PCT_COL = SPECULAR_COL + 1;
+	const int ADDON_TYPE_COL = GAIN_SOCKET_PCT_COL + 1;
+
+	int dataArray[ADDON_TYPE_COL + 1];
 	for (int i=0; i<sizeof(dataArray)/sizeof(dataArray[0]);i++) {
 		int validCheck = 0;
 		if (i==2) {
@@ -727,13 +736,7 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 		} else if (i==16) {
 			dataArray[i] = get_Item_LimitType_Value(csvTable.AsStringByIndex(col));
 			validCheck = dataArray[i];
-		} else if (i==18) {
-			dataArray[i] = get_Item_ApplyType_Value(csvTable.AsStringByIndex(col));
-			validCheck = dataArray[i];
-		} else if (i==20) {
-			dataArray[i] = get_Item_ApplyType_Value(csvTable.AsStringByIndex(col));
-			validCheck = dataArray[i];
-		} else if (i==22) {
+		} else if (i >= APPLY_COL_START && i < VALUES_COL_START && (i - APPLY_COL_START) % 2 == 0) {
 			dataArray[i] = get_Item_ApplyType_Value(csvTable.AsStringByIndex(col));
 			validCheck = dataArray[i];
 		} else {
@@ -757,11 +760,11 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 		col = col + 1;
 	}
 
-	// vnum ¹× vnum range ÀÐ±â.
+	// vnum ï¿½ï¿½ vnum range ï¿½Ð±ï¿½.
 	{
 		std::string s(csvTable.AsStringByIndex(0));
 		int pos = s.find("~");
-		// vnum ÇÊµå¿¡ '~'°¡ ¾ø´Ù¸é ÆÐ½º
+		// vnum ï¿½Êµå¿¡ '~'ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½Ð½ï¿½
 		if (std::string::npos == pos)
 		{
 			itemTable->dwVnum = dataArray[0];
@@ -785,7 +788,7 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 	}
 
 	strlcpy(itemTable->szName, csvTable.AsStringByIndex(1), sizeof(itemTable->szName));
-	//Áö¿ªº° ÀÌ¸§ ³Ö¾îÁÖ±â.
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½Ö¾ï¿½ï¿½Ö±ï¿½.
 	map<int,const char*>::iterator it;
 	it = nameMap.find(itemTable->dwVnum);
 	if (it != nameMap.end()) {
@@ -826,18 +829,18 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 
 	for (i = 0; i < ITEM_APPLY_MAX_NUM; ++i)
 	{
-		itemTable->aApplies[i].bType = dataArray[18+i*2];
-		itemTable->aApplies[i].lValue = dataArray[19+i*2];
+		itemTable->aApplies[i].bType = dataArray[APPLY_COL_START+i*2];
+		itemTable->aApplies[i].lValue = dataArray[APPLY_COL_START+1+i*2];
 	}
 
 	for (i = 0; i < ITEM_VALUES_MAX_NUM; ++i)
-		itemTable->alValues[i] = dataArray[24+i];
+		itemTable->alValues[i] = dataArray[VALUES_COL_START+i];
 
 	//column for 'Specular'
-	itemTable->bSpecular = dataArray[30];
+	itemTable->bSpecular = dataArray[SPECULAR_COL];
 
-	itemTable->bGainSocketPct = dataArray[31];
-	itemTable->sAddonType = dataArray[32];
+	itemTable->bGainSocketPct = dataArray[GAIN_SOCKET_PCT_COL];
+	itemTable->sAddonType = dataArray[ADDON_TYPE_COL];
 
 	//test
 	str_to_number(itemTable->bWeight, "0");
