@@ -64,8 +64,6 @@ enum EMisc
 	DRAGON_SOUL_REFINE_GRID_SIZE = 15,
 	MAX_AMOUNT_OF_MALL_BONUS	= 20,
 
-	WEAR_MAX_NUM				= 32,
-
 	//LIMIT_GOLD
 	GOLD_MAX = 2000000000,
 
@@ -81,25 +79,31 @@ enum EMisc
 	BELT_INVENTORY_SLOT_HEIGHT= 4,
 
 	BELT_INVENTORY_SLOT_COUNT = BELT_INVENTORY_SLOT_WIDTH * BELT_INVENTORY_SLOT_HEIGHT,
-
-
-/**
-	 **** ������� �Ҵ� �� ������ ���� ���� (DB�� Item Position) ****
-	+------------------------------------------------------+ 0
-	| ĳ���� �⺻ �κ��丮 (45ĭ * 2������) 90ĭ           | 
-	+------------------------------------------------------+ 90 = INVENTORY_MAX_NUM(90)
-	| ĳ���� ��� â (�������� ������) 32ĭ                |
-	+------------------------------------------------------+ 122 = INVENTORY_MAX_NUM(90) + WEAR_MAX_NUM(32)
-	| ��ȥ�� ��� â (�������� ��ȥ��) 12ĭ                | 
-	+------------------------------------------------------+ 134 = 122 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_MAX_NUM(2)
-	| ��ȥ�� ��� â ���� (���� �̻��) 18ĭ               | 
-	+------------------------------------------------------+ 152 = 134 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_RESERVED_MAX_NUM(3)
-	| ��Ʈ �κ��丮 (��Ʈ ����ÿ��� ��Ʈ ������ ���� Ȱ��)|
-	+------------------------------------------------------+ 168 = 152 + BELT_INVENTORY_SLOT_COUNT(16) = INVENTORY_AND_EQUIP_CELL_MAX
-	| �̻��                                               |
-	+------------------------------------------------------+ ??
-*/
 };
+
+/*
+	Character item-slot layout (window_type == INVENTORY), see EMisc2 below for the actual
+	constants. Every reserved block is intentional headroom for future growth of that one
+	category - if you need to add slots to a category, take them from ITS OWN reserve first,
+	so the categories after it don't shift again.
+
+	[0, INVENTORY_MAX_NUM)                                    base bag inventory
+	[EQUIPMENT_SLOT_START, EQUIPMENT_SLOT_END)                worn equipment (see item_length.h EWearPositions)
+	[EQUIPMENT_RESERVED_START, +EQUIPMENT_RESERVED_COUNT)      reserved: future equip/costume slots
+	[DRAGON_SOUL_EQUIP_SLOT_START, DRAGON_SOUL_EQUIP_SLOT_END) active dragon soul decks
+	[DRAGON_SOUL_EQUIP_RESERVED_SLOT_START, .._END)            reserved: a future 3rd dragon soul deck
+	[BELT_INVENTORY_SLOT_START, BELT_INVENTORY_SLOT_END)       belt inventory (4x4)
+	[BELT_INVENTORY_RESERVED_START, +..._COUNT)                reserved: a future larger belt grid
+	[SKILL_BOOK_INVENTORY_SLOT_START, .._END)                  skill book tab (WJ_SPLIT_INVENTORY_SYSTEM)
+	[SKILL_BOOK_INVENTORY_RESERVED_START, +..._COUNT)          reserved: +1 page
+	[UPGRADE_ITEMS_INVENTORY_SLOT_START, .._END)               upgrade-items tab
+	[UPGRADE_ITEMS_INVENTORY_RESERVED_START, +..._COUNT)       reserved: +1 page
+	[STONE_INVENTORY_SLOT_START, .._END)                       stone tab
+	[STONE_INVENTORY_RESERVED_START, +..._COUNT)               reserved: +1 page
+	[SANDIK_INVENTORY_SLOT_START, SANDIK_INVENTORY_SLOT_END)   chest tab (last - no reserve needed,
+	                                                            growing it never shifts anything else)
+	                                                            = INVENTORY_AND_EQUIP_SLOT_MAX
+*/
 
 enum EMatrixCard
 {
@@ -664,37 +668,60 @@ enum SPECIAL_EFFECT
 
 #include "item_length.h"
 
-enum EDragonSoulRefineWindowSize
-{
-	DRAGON_SOUL_REFINE_GRID_MAX = 15,
-};
-
 enum EMisc2
 {
-	DRAGON_SOUL_EQUIP_SLOT_START = INVENTORY_MAX_NUM + WEAR_MAX_NUM,
+	EQUIPMENT_SLOT_START = INVENTORY_MAX_NUM,
+	EQUIPMENT_SLOT_COUNT = WEAR_POSITION_COUNT,
+	EQUIPMENT_SLOT_END = EQUIPMENT_SLOT_START + EQUIPMENT_SLOT_COUNT,
+
+	EQUIPMENT_RING_SLOT_START = EQUIPMENT_SLOT_START + WEAR_RING1,
+	EQUIPMENT_COSTUME_SLOT_START = EQUIPMENT_SLOT_START + WEAR_COSTUME_BODY,
+
+	// Reserved for future equipment/costume slot additions - take from here first,
+	// don't grow EQUIPMENT_SLOT_COUNT itself (that would shift every range below again).
+	EQUIPMENT_RESERVED_START = EQUIPMENT_SLOT_END,
+	EQUIPMENT_RESERVED_COUNT = 10,
+
+	DRAGON_SOUL_EQUIP_SLOT_START = EQUIPMENT_RESERVED_START + EQUIPMENT_RESERVED_COUNT,
 	DRAGON_SOUL_EQUIP_SLOT_END = DRAGON_SOUL_EQUIP_SLOT_START + (DS_SLOT_MAX * DRAGON_SOUL_DECK_MAX_NUM),
-	DRAGON_SOUL_EQUIP_RESERVED_SLOT_END = DRAGON_SOUL_EQUIP_SLOT_END + (DS_SLOT_MAX * DRAGON_SOUL_DECK_RESERVED_MAX_NUM),
+
+	// Reserved for a future 3rd dragon soul deck (already-intentional headroom, now named).
+	DRAGON_SOUL_EQUIP_RESERVED_SLOT_START = DRAGON_SOUL_EQUIP_SLOT_END,
+	DRAGON_SOUL_EQUIP_RESERVED_SLOT_END = DRAGON_SOUL_EQUIP_RESERVED_SLOT_START + (DS_SLOT_MAX * DRAGON_SOUL_DECK_RESERVED_MAX_NUM),
 
 	BELT_INVENTORY_SLOT_START = DRAGON_SOUL_EQUIP_RESERVED_SLOT_END,
 	BELT_INVENTORY_SLOT_END = BELT_INVENTORY_SLOT_START + BELT_INVENTORY_SLOT_COUNT,
 
+	// Reserved for a future larger belt grid.
+	BELT_INVENTORY_RESERVED_START = BELT_INVENTORY_SLOT_END,
+	BELT_INVENTORY_RESERVED_COUNT = BELT_INVENTORY_SLOT_COUNT,
+
 	// WJ_SPLIT_INVENTORY_SYSTEM: dedicated tabs for skill books / development items / stones / chests,
-	// laid out as 4 contiguous sub-ranges of the INVENTORY window, right after the belt slots.
+	// laid out as 4 contiguous sub-ranges of the INVENTORY window. Each (except the last, Sandik)
+	// has its own named reserved block right after it - grow into that first instead of shifting
+	// every category that follows.
 	SKILL_BOOK_INVENTORY_SLOT_COUNT = 135,
-	SKILL_BOOK_INVENTORY_SLOT_START = BELT_INVENTORY_SLOT_END,
+	SKILL_BOOK_INVENTORY_SLOT_START = BELT_INVENTORY_RESERVED_START + BELT_INVENTORY_RESERVED_COUNT,
 	SKILL_BOOK_INVENTORY_SLOT_END = SKILL_BOOK_INVENTORY_SLOT_START + SKILL_BOOK_INVENTORY_SLOT_COUNT,
+	SKILL_BOOK_INVENTORY_RESERVED_START = SKILL_BOOK_INVENTORY_SLOT_END,
+	SKILL_BOOK_INVENTORY_RESERVED_COUNT = 45,
 
 	UPGRADE_ITEMS_INVENTORY_SLOT_COUNT = 135,
-	UPGRADE_ITEMS_INVENTORY_SLOT_START = SKILL_BOOK_INVENTORY_SLOT_END,
+	UPGRADE_ITEMS_INVENTORY_SLOT_START = SKILL_BOOK_INVENTORY_RESERVED_START + SKILL_BOOK_INVENTORY_RESERVED_COUNT,
 	UPGRADE_ITEMS_INVENTORY_SLOT_END = UPGRADE_ITEMS_INVENTORY_SLOT_START + UPGRADE_ITEMS_INVENTORY_SLOT_COUNT,
+	UPGRADE_ITEMS_INVENTORY_RESERVED_START = UPGRADE_ITEMS_INVENTORY_SLOT_END,
+	UPGRADE_ITEMS_INVENTORY_RESERVED_COUNT = 45,
 
 	STONE_INVENTORY_SLOT_COUNT = 135,
-	STONE_INVENTORY_SLOT_START = UPGRADE_ITEMS_INVENTORY_SLOT_END,
+	STONE_INVENTORY_SLOT_START = UPGRADE_ITEMS_INVENTORY_RESERVED_START + UPGRADE_ITEMS_INVENTORY_RESERVED_COUNT,
 	STONE_INVENTORY_SLOT_END = STONE_INVENTORY_SLOT_START + STONE_INVENTORY_SLOT_COUNT,
+	STONE_INVENTORY_RESERVED_START = STONE_INVENTORY_SLOT_END,
+	STONE_INVENTORY_RESERVED_COUNT = 45,
 
 	SANDIK_INVENTORY_SLOT_COUNT = 135,
-	SANDIK_INVENTORY_SLOT_START = STONE_INVENTORY_SLOT_END,
+	SANDIK_INVENTORY_SLOT_START = STONE_INVENTORY_RESERVED_START + STONE_INVENTORY_RESERVED_COUNT,
 	SANDIK_INVENTORY_SLOT_END = SANDIK_INVENTORY_SLOT_START + SANDIK_INVENTORY_SLOT_COUNT,
+	// Sandik is last - it can grow freely without a reserve, nothing else follows it.
 
 	INVENTORY_AND_EQUIP_SLOT_MAX = SANDIK_INVENTORY_SLOT_END,
 };
@@ -752,7 +779,7 @@ typedef struct SItemPos
 
 	bool IsEquipPosition() const
 	{
-		return ((INVENTORY == window_type || EQUIPMENT == window_type) && cell >= INVENTORY_MAX_NUM && cell < INVENTORY_MAX_NUM + WEAR_MAX_NUM)
+		return ((INVENTORY == window_type || EQUIPMENT == window_type) && cell >= EQUIPMENT_SLOT_START && cell < EQUIPMENT_SLOT_END)
 			|| IsDragonSoulEquipPosition();
 	}
 

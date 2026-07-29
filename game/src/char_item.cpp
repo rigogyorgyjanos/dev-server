@@ -580,8 +580,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 
 LPITEM CHARACTER::GetWear(BYTE bCell) const
 {
-	// > WEAR_MAX_NUM : 용혼석 슬롯들.
-	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
+	// > EQUIPMENT_SLOT_COUNT : 용혼석 슬롯들.
+	if (bCell >= EQUIPMENT_SLOT_COUNT + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::GetWear: invalid wear cell %d", bCell);
 		return NULL;
@@ -592,8 +592,8 @@ LPITEM CHARACTER::GetWear(BYTE bCell) const
 
 void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 {
-	// > WEAR_MAX_NUM : 용혼석 슬롯들.
-	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
+	// > EQUIPMENT_SLOT_COUNT : 용혼석 슬롯들.
+	if (bCell >= EQUIPMENT_SLOT_COUNT + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::SetItem: invalid item cell %d", bCell);
 		return;
@@ -6530,7 +6530,7 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 
 	// 올바른 Cell 인지 검사
 	// 용혼석은 Swap할 수 없으므로, 여기서 걸림.
-	//if (bCell >= INVENTORY_MAX_NUM + WEAR_MAX_NUM || bDestCell >= INVENTORY_MAX_NUM + WEAR_MAX_NUM)
+	//if (bCell >= DRAGON_SOUL_EQUIP_SLOT_START || bDestCell >= DRAGON_SOUL_EQUIP_SLOT_START)
 	if (srcCell.IsDragonSoulEquipPosition() || destCell.IsDragonSoulEquipPosition())
 		return false;
 
@@ -8157,6 +8157,7 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 
 	case INVENTORY:
 	case EQUIPMENT:
+	case BELT_INVENTORY:
 		return cell < (INVENTORY_AND_EQUIP_SLOT_MAX);
 
 	case DRAGON_SOUL_INVENTORY:

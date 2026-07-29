@@ -1492,7 +1492,7 @@ namespace quest
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 		int cell = (int) lua_tonumber(L, 1);
-		if (cell < 0 || cell >= WEAR_MAX_NUM)
+		if (cell < 0 || cell >= EQUIPMENT_SLOT_COUNT)
 		{
 			sys_err("invalid wear position %d", cell);
 			lua_pushnumber(L, 0);
@@ -2377,7 +2377,7 @@ teleport_area:
 
 		// 용혼석 슬롯은 할 필요 없을 듯.
 		// 이 함수는 탈석서용 함수인 듯 하다.
-		for ( int i=0; i < INVENTORY_MAX_NUM + WEAR_MAX_NUM; i++ )
+		for ( int i=0; i < EQUIPMENT_SLOT_END; i++ )
 		{
 			LPITEM pItem = pChar->GetInventoryItem(i);
 

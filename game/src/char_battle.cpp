@@ -1044,7 +1044,7 @@ void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 	{
 		std::vector<BYTE> vec_bSlots;
 
-		for (i = 0; i < WEAR_MAX_NUM; ++i)
+		for (i = 0; i < EQUIPMENT_SLOT_COUNT; ++i)
 			if (GetWear(i))
 				vec_bSlots.push_back(i);
 

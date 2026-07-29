@@ -1083,8 +1083,8 @@ bool DSManager::ActivateDragonSoul(LPITEM pItem)
 	if (deck_idx < 0)
 		return false;
 	
-	if (INVENTORY_MAX_NUM + WEAR_MAX_NUM + DS_SLOT_MAX * deck_idx <= pItem->GetCell() &&
-			pItem->GetCell() < INVENTORY_MAX_NUM + WEAR_MAX_NUM + DS_SLOT_MAX * (deck_idx + 1))
+	if (DRAGON_SOUL_EQUIP_SLOT_START + DS_SLOT_MAX * deck_idx <= pItem->GetCell() &&
+			pItem->GetCell() < DRAGON_SOUL_EQUIP_SLOT_START + DS_SLOT_MAX * (deck_idx + 1))
 	{
 		if (IsTimeLeftDragonSoul(pItem) && !IsActiveDragonSoul(pItem))
 		{
@@ -1132,7 +1132,7 @@ void DSManager::RefreshDragonSoulState(LPCHARACTER ch)
 {
 	if (NULL == ch)
 		return ;
-	for (int i = WEAR_MAX_NUM; i < WEAR_MAX_NUM + DS_SLOT_MAX * DRAGON_SOUL_DECK_MAX_NUM; i++)
+	for (int i = EQUIPMENT_SLOT_COUNT; i < EQUIPMENT_SLOT_COUNT + DS_SLOT_MAX * DRAGON_SOUL_DECK_MAX_NUM; i++)
 	{
 		LPITEM pItem = ch->GetWear(i);
 		if (pItem != NULL)

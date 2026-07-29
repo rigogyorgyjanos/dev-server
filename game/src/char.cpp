@@ -2177,7 +2177,7 @@ void CHARACTER::ComputeBattlePoints()
 
 		LPITEM pkItem;
 
-		for (int i = 0; i < WEAR_MAX_NUM; ++i)
+		for (int i = 0; i < EQUIPMENT_SLOT_COUNT; ++i)
 			if ((pkItem = GetWear(i)) && pkItem->GetType() == ITEM_ARMOR)
 			{
 				if (pkItem->GetSubType() == ARMOR_BODY || pkItem->GetSubType() == ARMOR_HEAD || pkItem->GetSubType() == ARMOR_FOOTS || pkItem->GetSubType() == ARMOR_SHIELD)
@@ -2369,7 +2369,7 @@ void CHARACTER::ComputePoints()
 
 	m_pointsInstant.dwImmuneFlag = 0;
 
-	for (int i = 0 ; i < WEAR_MAX_NUM; i++) 
+	for (int i = 0 ; i < EQUIPMENT_SLOT_COUNT; i++)
 	{
 		LPITEM pItem = GetWear(i);
 		if (pItem)
@@ -2385,8 +2385,8 @@ void CHARACTER::ComputePoints()
 	// 용혼석 시스템도 ActiveDeck에 있는 모든 용혼석의 속성값을 다시 적용시켜야 한다.
 	if (DragonSoul_IsDeckActivated())
 	{
-		for (int i = WEAR_MAX_NUM + DS_SLOT_MAX * DragonSoul_GetActiveDeck(); 
-			i < WEAR_MAX_NUM + DS_SLOT_MAX * (DragonSoul_GetActiveDeck() + 1); i++)	
+		for (int i = EQUIPMENT_SLOT_COUNT + DS_SLOT_MAX * DragonSoul_GetActiveDeck();
+			i < EQUIPMENT_SLOT_COUNT + DS_SLOT_MAX * (DragonSoul_GetActiveDeck() + 1); i++)
 		{
 			LPITEM pItem = GetWear(i);
 			if (pItem)
@@ -6450,7 +6450,7 @@ void CHARACTER::SendEquipment(LPCHARACTER ch)
 	TPacketViewEquip p;
 	p.header = HEADER_GC_VIEW_EQUIP;
 	p.vid    = GetVID();
-	for (int i = 0; i<WEAR_MAX_NUM; i++)
+	for (int i = 0; i<EQUIPMENT_SLOT_COUNT; i++)
 	{
 		LPITEM item = GetWear(i);
 		if (item)

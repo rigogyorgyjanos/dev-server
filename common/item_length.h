@@ -333,6 +333,13 @@ enum EItemWearableFlag
 	WEARABLE_COSTUME_BODY	= (1 << 12),
 };
 
+// Single source of truth for the "equipment" (worn-item) slot layout. This enum's ordinal
+// values ARE the 0-based offsets from EQUIPMENT_SLOT_START (see length.h EMisc2) - i.e.
+// WEAR_BODY is cell (EQUIPMENT_SLOT_START + 0), WEAR_RING1 is (EQUIPMENT_SLOT_START + 11), etc.
+// WEAR_POSITION_COUNT is auto-computed from this list - it IS EQUIPMENT_SLOT_COUNT (length.h).
+// To add a new equip/costume slot: insert it here (before WEAR_POSITION_COUNT) and take the
+// room from EQUIPMENT_RESERVED_COUNT (length.h) rather than growing this list unboundedly -
+// growing it shifts every range after Equipment (Dragon Soul, belt, the 4 custom tabs) again.
 enum EWearPositions
 {
 	WEAR_BODY,		// 0
@@ -346,27 +353,31 @@ enum EWearPositions
 	WEAR_UNIQUE2,	// 8
 	WEAR_ARROW,		// 9
 	WEAR_SHIELD,	// 10
-    WEAR_ABILITY1,  // 11
-    WEAR_ABILITY2,  // 12
-    WEAR_ABILITY3,  // 13
-    WEAR_ABILITY4,  // 14
-    WEAR_ABILITY5,  // 15
-    WEAR_ABILITY6,  // 16
-    WEAR_ABILITY7,  // 17
-    WEAR_ABILITY8,  // 18
-	WEAR_COSTUME_BODY,	// 19
-	WEAR_COSTUME_HAIR,	// 20
+
+	WEAR_RING1,		// 11 : gyuru 1
+	WEAR_RING2,		// 12 : gyuru 2
+	WEAR_BELT,		// 13 : ov
+
+	WEAR_COSTUME_BODY,		// 14
+	WEAR_COSTUME_HAIR,		// 15
 #if defined(__WEAPON_COSTUME_SYSTEM__)
-	WEAR_COSTUME_WEAPON,
+	WEAR_COSTUME_WEAPON,	// 16
 #endif
-	WEAR_COSTUME_MOUNT,
-	
-	WEAR_RING1,			// 21	: �ű� ��������1 (����)
-	WEAR_RING2,			// 22	: �ű� ��������2 (������)
+	WEAR_COSTUME_MOUNT,		// last costume slot
 
-	WEAR_BELT,			// 23	: �ű� ��Ʈ����
+	// Hidden slots used by CItem::GetWearFlagPosition() for WEARABLE_ABILITY items (item.cpp) -
+	// collection-quest items that permanently attach once worn, never shown in the normal
+	// equip UI. Real, in-use slots - do not remove.
+	WEAR_ABILITY1,
+	WEAR_ABILITY2,
+	WEAR_ABILITY3,
+	WEAR_ABILITY4,
+	WEAR_ABILITY5,
+	WEAR_ABILITY6,
+	WEAR_ABILITY7,
+	WEAR_ABILITY8,
 
-	WEAR_MAX = 32	// 
+	WEAR_POSITION_COUNT		// = EQUIPMENT_SLOT_COUNT (length.h)
 };
 
 enum ELimitTypes

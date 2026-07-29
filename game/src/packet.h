@@ -2219,7 +2219,7 @@ typedef struct pakcet_view_equip
 		WORD	count;
 		long	alSockets[ITEM_SOCKET_MAX_NUM];
 		TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
-	} equips[WEAR_MAX_NUM];
+	} equips[EQUIPMENT_SLOT_COUNT];
 } TPacketViewEquip;
 
 typedef struct 

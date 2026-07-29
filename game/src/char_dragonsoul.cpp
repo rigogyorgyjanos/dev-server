@@ -15,7 +15,7 @@
 // affect가 가장 마지막에 로드되어 LoadAffect에서 호출함.
 void CHARACTER::DragonSoul_Initialize()
 {
-	for (int i = INVENTORY_MAX_NUM + WEAR_MAX_NUM; i < DRAGON_SOUL_EQUIP_SLOT_END; i++)
+	for (int i = DRAGON_SOUL_EQUIP_SLOT_START; i < DRAGON_SOUL_EQUIP_SLOT_END; i++)
 	{
 		LPITEM pItem = GetItem(TItemPos(INVENTORY, i));
 		if (NULL != pItem)

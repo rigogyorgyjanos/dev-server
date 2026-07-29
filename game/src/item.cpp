@@ -508,8 +508,8 @@ int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 	if ((0 == GetWearFlag() || ITEM_TOTEM == GetType()) && ITEM_COSTUME != GetType() && ITEM_DS != GetType() && ITEM_SPECIAL_DS != GetType() && ITEM_RING != GetType() && ITEM_BELT != GetType())
 		return -1;
 
-	// 용혼석 슬롯을 WEAR로 처리할 수가 없어서(WEAR는 최대 32개까지 가능한데 용혼석을 추가하면 32가 넘는다.)
-	// 인벤토리의 특정 위치((INVENTORY_MAX_NUM + WEAR_MAX_NUM)부터 (INVENTORY_MAX_NUM + WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX - 1)까지)를
+	// 용혼석 슬롯을 WEAR로 처리할 수가 없어서(WEAR는 최대 EQUIPMENT_SLOT_COUNT개까지 가능한데 용혼석을 추가하면 넘는다.)
+	// 인벤토리의 특정 위치((INVENTORY_MAX_NUM + EQUIPMENT_SLOT_COUNT)부터 (INVENTORY_MAX_NUM + EQUIPMENT_SLOT_COUNT + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX - 1)까지)를
 	// 용혼석 슬롯으로 정함.
 	// return 할 때에, INVENTORY_MAX_NUM을 뺀 이유는,
 	// 본래 WearCell이 INVENTORY_MAX_NUM를 빼고 return 하기 때문.
@@ -517,13 +517,13 @@ int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 	{
 		if (iCandidateCell < 0)
 		{
-			return WEAR_MAX_NUM + GetSubType();
+			return EQUIPMENT_SLOT_COUNT + GetSubType();
 		}
 		else
 		{
 			for (int i = 0; i < DRAGON_SOUL_DECK_MAX_NUM; i++)
 			{
-				if (WEAR_MAX_NUM + i * DS_SLOT_MAX + GetSubType() == iCandidateCell)
+				if (EQUIPMENT_SLOT_COUNT + i * DS_SLOT_MAX + GetSubType() == iCandidateCell)
 				{
 					return iCandidateCell;
 				}
@@ -878,18 +878,18 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 		return false;
 	}
 
-	// 용혼석 슬롯 index는 WEAR_MAX_NUM 보다 ŭ.
+	// 용혼석 슬롯 index는 EQUIPMENT_SLOT_COUNT 보다 큼.
 	if (IsDragonSoul())
 	{
-		if (bWearCell < WEAR_MAX_NUM || bWearCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
+		if (bWearCell < EQUIPMENT_SLOT_COUNT || bWearCell >= EQUIPMENT_SLOT_COUNT + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 		{
-			sys_err("EquipTo: invalid dragon soul cell (this: #%d %s wearflag: %d cell: %d)", GetOriginalVnum(), GetName(), GetSubType(), bWearCell - WEAR_MAX_NUM);
+			sys_err("EquipTo: invalid dragon soul cell (this: #%d %s wearflag: %d cell: %d)", GetOriginalVnum(), GetName(), GetSubType(), bWearCell - EQUIPMENT_SLOT_COUNT);
 			return false;
 		}
 	}
 	else
 	{
-		if (bWearCell >= WEAR_MAX_NUM)
+		if (bWearCell >= EQUIPMENT_SLOT_COUNT)
 		{
 			sys_err("EquipTo: invalid wear cell (this: #%d %s wearflag: %d cell: %d)", GetOriginalVnum(), GetName(), GetWearFlag(), bWearCell);
 			return false;
@@ -914,7 +914,7 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 	// Original immun
 	// DWORD dwImmuneFlag = 0;
 
-	// for (int i = 0; i < WEAR_MAX_NUM; ++i)
+	// for (int i = 0; i < EQUIPMENT_SLOT_COUNT; ++i)
 		// if (m_pOwner->GetWear(i))
 			// SET_BIT(dwImmuneFlag, m_pOwner->GetWear(i)->m_pProto->dwImmuneFlag);
 
@@ -924,7 +924,7 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 	DWORD dwImmuneFlag = 0;
 	LPITEM item = NULL;
 	 
-	for (int i = 0; i < WEAR_MAX_NUM; ++i)
+	for (int i = 0; i < EQUIPMENT_SLOT_COUNT; ++i)
 	{
 		if (item=m_pOwner->GetWear(i))
 		{
@@ -1019,7 +1019,7 @@ bool CItem::Unequip()
 	// Original immun
 	// DWORD dwImmuneFlag = 0;
 
-	// for (int i = 0; i < WEAR_MAX_NUM; ++i)
+	// for (int i = 0; i < EQUIPMENT_SLOT_COUNT; ++i)
 		// if (m_pOwner->GetWear(i))
 			// SET_BIT(dwImmuneFlag, m_pOwner->GetWear(i)->m_pProto->dwImmuneFlag);
 
@@ -1029,7 +1029,7 @@ bool CItem::Unequip()
 	DWORD dwImmuneFlag = 0;
 	LPITEM item = NULL;
 	 
-	for (int i = 0; i < WEAR_MAX_NUM; ++i)
+	for (int i = 0; i < EQUIPMENT_SLOT_COUNT; ++i)
 	{
 		if (item=m_pOwner->GetWear(i))
 		{
