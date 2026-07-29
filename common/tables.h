@@ -1538,5 +1538,53 @@ enum
 };
 #endif
 
+#ifdef ENABLE_SWITCHBOT
+enum
+{
+	SWITCHBOT_ATTR_SLOT_COUNT = 5,	// mirrors ITEM_MANAGER::MAX_NORM_ATTR_NUM; kept separate to avoid redefining that name here
+};
+
+struct TSwitchbotAttributeAlternativeTable
+{
+	TPlayerItemAttribute attributes[SWITCHBOT_ATTR_SLOT_COUNT];
+
+	bool IsConfigured() const
+	{
+		for (int i = 0; i < SWITCHBOT_ATTR_SLOT_COUNT; ++i)
+		{
+			if (attributes[i].bType && attributes[i].sValue)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+};
+
+struct TSwitchbotTable
+{
+	DWORD player_id;
+	bool active[SWITCHBOT_SLOT_COUNT];
+	bool finished[SWITCHBOT_SLOT_COUNT];
+	DWORD items[SWITCHBOT_SLOT_COUNT];
+	TSwitchbotAttributeAlternativeTable alternatives[SWITCHBOT_SLOT_COUNT][SWITCHBOT_ALTERNATIVE_COUNT];
+
+	TSwitchbotTable() : player_id(0)
+	{
+		memset(&items, 0, sizeof(items));
+		memset(&alternatives, 0, sizeof(alternatives));
+		memset(&active, false, sizeof(active));
+		memset(&finished, false, sizeof(finished));
+	}
+};
+
+struct TSwitchbottAttributeTable
+{
+	BYTE attribute_set;
+	int apply_num;
+	long max_value;
+};
+#endif
 
 #pragma pack()

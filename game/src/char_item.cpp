@@ -47,6 +47,9 @@
 #include "DragonSoul.h"
 #include "buff_on_attributes.h"
 #include "belt_inventory_helper.h"
+#ifdef ENABLE_SWITCHBOT
+#include "switchbot.h"
+#endif
 
 const int ITEM_BROKEN_METIN_VNUM = 28960;
 
@@ -253,6 +256,16 @@ LPITEM CHARACTER::GetItem(TItemPos Cell) const
 			return NULL;
 		}
 		return m_pointsInstant.pDSItems[wCell];
+
+#ifdef ENABLE_SWITCHBOT
+	case SWITCHBOT:
+		if (wCell >= SWITCHBOT_SLOT_COUNT)
+		{
+			sys_err("CHARACTER::GetInventoryItem: invalid switchbot item cell %d", wCell);
+			return NULL;
+		}
+		return m_pointsInstant.pSwitchbotItems[wCell];
+#endif
 
 	default:
 		return NULL;
@@ -463,6 +476,34 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 			m_pointsInstant.pDSItems[wCell] = pItem;
 		}
 		break;
+#ifdef ENABLE_SWITCHBOT
+	case SWITCHBOT:
+		{
+			if (wCell >= SWITCHBOT_SLOT_COUNT)
+			{
+				sys_err("CHARACTER::SetItem: invalid switchbot item cell %d", wCell);
+				return;
+			}
+
+			LPITEM pOld = m_pointsInstant.pSwitchbotItems[wCell];
+			if (pItem && pOld)
+			{
+				return;
+			}
+
+			if (pItem)
+			{
+				CSwitchbotManager::Instance().RegisterItem(GetPlayerID(), pItem->GetID(), wCell);
+			}
+			else
+			{
+				CSwitchbotManager::Instance().UnregisterItem(GetPlayerID(), wCell);
+			}
+
+			m_pointsInstant.pSwitchbotItems[wCell] = pItem;
+		}
+		break;
+#endif
 	default:
 		sys_err ("Invalid Inventory type %d", window_type);
 		return;
@@ -528,6 +569,11 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		case DRAGON_SOUL_INVENTORY:
 			pItem->SetWindow(DRAGON_SOUL_INVENTORY);
 			break;
+#ifdef ENABLE_SWITCHBOT
+		case SWITCHBOT:
+			pItem->SetWindow(SWITCHBOT);
+			break;
+#endif
 		}
 	}
 }
@@ -604,6 +650,19 @@ void CHARACTER::ClearItem()
 			M2_DESTROY_ITEM(item);
 		}
 	}
+#ifdef ENABLE_SWITCHBOT
+	for (i = 0; i < SWITCHBOT_SLOT_COUNT; ++i)
+	{
+		if ((item = GetItem(TItemPos(SWITCHBOT, i))))
+		{
+			item->SetSkipSave(true);
+			ITEM_MANAGER::instance().FlushDelayedSave(item);
+
+			item->RemoveFromCharacter();
+			M2_DESTROY_ITEM(item);
+		}
+	}
+#endif
 }
 
 bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) const
@@ -826,7 +885,26 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 				return true;
 			}
 		}
+#ifdef ENABLE_SWITCHBOT
+	case SWITCHBOT:
+		{
+			WORD wCell = Cell.cell;
+			if (wCell >= SWITCHBOT_SLOT_COUNT)
+			{
+				return false;
+			}
+
+			if (m_pointsInstant.pSwitchbotItems[wCell])
+			{
+				return false;
+			}
+
+			return true;
+		}
+#endif
 	}
+
+	return false;
 }
 
 int CHARACTER::GetEmptyInventory(BYTE size) const
@@ -5415,6 +5493,45 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 	if (item->IsExchanging())
 		return false;
 
+#ifdef ENABLE_SWITCHBOT
+	if (Cell.IsSwitchbotPosition())
+	{
+		CSwitchbot* pkSwitchbot = CSwitchbotManager::Instance().FindSwitchbot(GetPlayerID());
+		if (pkSwitchbot && pkSwitchbot->IsActive(Cell.cell))
+		{
+			return false;
+		}
+
+		int iEmptyCell = GetEmptyInventory(item->GetSize());
+
+		if (iEmptyCell == -1)
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot remove item from switchbot. Inventory is full."));
+			return false;
+		}
+
+		MoveItem(Cell, TItemPos(INVENTORY, iEmptyCell), item->GetCount());
+		return true;
+	}
+	else
+	{
+		if (item->GetSubType() != USE_CHANGE_ATTRIBUTE)
+		{
+			if (thecore_pulse() > use_item_anti_flood_pulse() + PASSES_PER_SEC(1))
+			{
+				set_use_item_anti_flood_count(0);
+				set_use_item_anti_flood_pulse(thecore_pulse());
+			}
+
+			if (increase_use_item_anti_flood_count() >= 10)
+			{
+				GetDesc()->DelayedDisconnect(0);
+				return false;
+			}
+		}
+	}
+#endif
+
 	if (!item->CanUsedBy(this))
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군직이 맞지않아 이 아이템을 사용할 수 없습니다."));
@@ -5836,9 +5953,35 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, WORD count)
 
 	if (DestCell.IsBeltInventoryPosition() && false == CBeltInventoryHelper::CanMoveIntoBeltInventory(item))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 아이템은 벨트 인벤토리로 옮길 수 없습니다."));			
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 아이템은 벨트 인벤토리로 옮길 수 없습니다."));
 		return false;
 	}
+
+#ifdef ENABLE_SWITCHBOT
+	if (Cell.IsSwitchbotPosition() && CSwitchbotManager::Instance().IsActive(GetPlayerID(), Cell.cell))
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot move active switchbot item."));
+		return false;
+	}
+
+	if (DestCell.IsSwitchbotPosition() && !SwitchbotHelper::IsValidItem(item))
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Invalid item type for switchbot."));
+		return false;
+	}
+
+	if (Cell.IsSwitchbotPosition() && DestCell.IsEquipPosition())
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot equip items directly from switchbot."));
+		return false;
+	}
+
+	if (DestCell.IsSwitchbotPosition() && Cell.IsEquipPosition())
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot move equipped items to switchbot."));
+		return false;
+	}
+#endif
 
 	if (Cell.IsEquipPosition())
 	{
@@ -5913,6 +6056,13 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, WORD count)
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 물건은 상자 보관함에 넣을 수 없습니다."));
 			return false;
 		}
+#ifdef ENABLE_SWITCHBOT
+		else if (DestCell.IsSwitchbotPosition() && !SwitchbotHelper::IsValidItem(item))
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Invalid item type for switchbot."));
+			return false;
+		}
+#endif
 
 		LPITEM item2;
 
@@ -8011,6 +8161,11 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 
 	case DRAGON_SOUL_INVENTORY:
 		return cell < (DRAGON_SOUL_INVENTORY_MAX_NUM);
+
+#ifdef ENABLE_SWITCHBOT
+	case SWITCHBOT:
+		return cell < SWITCHBOT_SLOT_COUNT;
+#endif
 
 	case SAFEBOX:
 		if (NULL != m_pkSafebox)

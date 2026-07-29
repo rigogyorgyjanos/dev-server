@@ -8,6 +8,9 @@
 #ifdef __FARM_SESSION_SYSTEM__
 #include "FarmSessionManager.h"
 #endif
+#ifdef ENABLE_SWITCHBOT
+#include "switchbot.h"
+#endif
 #include "guild.h"
 #include "guild_manager.h"
 #include "party.h"
@@ -450,6 +453,19 @@ void CInputP2P::IamAwake(LPDESC d, const char * c_pData)
 	sys_log(0, "P2P Awakeness check from %s. My P2P connection number is %d. and details...\n%s", d->GetHostName(), P2P_MANAGER::instance().GetDescCount(), hostNames.c_str());
 }
 
+#ifdef ENABLE_SWITCHBOT
+void CInputP2P::Switchbot(LPDESC d, const char* c_pData)
+{
+	const TPacketGGSwitchbot* p = reinterpret_cast<const TPacketGGSwitchbot*>(c_pData);
+	if (p->wPort != mother_port)
+	{
+		return;
+	}
+
+	CSwitchbotManager::Instance().P2PReceiveSwitchbot(p->table);
+}
+#endif
+
 int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 {
 	if (test_server)
@@ -586,6 +602,12 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_GG_CHECK_AWAKENESS:
 			IamAwake(d, c_pData);
 			break;
+
+#ifdef ENABLE_SWITCHBOT
+		case HEADER_GG_SWITCHBOT:
+			Switchbot(d, c_pData);
+			break;
+#endif
 	}
 
 	return (iExtraLen);

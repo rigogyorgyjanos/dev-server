@@ -61,6 +61,9 @@
 #include "PetSystem.h"
 #endif
 #include "DragonSoul.h"
+#ifdef ENABLE_SWITCHBOT
+#include "switchbot.h"
+#endif
 #ifdef __SEND_TARGET_INFO__
 #include <algorithm>
 #include <iterator>
@@ -149,7 +152,12 @@ void CHARACTER::Initialize()
 
 	CountDrops    = 0;
 	LastDropTime  = 0;
-	
+
+#ifdef ENABLE_SWITCHBOT
+	use_item_anti_flood_count_ = 0;
+	use_item_anti_flood_pulse_ = 0;
+#endif
+
 	m_iLastPMPulse = 0;
 	m_iPMCounter = 0;
 
@@ -5439,7 +5447,16 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 #ifdef __FARM_SESSION_SYSTEM__
 	CFarmSessionManager::instance().TransferOut(this, p.lAddr, p.wPort);
 #endif
-	
+
+#ifdef ENABLE_SWITCHBOT
+	CSwitchbotManager::Instance().SetIsWarping(GetPlayerID(), true);
+
+	if (p.wPort != mother_port)
+	{
+		CSwitchbotManager::Instance().P2PSendSwitchbot(GetPlayerID(), p.wPort);
+	}
+#endif
+
 #ifdef ENABLE_PROXY_IP
 	if (!g_stProxyIP.empty())
 		p.lAddr = inet_addr(g_stProxyIP.c_str());

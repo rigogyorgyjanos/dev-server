@@ -42,6 +42,9 @@
 #include "OXEvent.h"
 #include "locale_service.h"
 #include "DragonSoul.h"
+#ifdef ENABLE_SWITCHBOT
+#include "switchbot.h"
+#endif
 
 extern void SendShout(const char * szText, BYTE bEmpire);
 extern int g_nPortalLimitTime;
@@ -3410,6 +3413,15 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			}
 			break;
 #endif
+
+#ifdef ENABLE_SWITCHBOT
+		case HEADER_CG_SWITCHBOT:
+			if ((iExtraLen = Switchbot(ch, c_pData, m_iBufferLeft)) < 0)
+			{
+				return -1;
+			}
+			break;
+#endif
 	}
 	return (iExtraLen);
 }
@@ -3488,6 +3500,59 @@ void CInputMain::MoveChannel(LPCHARACTER ch, const char* c_pData)
 
 	TMoveChannel t{ bChannel, ch->GetMapIndex() };
 	db_clientdesc->DBPacket(HEADER_GD_MOVE_CHANNEL, ch->GetDesc()->GetHandle(), &t, sizeof(t));
+}
+#endif
+
+#ifdef ENABLE_SWITCHBOT
+int CInputMain::Switchbot(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const TPacketCGSwitchbot* p = reinterpret_cast<const TPacketCGSwitchbot*>(data);
+
+	if (uiBytes < sizeof(TPacketCGSwitchbot) || uiBytes < p->wSize)
+	{
+		return -1;
+	}
+
+	int iExtraLen = p->wSize - sizeof(TPacketCGSwitchbot);
+
+	if (iExtraLen < 0)
+	{
+		sys_err("CInputMain::Switchbot: invalid packet length (len %d size %u buffer %u)", iExtraLen, p->wSize, uiBytes);
+		return -1;
+	}
+
+	const char* c_pData = data + sizeof(TPacketCGSwitchbot);
+
+	switch (p->subheader)
+	{
+	case SUBHEADER_CG_SWITCHBOT_START:
+		{
+			size_t expectedLen = sizeof(TSwitchbotAttributeAlternativeTable) * SWITCHBOT_ALTERNATIVE_COUNT;
+			if ((size_t)iExtraLen < expectedLen)
+			{
+				return -1;
+			}
+
+			std::vector<TSwitchbotAttributeAlternativeTable> vec_alternatives;
+
+			for (BYTE alternative = 0; alternative < SWITCHBOT_ALTERNATIVE_COUNT; ++alternative)
+			{
+				const TSwitchbotAttributeAlternativeTable* pAttr = reinterpret_cast<const TSwitchbotAttributeAlternativeTable*>(c_pData);
+				c_pData += sizeof(TSwitchbotAttributeAlternativeTable);
+
+				vec_alternatives.emplace_back(*pAttr);
+			}
+
+			CSwitchbotManager::Instance().Start(ch->GetPlayerID(), p->slot, vec_alternatives);
+		}
+		break;
+
+	case SUBHEADER_CG_SWITCHBOT_STOP:
+		CSwitchbotManager::Instance().Stop(ch->GetPlayerID(), p->slot);
+		break;
+	}
+
+	return iExtraLen;
 }
 #endif
 

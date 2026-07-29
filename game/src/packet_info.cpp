@@ -231,6 +231,9 @@ CPacketInfoCG::CPacketInfoCG()
 #ifdef __FARM_SESSION_SYSTEM__
 	Set(HEADER_CG_FARM_SESSION_CONTROL, sizeof(TPacketCGFarmSessionControl), "FarmSessionControl", false);
 #endif
+#ifdef ENABLE_SWITCHBOT
+	Set(HEADER_CG_SWITCHBOT, sizeof(TPacketCGSwitchbot), "Switchbot", true);
+#endif
 #ifdef __SEND_TARGET_INFO__
 	Set(HEADER_CG_TARGET_INFO_LOAD, sizeof(TPacketCGTargetInfoLoad), "TargetInfoLoad", true);
 #endif
@@ -282,6 +285,9 @@ CPacketInfoGG::CPacketInfoGG()
 	Set(HEADER_GG_FARM_SESSION_STATE,	sizeof(TPacketGGFarmSessionState),	"FarmSessionState", false);
 	Set(HEADER_GG_FARM_SESSION_KILL_ENTRY,	sizeof(TPacketGGFarmSessionKillEntry),	"FarmSessionKillEntry", false);
 	Set(HEADER_GG_FARM_SESSION_ITEM_ENTRY,	sizeof(TPacketGGFarmSessionItemEntry),	"FarmSessionItemEntry", false);
+#endif
+#ifdef ENABLE_SWITCHBOT
+	Set(HEADER_GG_SWITCHBOT, sizeof(TPacketGGSwitchbot), "Switchbot", false);
 #endif
 }
 

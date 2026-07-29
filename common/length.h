@@ -421,6 +421,23 @@ enum EOnIdleEvents
 	ON_IDLE_MAX_NUM
 };
 
+#ifdef ENABLE_SWITCHBOT
+enum ESwitchbotValues
+{
+	SWITCHBOT_SLOT_COUNT = 5,
+	SWITCHBOT_ALTERNATIVE_COUNT = 2,
+	SWITCHBOT_ITEM_AMOUNT = 1,		// consumed once per 0.2s reroll attempt (always 1, from whichever vnum below is available)
+};
+
+// Any one of these vnums is accepted as the switching item; the first one the player has is consumed.
+const DWORD c_arSwitchbotItems[3] =
+{
+	39028,
+	71084,
+	76014,
+};
+#endif
+
 enum EWindows
 {
 	RESERVED_WINDOW,
@@ -430,6 +447,9 @@ enum EWindows
 	MALL,
 	DRAGON_SOUL_INVENTORY,
 	BELT_INVENTORY,
+#ifdef ENABLE_SWITCHBOT
+	SWITCHBOT,
+#endif
 	GROUND
 };
 
@@ -709,6 +729,10 @@ typedef struct SItemPos
 			return cell < INVENTORY_AND_EQUIP_SLOT_MAX;
 		case DRAGON_SOUL_INVENTORY:
 			return cell < (DRAGON_SOUL_INVENTORY_MAX_NUM);
+#ifdef ENABLE_SWITCHBOT
+		case SWITCHBOT:
+			return cell < SWITCHBOT_SLOT_COUNT;
+#endif
 		case SAFEBOX:
 		case MALL:
 			return false;
@@ -766,6 +790,13 @@ typedef struct SItemPos
 	{
 		return (SANDIK_INVENTORY_SLOT_START <= cell) && (SANDIK_INVENTORY_SLOT_END > cell);
 	}
+
+#ifdef ENABLE_SWITCHBOT
+	bool IsSwitchbotPosition() const
+	{
+		return SWITCHBOT == window_type && cell < SWITCHBOT_SLOT_COUNT;
+	}
+#endif
 
 	bool operator==(const struct SItemPos& rhs) const
 	{

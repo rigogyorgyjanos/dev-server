@@ -31,6 +31,9 @@
 #include "log.h"
 #include "horsename_manager.h"
 #include "MarkManager.h"
+#ifdef ENABLE_SWITCHBOT
+#include "switchbot.h"
+#endif
 
 static void _send_bonus_info(LPCHARACTER ch)
 {
@@ -788,6 +791,10 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	}
 #if defined(__BL_MOVE_CHANNEL__)
 	ch->ChatPacket(CHAT_TYPE_COMMAND, "server_info %d %ld", g_bChannel, ch->GetMapIndex());
+#endif
+
+#ifdef ENABLE_SWITCHBOT
+	CSwitchbotManager::Instance().EnterGame(ch);
 #endif
 }
 

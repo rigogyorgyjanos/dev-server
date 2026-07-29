@@ -1554,6 +1554,9 @@ void CInputDB::ItemLoad(LPDESC d, const char * c_pData)
 			{
 				case INVENTORY:
 				case DRAGON_SOUL_INVENTORY:
+#ifdef ENABLE_SWITCHBOT
+				case SWITCHBOT:
+#endif
 					item->AddToCharacter(ch, TItemPos(p->window, p->pos));
 					break;
 

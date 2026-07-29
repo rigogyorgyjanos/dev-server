@@ -403,6 +403,10 @@ typedef struct character_point_instant
 	LPITEM			pDSItems[DRAGON_SOUL_INVENTORY_MAX_NUM];
 	WORD			wDSItemGrid[DRAGON_SOUL_INVENTORY_MAX_NUM];
 
+#ifdef ENABLE_SWITCHBOT
+	LPITEM			pSwitchbotItems[SWITCHBOT_SLOT_COUNT];
+#endif
+
 	// by mhh
 	LPITEM			pCubeItems[CUBE_MAX_NUM];
 	LPCHARACTER		pCubeNpc;
@@ -2070,6 +2074,16 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		const timeval&	GetLastSyncTime() { return m_tvLastSyncTime; }
 		void			SetSyncHackCount(int iCount) { m_iSyncHackCount = iCount;}
 		int				GetSyncHackCount() { return m_iSyncHackCount; }
+#ifdef ENABLE_SWITCHBOT
+	private:
+		DWORD		use_item_anti_flood_count_;
+		int			use_item_anti_flood_pulse_;
+	public:
+		int			use_item_anti_flood_pulse() const { return use_item_anti_flood_pulse_; }
+		void		set_use_item_anti_flood_pulse(int pulse) { use_item_anti_flood_pulse_ = pulse; }
+		void		set_use_item_anti_flood_count(DWORD count) { use_item_anti_flood_count_ = count; }
+		DWORD		increase_use_item_anti_flood_count() { return ++use_item_anti_flood_count_; }
+#endif
 	public:
 		int					LastDropTime;
 		int					CountDrops;

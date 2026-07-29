@@ -38,5 +38,6 @@
 #define BL_SORT_LASTPLAYTIME			// Character-select sorted by last play time
 #define __BL_ENABLE_PICKUP_ITEM_EFFECT__	// Highlight the inventory slot a freshly picked-up item lands in
 #define __BL_HOT_RESTART__			// /hotrestart GM command: self-exec game+db onto the freshly built binary, no manual stop/start
+#define ENABLE_SWITCHBOT			// Switchbot: auto-reroll item attributes in 5 dedicated slots
 
 #endif

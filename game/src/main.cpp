@@ -62,6 +62,9 @@
 #include "skill_power.h"
 #include "SpeedServer.h"
 #include "DragonSoul.h"
+#ifdef ENABLE_SWITCHBOT
+#include "switchbot.h"
+#endif
 #include <boost/bind.hpp>
 #ifndef __WIN32__
 	#include "limit_time.h"
@@ -602,6 +605,10 @@ int main(int argc, char **argv)
 
 	CSpeedServerManager SSManager;
 	DSManager dsManager;
+
+#ifdef ENABLE_SWITCHBOT
+	CSwitchbotManager switchbot;
+#endif
 
 	if (!start(argc, argv)) {
 		CleanUpForEarlyExit();

@@ -115,6 +115,10 @@ enum
 	HEADER_CG_MOVE_CHANNEL = 229,
 #endif
 
+#ifdef ENABLE_SWITCHBOT
+	HEADER_CG_SWITCHBOT				= 171,
+#endif
+
 	HEADER_CG_CLIENT_VERSION			= 0xfd,
 	HEADER_CG_CLIENT_VERSION2			= 0xf1,
 
@@ -309,6 +313,10 @@ enum
 	HEADER_CG_FARM_SESSION_CONTROL		= 215,
 #endif
 
+#ifdef ENABLE_SWITCHBOT
+	HEADER_GC_SWITCHBOT				= 171,
+#endif
+
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -346,6 +354,10 @@ enum
 	HEADER_GG_FARM_SESSION_STATE		= 31,
 	HEADER_GG_FARM_SESSION_KILL_ENTRY	= 32,
 	HEADER_GG_FARM_SESSION_ITEM_ENTRY	= 33,
+#endif
+
+#ifdef ENABLE_SWITCHBOT
+	HEADER_GG_SWITCHBOT				= 34,
 #endif
 };
 
@@ -2534,5 +2546,59 @@ typedef struct SPacketGCStateCheck
 	unsigned long index;
 	unsigned char state;
 } TPacketGCStateCheck;
+
+#ifdef ENABLE_SWITCHBOT
+typedef struct packet_gg_switchbot
+{
+	BYTE	bHeader;
+	WORD	wPort;
+	TSwitchbotTable table;
+
+	packet_gg_switchbot() : bHeader(HEADER_GG_SWITCHBOT), wPort(0)
+	{
+		table = TSwitchbotTable();
+	}
+} TPacketGGSwitchbot;
+
+enum ECGSwitchbotSubheader
+{
+	SUBHEADER_CG_SWITCHBOT_START,
+	SUBHEADER_CG_SWITCHBOT_STOP,
+};
+
+typedef struct packet_cg_switchbot
+{
+	BYTE	header;
+	WORD	wSize;
+	BYTE	subheader;
+	BYTE	slot;
+} TPacketCGSwitchbot;
+
+enum EGCSwitchbotSubheader
+{
+	SUBHEADER_GC_SWITCHBOT_UPDATE,
+	SUBHEADER_GC_SWITCHBOT_UPDATE_ITEM,
+	SUBHEADER_GC_SWITCHBOT_SEND_ATTRIBUTE_INFORMATION,
+};
+
+typedef struct packet_gc_switchbot
+{
+	BYTE	header;
+	WORD	wSize;
+	BYTE	subheader;
+	BYTE	slot;
+} TPacketGCSwitchbot;
+
+// NOTE: vnum/count are DWORD, not BYTE - the upstream package used BYTE here,
+// which truncates any real item vnum/stack count above 255.
+typedef struct packet_gc_switchbot_update_item
+{
+	BYTE	slot;
+	DWORD	vnum;
+	DWORD	count;
+	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
+} TSwitchbotUpdateItem;
+#endif
 
 #pragma pack()
