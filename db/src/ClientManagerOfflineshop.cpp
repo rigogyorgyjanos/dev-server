@@ -32,7 +32,11 @@ bool CClientManager::InitializeOfflineShop()
 				str_to_number(offlineshop->mapindex, row[6]);
 				str_to_number(offlineshop->type, row[7]);
 				str_to_number(offlineshop->channel, row[8]);
-				str_to_number(offlineshop->slotflag, row[9]);
+				{
+					long long llSlotFlag = 0;
+					str_to_number(llSlotFlag, row[9]);
+					offlineshop->slotflag = (unsigned long long)llSlotFlag;
+				}
 				str_to_number(offlineshop->time, row[10]);
 
 				snprintf(szQuery, sizeof(szQuery), "SELECT shop_money FROM player.player WHERE id = %u", offlineshop->owner_id);
@@ -85,15 +89,20 @@ bool CClientManager::InitializeOfflineShop()
 				}
 
 
-				bool status = true;
-				// for (DWORD i = 0; i < OFFLINE_SHOP_HOST_ITEM_MAX_NUM; ++i)
-				// {
-				// 	if (offlineshop->items[i].vnum != 0 && offlineshop->items[i].status == 0)
-				// 	{
-				// 		status = true;
-				// 		break;
-				// 	}
-				// }
+				// A shop with zero still-available items is worthless (nothing left to
+				// sell, nothing left to reclaim) - drop it at boot instead of keeping an
+				// empty NPC around forever. This mirrors CloseOfflineShopForTimeReal()'s
+				// runtime rule (game-side), which already fully erases a shop once its
+				// last item is gone.
+				bool status = false;
+				for (DWORD i = 0; i < OFFLINE_SHOP_HOST_ITEM_MAX_NUM; ++i)
+				{
+					if (offlineshop->items[i].vnum != 0 && offlineshop->items[i].status == 0)
+					{
+						status = true;
+						break;
+					}
+				}
 
 				if (!status)
 				{
@@ -400,16 +409,38 @@ void CClientManager::BuyItem(TOfflineShopBuy* buyItem)
 		break;
 	}
 
-#ifdef AFTER_BUY_REMOVE_DIRECTLY
+	// Always fully remove the sold item, rather than just flagging status=1 and
+	// leaving the row (and the slot) in place - that used to be gated behind
+	// AFTER_BUY_REMOVE_DIRECTLY, which is never #define'd anywhere, so every sale
+	// took the never-finished "mark sold" path: the row stayed in the DB, and the
+	// item kept occupying its slot forever - visible in the shop but permanently
+	// unbuyable (status!=0 blocks a repeat purchase client-side), instead of the
+	// slot freeing up. The permanent sale record already lives in offline_shop_log
+	// (INSERT above) and offline_shop_sale_log (below), so deleting this row loses
+	// no history.
 	snprintf(szQuery, sizeof(szQuery), "DELETE FROM player.offline_shop_item WHERE id = %u", buyItem->item.id);
 	memset(&item, 0, sizeof(item));
-#else
-	snprintf(szQuery, sizeof(szQuery), "UPDATE player.offline_shop_item SET status = 1, buyername = '%s' WHERE id = %u and owner_id = %u", buyItem->customer_name, buyItem->item.id, buyItem->item.owner_id);
-	thecore_memcpy(&buyItem->item, &item, sizeof(buyItem->item));
-#endif
 	std::unique_ptr<SQLMsg> pMsg2(CDBManager::instance().DirectQuery(szQuery));
 	sys_log(0, "BuyItem %d -> buyer name %s vnum %d count %d pos %d price %lld ", buyItem->item.owner_id, buyItem->customer_name, buyItem->item.vnum, buyItem->item.count, buyItem->item.pos, buyItem->item.price);
 
+	// Append-only history feeding SendOfflineShopOnSetup's average-price seed
+	// (per-vnum, raw asking/paid price - not the after-fee amount above, since the
+	// figure shown to a seller pricing their own listing is "what buyers pay").
+	{
+		const long long unitPrice = buyItem->item.price / (buyItem->item.count ? buyItem->item.count : 1);
+		snprintf(szQuery, sizeof(szQuery), "INSERT INTO player.offline_shop_sale_log (vnum, price) VALUES (%u, %lld)", buyItem->item.vnum, unitPrice);
+		std::unique_ptr<SQLMsg> pMsg3(CDBManager::instance().DirectQuery(szQuery));
+	}
+
+	// buyItem->item must reach BuyItemReal() on every game core with its REAL vnum/
+	// count/price/attrs/sockets intact - that function uses this same struct both to
+	// clear the shop's displayed slot (via its own explicit memset of
+	// pkOfflineShop->m_data.items[pos], unrelated to this struct's contents) AND,
+	// separately, to actually deduct the buyer's gold and hand them the item
+	// (ch->PointChange / ch->AutoGiveItem / SetAttributes / SetSockets). Zeroing this
+	// struct here (an earlier, wrong attempt at "clearing the slot" from this end)
+	// silently broke gold deduction and item delivery: the buyer paid nothing and got
+	// nothing, even though the slot correctly emptied out.
 	shop_buy n;
 	n.subheader = BUY_ITEM;
 	thecore_memcpy(&n.buyItem, buyItem, sizeof(n.buyItem));
@@ -587,7 +618,11 @@ void CClientManager::ChangePrice(DWORD ownerID, WORD bPos, long long itemPrice)
 		return;
 
 	char szQuery[1024];
-	snprintf(szQuery, sizeof(szQuery), "UPDATE player.offline_shop_npc SET price = %lld WHERE id = %u", itemPrice, it->second->items[bPos].id);
+	// Price lives on the item row, not the shop/npc row - offline_shop_npc has no
+	// price/id columns at all, so this UPDATE previously matched nothing and every
+	// price change silently failed to persist (in-memory + cross-core state stayed
+	// correct via ForwardPacket below, but a server restart reverted every price).
+	snprintf(szQuery, sizeof(szQuery), "UPDATE player.offline_shop_item SET price = %lld WHERE id = %u", itemPrice, it->second->items[bPos].id);
 	std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery));
 
 	sys_log(0, "change price %u - pos: %u %lld -> %lld", ownerID, bPos, it->second->items[bPos].price, itemPrice);
@@ -632,7 +667,17 @@ void CClientManager::AddTime(DWORD ch)
 	if (it == m_Offlineshop.end())
 		return;
 
-	it->second->time = time(0) + SHOP_TIME_ADD_TIME;
+	// Add to whatever time is left instead of flatly resetting to "now + 1 day" - see
+	// the matching fix/comment in COfflineShopManager::ShopAddTimeReal (game-src) for
+	// why the old behavior always showed exactly 1 day left no matter how many times
+	// this was clicked.
+	int oldTime = (int)(it->second->time - time(0));
+	if (oldTime <= 0)
+		oldTime = 0;
+	int newRemaining = oldTime + SHOP_TIME_ADD_TIME;
+	if (newRemaining > SHOP_MAX_TIME)
+		newRemaining = SHOP_MAX_TIME;
+	it->second->time = time(0) + newRemaining;
 
 	char szQuery[1024];
 	snprintf(szQuery, sizeof(szQuery), "UPDATE player.offline_shop_npc SET time = %d WHERE owner_id = %u", it->second->time, it->second->owner_id);

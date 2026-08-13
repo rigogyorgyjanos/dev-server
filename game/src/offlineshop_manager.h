@@ -84,7 +84,9 @@ class COfflineShopManager : public singleton<COfflineShopManager>
 		void			CreateOfflineShop(TOfflineShop* offlineshop);
 		void			StopShopping(LPCHARACTER ch);
 		void			OpenOfflineShop(LPCHARACTER ch);
-		void			OpenOfflineShopWithVID(LPCHARACTER ch, DWORD vid);
+		// Despite the historical name, this takes the shop OWNER's player ID (the key used
+		// by FindOfflineShopPID/m_Map_pkOfflineShopByNPC), not the NPC's actual VID.
+		void			OpenOfflineShopWithVID(LPCHARACTER ch, DWORD ownerID);
 		bool			HasOfflineShop(LPCHARACTER ch);
 
 		void			AddItemShortcut(LPCHARACTER ch, TItemPos pos, long long itemPrice);
@@ -102,6 +104,8 @@ class COfflineShopManager : public singleton<COfflineShopManager>
 		void			AddItemReal(OFFLINE_SHOP_ITEM* item);
 		
 		void			OpenSlot(LPCHARACTER ch, BYTE bPos);
+		void			ExpandSlot(LPCHARACTER ch, BYTE bPos);
+		void			ToggleLock(LPCHARACTER ch);
 		void			OpenSlotReal(TOfflineShopOpenSlot* ch);
 
 		void			RemoveItem(LPCHARACTER ch, BYTE bPos, DWORD itemID, BYTE bTakeAll);

@@ -31,6 +31,15 @@
 #include "desc_client.h"
 #include "../../common/PulseManager.h"
 
+// Minimal guard against breaking out of the surrounding single-quoted SQL literal
+// (sign/title strings get interpolated directly into UPDATE/INSERT statements on the DB side).
+static bool getInjectText(const char* str)
+{
+	if (!str)
+		return false;
+	return strchr(str, '\'') != NULL || strchr(str, '"') != NULL || strchr(str, '\\') != NULL || strchr(str, ';') != NULL;
+}
+
 COfflineShopManager::COfflineShopManager(){}
 COfflineShopManager::~COfflineShopManager()
 {
@@ -126,6 +135,12 @@ void COfflineShopManager::CreateOfflineShop(TOfflineShop* offlineshop)
 	LPOFFLINESHOP pkOfflineShop = M2_NEW COfflineShop;
 	thecore_memcpy(&pkOfflineShop->m_data, offlineshop, sizeof(TOfflineShop));
 
+	// This runs on EVERY game core (the DB fans out CREATE_OFFLINESHOP to all
+	// connected cores unconditionally, see SendOfflineShopOnSetup/ForwardPacket
+	// on the db side) - the channel check below only decides whether THIS core
+	// also spawns the live, visible NPC mob. The search index insert further down
+	// is intentionally NOT gated by channel, so shop search is global by
+	// construction: every core ends up with every shop's items in m_itemMap.
 	LPCHARACTER npc = (g_bChannel == offlineshop->channel && !pkOfflineShop->IsClosed()) ? CHARACTER_MANAGER::instance().SpawnMob(offlineshop->type, offlineshop->mapindex, offlineshop->x, offlineshop->y, offlineshop->z, false, -1, false) : NULL;
 #ifdef ENABLE_SHOP_SEARCH_SYSTEM
 	if (!pkOfflineShop->IsClosed())
@@ -154,7 +169,14 @@ void COfflineShopManager::CreateOfflineShop(TOfflineShop* offlineshop)
 	m_Map_pkOfflineShopByNPC.emplace(offlineshop->owner_id, pkOfflineShop);
 	m_Map_pkOfflineShopByName.emplace(offlineshop->owner_name, pkOfflineShop);
 
-	HasOfflineShop(CHARACTER_MANAGER::Instance().FindByPID(offlineshop->owner_id));
+	LPCHARACTER ownerCh = CHARACTER_MANAGER::Instance().FindByPID(offlineshop->owner_id);
+	HasOfflineShop(ownerCh);
+
+	// If the owner is online right now, open their owner-view panel immediately
+	// instead of waiting for them to click their own NPC.
+	if (ownerCh && npc)
+		pkOfflineShop->AddGuest(ownerCh, npc);
+
 	sys_log(0, "shop insert: owner_id %d owner_name %s sign %s x %ld y %ld mapIndex %d channel %d item_count %d", offlineshop->owner_id, offlineshop->owner_name, offlineshop->sign, offlineshop->x, offlineshop->y, offlineshop->mapindex, offlineshop->channel, pkOfflineShop->GetItemCount());
 }
 
@@ -178,13 +200,16 @@ void COfflineShopManager::OpenOfflineShop(LPCHARACTER ch)
 		char cmd[256];
 		snprintf(cmd, sizeof(cmd), "OfflineShopSetFlag %lld", ch->GetOfflineShopFlag());
 		ch->ChatPacket(CHAT_TYPE_COMMAND,cmd);
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "OpenOfflineShop");
 		return;
 	}
 
 	LPOFFLINESHOP pkOfflineShop = FindOfflineShopPID(ch->GetPlayerID());
 	if (!pkOfflineShop)
 		return;
+	// GetOfflineShopNPC() is NULL whenever this core isn't the one hosting the
+	// shop's live NPC - AddGuest() tolerates that by design, so the owner can
+	// manage their shop from any channel/core, not just the one it physically
+	// stands on.
 	pkOfflineShop->AddGuest(ch, pkOfflineShop->GetOfflineShopNPC());
 	sys_log(0, "COfflineShopManager::OpenOfflineShop owner open offlineshop panel: %s:%d", ch->GetName(), ch->GetPlayerID());
 }
@@ -199,12 +224,24 @@ void COfflineShopManager::DestroyOfflineShopReal(DWORD ch)
 	if (!pkOfflineShop)
 		return;
 
-	/*auto it2 = std::find(m_Map_pkOfflineShopCache.begin(), m_Map_pkOfflineShopCache.end(), ch);
+	auto it2 = std::find(m_Map_pkOfflineShopCache.begin(), m_Map_pkOfflineShopCache.end(), ch);
 	if (it2 != m_Map_pkOfflineShopCache.end())
-		m_Map_pkOfflineShopCache.erase(it2);*/
+		m_Map_pkOfflineShopCache.erase(it2);
 
 	if (m_Map_pkOfflineShopByName.find(pkOfflineShop->m_data.owner_name) != m_Map_pkOfflineShopByName.end())
 		m_Map_pkOfflineShopByName.erase(pkOfflineShop->m_data.owner_name);
+
+	// Tell everyone currently showing this NPC's floating sign to drop it before the NPC
+	// itself is destroyed below - mirrors CHARACTER::CloseMyShop()'s empty-sign packet.
+	LPCHARACTER npc = pkOfflineShop->GetOfflineShopNPC();
+	if (npc)
+	{
+		TPacketGCShopSign p;
+		p.bHeader = HEADER_GC_SHOP_SIGN;
+		p.dwVID = npc->GetVID();
+		p.szSign[0] = '\0';
+		npc->PacketAround(&p, sizeof(TPacketGCShopSign));
+	}
 
 	pkOfflineShop->Destroy();
 	M2_DELETE(pkOfflineShop);
@@ -273,7 +310,7 @@ void COfflineShopManager::AddItem(LPCHARACTER ch, BYTE bDisplayPos, TItemPos bPo
 
 	if (ch->IsDead())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 
@@ -285,28 +322,22 @@ void COfflineShopManager::AddItem(LPCHARACTER ch, BYTE bDisplayPos, TItemPos bPo
 
 	else if (pkItem->isLocked())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 	else if (pkItem->IsEquipped())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 	else if (pkItem->IsExchanging())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 	else if (ch->PreventTradeWindow(WND_MYSHOP | WND_SHOPOWNER, true))
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You need to close other windows."));
-		return;
-	}
-
-	if ((pkItem->GetType() == ITEM_BUFFI && pkItem->GetSubType() == BUFFI_SCROLL) && pkItem->GetSocket(1) == 1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Deactivate the Buffi Seal first."));
 		return;
 	}
 
@@ -329,8 +360,42 @@ void COfflineShopManager::AddItem(LPCHARACTER ch, BYTE bDisplayPos, TItemPos bPo
 
 	if (pkOfflineShop->IsClosed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"), pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"), pkItem->GetName());
 		return;
+	}
+
+	// bSize-aware occupancy check: some weapon/armor icons visually span multiple
+	// grid rows below their own position (item_proto bSize - same mechanism the
+	// main inventory/warehouse/PC-shop grids already use via CGrid). Without this,
+	// bDisplayPos was accepted unconditionally, so a big item could be dropped onto
+	// a cell already covered by a neighboring item's footprint (or onto an already-
+	// occupied cell at all), producing overlapping icons in the client grid.
+	{
+		CGrid shopGrid(10, 8);
+		const auto& itemSlots = pkOfflineShop->m_data.items;
+		const auto& playerFlag = ch->GetOfflineShopFlag();
+		for (BYTE j = 0; j < OFFLINE_SHOP_HOST_ITEM_MAX_NUM; ++j)
+		{
+			if (itemSlots[j].vnum != 0)
+			{
+				TItemTable* tableItem = ITEM_MANAGER::instance().GetTable(itemSlots[j].vnum);
+				if (tableItem)
+					shopGrid.Put(j, 1, tableItem->bSize);
+				continue;
+			}
+			if (j >= 40)
+			{
+				const BYTE cell = j - 40;
+				if (!IS_SET(playerFlag, 1ULL << cell))
+					shopGrid.Put(j, 1, 1);
+			}
+		}
+
+		if (!shopGrid.IsEmpty(bDisplayPos, 1, pkItem->GetSize()))
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This item doesn't fit there."));
+			return;
+		}
 	}
 
 	OFFLINE_SHOP_ITEM item;
@@ -485,7 +550,7 @@ void COfflineShopManager::RemoveItem(LPCHARACTER ch, BYTE bPos, DWORD itemID, BY
 	LPITEM item = ITEM_MANAGER::Instance().CreateItem(itemVnum);
 	if (!item)
 		return;
-	const int iEmptyCell = ch->CalculateItemPos(item);
+	const int iEmptyCell = ch->GetEmptyInventory(item->GetSize());
 	M2_DESTROY_ITEM(item);
 	if(iEmptyCell == -1)
 	{
@@ -516,11 +581,12 @@ void COfflineShopManager::StopShopping(LPCHARACTER ch)
 	if(!ch)
 		return;
 
+	// These two are independent, not mutually exclusive: a stale OfflineShopPanel flag
+	// (left over from a cancelled/completed creation flow) must never block clearing an
+	// active GetOfflineShop() guest/owner link, or the character gets stuck permanently
+	// "inside" their shop and every future AddGuest() call is silently rejected.
 	if (ch->GetOfflineShopPanel())
-	{
 		ch->SetOfflineShopPanel(false);
-		return;
-	}
 
 	LPOFFLINESHOP pkOfflineShop = ch->GetOfflineShop();
 	if (pkOfflineShop)
@@ -554,15 +620,23 @@ void COfflineShopManager::BuyItemReal(TOfflineShopBuy* item)
 		}
 	}
 
-#ifdef AFTER_BUY_REMOVE_DIRECTLY
+	// Always fully clear the sold slot - see the matching fix/comment in
+	// CClientManager::BuyItem (db-src) for why the old AFTER_BUY_REMOVE_DIRECTLY
+	// toggle never actually cleared anything (that macro is never #define'd, so
+	// this always ran the #else branch, which - before that DB fix - restored the
+	// just-sold item right back into the slot verbatim).
 	memset(&pkOfflineShop->m_data.items[item->item.pos], 0, sizeof(pkOfflineShop->m_data.items[item->item.pos]));
-#else
-	thecore_memcpy(&pkOfflineShop->m_data.items[item->item.pos] ,&item->item, sizeof(pkOfflineShop->m_data.items[item->item.pos]));
-#endif
 
 	const long long calculateFeePrice = (100 - SHOP_FEE) * (item->item.price / 100);
 
 	pkOfflineShop->m_data.price += calculateFeePrice;
+
+	// BuyItemReal runs on every game core (BUY_ITEM's DB reply is fanned out to all
+	// connected cores unconditionally, same as CREATE_OFFLINESHOP), so updating the
+	// average here - keyed off the actual realized sale price, not the asking price
+	// - keeps every core's market-average figure identical for free, with no extra
+	// network code.
+	SetAveragePrice(item->item.vnum, item->item.price / (item->item.count ? item->item.count : 1));
 
 	LPCHARACTER owner_ch = CHARACTER_MANAGER::Instance().FindByPID(item->item.owner_id);
 	if (owner_ch)
@@ -613,6 +687,11 @@ void COfflineShopManager::Buy(LPCHARACTER ch, DWORD vid, BYTE pos, DWORD itemID)
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can't do that!"));
 		return;
 	}
+	else if (pkOfflineShop->m_data.slotflag & SHOP_LOCKED_FLAG)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This shop is currently locked."));
+		return;
+	}
 
 	else if (ch->PreventTradeWindow(WND_MYSHOP | WND_SHOPOWNER, true))
 	{
@@ -644,7 +723,7 @@ void COfflineShopManager::Buy(LPCHARACTER ch, DWORD vid, BYTE pos, DWORD itemID)
 	}
 
 	LPITEM checkItem = ITEM_MANAGER::Instance().CreateItem(item.vnum);
-	const int iEmptyCell = ch->CalculateItemPos(checkItem);
+	const int iEmptyCell = ch->GetEmptyInventory(checkItem->GetSize());
 	M2_DESTROY_ITEM(checkItem);
 	if(iEmptyCell == -1)
 	{
@@ -691,9 +770,11 @@ void COfflineShopManager::ChangeTitleReal(TOfflineShopChangeTitle* p)
 	if (shop)
 	{
 		TPacketGCShopSign p;
-		p.bHeader = HEADER_GC_OFFLINE_SHOP_SIGN;
+		p.bHeader = HEADER_GC_SHOP_SIGN;
 		p.dwVID = shop->GetVID();
-		strlcpy(p.szSign, pkOfflineShop->m_data.sign, sizeof(p.szSign));
+		// m_data.sign is stored as "<titleType digit><actual sign text>" - skip the digit.
+		const char* sign = pkOfflineShop->m_data.sign;
+		strlcpy(p.szSign, sign[0] != '\0' ? sign + 1 : sign, sizeof(p.szSign));
 		shop->PacketAround(&p, sizeof(TPacketGCShopSign));
 	}
 
@@ -882,8 +963,21 @@ void COfflineShopManager::ChangeDecorationReal(TShopDecoration* ch)
 				shop->ViewReencode();
 			}
 		}
+
+		// Decoration change also changes the sign text (above) - the respawn/ViewReencode
+		// path only refreshes the model for people already watching, it doesn't touch the
+		// floating sign board, so re-broadcast it explicitly (same as ChangeTitleReal()).
+		if (shop)
+		{
+			TPacketGCShopSign p;
+			p.bHeader = HEADER_GC_SHOP_SIGN;
+			p.dwVID = shop->GetVID();
+			const char* sign = pkOfflineShop->m_data.sign;
+			strlcpy(p.szSign, sign[0] != '\0' ? sign + 1 : sign, sizeof(p.szSign));
+			shop->PacketAround(&p, sizeof(TPacketGCShopSign));
+		}
 	}
-	pkOfflineShop->BroadcastUpdateItem(0); 
+	pkOfflineShop->BroadcastUpdateItem(0);
 }
 
 
@@ -986,11 +1080,6 @@ void COfflineShopManager::OpenMyOfflineShop(LPCHARACTER ch, const char* c_pszSig
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can't add lock item!"));
 				return;
 			}
-			else if ((pkItem->GetType() == ITEM_BUFFI && pkItem->GetSubType() == BUFFI_SCROLL) && pkItem->GetSocket(1) == 1)
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Deactivate the Buffi Seal first."));
-				return;
-			}
 			else if ((pkItem->GetVnum() >= 51010 && pkItem->GetVnum() <= 51030) && pkItem->GetSocket(0) == 1)
 			{
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Deactivate the Energy Crystal first."));
@@ -1008,6 +1097,22 @@ void COfflineShopManager::OpenMyOfflineShop(LPCHARACTER ch, const char* c_pszSig
 			}
 		}
 	}
+
+	// PointChange(POINT_GOLD, ...) never clamps at 0, so without this check a player
+	// with less than the creation fee would go negative instead of creation failing.
+	if (ch->GetGold() < 2000000)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough gold."));
+		return;
+	}
+
+	// We're past every validation check and committed to creating the shop - clear the
+	// "still in the pre-creation panel flow" flag now. Leaving it set here was a real bug:
+	// it's only ever cleared inside StopShopping(), and the FIRST StopShopping() call after
+	// a successful creation would wrongly take the "still in panel" branch and never reach
+	// RemoveGuest()/SetOfflineShop(NULL) - permanently stranding the owner "inside" their own
+	// shop server-side, so every later AddGuest() (i.e. every future F7 reopen) silently no-ops.
+	ch->SetOfflineShopPanel(false);
 
 	ch->PointChange(POINT_GOLD, -2000000);
 	TOfflineShop m_data;
@@ -1128,7 +1233,72 @@ void COfflineShopManager::OpenSlot(LPCHARACTER ch, BYTE bPos)
 		ch->ChatPacket(CHAT_TYPE_COMMAND, cmd);
 	}
 	ch->Save();
-	
+
+}
+
+// Same slot-unlock mechanism as OpenSlot(), but paid with gold instead of consuming
+// item 72319 - an alternative funding path for players who'd rather spend yang.
+void COfflineShopManager::ExpandSlot(LPCHARACTER ch, BYTE bPos)
+{
+	if (!ch)
+		return;
+	unsigned long long myFlag = ch->GetOfflineShopFlag();
+	unsigned long long flag = 1ULL << bPos;
+	LPOFFLINESHOP pkOfflineShop = FindOfflineShopPID(ch->GetPlayerID());
+	if (IS_SET(myFlag, flag))
+		return;
+	else if (ch->GetGold() < SHOP_EXPAND_SLOT_PRICE)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough gold."));
+		return;
+	}
+
+	if (pkOfflineShop)
+	{
+		SET_BIT(myFlag, flag);
+		ch->SetOfflineShopFlag(myFlag);
+		ch->PointChange(POINT_GOLD, -SHOP_EXPAND_SLOT_PRICE);
+
+		shop_slot n;
+		n.subheader = CHANGE_OPEN_SLOT;
+		n.ch.owner_id = ch->GetPlayerID();
+		n.ch.flag = myFlag;
+		db_clientdesc->DBPacket(HEADER_GD_OFFLINESHOP, 0, &n, sizeof(shop_slot));
+	}
+	else if (ch->GetOfflineShopPanel())
+	{
+		ch->PointChange(POINT_GOLD, -SHOP_EXPAND_SLOT_PRICE);
+		SET_BIT(myFlag, flag);
+		ch->SetOfflineShopFlag(myFlag);
+
+		char cmd[256];
+		snprintf(cmd, sizeof(cmd), "OfflineShopSetFlag %lld", myFlag);
+		ch->ChatPacket(CHAT_TYPE_COMMAND, cmd);
+	}
+	ch->Save();
+}
+
+// Toggles bit 63 of the owner's (persisted, DB-fanned-out) slot flag - see
+// SHOP_LOCKED_FLAG in length.h. Reuses the exact same CHANGE_OPEN_SLOT DB round trip
+// OpenSlot()/ExpandSlot() already use, since it's just another bit of the same field.
+void COfflineShopManager::ToggleLock(LPCHARACTER ch)
+{
+	if (!ch)
+		return;
+	LPOFFLINESHOP pkOfflineShop = FindOfflineShopPID(ch->GetPlayerID());
+	if (!pkOfflineShop)
+		return;
+
+	unsigned long long myFlag = ch->GetOfflineShopFlag();
+	myFlag ^= SHOP_LOCKED_FLAG;
+	ch->SetOfflineShopFlag(myFlag);
+	ch->Save();
+
+	shop_slot n;
+	n.subheader = CHANGE_OPEN_SLOT;
+	n.ch.owner_id = ch->GetPlayerID();
+	n.ch.flag = myFlag;
+	db_clientdesc->DBPacket(HEADER_GD_OFFLINESHOP, 0, &n, sizeof(shop_slot));
 }
 
 void COfflineShopManager::CloseOfflineShopForTimeReal(DWORD offlineshop)
@@ -1149,7 +1319,7 @@ void COfflineShopManager::CloseOfflineShopForTimeReal(DWORD offlineshop)
 
 	if (status)
 	{
-		//m_Map_pkOfflineShopCache.push_back(offlineshop);
+		m_Map_pkOfflineShopCache.push_back(offlineshop);
 		pkOfflineShop->DestroyEx();
 		auto timesVector = std::find(m_Map_pkShopTimes.begin(), m_Map_pkShopTimes.end(), offlineshop);
 		if (timesVector != m_Map_pkShopTimes.end())
@@ -1262,6 +1432,15 @@ void COfflineShopManager::ShopAddTime(LPCHARACTER ch)
 		if (oldtime > SHOP_MAX_TIME_PREMIUM)
 			return;
 
+		// PointChange(POINT_GOLD, ...) never clamps at 0 - it just adds the (negative)
+		// amount to whatever gold the character has, so without this check a player
+		// with less than the cost would go negative instead of the purchase failing.
+		if (ch->GetGold() < 2000000)
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough gold."));
+			return;
+		}
+
 		ch->PointChange(POINT_GOLD, -2000000);
 
 		shop_owner n;
@@ -1274,7 +1453,13 @@ void COfflineShopManager::ShopAddTime(LPCHARACTER ch)
 		if (oldtime > SHOP_MAX_TIME)
 			return;
 
-		ch->PointChange(POINT_GOLD, -2000000);
+		if (ch->GetGold() < 1000000)
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough gold."));
+			return;
+		}
+
+		ch->PointChange(POINT_GOLD, -1000000);
 
 		shop_owner n;
 		n.subheader = ADD_TIME;
@@ -1295,7 +1480,15 @@ void COfflineShopManager::ShopAddTimeReal(DWORD ch)
 	if (oldTime <= 0)
 		oldTime = 0;
 
-	m_data.time = time(0) + SHOP_TIME_ADD_TIME;
+	// This used to be a flat "reset to now + 1 day" instead of adding to whatever was
+	// left, so the button always showed exactly 1 day remaining no matter how many
+	// times it was clicked. Add the grant to the remaining time, capped at SHOP_MAX_TIME
+	// (ShopAddTime() already enforces this cap before requesting the DB round-trip that
+	// leads here, but re-clamping keeps this function correct on its own).
+	int newRemaining = oldTime + SHOP_TIME_ADD_TIME;
+	if (newRemaining > SHOP_MAX_TIME)
+		newRemaining = SHOP_MAX_TIME;
+	m_data.time = time(0) + newRemaining;
 
 	pkOfflineShop->BroadcastUpdateItem(0);
 
@@ -1318,7 +1511,7 @@ void COfflineShopManager::ShopAddTimeReal(DWORD ch)
 		npc->SetName(m_data.owner_name);
 		npc->Show(m_data.mapindex, m_data.x, m_data.y, m_data.z, true);
 		npc->ViewReencode();
-		
+
 #ifdef ENABLE_SHOP_SEARCH_SYSTEM
 		for (DWORD i = 0; i < OFFLINE_SHOP_HOST_ITEM_MAX_NUM; ++i)
 			InsertItem(&m_data.items[i]);
@@ -1512,6 +1705,16 @@ void COfflineShopManager::RecvPackets(const char* data)
 				RemoveItemAllReal(p->ownerID);
 		}
 		break;
+
+		case SEED_PRICE_STAT:
+		{
+			shop_price_seed* p = (shop_price_seed*)data;
+			// Only seeds if this vnum has no in-memory average yet - if this core
+			// already observed sales itself (or an earlier seed), that stays authoritative.
+			if (p && m_pShopItemAveragePrice.find(p->vnum) == m_pShopItemAveragePrice.end())
+				SetAveragePrice(p->vnum, p->avgPrice);
+		}
+		break;
 	}
 }
 
@@ -1554,7 +1757,7 @@ void COfflineShopManager::AddItemShortcut(LPCHARACTER ch, TItemPos pos, long lon
 
 	if (ch->IsDead())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 
@@ -1566,17 +1769,17 @@ void COfflineShopManager::AddItemShortcut(LPCHARACTER ch, TItemPos pos, long lon
 
 	if (pkItem->isLocked())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 	else if (pkItem->IsEquipped())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 	else if (pkItem->IsExchanging())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetLocaleName(ch->GetLanguage()));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OFFLINE_SHOP_CANT_ADD_ITEM %s"),pkItem->GetName());
 		return;
 	}
 	else if (ch->PreventTradeWindow(WND_MYSHOP | WND_SHOPOWNER, true))
@@ -1584,12 +1787,6 @@ void COfflineShopManager::AddItemShortcut(LPCHARACTER ch, TItemPos pos, long lon
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You need to close other windows."));
 		return;
 	}
-	else if ((pkItem->GetType() == ITEM_BUFFI && pkItem->GetSubType() == BUFFI_SCROLL) && pkItem->GetSocket(1) == 1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Deactivate the Buffi Seal first."));
-		return;
-	}
-
 	if ((pkItem->GetVnum() >= 51010 && pkItem->GetVnum() <= 51030) && pkItem->GetSocket(0) == 1)
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Deactivate the Energy Crystal first."));
@@ -1602,7 +1799,10 @@ void COfflineShopManager::AddItemShortcut(LPCHARACTER ch, TItemPos pos, long lon
 
 	const auto& itemSlots = pkOfflineShop->m_data.items;
 	const auto& playerFlag = ch->GetOfflineShopFlag();
-	CGrid shopGrid(5, 16);
+	// Real display grid is 10 wide x 8 tall (uiscript/offlineshop/offlineshopwindow.py:
+	// x_count 10, y_count 8) - NOT 5x16. CGrid computes "row below" as pos + width, so
+	// the wrong width here silently reserved/checked the wrong cells entirely.
+	CGrid shopGrid(10, 8);
 	for (BYTE j = 0; j < OFFLINE_SHOP_HOST_ITEM_MAX_NUM; ++j)
 	{
 		if (itemSlots[j].vnum != 0)
@@ -1657,13 +1857,13 @@ void COfflineShopManager::AddItemShortcut(LPCHARACTER ch, TItemPos pos, long lon
 	thecore_memcpy(&n.item, &item, sizeof(n.item));
 	db_clientdesc->DBPacket(HEADER_GD_OFFLINESHOP, 0, &n, sizeof(shop_item));
 }
-void COfflineShopManager::OpenOfflineShopWithVID(LPCHARACTER ch, DWORD vid)
+void COfflineShopManager::OpenOfflineShopWithVID(LPCHARACTER ch, DWORD ownerID)
 {
 	if (!ch)
 		return;
 	if (ch->CanOpenOfflineShop())
 		return;
-	LPOFFLINESHOP pkOfflineShop = FindOfflineShopPID(vid);
+	LPOFFLINESHOP pkOfflineShop = FindOfflineShopPID(ownerID);
 	if (!pkOfflineShop)
 		return;
 	pkOfflineShop->AddGuest(ch, pkOfflineShop->GetOfflineShopNPC());
@@ -1703,6 +1903,38 @@ void COfflineShopManager::MoveItem(LPCHARACTER ch, WORD slotPos, WORD targetPos)
 		return;
 	else if (pkOfflineShop->m_data.items[slotPos].vnum == 0 || pkOfflineShop->m_data.items[targetPos].vnum != 0)
 		return;
+
+	// bSize-aware occupancy check - see AddItem() for why. Exclude slotPos itself
+	// (the item being moved away from) so it doesn't block its own move; this also
+	// rejects a locked (not-yet-unlocked) targetPos, which the checks above never did.
+	{
+		CGrid shopGrid(10, 8);
+		const auto& itemSlots = pkOfflineShop->m_data.items;
+		const auto& playerFlag = ch->GetOfflineShopFlag();
+		for (BYTE j = 0; j < OFFLINE_SHOP_HOST_ITEM_MAX_NUM; ++j)
+		{
+			if (j == slotPos)
+				continue;
+			if (itemSlots[j].vnum != 0)
+			{
+				TItemTable* tableItem = ITEM_MANAGER::instance().GetTable(itemSlots[j].vnum);
+				if (tableItem)
+					shopGrid.Put(j, 1, tableItem->bSize);
+				continue;
+			}
+			if (j >= 40)
+			{
+				const BYTE cell = j - 40;
+				if (!IS_SET(playerFlag, 1ULL << cell))
+					shopGrid.Put(j, 1, 1);
+			}
+		}
+
+		TItemTable* movingTable = ITEM_MANAGER::instance().GetTable(itemSlots[slotPos].vnum);
+		BYTE movingSize = movingTable ? movingTable->bSize : 1;
+		if (!shopGrid.IsEmpty(targetPos, 1, movingSize))
+			return;
+	}
 
 	move_item n;
 	n.subheader = MOVE_ITEM;

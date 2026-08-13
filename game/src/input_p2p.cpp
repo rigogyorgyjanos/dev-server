@@ -11,6 +11,10 @@
 #ifdef ENABLE_SWITCHBOT
 #include "switchbot.h"
 #endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+#include "offline_shop.h"
+#include "offlineshop_manager.h"
+#endif
 #include "guild.h"
 #include "guild_manager.h"
 #include "party.h"
@@ -466,6 +470,21 @@ void CInputP2P::Switchbot(LPDESC d, const char* c_pData)
 }
 #endif
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+void CInputP2P::OfflineShopWatcher(LPDESC d, const char* c_pData)
+{
+	const TPacketGGOfflineShopWatcher* p = reinterpret_cast<const TPacketGGOfflineShopWatcher*>(c_pData);
+	if (p->wSenderPort == mother_port)
+		return; // our own broadcast looped back through the mesh - ignore it
+
+	LPOFFLINESHOP pkOfflineShop = COfflineShopManager::Instance().FindOfflineShopPID(p->owner_id);
+	if (!pkOfflineShop)
+		return;
+
+	pkOfflineShop->ApplyRemoteWatcherCount(p->wSenderPort, p->dwDisplayedCount, p->dwRealWatcherCount);
+}
+#endif
+
 int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 {
 	if (test_server)
@@ -606,6 +625,11 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 #ifdef ENABLE_SWITCHBOT
 		case HEADER_GG_SWITCHBOT:
 			Switchbot(d, c_pData);
+			break;
+#endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+		case HEADER_GG_OFFLINESHOP_WATCHER:
+			OfflineShopWatcher(d, c_pData);
 			break;
 #endif
 	}

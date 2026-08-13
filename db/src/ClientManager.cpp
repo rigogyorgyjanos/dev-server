@@ -165,7 +165,7 @@ bool CClientManager::Initialize()
 
 	LoadEventFlag();
 
-	// database character-setÀ» °­Á¦·Î ¸ÂÃã
+	// database character-setï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (g_stLocale == "big5" || g_stLocale == "sjis")
 	    CDBManager::instance().QueryLocaleSet();
 
@@ -178,7 +178,7 @@ void CClientManager::MainLoop()
 
 	sys_log(0, "ClientManager pointer is %p", this);
 
-	// ¸ÞÀÎ·çÇÁ
+	// ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½
 	while (!m_bShutdowned)
 	{
 		while ((tmp = CDBManager::instance().PopResult()))
@@ -194,7 +194,7 @@ void CClientManager::MainLoop()
 	}
 
 	//
-	// ¸ÞÀÎ·çÇÁ Á¾·áÃ³¸®
+	// ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½
 	//
 	sys_log(0, "MainLoop exited, Starting cache flushing");
 
@@ -202,7 +202,7 @@ void CClientManager::MainLoop()
 
 	itertype(m_map_playerCache) it = m_map_playerCache.begin();
 
-	//ÇÃ·¹ÀÌ¾î Å×ÀÌºí Ä³½¬ ÇÃ·¯½¬	
+	//ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ Ä³ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½	
 	while (it != m_map_playerCache.end())
 	{
 		CPlayerTableCache * c = (it++)->second;
@@ -214,7 +214,7 @@ void CClientManager::MainLoop()
 
 	
 	itertype(m_map_itemCache) it2 = m_map_itemCache.begin();
-	//¾ÆÀÌÅÛ ÇÃ·¯½¬
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½
 	while (it2 != m_map_itemCache.end())
 	{
 		CItemCache * c = (it2++)->second;
@@ -226,7 +226,7 @@ void CClientManager::MainLoop()
 
 	// MYSHOP_PRICE_LIST
 	//
-	// °³ÀÎ»óÁ¡ ¾ÆÀÌÅÛ °¡°Ý ¸®½ºÆ® Flush
+	// ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® Flush
 	//
 	for (itertype(m_mapItemPriceListCache) itPriceList = m_mapItemPriceListCache.begin(); itPriceList != m_mapItemPriceListCache.end(); ++itPriceList)
 	{
@@ -246,7 +246,7 @@ void CClientManager::Quit()
 
 void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 {
-	const BYTE bPacketVersion = 6; // BOOT ÆÐÅ¶ÀÌ ¹Ù²ð¶§¸¶´Ù ¹øÈ£¸¦ ¿Ã¸®µµ·Ï ÇÑ´Ù.
+	const BYTE bPacketVersion = 6; // BOOT ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½Ù²ð¶§¸ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 
 	std::vector<tAdminInfo> vAdmin;
 	std::vector<std::string> vHost;
@@ -439,6 +439,42 @@ void CClientManager::SendPartyOnSetup(CPeer* pkPeer)
 	}
 }
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+void CClientManager::SendOfflineShopOnSetup(CPeer* pkPeer)
+{
+	// Push every currently-cached offline shop to the newly-connecting game channel;
+	// CreateOfflineShop() on the receiving end only actually spawns the NPC if g_bChannel matches offlineshop->channel.
+	for (auto it_shop = m_Offlineshop.begin(); it_shop != m_Offlineshop.end(); ++it_shop)
+	{
+		shop_create n;
+		n.subheader = CREATE_OFFLINESHOP;
+		thecore_memcpy(&n.offlineshop, it_shop->second, sizeof(n.offlineshop));
+
+		pkPeer->EncodeHeader(HEADER_DG_OFFLINESHOP, 0, sizeof(shop_create));
+		pkPeer->Encode(&n, sizeof(shop_create));
+	}
+
+	// Seed the newly-connecting core's average-sale-price cache from persisted
+	// history, so a freshly (re)started game process doesn't show a blank/zero
+	// market average until it happens to observe a fresh sale itself.
+	std::unique_ptr<SQLMsg> pMsgAvg(CDBManager::instance().DirectQuery("SELECT vnum, AVG(price) FROM player.offline_shop_sale_log GROUP BY vnum"));
+	if (pMsgAvg && pMsgAvg->Get()->uiNumRows != 0)
+	{
+		MYSQL_ROW row;
+		while (NULL != (row = mysql_fetch_row(pMsgAvg->Get()->pSQLResult)))
+		{
+			shop_price_seed n;
+			n.subheader = SEED_PRICE_STAT;
+			str_to_number(n.vnum, row[0]);
+			str_to_number(n.avgPrice, row[1]);
+
+			pkPeer->EncodeHeader(HEADER_DG_OFFLINESHOP, 0, sizeof(shop_price_seed));
+			pkPeer->Encode(&n, sizeof(shop_price_seed));
+		}
+	}
+}
+#endif
+
 void CClientManager::QUERY_PLAYER_COUNT(CPeer * pkPeer, TPlayerCountPacket * pPacket)
 {
 	pkPeer->SetUserCount(pPacket->dwCount);
@@ -520,9 +556,9 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 	ClientHandleInfo * pi = (ClientHandleInfo *) qi->pvData;
 	DWORD dwHandle = pi->dwHandle;
 
-	// ¿©±â¿¡¼­ »ç¿ëÇÏ´Â account_index´Â Äõ¸® ¼ø¼­¸¦ ¸»ÇÑ´Ù.
-	// Ã¹¹øÂ° ÆÐ½º¿öµå ¾Ë¾Æ³»±â À§ÇØ ÇÏ´Â Äõ¸®°¡ 0
-	// µÎ¹øÂ° ½ÇÁ¦ µ¥ÀÌÅÍ¸¦ ¾ò¾î³õ´Â Äõ¸®°¡ 1
+	// ï¿½ï¿½ï¿½â¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ account_indexï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½.
+	// Ã¹ï¿½ï¿½Â° ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾Æ³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0
+	// ï¿½Î¹ï¿½Â° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1
 
 	if (pi->account_index == 0)
 	{
@@ -547,7 +583,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 		{
 			MYSQL_ROW row = mysql_fetch_row(res->pSQLResult);
 
-			// ºñ¹Ð¹øÈ£°¡ Æ²¸®¸é..
+			// ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ Æ²ï¿½ï¿½ï¿½ï¿½..
 			if (((!row[2] || !*row[2]) && strcmp("000000", szSafeboxPassword)) ||
 				((row[2] && *row[2]) && strcmp(row[2], szSafeboxPassword)))
 			{
@@ -613,8 +649,8 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 		}
 
 
-		// Äõ¸®¿¡ ¿¡·¯°¡ ÀÖ¾úÀ¸¹Ç·Î ÀÀ´äÇÒ °æ¿ì Ã¢°í°¡ ºñ¾îÀÖ´Â °Í Ã³·³
-		// º¸ÀÌ±â ¶§¹®¿¡ Ã¢°í°¡ ¾Æ¾ê ¾È¿­¸®´Â°Ô ³ªÀ½
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ Ã³ï¿½ï¿½
+		// ï¿½ï¿½ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¾ï¿½ ï¿½È¿ï¿½ï¿½ï¿½ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if (!msg->Get()->pSQLResult)
 		{
 			sys_err("null safebox result");
@@ -724,8 +760,8 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 						{
 							case 72723: case 72724: case 72725: case 72726:
 							case 72727: case 72728: case 72729: case 72730:
-							// ¹«½Ã¹«½ÃÇÏÁö¸¸ ÀÌÀü¿¡ ÇÏ´ø °É °íÄ¡±â´Â ¹«¼·°í...
-							// ±×·¡¼­ ±×³É ÇÏµå ÄÚµù. ¼±¹° »óÀÚ¿ë ÀÚµ¿¹°¾à ¾ÆÀÌÅÛµé.
+							// ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...
+							// ï¿½×·ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½Ïµï¿½ ï¿½Úµï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ûµï¿½.
 							case 76004: case 76005: case 76021: case 76022:
 							case 79012: case 79013:
 								if (pItemAward->dwSocket2 == 0)
@@ -837,7 +873,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 void CClientManager::QUERY_SAFEBOX_CHANGE_SIZE(CPeer * pkPeer, DWORD dwHandle, TSafeboxChangeSizePacket * p)
 {
 	ClientHandleInfo * pi = new ClientHandleInfo(dwHandle);
-	pi->account_index = p->bSize;	// account_index¸¦ »çÀÌÁî·Î ÀÓ½Ã·Î »ç¿ë
+	pi->account_index = p->bSize;	// account_indexï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½
 
 	char szQuery[QUERY_MAX_LEN];
 
@@ -925,7 +961,7 @@ void CClientManager::RESULT_PRICELIST_LOAD(CPeer* peer, SQLMsg* pMsg)
 	TItemPricelistReqInfo* pReqInfo = (TItemPricelistReqInfo*)static_cast<CQueryInfo*>(pMsg->pvUserData)->pvData;
 
 	//
-	// DB ¿¡¼­ ·ÎµåÇÑ Á¤º¸¸¦ Cache ¿¡ ÀúÀå
+	// DB ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Cache ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	//
 
 	TItemPriceListTable table;
@@ -944,7 +980,7 @@ void CClientManager::RESULT_PRICELIST_LOAD(CPeer* peer, SQLMsg* pMsg)
 	PutItemPriceListCache(&table);
 
 	//
-	// ·ÎµåÇÑ µ¥ÀÌÅÍ¸¦ Game server ¿¡ Àü¼Û
+	// ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Game server ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	//
 
 	TPacketMyshopPricelistHeader header;
@@ -968,7 +1004,7 @@ void CClientManager::RESULT_PRICELIST_LOAD_FOR_UPDATE(SQLMsg* pMsg)
 	TItemPriceListTable* pUpdateTable = (TItemPriceListTable*)static_cast<CQueryInfo*>(pMsg->pvUserData)->pvData;
 
 	//
-	// DB ¿¡¼­ ·ÎµåÇÑ Á¤º¸¸¦ Cache ¿¡ ÀúÀå
+	// DB ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Cache ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	//
 
 	TItemPriceListTable table;
@@ -1030,9 +1066,9 @@ void CClientManager::QUERY_EMPIRE_SELECT(CPeer * pkPeer, DWORD dwHandle, TEmpire
 			UINT g_start_map[4] =
 			{
 				0,  // reserved
-				1,  // ½Å¼ö±¹
-				21, // ÃµÁ¶±¹
-				41  // Áø³ë±¹
+				1,  // ï¿½Å¼ï¿½ï¿½ï¿½
+				21, // Ãµï¿½ï¿½ï¿½ï¿½
+				41  // ï¿½ï¿½ï¿½ë±¹
 			};
 
 			// FIXME share with game
@@ -1094,7 +1130,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	peer->SetMaps(p->alMaps);
 
 	//
-	// ¾î¶² ¸ÊÀÌ ¾î¶² ¼­¹ö¿¡ ÀÖ´ÂÁö º¸³»±â
+	// ï¿½î¶² ï¿½ï¿½ï¿½ï¿½ ï¿½î¶² ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//
 	TMapLocation kMapLocations;
 
@@ -1201,7 +1237,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	peer->Encode(&vec_kMapLocations[0], sizeof(TMapLocation) * vec_kMapLocations.size());
 
 	//
-	// ¼Â¾÷ : Á¢¼ÓÇÑ ÇÇ¾î¿¡ ´Ù¸¥ ÇÇ¾îµéÀÌ Á¢¼ÓÇÏ°Ô ¸¸µç´Ù. (P2P ÄÁ³Ø¼Ç »ý¼º)
+	// ï¿½Â¾ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾î¿¡ ï¿½Ù¸ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½. (P2P ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	// 
 	sys_log(0, "SETUP: channel %u listen %u p2p %u count %u", peer->GetChannel(), p->wListenPort, p->wP2PPort, bMapCount);
 
@@ -1217,7 +1253,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 		if (tmp == peer)
 			continue;
 
-		// Ã¤³ÎÀÌ 0ÀÌ¶ó¸é ¾ÆÁ÷ SETUP ÆÐÅ¶ÀÌ ¿ÀÁö ¾ÊÀº ÇÇ¾î ¶Ç´Â auth¶ó°í °£ÁÖÇÒ ¼ö ÀÖÀ½
+		// Ã¤ï¿½ï¿½ï¿½ï¿½ 0ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ SETUP ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ ï¿½Ç´ï¿½ authï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if (0 == tmp->GetChannel())
 			continue;
 
@@ -1226,7 +1262,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	}
 
 	//
-	// ·Î±×ÀÎ ¹× ºô¸µÁ¤º¸ º¸³»±â
+	// ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//
 	TPacketLoginOnSetup * pck = (TPacketLoginOnSetup *) c_pData;;
 
@@ -1260,6 +1296,9 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	CPrivManager::instance().SendPrivOnSetup(peer);
 	SendEventFlagsOnSetup(peer);
 	marriage::CManager::instance().OnSetup(peer);
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	SendOfflineShopOnSetup(peer);
+#endif
 }
 
 void CClientManager::QUERY_ITEM_FLUSH(CPeer * pkPeer, const char * c_pData)
@@ -1279,7 +1318,7 @@ void CClientManager::QUERY_ITEM_SAVE(CPeer * pkPeer, const char * c_pData)
 {
 	TPlayerItem * p = (TPlayerItem *) c_pData;
 
-	// Ã¢°í¸é Ä³½¬ÇÏÁö ¾Ê°í, Ä³½¬¿¡ ÀÖ´ø °Íµµ »©¹ö·Á¾ß ÇÑ´Ù.
+	// Ã¢ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½, Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 
 	if (p->window == SAFEBOX || p->window == MALL)
 	{
@@ -1411,7 +1450,7 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 
 	c = GetItemCache(pNew->id);
 	
-	// ¾ÆÀÌÅÛ »õ·Î »ý¼º
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (!c)
 	{
 		if (g_log)
@@ -1420,15 +1459,15 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 		c = new CItemCache;
 		m_map_itemCache.insert(TItemCacheMap::value_type(pNew->id, c));
 	}
-	// ÀÖÀ»½Ã
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	else
 	{
 		if (g_log)
 			sys_log(0, "ITEM_CACHE: PutItemCache ==> Have Cache");
-		// ¼ÒÀ¯ÀÚ°¡ Æ²¸®¸é
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ Æ²ï¿½ï¿½ï¿½ï¿½
 		if (pNew->owner != c->Get()->owner)
 		{
-			// ÀÌ¹Ì ÀÌ ¾ÆÀÌÅÛÀ» °¡Áö°í ÀÖ¾ú´ø À¯Àú·Î ºÎÅÍ ¾ÆÀÌÅÛÀ» »èÁ¦ÇÑ´Ù.
+			// ï¿½Ì¹ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			TItemCacheSetPtrMap::iterator it = m_map_pkItemCacheSetPtr.find(c->Get()->owner);
 
 			if (it != m_map_pkItemCacheSetPtr.end())
@@ -1440,7 +1479,7 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 		}
 	}
 
-	// »õ·Î¿î Á¤º¸ ¾÷µ¥ÀÌÆ® 
+	// ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® 
 	c->Put(pNew, bSkipQuery);
 	
 	TItemCacheSetPtrMap::iterator it = m_map_pkItemCacheSetPtr.find(c->Get()->owner);
@@ -1455,8 +1494,8 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 	}
 	else
 	{
-		// ÇöÀç ¼ÒÀ¯ÀÚ°¡ ¾øÀ¸¹Ç·Î ¹Ù·Î ÀúÀåÇØ¾ß ´ÙÀ½ Á¢¼ÓÀÌ ¿Ã ¶§ SQL¿¡ Äõ¸®ÇÏ¿©
-		// ¹ÞÀ» ¼ö ÀÖÀ¸¹Ç·Î ¹Ù·Î ÀúÀåÇÑ´Ù.
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ SQLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		if (g_log)
 			sys_log(0, "ITEM_CACHE: direct save %u id %u", c->Get()->owner, c->Get()->id);
 		else
@@ -1516,7 +1555,7 @@ void CClientManager::UpdatePlayerCache()
 
 			c->Flush();
 
-			// Item Cacheµµ ¾÷µ¥ÀÌÆ®
+			// Item Cacheï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 			UpdateItemCacheSet(c->Get()->id);
 		}
 		else if (c->CheckFlushTimeout())
@@ -1542,7 +1581,7 @@ void CClientManager::UpdateItemCache()
 	{
 		CItemCache * c = (it++)->second;
 
-		// ¾ÆÀÌÅÛÀº Flush¸¸ ÇÑ´Ù.
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Flushï¿½ï¿½ ï¿½Ñ´ï¿½.
 		if (c->CheckFlushTimeout())
 		{
 			if (g_test_server)
@@ -1589,7 +1628,7 @@ void CClientManager::QUERY_ITEM_DESTROY(CPeer * pkPeer, const char * c_pData)
 		if (g_log)
 			sys_log(0, "HEADER_GD_ITEM_DESTROY: PID %u ID %u", dwPID, dwID);
 
-		if (dwPID == 0) // ¾Æ¹«µµ °¡Áø »ç¶÷ÀÌ ¾ø¾ú´Ù¸é, ºñµ¿±â Äõ¸®
+		if (dwPID == 0) // ï¿½Æ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½, ï¿½ñµ¿±ï¿½ ï¿½ï¿½ï¿½ï¿½
 			CDBManager::instance().AsyncQuery(szQuery);
 		else
 			CDBManager::instance().ReturnQuery(szQuery, QID_ITEM_DESTROY, pkPeer->GetHandle(), NULL);
@@ -1721,7 +1760,7 @@ void CClientManager::QUERY_HOTRESTART()
 
 // ADD_GUILD_PRIV_TIME
 /**
- * @version	05/06/08 Bang2ni - Áö¼Ó½Ã°£ Ãß°¡
+ * @version	05/06/08 Bang2ni - ï¿½ï¿½ï¿½Ó½Ã°ï¿½ ï¿½ß°ï¿½
  */
 void CClientManager::AddGuildPriv(TPacketGiveGuildPriv* p)
 {
@@ -2035,8 +2074,8 @@ void CClientManager::WeddingEnd(TPacketWeddingEnd * p)
 }
 
 //
-// Ä³½Ã¿¡ °¡°ÝÁ¤º¸°¡ ÀÖÀ¸¸é Ä³½Ã¸¦ ¾÷µ¥ÀÌÆ® ÇÏ°í Ä³½Ã¿¡ °¡°ÝÁ¤º¸°¡ ¾ø´Ù¸é
-// ¿ì¼± ±âÁ¸ÀÇ µ¥ÀÌÅÍ¸¦ ·ÎµåÇÑ µÚ¿¡ ±âÁ¸ÀÇ Á¤º¸·Î Ä³½Ã¸¦ ¸¸µé°í »õ·Î ¹ÞÀº °¡°ÝÁ¤º¸¸¦ ¾÷µ¥ÀÌÆ® ÇÑ´Ù.
+// Ä³ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½Ã¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ï°ï¿½ Ä³ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½
+// ï¿½ì¼± ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½Ã¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ñ´ï¿½.
 //
 
 // Old code:
@@ -2116,7 +2155,7 @@ void CClientManager::MyshopPricelistUpdate(const TItemPriceListTable* pPacket)
 }
 
 // MYSHOP_PRICE_LIST
-// Ä³½ÃµÈ °¡°ÝÁ¤º¸°¡ ÀÖÀ¸¸é Ä³½Ã¸¦ ÀÐ¾î ¹Ù·Î Àü¼ÛÇÏ°í Ä³½Ã¿¡ Á¤º¸°¡ ¾øÀ¸¸é DB ¿¡ Äõ¸®¸¦ ÇÑ´Ù.
+// Ä³ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½Ã¸ï¿½ ï¿½Ð¾ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ Ä³ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ DB ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 //
 void CClientManager::MyshopPricelistRequest(CPeer* peer, DWORD dwHandle, DWORD dwPlayerID)
 {
@@ -2485,7 +2524,13 @@ void CClientManager::ProcessPackets(CPeer * peer)
 				MyshopPricelistRequest(peer, dwHandle, *(DWORD*)data);
 				break;
 				// END_OF_MYSHOP_PRICE_LIST
-		
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+			case HEADER_GD_OFFLINESHOP:
+				RecvPackets(data);
+				break;
+#endif
+
 				//RELOAD_ADMIN
 			case HEADER_GD_RELOAD_ADMIN:
 				ReloadAdmin(peer, (TPacketReloadAdmin*)data);
@@ -2521,15 +2566,15 @@ void CClientManager::ProcessPackets(CPeer * peer)
 				ComeToVote(peer, dwHandle, data);
 				break;
 
-			case HEADER_GD_RMCANDIDACY:		//< ÈÄº¸ Á¦°Å (¿î¿µÀÚ)
+			case HEADER_GD_RMCANDIDACY:		//< ï¿½Äºï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½î¿µï¿½ï¿½)
 				RMCandidacy(peer, dwHandle, data);
 				break;
 
-			case HEADER_GD_SETMONARCH:		///<±ºÁÖ¼³Á¤ (¿î¿µÀÚ)
+			case HEADER_GD_SETMONARCH:		///<ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½ (ï¿½î¿µï¿½ï¿½)
 				SetMonarch(peer, dwHandle, data);
 				break;
 
-			case HEADER_GD_RMMONARCH:		///<±ºÁÖ»èÁ¦
+			case HEADER_GD_RMMONARCH:		///<ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½
 				RMMonarch(peer, dwHandle, data);
 				break;
 			//END_MONARCH
@@ -2657,9 +2702,9 @@ CPeer * CClientManager::GetAnyPeer()
 	return m_peerList.front();
 }
 
-// DB ¸Å´ÏÀú·Î ºÎÅÍ ¹ÞÀº °á°ú¸¦ Ã³¸®ÇÑ´Ù.
+// DB ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ñ´ï¿½.
 //
-// @version	05/06/10 Bang2ni - °¡°ÝÁ¤º¸ °ü·Ã Äõ¸®(QID_ITEMPRICE_XXX) Ãß°¡
+// @version	05/06/10 Bang2ni - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(QID_ITEMPRICE_XXX) ï¿½ß°ï¿½
 int CClientManager::AnalyzeQueryResult(SQLMsg * msg)
 {
 	CQueryInfo * qi = (CQueryInfo *) msg->pvUserData;
@@ -2777,7 +2822,7 @@ void UsageLog()
 	char        *time_s;
 	struct tm   lt;
 
-	int         avg = g_dwUsageAvg / 3600; // 60 ÃÊ * 60 ºÐ
+	int         avg = g_dwUsageAvg / 3600; // 60 ï¿½ï¿½ * 60 ï¿½ï¿½
 
 	fp = fopen("usage.txt", "a+");
 
@@ -2810,7 +2855,7 @@ int CClientManager::Process()
 		++thecore_heart->pulse;
 
 		/*
-		//30ºÐ¸¶´Ù º¯°æ
+		//30ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if (((thecore_pulse() % (60 * 30 * 10)) == 0))
 		{
 			g_iPlayerCacheFlushSeconds = MAX(60, rand() % 180);
@@ -2888,11 +2933,11 @@ int CClientManager::Process()
 			m_iCacheFlushCount = 0;
 
 
-			//ÇÃ·¹ÀÌ¾î ÇÃ·¯½¬
+			//ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½
 			UpdatePlayerCache();
-			//¾ÆÀÌÅÛ ÇÃ·¯½¬
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½
 			UpdateItemCache();
-			//·Î±×¾Æ¿ô½Ã Ã³¸®- Ä³½¬¼Â ÇÃ·¯½¬
+			//ï¿½Î±×¾Æ¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½- Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½
 			UpdateLogoutPlayer();
 
 			// MYSHOP_PRICE_LIST
@@ -2962,13 +3007,13 @@ int CClientManager::Process()
 			/////////////////////////////////////////////////////////////////
 		}
 
-		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 60)))	// 60ÃÊ¿¡ ÇÑ¹ø
+		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 60)))	// 60ï¿½Ê¿ï¿½ ï¿½Ñ¹ï¿½
 		{
-			// À¯´ÏÅ© ¾ÆÀÌÅÛÀ» À§ÇÑ ½Ã°£À» º¸³½´Ù.
+			// ï¿½ï¿½ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 			CClientManager::instance().SendTime();
 		}
 
-		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 3600)))	// ÇÑ½Ã°£¿¡ ÇÑ¹ø
+		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 3600)))	// ï¿½Ñ½Ã°ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½
 		{
 			CMoneyLog::instance().Save();
 		}
@@ -2978,7 +3023,7 @@ int CClientManager::Process()
 	int idx;
 	CPeer * peer;
 
-	for (idx = 0; idx < num_events; ++idx) // ÀÎÇ²
+	for (idx = 0; idx < num_events; ++idx) // ï¿½ï¿½Ç²
 	{
 		peer = (CPeer *) fdwatch_get_client_data(m_fdWatcher, idx);
 
@@ -3057,7 +3102,7 @@ int CClientManager::Process()
 
 DWORD CClientManager::GetUserCount()
 {
-	// ´Ü¼øÈ÷ ·Î±×ÀÎ Ä«¿îÆ®¸¦ ¼¾´Ù.. --;
+	// ï¿½Ü¼ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.. --;
 	return m_map_kLogonAccount.size();
 }
 
@@ -3117,7 +3162,7 @@ bool CClientManager::InitializeNowItemID()
 {
 	DWORD dwMin, dwMax;
 
-	//¾ÆÀÌÅÛ ID¸¦ ÃÊ±âÈ­ ÇÑ´Ù.
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ñ´ï¿½.
 	if (!CConfig::instance().GetTwoValue("ITEM_ID_RANGE", &dwMin, &dwMax))
 	{
 		sys_err("conf.txt: Cannot find ITEM_ID_RANGE [start_item_id] [end_item_id]");
@@ -3547,7 +3592,7 @@ bool CClientManager::InitializeLocalization()
 
 bool CClientManager::__GetAdminInfo(const char *szIP, std::vector<tAdminInfo> & rAdminVec)
 {
-	//szIP == NULL ÀÏ°æ¿ì  ¸ðµç¼­¹ö¿¡ ¿î¿µÀÚ ±ÇÇÑÀ» °®´Â´Ù.
+	//szIP == NULL ï¿½Ï°ï¿½ï¿½  ï¿½ï¿½ç¼­ï¿½ï¿½ï¿½ï¿½ ï¿½î¿µï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â´ï¿½.
 	char szQuery[512];
 	snprintf(szQuery, sizeof(szQuery),
 			"SELECT mID,mAccount,mName,mContactIP,mServerIP,mAuthority FROM gmlist WHERE mServerIP='ALL' or mServerIP='%s'",
@@ -4083,7 +4128,7 @@ void CClientManager::SendSpareItemIDRange(CPeer* peer)
 }
 
 //
-// Login Key¸¸ ¸Ê¿¡¼­ Áö¿î´Ù.
+// Login Keyï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
 // 
 void CClientManager::DeleteLoginKey(TPacketDC *data)
 {

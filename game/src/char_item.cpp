@@ -2306,11 +2306,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							switch (dwVnums[i])
 							{
 								case CSpecialItemGroup::GOLD:
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+									ChatPacket(CHAT_TYPE_MONEY_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#else
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#endif
 									break;
 								case CSpecialItemGroup::EXP:
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+									ChatPacket(CHAT_TYPE_EXP_INFO, LC_TEXT("상자에서 부터 신비한 빛이 나옵니다."));
+									ChatPacket(CHAT_TYPE_EXP_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), dwCounts[i]);
+#else
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 부터 신비한 빛이 나옵니다."));
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), dwCounts[i]);
+#endif
 									break;
 								case CSpecialItemGroup::MOB:
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 몬스터가 나타났습니다!"));
@@ -2331,9 +2340,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (item_gets[i])
 									{
 										if (dwCounts[i] > 1)
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+											ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("상자에서 %s 가 %d 개 나왔습니다."), item_gets[i]->GetName(), dwCounts[i]);
+										else
+											ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("상자에서 %s 가 나왔습니다."), item_gets[i]->GetName());
+#else
 											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 %s 가 %d 개 나왔습니다."), item_gets[i]->GetName(), dwCounts[i]);
 										else
 											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 %s 가 나왔습니다."), item_gets[i]->GetName());
+#endif
 
 									}
 							}
@@ -2387,11 +2402,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						switch (dwVnums[i])
 						{
 						case CSpecialItemGroup::GOLD:
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+							ChatPacket(CHAT_TYPE_MONEY_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#else
 							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#endif
 							break;
 						case CSpecialItemGroup::EXP:
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+							ChatPacket(CHAT_TYPE_EXP_INFO, LC_TEXT("상자에서 부터 신비한 빛이 나옵니다."));
+							ChatPacket(CHAT_TYPE_EXP_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), dwCounts[i]);
+#else
 							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 부터 신비한 빛이 나옵니다."));
 							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), dwCounts[i]);
+#endif
 							break;
 						case CSpecialItemGroup::MOB:
 							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 몬스터가 나타났습니다!"));
@@ -2412,9 +2436,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							if (item_gets[i])
 							{
 								if (dwCounts[i] > 1)
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+									ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("상자에서 %s 가 %d 개 나왔습니다."), item_gets[i]->GetName(), dwCounts[i]);
+								else
+									ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("상자에서 %s 가 나왔습니다."), item_gets[i]->GetName());
+#else
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 %s 가 %d 개 나왔습니다."), item_gets[i]->GetName(), dwCounts[i]);
 								else
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 %s 가 나왔습니다."), item_gets[i]->GetName());
+#endif
 							}
 						}
 					}
@@ -2819,6 +2849,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									item->SetCount(item->GetCount() - 1);
 								}
 								break;
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+							case 71221: // Shop Decoration - grants premium offline-shop status (longer duration, decoration/title changes, faster time-extension cap)
+								{
+									if (FindAffect(AFFECT_DECORATION))
+									{
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 효과가 걸려 있습니다."));
+										return false;
+									}
+									const long duration = item->GetValue(0) * 24 * 60 * 60; // value0 = days
+									AddAffect(AFFECT_DECORATION, POINT_NONE, 0, AFF_NONE, duration, 0, true);
+									item->SetCount(item->GetCount() - 1);
+								}
+								break;
+#endif
 							case ITEM_MARRIAGE_RING:
 								{
 									marriage::TMarriage* pMarriage = marriage::CManager::instance().Get(GetPlayerID());
@@ -3914,7 +3958,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										for (int i = 0; i < count; i++)
 										{
 											if (dwVnums[i] == CSpecialItemGroup::GOLD)
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+												ChatPacket(CHAT_TYPE_MONEY_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#else
 												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#endif
 										}
 
 										item->SetCount(item->GetCount() - 1);
@@ -3992,12 +4040,21 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											switch (dwVnums[i])
 											{
 											case CSpecialItemGroup::GOLD:
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+												ChatPacket(CHAT_TYPE_MONEY_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#else
 												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+#endif
 												break;
 
 											case CSpecialItemGroup::EXP:
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+												ChatPacket(CHAT_TYPE_EXP_INFO, LC_TEXT("상자에서 부터 신비한 빛이 나옵니다."));
+												ChatPacket(CHAT_TYPE_EXP_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), dwCounts[i]);
+#else
 												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 부터 신비한 빛이 나옵니다."));
 												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), dwCounts[i]);
+#endif
 												break;
 
 											case CSpecialItemGroup::MOB:
@@ -4024,9 +4081,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												if (item_gets[i])
 												{
 													if (dwCounts[i] > 1)
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+														ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("상자에서 %s 가 %d 개 나왔습니다."), item_gets[i]->GetName(), dwCounts[i]);
+													else
+														ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("상자에서 %s 가 나왔습니다."), item_gets[i]->GetName());
+#else
 														ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 %s 가 %d 개 나왔습니다."), item_gets[i]->GetName(), dwCounts[i]);
 													else
 														ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 %s 가 나왔습니다."), item_gets[i]->GetName());
+#endif
 												}
 												break;
 											}
@@ -4091,7 +4154,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									int iGold = item->GetSocket(0);
 									ITEM_MANAGER::instance().RemoveItem(item);
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+									ChatPacket(CHAT_TYPE_MONEY_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), iGold);
+#else
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), iGold);
+#endif
 									PointChange(POINT_GOLD, iGold);
 								}
 								break;
@@ -6308,7 +6375,11 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 							if (bCount == 0)
 							{
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+								ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("아이템 획득: %s"), item2->GetName());
+#else
 								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item2->GetName());
+#endif
 								M2_DESTROY_ITEM(item);
 								if (item2->GetType() == ITEM_QUEST)
 									quest::CQuestManager::instance().PickupItem (GetPlayerID(), item2);
@@ -6389,7 +6460,11 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 #ifdef __FARM_SESSION_SYSTEM__
 			CFarmSessionManager::instance().OnItemReceived(this, item->GetOriginalVnum(), item->GetCount());
 #endif
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+				ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+#else
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+#endif
 
 				if (item->GetType() == ITEM_QUEST)
 					quest::CQuestManager::instance().PickupItem (GetPlayerID(), item);
@@ -6504,12 +6579,21 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 #endif
 
 			if (owner == this)
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+				ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+			else
+			{
+				owner->ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("아이템 획득: %s 님으로부터 %s"), GetName(), item->GetName());
+				ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("아이템 전달: %s 님에게 %s"), owner->GetName(), item->GetName());
+			}
+#else
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
 			else
 			{
 				owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s 님으로부터 %s"), GetName(), item->GetName());
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 전달: %s 님에게 %s"), owner->GetName(), item->GetName());
 			}
+#endif
 
 			if (item->GetType() == ITEM_QUEST)
 				quest::CQuestManager::instance().PickupItem (owner->GetPlayerID(), item);
@@ -7290,7 +7374,11 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, WORD bCount, int iRarePct, bool
 				if (bCount == 0)
 				{
 					if (bMsg)
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+						ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+#else
 						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+#endif
 
 					return item;
 				}
@@ -7351,7 +7439,11 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, WORD bCount, int iRarePct, bool
 	if (iEmptyCell != -1)
 	{
 		if (bMsg)
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+			ChatPacket(CHAT_TYPE_ITEM_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+#else
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+#endif
 
 		if (item->IsDragonSoul())
 			item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));

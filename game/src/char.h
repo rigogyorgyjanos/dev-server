@@ -2120,8 +2120,86 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		std::map<std::string, int>  m_protection_Time;
 #endif
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	public:
+		// On a PC: the shop currently being browsed as a guest. On the shopkeeper NPC: the shop it represents.
+		LPOFFLINESHOP	GetOfflineShop() const					{ return m_pkOfflineShop; }
+		void			SetOfflineShop(LPOFFLINESHOP p)		{ m_pkOfflineShop = p; }
+		bool			IsOfflineShopNPC() const				{ return !IsPC() && m_pkOfflineShop != NULL; }
+
+		// 40-bit extra-slot unlock mask, persisted via player.player.shop_flag
+		unsigned long long	GetOfflineShopFlag() const					{ return m_dwOfflineShopFlag; }
+		void				SetOfflineShopFlag(unsigned long long flag)	{ m_dwOfflineShopFlag = flag; }
+
+		// Transient: true while the shop-builder panel is open, before the shop actually exists
+		bool			GetOfflineShopPanel() const			{ return m_bOfflineShopPanel; }
+		void			SetOfflineShopPanel(bool b)				{ m_bOfflineShopPanel = b; }
+
+		void			SetOfflineShopRefresh(bool b)			{ m_bOfflineShopRefresh = b; }
+
+		// Same-map-or-Extended-Market check gating item add/withdraw actions on an offline shop
+		bool			CheckPremiumStateMap();
+
+		// Rate-limit gates built on the existing GetProtectTime/SetProtectTime cooldown idiom.
+		// Each returns true when the action is currently throttled (caller should abort).
+		bool			CanOpenShopPanel();
+		bool			CanOpenOfflineShop();
+		bool			CanCreateShop();
+		bool			CanDestroyShop();
+		bool			CanChangePriceShop();
+		bool			CanRemoveItemShop();
+		bool			CanRemoveLogShop();
+		bool			CanChangeDecoration();
+		bool			CanChangeTitle();
+		bool			CanWithdrawMoney();
+		bool			CanGetBackItems();
+		bool			CanAddTimeShop();
+		bool			CanTakeOutAllItemsOfflineShop();
+		bool			CanMoveItemOfflineShop();
+		bool			CanTeleportOfflineShop();
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+		bool			CanSearch();
+
+		// Search-result pagination state (finalized against offlineshop_search_manager.cpp in Phase 4)
+		void			SetLookingSearch(const std::vector<DWORD>& items)	{ m_vecSearchItems = items; m_bLookingSearch = !items.empty(); }
+		bool			IsLookingSearchItem() const				{ return m_bLookingSearch; }
+		// Notifies this character if itemID is part of its last search-result set (e.g. it just sold out elsewhere);
+		// bNotify triggers a re-send of the current search page so the client's row reflects the change.
+		void			IsLookingSearchItem(DWORD itemID, bool bRemoved, bool bNotify);
+		int				GetTotalPageCount() const;
+		void			GetPageItems(int pageIdx, std::vector<DWORD>& out) const;
+#endif
+
+		// Minimal same-purpose window-lock: keeps the offline-shop builder/viewer windows mutually exclusive.
+		// NOTE: does not (yet) integrate with the pre-existing normal shop/exchange/safebox windows - see plan Phase 1.
+		bool			PreventTradeWindow(DWORD mask, bool bChat);
+		void			SetTradeWindowFlag(DWORD mask, bool bSet);
+
+	protected:
+		// true (blocked) if less than ms have passed since the last call with this key; otherwise records now and returns false
+		bool			CheckOfflineShopCooldown(const char* key, int ms);
+
+		LPOFFLINESHOP	m_pkOfflineShop = NULL;
+		unsigned long long m_dwOfflineShopFlag = 0;
+		bool			m_bOfflineShopPanel = false;
+		bool			m_bOfflineShopRefresh = false;
+		DWORD			m_dwPreventTradeMask = 0;
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+		bool			m_bLookingSearch = false;
+		std::vector<DWORD> m_vecSearchItems;
+#endif
+#endif
 
 };
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+enum EOfflineShopWindowLock
+{
+	WND_MYSHOP		= (1 << 0),		// own shop-builder / owner panel open
+	WND_SHOPOWNER	= (1 << 1),		// viewing someone else's shop as a guest
+	WND_ALL			= WND_MYSHOP | WND_SHOPOWNER,
+};
+#endif
 
 ESex GET_SEX(LPCHARACTER ch);
 

@@ -86,6 +86,14 @@ bool CClientManager::InitializeTables()
 		return false;
 	}
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	if (!InitializeOfflineShop())
+	{
+		sys_err("InitializeOfflineShop FAILED");
+		return false;
+	}
+#endif
+
 	if (!InitializeObjectProto())
 	{
 		sys_err("InitializeObjectProto FAILED");

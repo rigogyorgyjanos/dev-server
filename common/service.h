@@ -39,5 +39,10 @@
 #define __BL_ENABLE_PICKUP_ITEM_EFFECT__	// Highlight the inventory slot a freshly picked-up item lands in
 #define __BL_HOT_RESTART__			// /hotrestart GM command: self-exec game+db onto the freshly built binary, no manual stop/start
 #define ENABLE_SWITCHBOT			// Switchbot: auto-reroll item attributes in 5 dedicated slots
+#define ENABLE_OFFLINESHOP_SYSTEM		// Offline shop: player's shop persists as an NPC after logout/server restart
+#if defined(ENABLE_OFFLINESHOP_SYSTEM)
+	#define ENABLE_SHOP_SEARCH_SYSTEM		// Global search across all active offline shops
+#endif
+#define ENABLE_CHATTING_WINDOW_RENEWAL		// Chat window renewal: per-category message filtering (EXP/item/money split out of INFO)
 
 #endif

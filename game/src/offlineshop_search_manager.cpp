@@ -28,67 +28,37 @@ void replace(std::string& str, const std::string& from, const std::string& to) {
 	}
 }
 
+// split_argument() in this codebase only supports its own fixed delimiter, so the
+// filter-command parser (which needs '$'/'^' as delimiters) uses this instead.
+static void SplitByDelim(const std::string& str, std::vector<std::string>& out, char delim)
+{
+	out.clear();
+	size_t start = 0;
+	for (size_t i = 0; i <= str.size(); ++i)
+	{
+		if (i == str.size() || str[i] == delim)
+		{
+			out.emplace_back(str.substr(start, i - start));
+			start = i + 1;
+		}
+	}
+}
+
 bool COfflineShopManager::CompareNames(const std::string searchedInput, DWORD itemIdx, bool exactSearch, BYTE playerLanguage)
 {
-	const auto it = m_mapItemNames.find(playerLanguage);
-	if (it != m_mapItemNames.end())
-	{
-		const auto itItem = it->second.find(itemIdx);
-		if (itItem != it->second.end())
-			return exactSearch ? (itItem->second == searchedInput) : (itItem->second.find(searchedInput.c_str()) != std::string::npos);
-	}
-	return false;
+	const TItemTable* table = ITEM_MANAGER::instance().GetTable(itemIdx);
+	if (!table)
+		return false;
+
+	std::string itemName(table->szLocaleName);
+	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+	return exactSearch ? (itemName == searchedInput) : (itemName.find(searchedInput) != std::string::npos);
 }
 
 void COfflineShopManager::LoadSearchLanguage()
 {
-	const std::map<BYTE, std::string> m_vecLang = {
-		{LOCALE_EN, "en"},
-		{LOCALE_PT, "pt"},
-		{LOCALE_ES, "es"},
-		{LOCALE_FR, "fr"},
-		{LOCALE_GR, "gr"},
-		{LOCALE_DE, "de"},
-		{LOCALE_RO, "ro"},
-		{LOCALE_PL, "pl"},
-		{LOCALE_IT, "it"},
-		{LOCALE_CZ, "cz"},
-		{LOCALE_HU, "hu"},
-		{LOCALE_TR, "tr"},
-	};
-	m_mapItemNames.clear();
-	std::map<DWORD, std::string> m_ItemNames;
-	for (auto it = m_vecLang.begin(); it != m_vecLang.end(); ++it)
-	{
-		char filename[40];
-		snprintf(filename, sizeof(filename), "locale/germany/country/%s/item_names.txt", it->second.c_str());
-		char	one_line[256];
-		FILE* fp = fopen(filename, "r");
-		if (fp != NULL)
-		{
-			m_ItemNames.clear();
-			while (fgets(one_line, 256, fp))
-			{
-				std::vector<std::string> m_vec;
-				split_argument(one_line, m_vec, "\t");
-				if (m_vec.size() < 2)
-					continue;
-				else if (m_vec[0].length() < 1 || m_vec[1].length() < 1)
-					continue;
-				DWORD itemIdx;
-				if (!str_to_number(itemIdx, m_vec[0].c_str()))
-					continue;
-
-				std::string itemName(m_vec[1].c_str());
-				replace(itemName, "\n", "");
-				std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
-				m_ItemNames.emplace(itemIdx, itemName);
-			}
-			fclose(fp);
-			if (m_ItemNames.size())
-				m_mapItemNames.emplace(it->first, m_ItemNames);
-		}
-	}
+	// This codebase is single-locale; CompareNames() compares directly against
+	// TItemTable::szLocaleName, so there is no external per-language name index to load.
 }
 
 
@@ -107,15 +77,15 @@ int GetRefineLevel(const char* name)
 void COfflineShopManager::CompareFilter(searchFilter& filter, const char* szCommand)
 {
 	std::vector<std::string> vecArgs;
-	split_argument(szCommand, vecArgs, "$");
+	SplitByDelim(szCommand, vecArgs, '$');
 	const bool printInfo = false;
 	if(printInfo)
 		sys_err("");
-	// type^0^-1$checkbox^0^0$input^hello½world½worl$combo^0^0^0^0^0^0^0^0^$editline^?^?^?^?^?^?^?^?^$attr^6^2000^-1^0^-1^0^-1^0^-1^0^$
+	// type^0^-1$checkbox^0^0$input^helloï¿½worldï¿½worl$combo^0^0^0^0^0^0^0^0^$editline^?^?^?^?^?^?^?^?^$attr^6^2000^-1^0^-1^0^-1^0^-1^0^$
 	for (BYTE j = 0; j < vecArgs.size(); ++j)
 	{
 		std::vector<std::string> vec;
-		split_argument(vecArgs[j].c_str(), vec, "^");
+		SplitByDelim(vecArgs[j], vec, '^');
 		if (vec.size() <= 1)
 			continue;
 		std::string filterType(vec[0]);
@@ -147,8 +117,8 @@ void COfflineShopManager::CompareFilter(searchFilter& filter, const char* szComm
 			std::string newString(vec[1].c_str());
 			if (!newString.length())
 				continue;
-			replace(newString, "½", " ");
-			replace(newString, "Â", "");
+			replace(newString, "ï¿½", " ");
+			replace(newString, "ï¿½", "");
 			filter.searchInput = newString;
 			if (printInfo)
 				sys_err("searchInput: %s searchInputNEW: %s", filter.searchInput.c_str(), vec[1].c_str());
@@ -373,9 +343,9 @@ bool COfflineShopManager::CheckFilter(const searchFilter* filter, const OFFLINE_
 	{
 		if (filter->costumeType > 0)
 		{
-			// constexpr BYTE costumeList[6] = { COSTUME_BODY, COSTUME_WEAPON, COSTUME_HAIR, COSTUME_ACCE, COSTUME_PET, COSTUME_MOUNT };
-			constexpr BYTE costumeList[6] = { COSTUME_BODY, COSTUME_WEAPON, COSTUME_HAIR, COSTUME_ACCE_SKIN, COSTUME_NORMAL_PET_SKIN, COSTUME_MOUNT_SKIN };
-			if (costumeList[(5) < (filter->costumeType - 1) ? (5) : (filter->costumeType - 1)] != itemSubType)
+			// This codebase's costume system only has BODY/WEAPON/HAIR/MOUNT (no accessory/pet/skin variants).
+			constexpr BYTE costumeList[4] = { COSTUME_BODY, COSTUME_WEAPON, COSTUME_HAIR, COSTUME_MOUNT };
+			if (costumeList[(3) < (filter->costumeType - 1) ? (3) : (filter->costumeType - 1)] != itemSubType)
 				return false;
 		}
 
@@ -383,30 +353,6 @@ bool COfflineShopManager::CheckFilter(const searchFilter* filter, const OFFLINE_
 		{
 			//put your costume rarity method!
 		}
-
-		if (itemSubType == COSTUME_ACCE)
-		{
-			if (filter->sashType > 0)
-			{
-				//put acce 1 grade itemIdx like example in list.
-				const std::vector<DWORD> m_acceItemIdxList = { 85001, 85005, 85011, 85015, 85021, 86001, 86005, 86011, 86015, 86021, 86025, 86031, 86035, 86041, 86045, 86051, 86055, 86061 };
-				BYTE gradeLevel = 0;
-				for (const auto& acceIdx : m_acceItemIdxList)
-				{
-					if (itemIdx >= acceIdx && itemIdx <= acceIdx + 3)
-					{
-						gradeLevel = itemIdx - (acceIdx - 1);
-						break;
-					}
-				}
-				if (filter->sashType - 1 != gradeLevel)
-					return false;
-			}
-
-			if (item->alSockets[0] < filter->minAbs || (filter->maxAbs != 0 && item->alSockets[0] > filter->maxAbs))
-				return false;
-		}
-		
 	}
 	
 
@@ -521,10 +467,23 @@ void COfflineShopManager::StartSearch(LPCHARACTER ch, const char* szCommand)
 {
 	if (!ch || strlen(szCommand) <= 4)
 		return;
+
+	// Page-navigation request ("page^N$") reuses the result set cached by the last
+	// full search (ch->SetLookingSearch below) instead of re-running the filter.
+	if (!strncmp(szCommand, "page^", 5))
+	{
+		if (!ch->IsLookingSearchItem())
+			return;
+		int pageIdx = 1;
+		str_to_number(pageIdx, szCommand + 5);
+		SendPlayerSearch(ch, pageIdx);
+		return;
+	}
+
 	searchFilter filter;
 	CompareFilter(filter, szCommand);
 
-	const BYTE playerLanguage = ch->GetLanguage();
+	const BYTE playerLanguage = 0; // single-locale codebase; CompareNames() no longer keys off this
 	std::vector<DWORD> m_SearchItems;
 
 	if (filter.playerSearch && filter.searchInput.length())
@@ -673,20 +632,8 @@ std::pair<int, int> COfflineShopManager::GetItemCategory(DWORD itemIdx, BYTE ite
 			return { 2, 5 };
 		else if (itemSubType == ARMOR_HEAD)
 			return { 2, 7 };
-		else if (itemSubType == ARMOR_PENDANT_FIRE)
-			return { 2, 8 };
-		else if (itemSubType == ARMOR_PENDANT_ICE)
-			return { 2, 8 };
-		else if (itemSubType == ARMOR_PENDANT_WIND)
-			return { 2, 8 };
-		else if (itemSubType == ARMOR_PENDANT_THUNDER)
-			return { 2, 8 };
-		else if (itemSubType == ARMOR_PENDANT_EARTH)
-			return { 2, 8 };
-		else if (itemSubType == ARMOR_PENDANT_DARK)
-			return { 2, 8 };
-		else if (itemSubType == ARMOR_PENDANT_SOUL)
-			return { 2, 8 };
+		// NOTE: this codebase has no pendant/element-armor subsystem (ARMOR_PENDANT_*), unlike the
+		// reference this file was ported from - category 2/8 is simply unreachable here.
 	}
 	else if (itemType == ITEM_DS)
 		return { 3, -1 };
@@ -716,22 +663,9 @@ std::pair<int, int> COfflineShopManager::GetItemCategory(DWORD itemIdx, BYTE ite
 					return { 4, 7 };
 			}
 		}
-		else if (itemSubType == COSTUME_ACCE)
-			return { 5, 0 };
-		else if (itemSubType == COSTUME_ACCE_SKIN)
-			return { 5, 1 };
 		else if (itemSubType == COSTUME_MOUNT)
 			return { 10, 0 };
-		else if (itemSubType == COSTUME_MOUNT_SKIN)
-			return { 10, 1 };
-		else if (itemSubType == COSTUME_PET)
-			return { 11, 1 };
-		else if (itemSubType == COSTUME_NORMAL_PET_SKIN)
-			return { 11, 2 };
 	}
-
-	else if (itemType == COSTUME_PET && itemSubType == PET_LEVELABLE)
-		return { 11, 0 };
 
 	// reinforcements
 	else if (itemIdx >= 401001 && itemIdx <= 403019)
@@ -1013,7 +947,9 @@ void COfflineShopManager::InsertItem(OFFLINE_SHOP_ITEM* p)
 		sys_err("wtf have 2 id in game? item id %u",p->id);
 		return;
 	}
-	SetAveragePrice(p->vnum, p->price / p->count);
+	// Average price is sale-based now (see BuyItemReal), not listing-based - a
+	// seller asking an inflated/lowball price for an unsold listing must not skew
+	// the "market average" shown to other players.
 
 	OFFLINE_SHOP_ITEM* item = new OFFLINE_SHOP_ITEM;
 	thecore_memcpy(item, p, sizeof(OFFLINE_SHOP_ITEM));

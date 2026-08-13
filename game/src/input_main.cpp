@@ -45,6 +45,10 @@
 #ifdef ENABLE_SWITCHBOT
 #include "switchbot.h"
 #endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+#include "offline_shop.h"
+#include "offlineshop_manager.h"
+#endif
 
 extern void SendShout(const char * szText, BYTE bEmpire);
 extern int g_nPortalLimitTime;
@@ -3014,6 +3018,181 @@ int CInputMain::MyShop(LPCHARACTER ch, const char * c_pData, size_t uiBytes)
 	return (iExtraLen);
 }
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+int CInputMain::MyOfflineShop(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
+{
+	if (uiBytes < sizeof(TPacketCGMyOfflineShop))
+		return -1;
+
+	const TPacketCGMyOfflineShop* p = (const TPacketCGMyOfflineShop*)c_pData;
+	int iExtraLen = p->bItemCount * sizeof(TOfflineShopItemTable);
+
+	if (uiBytes < sizeof(TPacketCGMyOfflineShop) + iExtraLen)
+		return -1;
+
+	COfflineShopManager::Instance().OpenMyOfflineShop(ch, p->sign, (TOfflineShopItemTable*)(c_pData + sizeof(TPacketCGMyOfflineShop)), p->bItemCount, p->shopVnum, p->titleType);
+	return iExtraLen;
+}
+
+int CInputMain::OfflineShop(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
+{
+	if (uiBytes < sizeof(TPacketCGShop))
+		return -1;
+
+	const TPacketCGShop* p = (const TPacketCGShop*)c_pData;
+	const char* data = c_pData + sizeof(TPacketCGShop);
+	const size_t left = uiBytes - sizeof(TPacketCGShop);
+	COfflineShopManager& mgr = COfflineShopManager::Instance();
+
+	switch (p->subheader)
+	{
+		case CG_OFFLINESHOP_ADD_ITEM:
+		{
+			if (left < sizeof(TPacketCGOfflineShopAddItem)) return -1;
+			const TPacketCGOfflineShopAddItem* q = (const TPacketCGOfflineShopAddItem*)data;
+			mgr.AddItem(ch, q->bDisplayPos, TItemPos(q->window_type, q->cell), q->price);
+			return sizeof(TPacketCGOfflineShopAddItem);
+		}
+		case CG_OFFLINESHOP_ADD_ITEM_SHORTCUT:
+		{
+			if (left < sizeof(TPacketCGOfflineShopAddItemShortcut)) return -1;
+			const TPacketCGOfflineShopAddItemShortcut* q = (const TPacketCGOfflineShopAddItemShortcut*)data;
+			mgr.AddItemShortcut(ch, TItemPos(q->window_type, q->cell), q->price);
+			return sizeof(TPacketCGOfflineShopAddItemShortcut);
+		}
+		case CG_OFFLINESHOP_REMOVE_ITEM:
+		{
+			if (left < sizeof(TPacketCGOfflineShopRemoveItem)) return -1;
+			const TPacketCGOfflineShopRemoveItem* q = (const TPacketCGOfflineShopRemoveItem*)data;
+			mgr.RemoveItem(ch, q->bPos, q->itemID, q->bTakeAll);
+			return sizeof(TPacketCGOfflineShopRemoveItem);
+		}
+		case CG_OFFLINESHOP_BUY:
+		{
+			if (left < sizeof(TPacketCGOfflineShopBuy)) return -1;
+			const TPacketCGOfflineShopBuy* q = (const TPacketCGOfflineShopBuy*)data;
+			mgr.Buy(ch, q->vid, q->pos, q->itemID);
+			return sizeof(TPacketCGOfflineShopBuy);
+		}
+		case CG_OFFLINESHOP_CHANGE_PRICE:
+		{
+			if (left < sizeof(TPacketCGOfflineShopChangePrice)) return -1;
+			const TPacketCGOfflineShopChangePrice* q = (const TPacketCGOfflineShopChangePrice*)data;
+			mgr.ChangePrice(ch, q->bPos, q->itemID, q->itemPrice, q->bAllItem);
+			return sizeof(TPacketCGOfflineShopChangePrice);
+		}
+		case CG_OFFLINESHOP_CHANGE_TITLE:
+		{
+			if (left < sizeof(TPacketCGOfflineShopChangeTitle)) return -1;
+			const TPacketCGOfflineShopChangeTitle* q = (const TPacketCGOfflineShopChangeTitle*)data;
+			mgr.ChangeTitle(ch, q->title);
+			return sizeof(TPacketCGOfflineShopChangeTitle);
+		}
+		case CG_OFFLINESHOP_CHANGE_DECORATION:
+		{
+			if (left < sizeof(TPacketCGOfflineShopChangeDecoration)) return -1;
+			const TPacketCGOfflineShopChangeDecoration* q = (const TPacketCGOfflineShopChangeDecoration*)data;
+			TShopDecoration deco;
+			deco.vnum = q->vnum;
+			deco.type = q->type;
+			strlcpy(deco.sign, q->sign, sizeof(deco.sign));
+			mgr.ChangeDecoration(ch, &deco);
+			return sizeof(TPacketCGOfflineShopChangeDecoration);
+		}
+		case CG_OFFLINESHOP_OPEN_SLOT:
+		{
+			if (left < sizeof(TPacketCGOfflineShopOpenSlot)) return -1;
+			const TPacketCGOfflineShopOpenSlot* q = (const TPacketCGOfflineShopOpenSlot*)data;
+			mgr.OpenSlot(ch, q->bPos);
+			return sizeof(TPacketCGOfflineShopOpenSlot);
+		}
+		case CG_OFFLINESHOP_MOVE_ITEM:
+		{
+			if (left < sizeof(TPacketCGOfflineShopMoveItem)) return -1;
+			const TPacketCGOfflineShopMoveItem* q = (const TPacketCGOfflineShopMoveItem*)data;
+			mgr.MoveItem(ch, q->slotPos, q->targetPos);
+			return sizeof(TPacketCGOfflineShopMoveItem);
+		}
+		case CG_OFFLINESHOP_TELEPORT:
+		{
+			if (left < sizeof(TPacketCGOfflineShopTeleport)) return -1;
+			const TPacketCGOfflineShopTeleport* q = (const TPacketCGOfflineShopTeleport*)data;
+			mgr.Teleport(ch, q->ownerName);
+			return sizeof(TPacketCGOfflineShopTeleport);
+		}
+		case CG_OFFLINESHOP_WITHDRAW_MONEY:
+			mgr.WithdrawMoney(ch);
+			return 0;
+		case CG_OFFLINESHOP_CLEAR_LOG:
+			mgr.ShopLogRemove(ch);
+			return 0;
+		case CG_OFFLINESHOP_DESTROY:
+			mgr.DestroyOfflineShop(ch);
+			return 0;
+		case CG_OFFLINESHOP_GET_BACK_ITEM:
+			mgr.GetBackItem(ch);
+			return 0;
+		case CG_OFFLINESHOP_ADD_TIME:
+			mgr.ShopAddTime(ch);
+			return 0;
+		case CG_OFFLINESHOP_REMOVE_ALL_ITEM:
+			mgr.RemoveItemAll(ch);
+			return 0;
+		case CG_OFFLINESHOP_STOP_SHOPPING:
+			mgr.StopShopping(ch);
+			return 0;
+		case CG_OFFLINESHOP_OPEN_WITH_VID:
+			// only used for the "open my own shop panel" case; other players reach a shop via NPC click (CHARACTER::OnClick)
+			mgr.OpenOfflineShop(ch);
+			return 0;
+		case CG_OFFLINESHOP_GET_AVERAGE_PRICE:
+		{
+			if (left < sizeof(TPacketCGOfflineShopGetAveragePrice)) return -1;
+			const TPacketCGOfflineShopGetAveragePrice* q = (const TPacketCGOfflineShopGetAveragePrice*)data;
+			mgr.CheckAveragePrice(ch, q->vnum);
+			return sizeof(TPacketCGOfflineShopGetAveragePrice);
+		}
+		case CG_OFFLINESHOP_EXPAND_SLOT:
+		{
+			if (left < sizeof(TPacketCGOfflineShopOpenSlot)) return -1;
+			const TPacketCGOfflineShopOpenSlot* q = (const TPacketCGOfflineShopOpenSlot*)data;
+			mgr.ExpandSlot(ch, q->bPos);
+			return sizeof(TPacketCGOfflineShopOpenSlot);
+		}
+		case CG_OFFLINESHOP_TOGGLE_LOCK:
+			mgr.ToggleLock(ch);
+			return 0;
+	}
+
+	sys_err("CInputMain::OfflineShop: unknown subheader %d from %s", p->subheader, ch->GetName());
+	return -1;
+}
+#endif
+
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+int CInputMain::ShopSearch(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
+{
+	// c_pData[0] is the already-dispatched header byte; the NUL-terminated search command follows it.
+	if (uiBytes < 2)
+		return -1;
+
+	const char* command = c_pData + 1;
+	const size_t commandBufLen = uiBytes - 1;
+
+	const void* pNul = memchr(command, '\0', commandBufLen);
+	if (!pNul)
+		return -1;
+
+	const int iExtraLen = (int)((const char*)pNul - command) + 1;
+
+	if (ch->CanSearch())
+		return iExtraLen;
+
+	COfflineShopManager::Instance().StartSearch(ch, command);
+	return iExtraLen;
+}
+#endif
+
 void CInputMain::Refine(LPCHARACTER ch, const char* c_pData)
 {
 	const TPacketCGRefine* p = reinterpret_cast<const TPacketCGRefine*>(c_pData);
@@ -3420,6 +3599,24 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			{
 				return -1;
 			}
+			break;
+#endif
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+		case HEADER_CG_OFFLINE_SHOP:
+			if ((iExtraLen = OfflineShop(ch, c_pData, m_iBufferLeft)) < 0)
+				return -1;
+			break;
+
+		case HEADER_CG_MY_OFFLINE_SHOP:
+			if ((iExtraLen = MyOfflineShop(ch, c_pData, m_iBufferLeft)) < 0)
+				return -1;
+			break;
+#endif
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+		case HEADER_CG_SHOP_SEARCH:
+			if ((iExtraLen = ShopSearch(ch, c_pData, m_iBufferLeft)) < 0)
+				return -1;
 			break;
 #endif
 	}

@@ -43,6 +43,11 @@ enum
 	HEADER_CG_SHOOT				= 54,
 	HEADER_CG_MYSHOP				= 55,
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	HEADER_CG_OFFLINE_SHOP			= 57,
+	HEADER_CG_MY_OFFLINE_SHOP		= 58,
+#endif
+
 	HEADER_CG_ITEM_USE_TO_ITEM			= 60,
 	HEADER_CG_TARGET			 	= 61,
 
@@ -188,6 +193,10 @@ enum
 	HEADER_GC_SCRIPT				= 45,
 	HEADER_GC_QUEST_CONFIRM			= 46,
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	HEADER_GC_OFFLINE_SHOP			= 47,
+#endif
+
 #ifdef __SEND_TARGET_INFO__
 	HEADER_GC_TARGET_INFO			= 58,
 	HEADER_CG_TARGET_INFO_LOAD		= 59,
@@ -293,6 +302,10 @@ enum
 	HEADER_GC_HYBRIDCRYPT_SDB		= 153, // SDB means Supplmentary Data Blocks
 	//HYBRID CRYPT
 
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+	HEADER_GC_SHOPSEARCH_SET		= 156,
+#endif
+
 	// ROULETTE
 	HEADER_GC_ROULETTE					= 200, 
 	// END_ROULETTE			
@@ -311,6 +324,10 @@ enum
 	HEADER_GC_FARM_SESSION_ITEM_ENTRY	= 213,
 	HEADER_GC_FARM_SESSION_REPORT_END	= 214,
 	HEADER_CG_FARM_SESSION_CONTROL		= 215,
+#endif
+
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+	HEADER_CG_SHOP_SEARCH			= 220,
 #endif
 
 #ifdef ENABLE_SWITCHBOT
@@ -358,6 +375,9 @@ enum
 
 #ifdef ENABLE_SWITCHBOT
 	HEADER_GG_SWITCHBOT				= 34,
+#endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	HEADER_GG_OFFLINESHOP_WATCHER		= 35,
 #endif
 };
 
@@ -803,6 +823,34 @@ enum
 	SHOP_SUBHEADER_CG_SELL,
 	SHOP_SUBHEADER_CG_SELL2
 };
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+// Client -> game subheaders carried under HEADER_CG_OFFLINE_SHOP (TPacketCGShop.subheader)
+enum
+{
+	CG_OFFLINESHOP_ADD_ITEM,
+	CG_OFFLINESHOP_REMOVE_ITEM,
+	CG_OFFLINESHOP_BUY,
+	CG_OFFLINESHOP_WITHDRAW_MONEY,
+	CG_OFFLINESHOP_CHANGE_TITLE,
+	CG_OFFLINESHOP_CLEAR_LOG,
+	CG_OFFLINESHOP_CHANGE_DECORATION,
+	CG_OFFLINESHOP_OPEN_SLOT,
+	CG_OFFLINESHOP_DESTROY,
+	CG_OFFLINESHOP_GET_BACK_ITEM,
+	CG_OFFLINESHOP_ADD_TIME,
+	CG_OFFLINESHOP_MOVE_ITEM,
+	CG_OFFLINESHOP_CHANGE_PRICE,
+	CG_OFFLINESHOP_REMOVE_ALL_ITEM,
+	CG_OFFLINESHOP_STOP_SHOPPING,
+	CG_OFFLINESHOP_OPEN_WITH_VID,
+	CG_OFFLINESHOP_TELEPORT,
+	CG_OFFLINESHOP_GET_AVERAGE_PRICE,
+	CG_OFFLINESHOP_EXPAND_SLOT,
+	CG_OFFLINESHOP_TOGGLE_LOCK,
+	CG_OFFLINESHOP_ADD_ITEM_SHORTCUT,
+};
+#endif
 #if defined(__BL_MOVE_CHANNEL__)
 typedef struct command_move_channel
 {
@@ -827,6 +875,45 @@ typedef struct command_shop
 	BYTE	header;
 	BYTE	subheader;
 } TPacketCGShop;
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+// "Open my offline shop" request. Followed by bItemCount * TOfflineShopItemTable (variable length, parsed manually in input_main.cpp)
+typedef struct command_my_offlineshop
+{
+	BYTE		header;
+	char		sign[SHOP_SIGN_MAX_LEN + 1];
+	BYTE		titleType;
+	DWORD		shopVnum;
+	BYTE		bItemCount;
+} TPacketCGMyOfflineShop;
+
+// Fixed-size payloads following TPacketCGShop{header,subheader} when header == HEADER_CG_OFFLINE_SHOP,
+// selected by CG_OFFLINESHOP_* (see subheader enum above). No trailing/variable data on any of these.
+typedef struct offlineshop_cg_add_item		{ BYTE bDisplayPos; WORD window_type; WORD cell; long long price; } TPacketCGOfflineShopAddItem;
+typedef struct offlineshop_cg_add_item_shortcut { WORD window_type; WORD cell; long long price; } TPacketCGOfflineShopAddItemShortcut;
+typedef struct offlineshop_cg_remove_item	{ BYTE bPos; DWORD itemID; BYTE bTakeAll; } TPacketCGOfflineShopRemoveItem;
+typedef struct offlineshop_cg_buy			{ DWORD vid; BYTE pos; DWORD itemID; } TPacketCGOfflineShopBuy;
+typedef struct offlineshop_cg_change_price	{ BYTE bPos; DWORD itemID; long long itemPrice; BYTE bAllItem; } TPacketCGOfflineShopChangePrice;
+typedef struct offlineshop_cg_change_title	{ char title[SHOP_SIGN_MAX_LEN + 1]; } TPacketCGOfflineShopChangeTitle;
+typedef struct offlineshop_cg_change_deco	{ BYTE vnum; BYTE type; char sign[SHOP_SIGN_MAX_LEN + 1]; } TPacketCGOfflineShopChangeDecoration;
+typedef struct offlineshop_cg_open_slot	{ BYTE bPos; } TPacketCGOfflineShopOpenSlot;
+typedef struct offlineshop_cg_move_item	{ WORD slotPos; WORD targetPos; } TPacketCGOfflineShopMoveItem;
+typedef struct offlineshop_cg_teleport		{ char ownerName[CHARACTER_NAME_MAX_LEN + 1]; } TPacketCGOfflineShopTeleport;
+typedef struct offlineshop_cg_get_avg_price { DWORD vnum; } TPacketCGOfflineShopGetAveragePrice;
+#endif
+
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+// HEADER_CG_SHOP_SEARCH carries no fixed struct - just a raw '$'-delimited filter command string
+// following the 1-byte header (parsed by COfflineShopManager::CompareFilter), registered as dynamic-size.
+
+// Envelope for HEADER_GC_SHOPSEARCH_SET; trailing payload (int pageIdx, int totalPageCount, int itemCount,
+// then itemCount * TOfflineShopItem) is written separately via TEMP_BUFFER, mirroring TPacketGCShop's pattern.
+typedef struct packet_shop_search_item_set
+{
+	BYTE	header;
+	WORD	size;
+} TPacketGCShopSearchItemSet;
+#endif
 
 typedef struct command_on_click
 {
@@ -1411,9 +1498,66 @@ typedef struct packet_shop_update_price
 typedef struct packet_shop	// ���� ��Ŷ
 {
 	BYTE        header;
-	WORD	size; 
+	WORD	size;
 	BYTE        subheader;
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	WORD	packet_size;	// element count of the batched trailing array (offline-shop item/log streaming); unused (0) by the regular myshop packets
+#endif
 } TPacketGCShop;
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+// Additional subheaders for TPacketGCShop when header == HEADER_GC_OFFLINE_SHOP
+// (SHOP_SUBHEADER_GC_START/END/UPDATE_ITEM/OK/NOT_ENOUGH_MONEY/SOLD_OUT above are reused as-is)
+enum
+{
+	SHOP_SUBHEADER_GC_ITEM_OPTIMIZE = 100,
+	SHOP_SUBHEADER_GC_CLEAR_DATA,
+	SHOP_SUBHEADER_GC_LOG_OPTIMIZE,
+	SHOP_SUBHEADER_GC_REFRESH_COUNT,
+	SHOP_SUBHEADER_GC_REALWATCHER_COUNT,
+	SHOP_SUBHEADER_GC_CHANGE_TITLE,
+	SHOP_SUBHEADER_GC_REFRESH_MONEY,
+	SHOP_SUBHEADER_GC_CHECK_RESULT,
+};
+
+// Payload of SHOP_SUBHEADER_GC_START, sent to a guest right after AddGuest()
+typedef struct packet_offlineshop_start
+{
+	char		title[SHOP_SIGN_MAX_LEN + 1];
+	DWORD		owner_vid;
+	DWORD		owner_id;	// the shop owner's player ID - Buy()/FindOfflineShopPID() key, NOT the NPC's VID above
+	DWORD		m_dwRealWatcherCount;
+	DWORD		m_dwDisplayedCount;
+	unsigned long long flag;
+	DWORD		type;
+	bool		IsOwner;
+	DWORD		time;
+	long long	price;
+	long		x, y;			// world position the shop was created at - static for the shop's lifetime
+	DWORD		mapindex;
+	BYTE		channel;
+} TPacketGCOfflineShopStart;
+
+// Payload of SHOP_SUBHEADER_GC_UPDATE_ITEM
+typedef struct packet_offlineshop_update_item
+{
+	BYTE		pos;
+	DWORD		m_dwDisplayedCount;
+	DWORD		m_dwRealWatcherCount;
+	long long	price;
+	unsigned long long flag;
+	DWORD		time;
+	DWORD		type;
+	char		title[SHOP_SIGN_MAX_LEN + 1];
+	ShopLog		log;
+	// Must be the wire-safe DTO, not the 107-byte internal OFFLINE_SHOP_ITEM - the
+	// client's mirrored struct (client-src/.../Packet.h) uses TOfflineShopItem's
+	// 91-byte shape. Embedding the internal struct here left the item's fields at
+	// the wrong offsets client-side (bogus vnum -> "random item appears") and undersized
+	// the packet on the client's fixed-size Recv(), desyncing every packet after it.
+	TOfflineShopItem item;
+} TPacketGCOfflineShopUpdateItem;
+#endif
 
 struct packet_exchange
 {
@@ -2599,6 +2743,24 @@ typedef struct packet_gc_switchbot_update_item
 	long	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 } TSwitchbotUpdateItem;
+#endif
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+// P2P broadcast of one core's own LOCAL watcher count for a shop - every other
+// core's COfflineShop mirror keys this by wSenderPort (identifies "the core with
+// this listening port", same self-addressing convention as TPacketGGSwitchbot) so
+// it can replace (not accumulate) that one peer's contribution, then sum local +
+// all known remote contributions for the number actually shown to clients.
+typedef struct packet_gg_offlineshop_watcher
+{
+	BYTE	bHeader;
+	WORD	wSenderPort;
+	DWORD	owner_id;
+	DWORD	dwDisplayedCount;
+	DWORD	dwRealWatcherCount;
+
+	packet_gg_offlineshop_watcher() : bHeader(HEADER_GG_OFFLINESHOP_WATCHER), wSenderPort(0), owner_id(0), dwDisplayedCount(0), dwRealWatcherCount(0) {}
+} TPacketGGOfflineShopWatcher;
 #endif
 
 #pragma pack()

@@ -22,6 +22,10 @@
 #include "affect.h"
 #include "shop.h"
 #include "shop_manager.h"
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+#include "offline_shop.h"
+#include "offlineshop_manager.h"
+#endif
 #include "safebox.h"
 #include "regen.h"
 #include "pvp.h"
@@ -461,6 +465,14 @@ void CHARACTER::Destroy()
 		GetShop()->RemoveGuest(this);
 		SetShop(NULL);
 	}
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	if (GetOfflineShop())
+	{
+		GetOfflineShop()->RemoveGuest(this, true);
+		SetOfflineShop(NULL);
+	}
+#endif
 
 	ClearStone();
 	ClearSync();
@@ -990,6 +1002,27 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 		d->Packet(&p, sizeof(TPacketGCShopSign));
 	}
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	// Reuses the same floating myshop-sign mechanism: whenever a viewer's client newly
+	// discovers this NPC (walks into range, zones in, etc.), tell them the shop's sign.
+	// ChangeTitleReal()'s PacketAround() only reaches whoever is nearby AT THE MOMENT the
+	// title changes - it can never reach someone who wanders into range afterward, which
+	// left the sign invisible to almost everyone in practice.
+	if (!IsPC() && IsOfflineShopNPC())
+	{
+		TPacketGCShopSign p;
+
+		p.bHeader = HEADER_GC_SHOP_SIGN;
+		p.dwVID = GetVID();
+		// m_data.sign is stored as "<titleType digit><actual sign text>" - skip the digit,
+		// it's not part of what the player typed.
+		const char* sign = GetOfflineShop()->m_data.sign;
+		strlcpy(p.szSign, sign[0] != '\0' ? sign + 1 : sign, sizeof(p.szSign));
+
+		d->Packet(&p, sizeof(TPacketGCShopSign));
+	}
+#endif
+
 	if (entity->IsType(ENTITY_CHARACTER))
 	{
 		sys_log(3, "EntityInsert %s (RaceNum %d) (%d %d) TO %s",
@@ -1274,6 +1307,10 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 	// END_OF_REMOVE_REAL_SKILL_LEVLES
 
 	tab.horse = GetHorseData();
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	tab.shop_flag = GetOfflineShopFlag();
+#endif
 }
 
 
@@ -1862,6 +1899,10 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 	}
 
 	m_petSystem = M2_NEW CPetSystem(this);
+#endif
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	SetOfflineShopFlag(t->shop_flag);
 #endif
 }
 
@@ -3123,6 +3164,10 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 
 					if (test_server)
 						ChatPacket(CHAT_TYPE_INFO, "You have gained %d exp.", amount);
+
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+					ChatPacket(CHAT_TYPE_EXP_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), amount);
+#endif
 
 					DWORD iExpBalance = 0;
 
@@ -4969,6 +5014,25 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 			return;
 		}
 	}
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	// Offline-shop NPCs are plain SpawnMob() entities intercepted here, before the quest-trigger path.
+	if (!IsPC() && IsOfflineShopNPC())
+	{
+		if (pkChrCauser->IsDead())
+			return;
+
+		if (pkChrCauser->GetPlayerID() == GetOfflineShop()->m_data.owner_id)
+			COfflineShopManager::Instance().OpenOfflineShop(pkChrCauser);
+		else
+			// OpenOfflineShopWithVID actually keys off the owner's player ID (see its
+			// declaration) - GetVID() here would be this NPC's own instance VID, which
+			// FindOfflineShopPID() would never match, silently failing to open the guest
+			// dialog for every click on a shop that isn't your own.
+			COfflineShopManager::Instance().OpenOfflineShopWithVID(pkChrCauser, GetOfflineShop()->m_data.owner_id);
+		return;
+	}
+#endif
 
 	// 청소년은 퀘스트 못함
 	if (LC_IsNewCIBN())
@@ -7573,6 +7637,106 @@ int CHARACTER::GetProtectTime(const std::string& flagname) const
 		return it->second;
 	return 0;
 }
+#endif
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+bool CHARACTER::CheckOfflineShopCooldown(const char* key, int ms)
+{
+	const DWORD now = get_dword_time();
+	const DWORD last = (DWORD)GetProtectTime(key);
+	if (last != 0 && (int)(now - last) < ms)
+		return true;
+	SetProtectTime(key, (int)now);
+	return false;
+}
+
+bool CHARACTER::CanOpenShopPanel()				{ return CheckOfflineShopCooldown("offlineshop.openpanel", 500); }
+bool CHARACTER::CanOpenOfflineShop()			{ return CheckOfflineShopCooldown("offlineshop.open", 500); }
+bool CHARACTER::CanCreateShop()				{ return CheckOfflineShopCooldown("offlineshop.create", 1000); }
+bool CHARACTER::CanDestroyShop()				{ return CheckOfflineShopCooldown("offlineshop.destroy", 1000); }
+bool CHARACTER::CanChangePriceShop()			{ return CheckOfflineShopCooldown("offlineshop.changeprice", 500); }
+bool CHARACTER::CanRemoveItemShop()			{ return CheckOfflineShopCooldown("offlineshop.removeitem", 500); }
+bool CHARACTER::CanRemoveLogShop()				{ return CheckOfflineShopCooldown("offlineshop.removelog", 1000); }
+bool CHARACTER::CanChangeDecoration()			{ return CheckOfflineShopCooldown("offlineshop.decoration", 1000); }
+bool CHARACTER::CanChangeTitle()				{ return CheckOfflineShopCooldown("offlineshop.title", 1000); }
+bool CHARACTER::CanWithdrawMoney()				{ return CheckOfflineShopCooldown("offlineshop.withdraw", 1000); }
+bool CHARACTER::CanGetBackItems()				{ return CheckOfflineShopCooldown("offlineshop.getback", 1000); }
+bool CHARACTER::CanAddTimeShop()				{ return CheckOfflineShopCooldown("offlineshop.addtime", 1000); }
+bool CHARACTER::CanTakeOutAllItemsOfflineShop(){ return CheckOfflineShopCooldown("offlineshop.removeall", 1000); }
+bool CHARACTER::CanMoveItemOfflineShop()		{ return CheckOfflineShopCooldown("offlineshop.moveitem", 300); }
+bool CHARACTER::CanTeleportOfflineShop()		{ return CheckOfflineShopCooldown("offlineshop.teleport", 5000); }
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+bool CHARACTER::CanSearch()					{ return CheckOfflineShopCooldown("offlineshop.search", 1000); }
+
+int CHARACTER::GetTotalPageCount() const
+{
+	return (int)((m_vecSearchItems.size() + SHOP_SEARCH_PAGE_SIZE - 1) / SHOP_SEARCH_PAGE_SIZE);
+}
+
+void CHARACTER::GetPageItems(int pageIdx, std::vector<DWORD>& out) const
+{
+	out.clear();
+	if (pageIdx < 1)
+		return;
+
+	const size_t startIdx = (size_t)(pageIdx - 1) * SHOP_SEARCH_PAGE_SIZE;
+	for (size_t i = startIdx; i < m_vecSearchItems.size() && i < startIdx + SHOP_SEARCH_PAGE_SIZE; ++i)
+		out.push_back(m_vecSearchItems[i]);
+}
+
+void CHARACTER::IsLookingSearchItem(DWORD itemID, bool bRemoved, bool bNotify)
+{
+	if (!m_bLookingSearch)
+		return;
+
+	const auto it = std::find(m_vecSearchItems.begin(), m_vecSearchItems.end(), itemID);
+	if (it == m_vecSearchItems.end())
+		return;
+
+	if (bRemoved)
+		m_vecSearchItems.erase(it);
+
+	if (bNotify)
+	{
+		// Re-send whichever page the player is currently viewing so the row reflects the change.
+		// SendPlayerSearch always re-derives the page from GetPageItems(), so page 1 is a safe default.
+		COfflineShopManager::Instance().SendPlayerSearch(this, 1);
+	}
+}
+#endif
+
+bool CHARACTER::CheckPremiumStateMap()
+{
+	if (FindAffect(AFFECT_DECORATION))
+		return true;
+
+	LPOFFLINESHOP pkOfflineShop = COfflineShopManager::Instance().FindOfflineShopPID(GetPlayerID());
+	if (!pkOfflineShop)
+		return true;	// no shop of our own yet - nothing to be "on the map" of
+
+	return pkOfflineShop->m_data.mapindex == GetMapIndex();
+}
+
+void CHARACTER::SetTradeWindowFlag(DWORD mask, bool bSet)
+{
+	if (bSet)
+		SET_BIT(m_dwPreventTradeMask, mask);
+	else
+		REMOVE_BIT(m_dwPreventTradeMask, mask);
+}
+
+bool CHARACTER::PreventTradeWindow(DWORD mask, bool bChat)
+{
+	if (!IS_SET(m_dwPreventTradeMask, mask))
+		return false;
+
+	if (bChat)
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You need to close other windows."));
+	return true;
+}
+#endif
+
+#if defined(__MISSION_BOOKS__)
 void CHARACTER::SetMissionBook(BYTE missionType, BYTE value, DWORD arg, WORD level)
 {
 #if __cplusplus < 199711L

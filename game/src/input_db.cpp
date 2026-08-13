@@ -11,6 +11,10 @@
 #include "protocol.h"
 #include "mob_manager.h"
 #include "shop_manager.h"
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+#include "offline_shop.h"
+#include "offlineshop_manager.h"
+#endif
 #include "sectree_manager.h"
 #include "skill.h"
 #include "questmanager.h"
@@ -2275,6 +2279,12 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 	case HEADER_DG_MYSHOP_PRICELIST_RES:
 		MyshopPricelistRes(DESC_MANAGER::instance().FindByHandle(m_dwHandle), (TPacketMyshopPricelistHeader*) c_pData );
 		break;
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	case HEADER_DG_OFFLINESHOP:
+		COfflineShopManager::Instance().RecvPackets(c_pData);
+		break;
+#endif
 		// END_OF_MYSHOP_PRICE_LIST
 		//
 	// RELOAD_ADMIN

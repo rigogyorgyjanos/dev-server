@@ -145,6 +145,9 @@ enum
 #if defined(__BL_HOT_RESTART__)
 	HEADER_GD_HOTRESTART = 153,		// game tells db to self-exec onto the freshly built binary
 #endif
+#if defined(ENABLE_OFFLINESHOP_SYSTEM)
+	HEADER_GD_OFFLINESHOP = 154,		// NOTE: NOT 117 - that value is taken by HEADER_GD_ELECT_MONARCH
+#endif
 
 	HEADER_GD_SETUP			= 0xff,
 
@@ -215,6 +218,10 @@ enum
 	HEADER_DG_GUILD_WAR_RESERVE_ADD	= 106,
 	HEADER_DG_GUILD_WAR_RESERVE_DEL	= 107,
 	HEADER_DG_GUILD_WAR_BET		= 108,
+
+#if defined(ENABLE_OFFLINESHOP_SYSTEM)
+	HEADER_DG_OFFLINESHOP		= 109,
+#endif
 
 	HEADER_DG_RELOAD_PROTO		= 120,
 	HEADER_DG_CHANGE_NAME		= 121,
@@ -472,6 +479,9 @@ typedef struct SPlayerTable
 	DWORD	logoff_interval;
 
 	int		aiPremiumTimes[PREMIUM_MAX_NUM];
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	unsigned long long shop_flag;	// persisted extra-slot unlock mask, carried over to the next shop created
+#endif
 } TPlayerTable;
 
 typedef struct SMobSkillLevel
@@ -1585,6 +1595,141 @@ struct TSwitchbottAttributeTable
 	int apply_num;
 	long max_value;
 };
+#endif
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+class COfflineShop;
+typedef COfflineShop* LPOFFLINESHOP;
+
+enum
+{
+	OFFLINE_SHOP_HOST_ITEM_MAX_NUM = 80,	// CGrid(5,16) display grid; pos 0-39 always available, 40-79 unlocked per-cell via slotflag (40 bits)
+};
+
+struct ShopLog
+{
+	char		name[CHARACTER_NAME_MAX_LEN + 1];	// buyer name ("target" column)
+	char		date[32];							// formatted date string, NOT epoch (offline_shop_log.time is a VARCHAR)
+	DWORD		itemVnum;
+	WORD		itemCount;
+	long long	price;
+};
+
+struct OFFLINE_SHOP_ITEM
+{
+	DWORD		id;
+	DWORD		owner_id;
+	BYTE		pos;			// display position in the shop's 5x16 grid (0..OFFLINE_SHOP_HOST_ITEM_MAX_NUM-1)
+	WORD		count;
+	DWORD		vnum;
+	long		alSockets[ITEM_SOCKET_MAX_NUM];
+	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
+	long long	price;
+	BYTE		status;			// 0 = available, 1 = sold/reserved
+	char		szOwnerName[CHARACTER_NAME_MAX_LEN + 1];
+	char		szBuyerName[CHARACTER_NAME_MAX_LEN + 1];
+#ifdef ENABLE_CHANGELOOK_SYSTEM
+	DWORD		transmutation;
+#endif
+#ifdef ENABLE_NEW_NAME_ITEM
+	char		name[ITEM_NAME_MAX_LEN + 1];
+#endif
+#ifdef ENABLE_PERMA_ITEM
+	BYTE		perma;
+#endif
+};
+
+// Client-visible item DTO sent over the wire (kept distinct from the server-internal OFFLINE_SHOP_ITEM)
+struct TOfflineShopItem
+{
+	DWORD		id, owner_id, vnum;
+	WORD		count;
+	long long	price;
+	BYTE		status;
+	BYTE		display_pos;
+	char		szBuyerName[CHARACTER_NAME_MAX_LEN + 1];
+	long		alSockets[ITEM_SOCKET_MAX_NUM];
+	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
+#ifdef ENABLE_CHANGELOOK_SYSTEM
+	DWORD		transmutation;
+#endif
+#ifdef ENABLE_NEW_NAME_ITEM
+	char		name[ITEM_NAME_MAX_LEN + 1];
+#endif
+#ifdef ENABLE_PERMA_ITEM
+	BYTE		perma;
+#endif
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+	bool		ownerStatus;		// true if the seller is currently online/reachable (search-result display only)
+	long long	averagePrice;		// running average sale price for this vnum (search-result display only)
+#endif
+};
+
+struct TOfflineShop
+{
+	DWORD		owner_id;
+	char		owner_name[CHARACTER_NAME_MAX_LEN + 1];
+	char		sign[SHOP_SIGN_MAX_LEN + 1];		// title/sign (also overwritten by decoration change)
+	long		x, y, z;
+	long		mapindex;
+	DWORD		type;			// shopkeeper NPC vnum, base 30000 + decoration index (0-15)
+	BYTE		channel;
+	unsigned long long slotflag;	// 40-bit extra-slot unlock mask; also persisted per-character (player.player.shop_flag)
+	DWORD		time;			// unix close time
+	long long	price;			// accumulated, withdrawable revenue (DB: player.player.shop_money, NOT this table)
+	OFFLINE_SHOP_ITEM items[OFFLINE_SHOP_HOST_ITEM_MAX_NUM];
+	ShopLog		log[OFFLINE_SHOP_HOST_ITEM_MAX_NUM];
+};
+
+struct TOfflineShopBuy
+{
+	OFFLINE_SHOP_ITEM item;
+	DWORD		customer_id;
+	char		customer_name[CHARACTER_NAME_MAX_LEN + 1];
+	int			log_index;
+	ShopLog		log;
+};
+
+struct TShopDecoration
+{
+	DWORD	owner_id;
+	BYTE	vnum;		// shopkeeper NPC model index 0-15 (30000+vnum becomes TOfflineShop::type)
+	BYTE	type;		// decoration theme 0-6 (fire/ice/paper/ribbon/wing/...)
+	char	sign[SHOP_SIGN_MAX_LEN + 1];
+};
+
+struct TOfflineShopChangeTitle	{ DWORD owner_id; char sign[SHOP_SIGN_MAX_LEN + 1]; };
+struct TOfflineShopOpenSlot	{ DWORD owner_id; unsigned long long flag; };
+struct TOfflineShopBackItem	{ DWORD owner_id; OFFLINE_SHOP_ITEM items[OFFLINE_SHOP_HOST_ITEM_MAX_NUM]; };
+
+// Client "open my shop with these items" request row
+struct TOfflineShopItemTable { TItemPos pos; BYTE display_pos; long long price; };
+
+// game<->db IPC envelopes (each starts with a BYTE subheader; RecvPackets() reads it first)
+enum
+{
+	CREATE_OFFLINESHOP = 1, DESTROY_OFFLINESHOP, ADD_ITEM, REMOVE_ITEM, BUY_ITEM,
+	WITHDRAW_MONEY, CHANGE_TITLE, CLEAR_LOG, CHANGE_DECORATION, CHANGE_OPEN_SLOT,
+	TIME_DONE, GET_BACK_ITEM, ADD_TIME, ADD_TIME_PREMIUM, MOVE_ITEM, CHANGE_PRICE, REMOVE_ALL_ITEM,
+	// db->game only, sent once per vnum when a game core connects/reconnects: seeds
+	// that core's in-memory average-sale-price tracker from the DB's persistent
+	// sale history, so a freshly (re)started core doesn't start from zero. Live
+	// updates after that happen for free via BUY_ITEM's existing all-core fanout.
+	SEED_PRICE_STAT,
+};
+
+struct shop_create		{ BYTE subheader; TOfflineShop offlineshop; };
+struct shop_owner		{ BYTE subheader; DWORD owner_id; };
+struct shop_item		{ BYTE subheader; OFFLINE_SHOP_ITEM item; };
+struct shop_buy			{ BYTE subheader; TOfflineShopBuy buyItem; };
+struct shop_title		{ BYTE subheader; TOfflineShopChangeTitle title; };
+struct shop_decoration	{ BYTE subheader; TShopDecoration decoration; };
+struct shop_slot		{ BYTE subheader; TOfflineShopOpenSlot ch; };
+struct shop_back		{ BYTE subheader; TOfflineShopBackItem back; };
+struct change_price		{ BYTE subheader; DWORD ownerID; BYTE bPos; long long itemPrice; };
+struct move_item		{ BYTE subheader; DWORD ownerID; WORD slotPos, targetPos; };
+struct remove_all		{ BYTE subheader; DWORD ownerID; };
+struct shop_price_seed	{ BYTE subheader; DWORD vnum; long long avgPrice; };
 #endif
 
 #pragma pack()

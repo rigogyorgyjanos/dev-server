@@ -233,7 +233,12 @@ enum EChatType
 	CHAT_TYPE_SHOUT,	
 	CHAT_TYPE_WHISPER,
 	CHAT_TYPE_BIG_NOTICE,
-	CHAT_TYPE_MONARCH_NOTICE,
+#if defined(ENABLE_CHATTING_WINDOW_RENEWAL)
+	CHAT_TYPE_EXP_INFO,
+	CHAT_TYPE_ITEM_INFO,
+	CHAT_TYPE_MONEY_INFO,
+#endif
+	CHAT_TYPE_MONARCH_NOTICE,	// unused server-only tag, no client-side counterpart - kept after the wire-matched block above so it can't shift EXP/ITEM/MONEY_INFO's values out of sync with the client enum again
 	CHAT_TYPE_MAX_NUM
 };
 
@@ -440,6 +445,29 @@ const DWORD c_arSwitchbotItems[3] =
 	71084,
 	76014,
 };
+#endif
+
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+enum EOfflineShopValues
+{
+	SHOP_FEE					= 5,				// % commission taken on each sale
+	SHOP_TIME_CREATE			= 60*60*24,			// base open duration: 24h
+	SHOP_TIME_CREATE_PREMIUM	= 60*60*24*3,		// premium (AFFECT_DECORATION active) open duration: 72h
+	SHOP_MAX_TIME				= 60*60*24*3,		// max extendable duration
+	SHOP_MAX_TIME_PREMIUM		= 60*60*24*14,
+	SHOP_TIME_ADD_TIME			= 60*60*24,			// one "extend time" purchase grants this much
+	SHOP_TIME_ADD_TIME_PREMIUM	= 60*60*24*3,
+	SHOP_EXPAND_SLOT_PRICE		= 500000,			// gold cost for the pay-with-gold alternative to the 72319-item slot unlock
+};
+// Bit 63 of TOfflineShop::slotflag (player.player.shop_flag) - only bits 0-39 are ever
+// used for the 40 extra-slot unlocks, so this rides the same already-persisted,
+// already-DB-fanned-out-to-every-core field for free instead of needing a new column/
+// wire struct field of its own. Declared outside EOfflineShopValues since an enum's
+// underlying type can't portably hold a 64-bit value.
+static const unsigned long long SHOP_LOCKED_FLAG = 1ULL << 63;
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+enum { SHOP_SEARCH_PAGE_SIZE = 50 };
+#endif
 #endif
 
 enum EWindows

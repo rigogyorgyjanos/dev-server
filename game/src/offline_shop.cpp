@@ -62,6 +62,13 @@ COfflineShop::~COfflineShop(){
 	Destroy();
 }
 
+// npc may legitimately be NULL: every game core keeps its own COfflineShop mirror
+// for every shop server-wide (DB fans out CREATE/every mutation to all cores
+// unconditionally), but only the ONE core whose map range actually covers the
+// shop's coordinates spawns a live NPC. An owner reopening their panel from a
+// different core/channel than the one hosting their shop's NPC must still work
+// (cross-channel management is a hard requirement), so nothing below may
+// dereference npc without a null-check.
 bool COfflineShop::AddGuest(LPCHARACTER ch, LPCHARACTER npc)
 {
 	if (!ch)
@@ -82,16 +89,18 @@ bool COfflineShop::AddGuest(LPCHARACTER ch, LPCHARACTER npc)
 	memset(&pack2, 0, sizeof(pack2));
 	if(npc)
 		pack2.owner_vid = npc->GetVID();
+	pack2.owner_id = m_data.owner_id;
 
 	++m_dwRealWatcherCount;
 	if (ch->GetPlayerID() != m_data.owner_id)
 		++m_dwDisplayedCount;
+	BroadcastWatcherCountP2P();
 
 	if (m_map_guest.size() > 0)
 	{
 		DWORD	count[2] = { 0,0 };
-		count[0] = m_dwDisplayedCount;
-		count[1] = m_dwRealWatcherCount;
+		count[0] = GetGlobalDisplayedCount();
+		count[1] = GetGlobalRealWatcherCount();
 		TPacketGCShop pack_display;
 		TEMP_BUFFER buf;
 		pack_display.header = HEADER_GC_OFFLINE_SHOP;
@@ -103,10 +112,14 @@ bool COfflineShop::AddGuest(LPCHARACTER ch, LPCHARACTER npc)
 	}
 
 	strlcpy(pack2.title, m_data.sign, sizeof(pack2.title));
-	pack2.m_dwRealWatcherCount = m_dwRealWatcherCount;
-	pack2.m_dwDisplayedCount = m_dwDisplayedCount;
+	pack2.m_dwRealWatcherCount = GetGlobalRealWatcherCount();
+	pack2.m_dwDisplayedCount = GetGlobalDisplayedCount();
 	pack2.flag = m_data.slotflag;
 	pack2.type = m_data.type;
+	pack2.x = m_data.x;
+	pack2.y = m_data.y;
+	pack2.mapindex = m_data.mapindex;
+	pack2.channel = m_data.channel;
 	
 	if (ch->GetPlayerID() == m_data.owner_id)
 	{
@@ -242,11 +255,13 @@ void COfflineShop::RemoveGuest(LPCHARACTER ch, bool isDestroy)
 		{
 			m_map_guest.erase(ch->GetPlayerID());
 			--m_dwRealWatcherCount;
+			BroadcastWatcherCountP2P();
 			TEMP_BUFFER buf;
 			pack.subheader = SHOP_SUBHEADER_GC_REALWATCHER_COUNT;
 			pack.size = sizeof(pack) + sizeof(DWORD);
+			DWORD dwGlobalRealWatcherCount = GetGlobalRealWatcherCount();
 			buf.write(&pack, sizeof(pack));
-			buf.write(&m_dwRealWatcherCount, sizeof(DWORD));
+			buf.write(&dwGlobalRealWatcherCount, sizeof(DWORD));
 			Broadcast(buf.read_peek(), buf.size());
 		}
 		sys_log(0, "COfflineShop::RemoveGuest: shop: %s customer: %s", m_data.owner_name, ch->GetName());
@@ -265,8 +280,8 @@ void COfflineShop::BroadcastUpdateItem(BYTE bPos, bool bDestroy,int log_index)
 	pack.subheader = SHOP_SUBHEADER_GC_UPDATE_ITEM;
 	pack.size = sizeof(pack) + sizeof(pack2);
 	pack2.pos = bPos;
-	pack2.m_dwDisplayedCount = m_dwDisplayedCount;
-	pack2.m_dwRealWatcherCount = m_dwRealWatcherCount;
+	pack2.m_dwDisplayedCount = GetGlobalDisplayedCount();
+	pack2.m_dwRealWatcherCount = GetGlobalRealWatcherCount();
 	pack2.price = m_data.price;
 	pack2.flag = m_data.slotflag;
 	pack2.time = m_data.time;
@@ -288,10 +303,14 @@ void COfflineShop::BroadcastUpdateItem(BYTE bPos, bool bDestroy,int log_index)
 		pack2.item.vnum = item.vnum;
 		pack2.item.price = item.price;
 		pack2.item.status = item.status;
+		pack2.item.display_pos = bPos;
 		strlcpy(pack2.item.szBuyerName, item.szBuyerName, sizeof(pack2.item.szBuyerName));
 		thecore_memcpy(pack2.item.alSockets, item.alSockets, sizeof(pack2.item.alSockets));
 		thecore_memcpy(pack2.item.aAttr, item.aAttr, sizeof(pack2.item.aAttr));
-
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+		pack2.item.ownerStatus = false;
+		pack2.item.averagePrice = 0;
+#endif
 	}
 	buf.write(&pack, sizeof(pack));
 	buf.write(&pack2, sizeof(pack2));
@@ -310,6 +329,37 @@ void COfflineShop::Broadcast(const void * data, int bytes)
 			ch->GetDesc()->Packet(data, bytes);
 		}
 	}
+}
+
+void COfflineShop::BroadcastWatcherCountP2P()
+{
+	TPacketGGOfflineShopWatcher pack;
+	pack.owner_id = m_data.owner_id;
+	pack.wSenderPort = mother_port;
+	pack.dwDisplayedCount = m_dwDisplayedCount;
+	pack.dwRealWatcherCount = m_dwRealWatcherCount;
+	P2P_MANAGER::Instance().Send(&pack, sizeof(pack));
+}
+
+void COfflineShop::ApplyRemoteWatcherCount(WORD wSenderPort, DWORD dwDisplayed, DWORD dwRealWatcher)
+{
+	m_map_remoteWatcherCounts[wSenderPort] = std::make_pair(dwDisplayed, dwRealWatcher);
+}
+
+DWORD COfflineShop::GetGlobalDisplayedCount()
+{
+	DWORD total = m_dwDisplayedCount;
+	for (auto it = m_map_remoteWatcherCounts.begin(); it != m_map_remoteWatcherCounts.end(); ++it)
+		total += it->second.first;
+	return total;
+}
+
+DWORD COfflineShop::GetGlobalRealWatcherCount()
+{
+	DWORD total = m_dwRealWatcherCount;
+	for (auto it = m_map_remoteWatcherCounts.begin(); it != m_map_remoteWatcherCounts.end(); ++it)
+		total += it->second.second;
+	return total;
 }
 
 bool COfflineShop::IsClosed()

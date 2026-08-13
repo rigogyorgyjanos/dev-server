@@ -151,6 +151,14 @@ class CInputMain : public CInputProcessor
 		int			Switchbot(LPCHARACTER ch, const char* data, size_t uiBytes);
 #endif
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+		int			OfflineShop(LPCHARACTER ch, const char* c_pData, size_t uiBytes);
+		int			MyOfflineShop(LPCHARACTER ch, const char* c_pData, size_t uiBytes);
+#endif
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+		int			ShopSearch(LPCHARACTER ch, const char* c_pData, size_t uiBytes);
+#endif
+
 		void 		PartyInvite(LPCHARACTER ch, const char * c_pData);
 		void 		PartyInviteAnswer(LPCHARACTER ch, const char * c_pData);
 		void		PartyRemove(LPCHARACTER ch, const char * c_pData);
@@ -367,6 +375,9 @@ class CInputP2P : public CInputProcessor
 		void		IamAwake(LPDESC d, const char * c_pData);
 #ifdef ENABLE_SWITCHBOT
 		void		Switchbot(LPDESC d, const char * c_pData);
+#endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+		void		OfflineShopWatcher(LPDESC d, const char * c_pData);
 #endif
 		#ifdef CROSS_CHANNEL_FRIEND_REQUEST
 	void		MessengerRequestAdd(const char* c_pData);

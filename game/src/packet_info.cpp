@@ -234,6 +234,13 @@ CPacketInfoCG::CPacketInfoCG()
 #ifdef ENABLE_SWITCHBOT
 	Set(HEADER_CG_SWITCHBOT, sizeof(TPacketCGSwitchbot), "Switchbot", true);
 #endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	Set(HEADER_CG_OFFLINE_SHOP, sizeof(TPacketCGShop), "OfflineShop", true);
+	Set(HEADER_CG_MY_OFFLINE_SHOP, sizeof(TPacketCGMyOfflineShop), "MyOfflineShop", true);
+#endif
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+	Set(HEADER_CG_SHOP_SEARCH, sizeof(BYTE), "ShopSearch", true);
+#endif
 #ifdef __SEND_TARGET_INFO__
 	Set(HEADER_CG_TARGET_INFO_LOAD, sizeof(TPacketCGTargetInfoLoad), "TargetInfoLoad", true);
 #endif
@@ -288,6 +295,9 @@ CPacketInfoGG::CPacketInfoGG()
 #endif
 #ifdef ENABLE_SWITCHBOT
 	Set(HEADER_GG_SWITCHBOT, sizeof(TPacketGGSwitchbot), "Switchbot", false);
+#endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	Set(HEADER_GG_OFFLINESHOP_WATCHER, sizeof(TPacketGGOfflineShopWatcher), "OfflineShopWatcher", false);
 #endif
 }
 

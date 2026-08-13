@@ -54,23 +54,23 @@ enum EAffectTypes
 	AFFECT_DEF_GRADE,		// 226
 
 	AFFECT_PREMIUM_START	= 500,
-	AFFECT_EXP_BONUS		= 500,	// °æÇèÀÇ ¹ÝÁö
-	AFFECT_ITEM_BONUS		= 501,	// µµµÏÀÇ Àå°©
+	AFFECT_EXP_BONUS		= 500,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	AFFECT_ITEM_BONUS		= 501,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½å°©
 	AFFECT_SAFEBOX		= 502,  // PREMIUM_SAFEBOX,
 	AFFECT_AUTOLOOT		= 503,	// PREMIUM_AUTOLOOT,
 	AFFECT_FISH_MIND		= 504,	// PREMIUM_FISH_MIND,
-	AFFECT_MARRIAGE_FAST	= 505,	// ¿ø¾ÓÀÇ ±êÅÐ
-	AFFECT_GOLD_BONUS		= 506,	// µ· µå·ÓÈ®·ü 50%Áõ°¡
+	AFFECT_MARRIAGE_FAST	= 505,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	AFFECT_GOLD_BONUS		= 506,	// ï¿½ï¿½ ï¿½ï¿½ï¿½È®ï¿½ï¿½ 50%ï¿½ï¿½ï¿½ï¿½
 	AFFECT_PREMIUM_END		= 509,
 
-	AFFECT_MALL			= 510,	// ¸ô ¾ÆÀÌÅÛ ¿¡ÆåÆ®
-	AFFECT_NO_DEATH_PENALTY	= 511,	// ¿ë½ÅÀÇ °¡È£ (°æÇèÄ¡°¡ ÆÐ³ÎÆ¼¸¦ ÇÑ¹ø ¸·¾ÆÁØ´Ù)
-	AFFECT_SKILL_BOOK_BONUS	= 512,	// ¼±ÀÎÀÇ ±³ÈÆ (Ã¥ ¼ö·Ã ¼º°ø È®·üÀÌ 50% Áõ°¡)
-	AFFECT_SKILL_NO_BOOK_DELAY	= 513,	// ÁÖ¾È¼ú¼­
+	AFFECT_MALL			= 510,	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
+	AFFECT_NO_DEATH_PENALTY	= 511,	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ (ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ð³ï¿½Æ¼ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½)
+	AFFECT_SKILL_BOOK_BONUS	= 512,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Ã¥ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ 50% ï¿½ï¿½ï¿½ï¿½)
+	AFFECT_SKILL_NO_BOOK_DELAY	= 513,	// ï¿½Ö¾È¼ï¿½ï¿½ï¿½
 
-	AFFECT_HAIR	= 514,	// Çì¾î È¿°ú
-	AFFECT_COLLECT = 515, //¼öÁýÄù½ºÆ® 
-	AFFECT_EXP_BONUS_EURO_FREE = 516, // °æÇèÀÇ ¹ÝÁö (À¯·´ ¹öÀü 14 ·¹º§ ÀÌÇÏ ±âº» È¿°ú)
+	AFFECT_HAIR	= 514,	// ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
+	AFFECT_COLLECT = 515, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® 
+	AFFECT_EXP_BONUS_EURO_FREE = 516, // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 14 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½âº» È¿ï¿½ï¿½)
 	AFFECT_EXP_BONUS_EURO_FREE_UNDER_15 = 517,
 	AFFECT_UNIQUE_ABILITY = 518,
 
@@ -109,6 +109,9 @@ enum EAffectTypes
 #ifdef __AUTO_QUQUE_ATTACK__
 	AFFECT_AUTO_METIN_FARM = 706,
 #endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	AFFECT_DECORATION = 707,	// premium offline-shop status (granted by Shop Decoration item, vnum 71221)
+#endif
 	AFFECT_QUEST_START_IDX = 1000
 };
 
@@ -124,8 +127,8 @@ enum EAffectBits
 	AFF_SLOW,
 	AFF_STUN,
 
-	AFF_DUNGEON_READY,		// ´øÀü¿¡¼­ ÁØºñ »óÅÂ
-	AFF_DUNGEON_UNIQUE,		// ´øÀü À¯´ÏÅ© (Å¬¶óÀÌ¾ðÆ®¿¡¼­ ÄÃ¸µµÇÁö¾ÊÀ½)
+	AFF_DUNGEON_READY,		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½ï¿½ï¿½ï¿½
+	AFF_DUNGEON_UNIQUE,		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å© (Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
 	AFF_BUILDING_CONSTRUCTION_SMALL,
 	AFF_BUILDING_CONSTRUCTION_LARGE,
@@ -136,34 +139,34 @@ enum EAffectBits
 
 	AFF_FISH_MIND,
 
-	AFF_JEONGWIHON,		// Àü±ÍÈ¥
-	AFF_GEOMGYEONG,		// °Ë°æ
-	AFF_CHEONGEUN,		// Ãµ±ÙÃß
-	AFF_GYEONGGONG,		// °æ°ø¼ú
-	AFF_EUNHYUNG,		// ÀºÇü¹ý
-	AFF_GWIGUM,			// ±Í°Ë
-	AFF_TERROR,			// °øÆ÷
-	AFF_JUMAGAP,		// ÁÖ¸¶°©
-	AFF_HOSIN,			// È£½Å
-	AFF_BOHO,			// º¸È£
-	AFF_KWAESOK,		// Äè¼Ó
-	AFF_MANASHIELD,		// ¸¶³ª½¯µå
-	AFF_MUYEONG,		// ¹«¿µÁø affect
-	AFF_REVIVE_INVISIBLE,	// ºÎÈ°½Ã Àá½Ãµ¿¾È ¹«Àû
-	AFF_FIRE,			// Áö¼Ó ºÒ µ¥¹ÌÁö
-	AFF_GICHEON,		// ±âÃµ´ë°ø
-	AFF_JEUNGRYEOK,		// Áõ·Â¼ú
-	AFF_TANHWAN_DASH,		// ÅºÈ¯°Ý¿ë ´Þ¸®±â¾îÆåÆ®
-	AFF_PABEOP,			// ÆÄ¹ý¼ú
-	AFF_CHEONGEUN_WITH_FALL,	// Ãµ±ÙÃß
+	AFF_JEONGWIHON,		// ï¿½ï¿½ï¿½ï¿½È¥
+	AFF_GEOMGYEONG,		// ï¿½Ë°ï¿½
+	AFF_CHEONGEUN,		// Ãµï¿½ï¿½ï¿½ï¿½
+	AFF_GYEONGGONG,		// ï¿½ï¿½ï¿½ï¿½ï¿½
+	AFF_EUNHYUNG,		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	AFF_GWIGUM,			// ï¿½Í°ï¿½
+	AFF_TERROR,			// ï¿½ï¿½ï¿½ï¿½
+	AFF_JUMAGAP,		// ï¿½Ö¸ï¿½ï¿½ï¿½
+	AFF_HOSIN,			// È£ï¿½ï¿½
+	AFF_BOHO,			// ï¿½ï¿½È£
+	AFF_KWAESOK,		// ï¿½ï¿½ï¿½
+	AFF_MANASHIELD,		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	AFF_MUYEONG,		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ affect
+	AFF_REVIVE_INVISIBLE,	// ï¿½ï¿½È°ï¿½ï¿½ ï¿½ï¿½Ãµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	AFF_FIRE,			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	AFF_GICHEON,		// ï¿½ï¿½Ãµï¿½ï¿½ï¿½
+	AFF_JEUNGRYEOK,		// ï¿½ï¿½ï¿½Â¼ï¿½
+	AFF_TANHWAN_DASH,		// ÅºÈ¯ï¿½Ý¿ï¿½ ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+	AFF_PABEOP,			// ï¿½Ä¹ï¿½ï¿½ï¿½
+	AFF_CHEONGEUN_WITH_FALL,	// Ãµï¿½ï¿½ï¿½ï¿½
 	AFF_POLYMORPH,
 	AFF_WAR_FLAG1,
 	AFF_WAR_FLAG2,
 	AFF_WAR_FLAG3,
 
 	AFF_CHINA_FIREWORK,
-	AFF_HAIR,	// Çì¾î
-	AFF_GERMANY, // µ¶ÀÏ 
+	AFF_HAIR,	// ï¿½ï¿½ï¿½
+	AFF_GERMANY, // ï¿½ï¿½ï¿½ï¿½ 
 
 	AFF_BITS_MAX
 };
@@ -173,11 +176,11 @@ extern void SendAffectAddPacket(LPDESC d, CAffect * pkAff);
 // AFFECT_DURATION_BUG_FIX
 enum AffectVariable
 {
-	// Affect°¡ ¹«ÇÑ´ë·Î µé¾î°¡ ÀÖ¾î¾ß ÇÒ °æ¿ì »ç¿ë.
-	// ½Ã°£À» °è¼Ó ÁÙÀÌ±â ¶§¹®¿¡ ¸Å¿ì Å«°ªÀ¸·Î ¹«ÇÑ´ë¸¦ ¿¡¹Ä·¹ÀÌ¼ÇÇÔ.
-	//// 24ºñÆ®´Â ÀûÀ¸¹Ç·Î 25ºñÆ®¸¦ »ç¿ë.
-	// ... 25ºñÆ® »ç¿ëÇÑ´Ù°í ÇØ³õ°í¼± 29bit »ç¿ëÇÏ°í ÀÖ´Â ¾öÃ»³­ ÁÖ¼®ÀÌ¶õ...
-	// collect quest¿¡¼­ ¹«ÇÑ ½Ã°£À» 60³âÀ¸·Î »ç¿ëÇÏ°í ÀÖÀ¸¹Ç·Î, ¿©±âµµ 60³âÀ¸·Î ÇÏÀÚ.
+	// Affectï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½ï¿½ ï¿½ï¿½î°¡ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
+	// ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¿ï¿½ Å«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ë¸¦ ï¿½ï¿½ï¿½Ä·ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½.
+	//// 24ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ 25ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½.
+	// ... 25ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½Ñ´Ù°ï¿½ ï¿½Ø³ï¿½ï¿½ï¿½ï¿½ï¿½ 29bit ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½Ì¶ï¿½...
+	// collect questï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ 60ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½, ï¿½ï¿½ï¿½âµµ 60ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
 	INFINITE_AFFECT_DURATION = 60 * 365 * 24 * 60 * 60
 };

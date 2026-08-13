@@ -19,6 +19,10 @@
 #ifdef __FARM_SESSION_SYSTEM__
 #include "FarmSessionManager.h"
 #endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+#include "offline_shop.h"
+#include "offlineshop_manager.h"
+#endif
 #include "party.h"
 #include "questmanager.h"
 #include "profiler.h"
@@ -565,6 +569,12 @@ int main(int argc, char **argv)
 	CPVPManager		pvp_manager;
 #ifdef __FARM_SESSION_SYSTEM__
 	CFarmSessionManager	farm_session_manager;
+#endif
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+	COfflineShopManager	offlineshop_manager;
+#ifdef ENABLE_SHOP_SEARCH_SYSTEM
+	offlineshop_manager.LoadSearchLanguage();
+#endif
 #endif
 	LZOManager		lzo_manager;
 	DBManager		db_manager;

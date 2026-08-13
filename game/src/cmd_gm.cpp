@@ -856,6 +856,11 @@ struct FuncPurge
 		if (!m_bAll && iDist >= 1000)	// 10미터 이상에 있는 것들은 purge 하지 않는다.
 			return;
 
+#ifdef ENABLE_OFFLINESHOP_SYSTEM
+		if (pkChr->IsOfflineShopNPC())
+			return;
+#endif
+
 		sys_log(0, "PURGE: %s %d", pkChr->GetName(), iDist);
 
 		if (pkChr->IsNPC() && !pkChr->IsPet() && pkChr->GetRider() == NULL)
