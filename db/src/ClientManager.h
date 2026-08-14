@@ -398,6 +398,15 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	std::map<DWORD, TOfflineShop*>	m_Offlineshop;
 #endif
 
+#ifdef ENABLE_EVENT_MANAGER
+	bool		InitializeEventManager(bool updateFromGameMaster = false);
+	void		RecvEventManagerPacket(const char* data);
+	void		UpdateEventManager();
+	void		SendEventData(CPeer* pkPeer = NULL, bool updateFromGameMaster = false);
+
+	std::map<BYTE, std::vector<TEventManagerData>>	m_EventManager;
+#endif
+
 	// Building
 	void		CreateObject(TPacketGDCreateObject * p);
 	void		DeleteObject(DWORD dwID);

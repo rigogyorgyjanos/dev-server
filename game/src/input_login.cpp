@@ -609,6 +609,10 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 	marriage::CManager::instance().Login(ch);
 
+#ifdef ENABLE_EVENT_MANAGER
+	CHARACTER_MANAGER::instance().SendDataPlayer(ch);
+#endif
+
 	TPacketGCTime p;
 	p.bHeader = HEADER_GC_TIME;
 	p.time = get_global_time();

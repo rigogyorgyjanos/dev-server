@@ -551,6 +551,15 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 	if (pkAttacker->GetPoint(POINT_MALL_GOLDBONUS))
 		iGoldPercent += (iGoldPercent * pkAttacker->GetPoint(POINT_MALL_GOLDBONUS) / 100);
 
+#ifdef ENABLE_EVENT_MANAGER
+	if (pkAttacker->IsPC())
+	{
+		const TEventManagerData* eventPtr = CHARACTER_MANAGER::instance().CheckEventIsActive(YANG_DROP_EVENT, pkAttacker->GetEmpire());
+		if (eventPtr)
+			iGoldPercent = iGoldPercent * (100 + (int)eventPtr->value[0]) / 100;
+	}
+#endif
+
 	iGoldPercent = iGoldPercent * CHARACTER_MANAGER::instance().GetMobGoldDropRate(pkAttacker) / 100;
 
 	// ADD_PREMIUM
@@ -2349,6 +2358,14 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 		iExp *= 3;
 
 	int iBaseExp = iExp;
+
+#ifdef ENABLE_EVENT_MANAGER
+	{
+		const TEventManagerData* eventPtr = CHARACTER_MANAGER::instance().CheckEventIsActive(EXP_EVENT, to->GetEmpire());
+		if (eventPtr)
+			iExp = iExp * (100 + (int)eventPtr->value[0]) / 100;
+	}
+#endif
 
 	// ����, ȸ�� ����ġ �̺�Ʈ ����
 	iExp = iExp * (100 + CPrivManager::instance().GetPriv(to, PRIV_EXP_PCT)) / 100;

@@ -15,6 +15,9 @@
 class CDungeon;
 class CHARACTER;
 class CharacterVectorInteractor;
+#ifdef ENABLE_EVENT_MANAGER
+class TEMP_BUFFER;
+#endif
 
 class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 {
@@ -26,7 +29,7 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 
 		void                    Destroy();
 
-		void			GracefulShutdown();	// Á¤»óÀû ¼Ë´Ù¿îÇÒ ¶§ »ç¿ë. PC¸¦ ¸ðµÎ ÀúÀå½ÃÅ°°í Destroy ÇÑ´Ù.
+		void			GracefulShutdown();	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë´Ù¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½. PCï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ Destroy ï¿½Ñ´ï¿½.
 
 		DWORD			AllocVID();
 
@@ -58,11 +61,11 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		bool			AddToStateList(LPCHARACTER ch);
 		void			RemoveFromStateList(LPCHARACTER ch);
 
-		// DelayedSave: ¾î¶°ÇÑ ·çÆ¾ ³»¿¡¼­ ÀúÀåÀ» ÇØ¾ß ÇÒ ÁþÀ» ¸¹ÀÌ ÇÏ¸é ÀúÀå
-		// Äõ¸®°¡ ³Ê¹« ¸¹¾ÆÁö¹Ç·Î "ÀúÀåÀ» ÇÑ´Ù" ¶ó°í Ç¥½Ã¸¸ ÇØµÎ°í Àá±ñ
-		// (¿¹: 1 frame) ÈÄ¿¡ ÀúÀå½ÃÅ²´Ù.
+		// DelayedSave: ï¿½î¶°ï¿½ï¿½ ï¿½ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½" ï¿½ï¿½ï¿½ Ç¥ï¿½Ã¸ï¿½ ï¿½ØµÎ°ï¿½ ï¿½ï¿½ï¿½
+		// (ï¿½ï¿½: 1 frame) ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å²ï¿½ï¿½.
 		void                    DelayedSave(LPCHARACTER ch);
-		bool                    FlushDelayedSave(LPCHARACTER ch); // Delayed ¸®½ºÆ®¿¡ ÀÖ´Ù¸é Áö¿ì°í ÀúÀåÇÑ´Ù. ²÷±è Ã³¸®½Ã »ç¿ë µÊ.
+		bool                    FlushDelayedSave(LPCHARACTER ch); // Delayed ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½.
 		void			ProcessDelayedSave();
 
 		template<class Func>	Func for_each_pc(Func f);
@@ -105,7 +108,23 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		bool			BeginPendingDestroy();
 		void			FlushPendingDestroy();
 
+#ifdef ENABLE_EVENT_MANAGER
+		void			ClearEventData();
+		bool			CloseEventManuel(BYTE eventIndex);
+		void			SetEventData(BYTE dayIndex, const std::vector<TEventManagerData>& data);
+		void			SetEventStatus(const WORD eventID, const bool eventStatus, const int endTime);
+		void			SendDataPlayer(LPCHARACTER ch);
+		void			CheckBonusEvent(LPCHARACTER ch);
+		void			UpdateAllPlayerEventData();
+		void			CompareEventSendData(TEMP_BUFFER* buf);
+		const TEventManagerData*	CheckEventIsActive(BYTE eventIndex, BYTE empireIndex = 0);
+		void			CheckEventForDrop(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM>& vec_item);
+#endif
+
 	private:
+#ifdef ENABLE_EVENT_MANAGER
+		std::map<BYTE, std::vector<TEventManagerData>>	m_eventData;
+#endif
 		int					m_iMobItemRate;
 		int					m_iMobDamageRate;
 		int					m_iMobGoldAmountRate;
@@ -126,7 +145,7 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		NAME_MAP			m_map_pkPCChr;
 
 		char				dummy1[1024];	// memory barrier
-		CHARACTER_SET		m_set_pkChrState;	// FSMÀÌ µ¹¾Æ°¡°í ÀÖ´Â ³ðµé
+		CHARACTER_SET		m_set_pkChrState;	// FSMï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½
 		CHARACTER_SET		m_set_pkChrForDelayedSave;
 		CHARACTER_SET		m_set_pkChrMonsterLog;
 

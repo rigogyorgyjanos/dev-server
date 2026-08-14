@@ -257,6 +257,9 @@ ACMD (do_clear_affect);
 #if defined(__MISSION_BOOKS__)
 ACMD(do_missionbooks);
 #endif
+#ifdef ENABLE_EVENT_MANAGER
+ACMD(do_event_manager);
+#endif
 
 
 // ACMD(do_remove_affect);
@@ -556,7 +559,10 @@ struct command_info cmd_info[] =
 #if defined(__MISSION_BOOKS__)
 	{ "mission_books",	do_missionbooks,		0,		POS_DEAD,	GM_PLAYER },
 #endif
-	
+#ifdef ENABLE_EVENT_MANAGER
+	{ "event_manager",	do_event_manager,		0,		POS_DEAD,	GM_PLAYER },
+#endif
+
 	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}  /* 반드시 이 것이 마지막이어야 한다. */
 };
 

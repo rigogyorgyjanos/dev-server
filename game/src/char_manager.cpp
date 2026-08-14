@@ -1076,6 +1076,298 @@ void CHARACTER_MANAGER::FlushPendingDestroy()
 	}
 }
 
+#ifdef ENABLE_EVENT_MANAGER
+#include "buffer_manager.h"
+#include "desc_client.h"
+#include "desc_manager.h"
+
+void CHARACTER_MANAGER::ClearEventData()
+{
+	m_eventData.clear();
+}
+
+void CHARACTER_MANAGER::CheckBonusEvent(LPCHARACTER ch)
+{
+	const TEventManagerData* eventPtr = CheckEventIsActive(BONUS_EVENT, ch->GetEmpire());
+	if (eventPtr)
+		ch->ApplyPoint(eventPtr->value[0], eventPtr->value[1]);
+}
+
+const TEventManagerData* CHARACTER_MANAGER::CheckEventIsActive(BYTE eventIndex, BYTE empireIndex)
+{
+	for (const auto& dayKv : m_eventData)
+	{
+		for (const auto& eventData : dayKv.second)
+		{
+			if (eventData.eventIndex != eventIndex)
+				continue;
+
+			if (eventData.channelFlag != 0 && eventData.channelFlag != g_bChannel)
+				continue;
+			if (eventData.empireFlag != 0 && empireIndex != 0 && eventData.empireFlag != empireIndex)
+				continue;
+
+			if (eventData.eventStatus)
+				return &eventData;
+		}
+	}
+	return NULL;
+}
+
+void CHARACTER_MANAGER::CheckEventForDrop(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM>& vec_item)
+{
+	const BYTE killerEmpire = pkKiller->GetEmpire();
+	const TEventManagerData* eventPtr = NULL;
+
+	// Duplicates every currently-dropping item at the given success chance - used by the
+	// DOUBLE_x_LOOT events below. Runs after the normal drop roll already decided what
+	// drops, so this only ever adds a second copy, never invents a drop from nothing.
+	auto duplicateDrop = [&vec_item](int successPct)
+	{
+		if (number(1, 100) > successPct)
+			return;
+
+		std::vector<LPITEM> extra;
+		for (const auto& item : vec_item)
+		{
+			LPITEM newItem = ITEM_MANAGER::instance().CreateItem(item->GetVnum(), item->GetCount(), 0, true);
+			if (newItem)
+				extra.emplace_back(newItem);
+		}
+		for (const auto& item : extra)
+			vec_item.emplace_back(item);
+	};
+
+	if (pkChr->IsStone())
+	{
+		eventPtr = CheckEventIsActive(DOUBLE_METIN_LOOT_EVENT, killerEmpire);
+		if (eventPtr)
+			duplicateDrop(eventPtr->value[3]);
+	}
+	else if (pkChr->GetMobRank() >= MOB_RANK_BOSS)
+	{
+		eventPtr = CheckEventIsActive(DOUBLE_BOSS_LOOT_EVENT, killerEmpire);
+		if (eventPtr)
+			duplicateDrop(eventPtr->value[3]);
+	}
+
+	eventPtr = CheckEventIsActive(DOUBLE_MISSION_BOOK_EVENT, killerEmpire);
+	if (eventPtr && number(1, 100) <= (int)eventPtr->value[3])
+	{
+		// Mission-book item vnums - adjust here if this server's mission books use different vnums.
+		static const DWORD s_missionBookVnums[] = { 50300, 50301, 50302 };
+		std::vector<LPITEM> extra;
+		for (const auto& item : vec_item)
+		{
+			for (const auto& bookVnum : s_missionBookVnums)
+			{
+				if (bookVnum == item->GetVnum())
+				{
+					LPITEM newItem = ITEM_MANAGER::instance().CreateItem(bookVnum, item->GetCount(), 0, true);
+					if (newItem)
+						extra.emplace_back(newItem);
+					break;
+				}
+			}
+		}
+		for (const auto& item : extra)
+			vec_item.emplace_back(item);
+	}
+
+	eventPtr = CheckEventIsActive(DUNGEON_TICKET_LOOT_EVENT, killerEmpire);
+	if (eventPtr && number(1, 100) <= (int)eventPtr->value[3])
+	{
+		// Dungeon-ticket item vnum - adjust here if this server's ticket item uses a different vnum.
+		static const DWORD s_ticketVnums[] = { 71201 };
+		std::vector<LPITEM> extra;
+		for (const auto& item : vec_item)
+		{
+			for (const auto& ticketVnum : s_ticketVnums)
+			{
+				if (ticketVnum == item->GetVnum())
+				{
+					LPITEM newItem = ITEM_MANAGER::instance().CreateItem(ticketVnum, item->GetCount(), 0, true);
+					if (newItem)
+						extra.emplace_back(newItem);
+					break;
+				}
+			}
+		}
+		for (const auto& item : extra)
+			vec_item.emplace_back(item);
+	}
+
+	eventPtr = CheckEventIsActive(MOONLIGHT_EVENT, killerEmpire);
+	if (eventPtr && number(1, 100) <= (int)eventPtr->value[3])
+	{
+		// Moonlight-event reward item vnum - adjust here if this server's item uses a different vnum.
+		LPITEM item = ITEM_MANAGER::instance().CreateItem(50011, 1, 0, true);
+		if (item)
+			vec_item.emplace_back(item);
+	}
+}
+
+void CHARACTER_MANAGER::CompareEventSendData(TEMP_BUFFER* buf)
+{
+	const BYTE subIndex = EVENT_MANAGER_LOAD;
+	const BYTE dayCount = (BYTE)m_eventData.size();
+	const int curTime = (int)time(NULL);
+
+	buf->write(&subIndex, sizeof(BYTE));
+	buf->write(&dayCount, sizeof(BYTE));
+	buf->write(&curTime, sizeof(int));
+
+	for (const auto& dayKv : m_eventData)
+	{
+		const BYTE dayIndex = dayKv.first;
+		const BYTE dayEventCount = (BYTE)dayKv.second.size();
+		buf->write(&dayIndex, sizeof(BYTE));
+		buf->write(&dayEventCount, sizeof(BYTE));
+		if (dayEventCount > 0)
+			buf->write(dayKv.second.data(), dayEventCount * sizeof(TEventManagerData));
+	}
+}
+
+void CHARACTER_MANAGER::UpdateAllPlayerEventData()
+{
+	TEMP_BUFFER buf;
+	CompareEventSendData(&buf);
+
+	TPacketGCEventManager p;
+	p.header = HEADER_GC_EVENT_MANAGER;
+	p.size = sizeof(TPacketGCEventManager) + buf.size();
+
+	const DESC_MANAGER::DESC_SET& c_ref_set = DESC_MANAGER::instance().GetClientSet();
+	for (const auto& desc : c_ref_set)
+	{
+		if (!desc->GetCharacter())
+			continue;
+		desc->BufferedPacket(&p, sizeof(TPacketGCEventManager));
+		desc->Packet(buf.read_peek(), buf.size());
+	}
+}
+
+void CHARACTER_MANAGER::SendDataPlayer(LPCHARACTER ch)
+{
+	LPDESC desc = ch->GetDesc();
+	if (!desc)
+		return;
+
+	TEMP_BUFFER buf;
+	CompareEventSendData(&buf);
+
+	TPacketGCEventManager p;
+	p.header = HEADER_GC_EVENT_MANAGER;
+	p.size = sizeof(TPacketGCEventManager) + buf.size();
+
+	desc->BufferedPacket(&p, sizeof(TPacketGCEventManager));
+	desc->Packet(buf.read_peek(), buf.size());
+}
+
+bool CHARACTER_MANAGER::CloseEventManuel(BYTE eventIndex)
+{
+	const TEventManagerData* eventPtr = CheckEventIsActive(eventIndex);
+	if (!eventPtr)
+		return false;
+
+	const BYTE subHeader = EVENT_MANAGER_REMOVE_EVENT;
+	db_clientdesc->DBPacketHeader(HEADER_GD_EVENT_MANAGER, 0, sizeof(BYTE) + sizeof(WORD));
+	db_clientdesc->Packet(&subHeader, sizeof(BYTE));
+	db_clientdesc->Packet(&eventPtr->eventID, sizeof(WORD));
+	return true;
+}
+
+void CHARACTER_MANAGER::SetEventStatus(const WORD eventID, const bool eventStatus, const int endTime)
+{
+	TEventManagerData* eventData = NULL;
+	for (auto& dayKv : m_eventData)
+	{
+		for (auto& candidate : dayKv.second)
+		{
+			if (candidate.eventID == eventID)
+			{
+				eventData = &candidate;
+				break;
+			}
+		}
+		if (eventData)
+			break;
+	}
+
+	if (!eventData)
+		return;
+
+	eventData->eventStatus = eventStatus;
+	eventData->endTime = endTime;
+
+	// Auto start/end notice, Hungarian - keyed by event type, not every type gets one
+	// (matches the reference package's own scope: PvP/empire-war/wheel-of-fortune/etc.
+	// are meant to be announced by the GM's own means, not auto-broadcast).
+	extern void SendNotice(const char* c_pszBuf);
+	static const std::map<BYTE, std::pair<std::string, std::string>> s_eventText = {
+		{ BONUS_EVENT,               { "A Bónusz esemény aktív!",                 "A Bónusz esemény véget ért!" } },
+		{ DOUBLE_BOSS_LOOT_EVENT,    { "A Dupla Boss Zsákmány esemény aktív!",    "A Dupla Boss Zsákmány esemény véget ért!" } },
+		{ DOUBLE_METIN_LOOT_EVENT,   { "A Dupla Kőszobor Zsákmány esemény aktív!","A Dupla Kőszobor Zsákmány esemény véget ért!" } },
+		{ DOUBLE_MISSION_BOOK_EVENT, { "A Dupla Küldetés Könyv esemény aktív!",   "A Dupla Küldetés Könyv esemény véget ért!" } },
+		{ DUNGEON_COOLDOWN_EVENT,    { "A Dungeon Várakozás Csökkentés esemény aktív!", "A Dungeon Várakozás Csökkentés esemény véget ért!" } },
+		{ DUNGEON_TICKET_LOOT_EVENT, { "A Dungeon Jegy esemény aktív!",           "A Dungeon Jegy esemény véget ért!" } },
+		{ MOONLIGHT_EVENT,           { "A Holdfény esemény aktív!",               "A Holdfény esemény véget ért!" } },
+	};
+
+	const auto it = s_eventText.find(eventData->eventIndex);
+	if (it != s_eventText.end())
+		SendNotice((eventStatus ? it->second.first : it->second.second).c_str());
+
+	const DESC_MANAGER::DESC_SET& c_ref_set = DESC_MANAGER::instance().GetClientSet();
+
+	// Bonus event: point bonus is applied live in ComputePoints() while active, so
+	// on deactivation we just need to strip it back off every online character once.
+	if (eventData->eventIndex == BONUS_EVENT && !eventStatus)
+	{
+		for (const auto& desc : c_ref_set)
+		{
+			LPCHARACTER ch = desc->GetCharacter();
+			if (!ch)
+				continue;
+			if (eventData->empireFlag != 0 && eventData->empireFlag != ch->GetEmpire())
+				continue;
+			if (eventData->channelFlag != 0 && eventData->channelFlag != g_bChannel)
+				continue;
+
+			ch->ApplyPoint(eventData->value[0], -(long)eventData->value[1]);
+			ch->ComputePoints();
+		}
+	}
+
+	const int now = (int)time(NULL);
+	const BYTE subIndex = EVENT_MANAGER_EVENT_STATUS;
+
+	TEMP_BUFFER buf;
+	buf.write(&subIndex, sizeof(BYTE));
+	buf.write(&eventData->eventID, sizeof(WORD));
+	buf.write(&eventData->eventStatus, sizeof(bool));
+	buf.write(&eventData->endTime, sizeof(int));
+	buf.write(&now, sizeof(int));
+
+	TPacketGCEventManager p;
+	p.header = HEADER_GC_EVENT_MANAGER;
+	p.size = sizeof(TPacketGCEventManager) + buf.size();
+
+	for (const auto& desc : c_ref_set)
+	{
+		if (!desc->GetCharacter())
+			continue;
+		desc->BufferedPacket(&p, sizeof(TPacketGCEventManager));
+		desc->Packet(buf.read_peek(), buf.size());
+	}
+}
+
+void CHARACTER_MANAGER::SetEventData(BYTE dayIndex, const std::vector<TEventManagerData>& data)
+{
+	m_eventData[dayIndex] = data;
+}
+#endif
+
 CharacterVectorInteractor::CharacterVectorInteractor(const CHARACTER_SET & r)
 {
 	using namespace std;

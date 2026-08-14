@@ -311,6 +311,10 @@ protected:
 
 	void		RespondChannelStatus(LPDESC desc, const char* pcData);
 
+#ifdef ENABLE_EVENT_MANAGER
+	void		EventManager(const char* c_pData);
+#endif
+
 	protected:
 		DWORD		m_dwHandle;
 };

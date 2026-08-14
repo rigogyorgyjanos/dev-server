@@ -828,10 +828,20 @@ bool ITEM_MANAGER::GetDropPct(LPCHARACTER pkChr, LPCHARACTER pkKiller, OUT int& 
 	// END_OF_ADD_PREMIUM
 
 	iRandRange = 4000000;
-	iRandRange = iRandRange * 100 / 
-		(100 + 
-		 CPrivManager::instance().GetPriv(pkKiller, PRIV_ITEM_DROP) + 
+#ifdef ENABLE_EVENT_MANAGER
+	{
+		int extraDrop = CPrivManager::instance().GetPriv(pkKiller, PRIV_ITEM_DROP) + (pkKiller->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_ITEM) ? 100 : 0);
+		const TEventManagerData* eventPtr = CHARACTER_MANAGER::instance().CheckEventIsActive(ITEM_DROP_EVENT, pkKiller->GetEmpire());
+		if (eventPtr)
+			extraDrop += (int)eventPtr->value[0];
+		iRandRange = iRandRange * 100 / (100 + extraDrop);
+	}
+#else
+	iRandRange = iRandRange * 100 /
+		(100 +
+		 CPrivManager::instance().GetPriv(pkKiller, PRIV_ITEM_DROP) +
 		 pkKiller->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_ITEM)?100:0);
+#endif
 
 	if (distribution_test_server) iRandRange /= 3;
 
@@ -1224,6 +1234,10 @@ bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::
 	// 
 	CreateQuestDropItem(pkChr, pkKiller, vec_item, iDeltaPercent, iRandRange);
 
+#ifdef ENABLE_EVENT_MANAGER
+	CHARACTER_MANAGER::instance().CheckEventForDrop(pkChr, pkKiller, vec_item);
+#endif
+
 	for (itertype(vec_item) it = vec_item.begin(); it != vec_item.end(); ++it)
 	{
 		LPITEM item = *it;
@@ -1420,7 +1434,7 @@ bool DropEvent_CharStone_SetValue(const std::string& name, int value)
 // fixme
 // 위의 것과 함께 quest로 뺄것 빼보자. 
 // 이거 너무 더럽잖아...
-// �?. 하드코딩 싫다 ㅜㅠ
+// �?. 하드코딩 싫다 ㅜㅠ
 // 계량 아이템 보상 시작.
 // by rtsummit 고치자 진짜
 static struct DropEvent_RefineBox

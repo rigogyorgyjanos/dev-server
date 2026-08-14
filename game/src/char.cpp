@@ -2420,6 +2420,13 @@ void CHARACTER::ComputePoints()
 		}
 	}
 
+#ifdef ENABLE_EVENT_MANAGER
+	// Same reasoning as the dragon-soul reapplication just below: ComputePoints() resets
+	// every stat and recomputes from scratch, so a live BONUS_EVENT bonus has to be
+	// reapplied here every time too, not just once when the event turns on.
+	CHARACTER_MANAGER::instance().CheckBonusEvent(this);
+#endif
+
 	// 용혼석 시스템
 	// ComputePoints에서는 케릭터의 모든 속성값을 초기화하고,
 	// 아이템, 버프 등에 관련된 모든 속성값을 재계산하기 때문에,

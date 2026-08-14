@@ -7,6 +7,9 @@
 #include "item.h"
 #include "cmd.h"
 #include "packet.h"
+#ifdef ENABLE_EVENT_MANAGER
+#include "char_manager.h"
+#endif
 
 #undef sys_err
 #ifndef __WIN32__
@@ -40,6 +43,22 @@ namespace quest
 
 		return 1;
 	}
+
+#ifdef ENABLE_EVENT_MANAGER
+	int game_check_event(lua_State* L)
+	{
+		if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2))
+		{
+			lua_pushboolean(L, 0);
+			return 1;
+		}
+
+		const BYTE eventIndex = (BYTE)(int)lua_tonumber(L, 1);
+		const BYTE empireIndex = (BYTE)(int)lua_tonumber(L, 2);
+		lua_pushboolean(L, CHARACTER_MANAGER::instance().CheckEventIsActive(eventIndex, empireIndex) != NULL);
+		return 1;
+	}
+#endif
 
 	int game_request_make_guild(lua_State* L)
 	{
@@ -195,6 +214,9 @@ namespace quest
 			{ "drop_item",					game_drop_item					},
 			{ "drop_item_with_ownership",	game_drop_item_with_ownership	},
 			{ "open_web_mall",				game_web_mall					},
+#ifdef ENABLE_EVENT_MANAGER
+			{ "check_event",				game_check_event				},
+#endif
 
 			{ NULL,					NULL				}
 		};

@@ -148,6 +148,9 @@ enum
 #if defined(ENABLE_OFFLINESHOP_SYSTEM)
 	HEADER_GD_OFFLINESHOP = 154,		// NOTE: NOT 117 - that value is taken by HEADER_GD_ELECT_MONARCH
 #endif
+#ifdef ENABLE_EVENT_MANAGER
+	HEADER_GD_EVENT_MANAGER = 155,
+#endif
 
 	HEADER_GD_SETUP			= 0xff,
 
@@ -278,6 +281,9 @@ enum
 	HEADER_DG_RESPOND_CHANNELSTATUS		= 181,
 #if defined(__BL_MOVE_CHANNEL__)
 	HEADER_DG_RESPOND_MOVE_CHANNEL = 188,
+#endif
+#ifdef ENABLE_EVENT_MANAGER
+	HEADER_DG_EVENT_MANAGER = 189,
 #endif
 	HEADER_DG_MAP_LOCATIONS		= 0xfe,
 	HEADER_DG_P2P			= 0xff,
@@ -1730,6 +1736,52 @@ struct change_price		{ BYTE subheader; DWORD ownerID; BYTE bPos; long long itemP
 struct move_item		{ BYTE subheader; DWORD ownerID; WORD slotPos, targetPos; };
 struct remove_all		{ BYTE subheader; DWORD ownerID; };
 struct shop_price_seed	{ BYTE subheader; DWORD vnum; long long avgPrice; };
+#endif
+
+#ifdef ENABLE_EVENT_MANAGER
+// One scheduled calendar event (double drop, exp bonus, tournament, etc.), row-mirrored
+// from player.event_manager_data. Sent whole over the wire (db->game fanout, game->client),
+// so keep it POD and let the enclosing #pragma pack(1) fix its layout.
+typedef struct event_struct_
+{
+	WORD	eventID;
+	BYTE	eventIndex;
+	int		startTime;
+	int		endTime;
+	BYTE	empireFlag;
+	BYTE	channelFlag;
+	DWORD	value[4];
+	bool	eventStatus;
+	bool	eventTypeOnlyStart;
+} TEventManagerData;
+
+enum
+{
+	EVENT_MANAGER_LOAD,
+	EVENT_MANAGER_EVENT_STATUS,
+	EVENT_MANAGER_REMOVE_EVENT,
+	EVENT_MANAGER_UPDATE,
+
+	// Explicit alias for EVENT_MANAGER_LOAD's value (0) - exported to Python as "no event type"
+	// for UI code that needs a sentinel, kept as its own name so it reads clearly at call sites.
+	EVENT_NONE = 0,
+
+	BONUS_EVENT = 1,
+	DOUBLE_BOSS_LOOT_EVENT = 2,
+	DOUBLE_METIN_LOOT_EVENT = 3,
+	DOUBLE_MISSION_BOOK_EVENT = 4,
+	DUNGEON_COOLDOWN_EVENT = 5,
+	DUNGEON_TICKET_LOOT_EVENT = 6,
+	EMPIRE_WAR_EVENT = 7,
+	MOONLIGHT_EVENT = 8,
+	TOURNAMENT_EVENT = 9,
+	WHELL_OF_FORTUNE_EVENT = 10,
+	HALLOWEEN_EVENT = 11,
+	NPC_SEARCH_EVENT = 12,
+	EXP_EVENT = 13,
+	ITEM_DROP_EVENT = 14,
+	YANG_DROP_EVENT = 15,
+};
 #endif
 
 #pragma pack()

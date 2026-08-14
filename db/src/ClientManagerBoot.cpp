@@ -112,6 +112,14 @@ bool CClientManager::InitializeTables()
 		return false;
 	}
 
+#ifdef ENABLE_EVENT_MANAGER
+	if (!InitializeEventManager())
+	{
+		sys_err("InitializeEventManager FAILED");
+		return false;
+	}
+#endif
+
 
 	return true;
 }

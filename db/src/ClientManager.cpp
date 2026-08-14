@@ -1,6 +1,8 @@
 
 #include "stdafx.h"
 
+#include <algorithm>
+
 #include "../../common/building.h"
 #include "../../common/VnumHelper.h"
 #include "../../libgame/include/grid.h"
@@ -472,6 +474,185 @@ void CClientManager::SendOfflineShopOnSetup(CPeer* pkPeer)
 			pkPeer->Encode(&n, sizeof(shop_price_seed));
 		}
 	}
+}
+#endif
+
+#ifdef ENABLE_EVENT_MANAGER
+namespace
+{
+	// EMPIRE_WAR_EVENT / TOURNAMENT_EVENT run indefinitely once started (no scheduled end -
+	// a GM closes them manually via /event_manager remove); every other event type ends
+	// on its own at endTime like normal.
+	bool IsEventTypeOnlyStart(BYTE eventIndex)
+	{
+		switch (eventIndex)
+		{
+			case EMPIRE_WAR_EVENT:
+			case TOURNAMENT_EVENT:
+				return true;
+		}
+		return false;
+	}
+}
+
+bool CClientManager::InitializeEventManager(bool updateFromGameMaster)
+{
+	m_EventManager.clear();
+
+	// eventIndex is an ENUM column (BONUS_EVENT, DOUBLE_BOSS_LOOT_EVENT, ...) - "+0" forces MySQL
+	// to return its numeric ordinal instead of the string label, matching the eventIndex values
+	// in the enum in common/tables.h (the ENUM's declared member order lines up with it 1:1).
+	std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(
+		"SELECT id, eventIndex+0, UNIX_TIMESTAMP(startTime), UNIX_TIMESTAMP(endTime), empireFlag, channelFlag, value0, value1, value2, value3 "
+		"FROM player.event_table"));
+
+	if (pMsg->Get()->uiNumRows != 0)
+	{
+		const time_t curTime = time(NULL);
+		const struct tm vNowKey = *localtime(&curTime);
+
+		MYSQL_ROW row;
+		while (NULL != (row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
+		{
+			int col = 0;
+			TEventManagerData p;
+			memset(&p, 0, sizeof(p));
+
+			str_to_number(p.eventID, row[col++]);
+			str_to_number(p.eventIndex, row[col++]);
+			str_to_number(p.startTime, row[col++]);
+			str_to_number(p.endTime, row[col++]);
+			str_to_number(p.empireFlag, row[col++]);
+			str_to_number(p.channelFlag, row[col++]);
+			for (int j = 0; j < 4; ++j)
+				str_to_number(p.value[j], row[col++]);
+
+			p.eventTypeOnlyStart = IsEventTypeOnlyStart(p.eventIndex);
+			p.eventStatus = p.eventTypeOnlyStart ? false : (curTime >= p.startTime && curTime <= p.endTime);
+
+			// Bucket by day-of-month: events ending this month key off their start day,
+			// events that already started before this month (still running) key off their
+			// end day instead, so a long-running event still shows up somewhere on today's
+			// calendar view rather than only on a start date the player already scrolled past.
+			const time_t startKeyTime = p.startTime;
+			const struct tm vStartKey = *localtime(&startKeyTime);
+
+			BYTE dayIndex;
+			if (vStartKey.tm_mon == vNowKey.tm_mon && vStartKey.tm_year == vNowKey.tm_year)
+				dayIndex = (BYTE)vStartKey.tm_mday;
+			else
+			{
+				const time_t endKeyTime = p.endTime;
+				const struct tm vEndKey = *localtime(&endKeyTime);
+				dayIndex = (BYTE)vEndKey.tm_mday;
+			}
+
+			m_EventManager[dayIndex].emplace_back(p);
+		}
+
+		for (auto& kv : m_EventManager)
+		{
+			std::stable_sort(kv.second.begin(), kv.second.end(),
+				[](const TEventManagerData& a, const TEventManagerData& b) { return a.startTime < b.startTime; });
+		}
+	}
+
+	SendEventData(NULL, updateFromGameMaster);
+	return true;
+}
+
+void CClientManager::RecvEventManagerPacket(const char* data)
+{
+	const BYTE subIndex = *(BYTE*)data;
+	data += sizeof(BYTE);
+
+	if (subIndex == EVENT_MANAGER_UPDATE)
+	{
+		InitializeEventManager(true);
+	}
+	else if (subIndex == EVENT_MANAGER_REMOVE_EVENT)
+	{
+		WORD eventID;
+		memcpy(&eventID, data, sizeof(WORD));
+
+		char szQuery[1024];
+		snprintf(szQuery, sizeof(szQuery), "UPDATE player.event_table SET endTime = NOW() WHERE id = %u", eventID);
+		std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery));
+
+		InitializeEventManager(false);
+	}
+}
+
+void CClientManager::UpdateEventManager()
+{
+	const time_t curTime = time(NULL);
+	const struct tm vNowKey = *localtime(&curTime);
+
+	const auto it = m_EventManager.find((BYTE)vNowKey.tm_mday);
+	if (it == m_EventManager.end())
+		return;
+
+	for (auto& eventData : it->second)
+	{
+		bool sendStatusPacket = false;
+
+		if (!eventData.eventStatus && !eventData.eventTypeOnlyStart && curTime >= eventData.startTime && (eventData.endTime == 0 || curTime <= eventData.endTime))
+		{
+			eventData.eventStatus = true;
+			sendStatusPacket = true;
+		}
+		else if (eventData.eventStatus && eventData.endTime != 0 && curTime > eventData.endTime)
+		{
+			eventData.eventStatus = false;
+			sendStatusPacket = true;
+		}
+
+		if (sendStatusPacket)
+		{
+			std::vector<BYTE> buf;
+			const BYTE subIndex = EVENT_MANAGER_EVENT_STATUS;
+			buf.insert(buf.end(), (BYTE*)&subIndex, (BYTE*)&subIndex + sizeof(BYTE));
+			buf.insert(buf.end(), (BYTE*)&eventData.eventID, (BYTE*)&eventData.eventID + sizeof(WORD));
+			buf.insert(buf.end(), (BYTE*)&eventData.eventStatus, (BYTE*)&eventData.eventStatus + sizeof(bool));
+			buf.insert(buf.end(), (BYTE*)&eventData.endTime, (BYTE*)&eventData.endTime + sizeof(int));
+
+			ForwardPacket(HEADER_DG_EVENT_MANAGER, buf.data(), (int)buf.size());
+		}
+	}
+}
+
+void CClientManager::SendEventData(CPeer* pkPeer, bool updateFromGameMaster)
+{
+	// Built by hand (not TEMP_BUFFER - that helper lives under game/src, not reachable from
+	// db/src) into a plain byte vector, then handed to EncodeHeader/Encode or ForwardPacket
+	// exactly like every other variable-length DG payload in this file.
+	std::vector<BYTE> buf;
+	auto write = [&buf](const void* p, size_t n) { const BYTE* b = (const BYTE*)p; buf.insert(buf.end(), b, b + n); };
+
+	const BYTE subIndex = EVENT_MANAGER_LOAD;
+	const BYTE dayCount = (BYTE)m_EventManager.size();
+
+	write(&subIndex, sizeof(BYTE));
+	write(&dayCount, sizeof(BYTE));
+	write(&updateFromGameMaster, sizeof(bool));
+
+	for (const auto& kv : m_EventManager)
+	{
+		const BYTE dayIndex = kv.first;
+		const BYTE dayEventCount = (BYTE)kv.second.size();
+		write(&dayIndex, sizeof(BYTE));
+		write(&dayEventCount, sizeof(BYTE));
+		if (dayEventCount > 0)
+			write(kv.second.data(), dayEventCount * sizeof(TEventManagerData));
+	}
+
+	if (pkPeer != NULL)
+	{
+		pkPeer->EncodeHeader(HEADER_DG_EVENT_MANAGER, 0, (DWORD)buf.size());
+		pkPeer->Encode(buf.data(), buf.size());
+	}
+	else
+		ForwardPacket(HEADER_DG_EVENT_MANAGER, buf.data(), (int)buf.size());
 }
 #endif
 
@@ -1298,6 +1479,9 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	marriage::CManager::instance().OnSetup(peer);
 #ifdef ENABLE_OFFLINESHOP_SYSTEM
 	SendOfflineShopOnSetup(peer);
+#endif
+#ifdef ENABLE_EVENT_MANAGER
+	SendEventData(peer);
 #endif
 }
 
@@ -2623,8 +2807,14 @@ void CClientManager::ProcessPackets(CPeer * peer)
 			case HEADER_GD_REQUEST_CHANNELSTATUS:
 				RequestChannelStatus(peer, dwHandle);
 				break;
-				
-			default:					
+
+#ifdef ENABLE_EVENT_MANAGER
+			case HEADER_GD_EVENT_MANAGER:
+				RecvEventManagerPacket(data);
+				break;
+#endif
+
+			default:
 				sys_err("Unknown header (header: %d handle: %d length: %d)", header, dwHandle, dwLength);
 				break;
 		}
@@ -2947,6 +3137,9 @@ int CClientManager::Process()
 			CGuildManager::instance().Update();
 			CPrivManager::instance().Update();
 			marriage::CManager::instance().Update();
+#ifdef ENABLE_EVENT_MANAGER
+			UpdateEventManager();
+#endif
 		}
 
 		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 5)))

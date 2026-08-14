@@ -330,6 +330,10 @@ enum
 	HEADER_CG_SHOP_SEARCH			= 220,
 #endif
 
+#ifdef ENABLE_EVENT_MANAGER
+	HEADER_GC_EVENT_MANAGER			= 221,
+#endif
+
 #ifdef ENABLE_SWITCHBOT
 	HEADER_GC_SWITCHBOT				= 171,
 #endif
@@ -913,6 +917,17 @@ typedef struct packet_shop_search_item_set
 	BYTE	header;
 	WORD	size;
 } TPacketGCShopSearchItemSet;
+#endif
+
+#ifdef ENABLE_EVENT_MANAGER
+// Envelope for HEADER_GC_EVENT_MANAGER; trailing payload (subIndex + whatever that subIndex
+// needs - see CHARACTER_MANAGER::CompareEventSendData/SetEventStatus) is written separately
+// via TEMP_BUFFER, same pattern as TPacketGCShopSearchItemSet above.
+typedef struct event_manager_gc_envelope
+{
+	BYTE	header;
+	DWORD	size;
+} TPacketGCEventManager;
 #endif
 
 typedef struct command_on_click

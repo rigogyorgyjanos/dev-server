@@ -2643,3 +2643,49 @@ ACMD(do_missionbooks)
 }
 #endif
 
+#ifdef ENABLE_EVENT_MANAGER
+ACMD(do_event_manager)
+{
+	std::vector<std::string> vecArgs;
+	split_argument(argument, vecArgs);
+	if (vecArgs.size() < 1)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "usage: /event_manager info|remove <index>|update");
+		return;
+	}
+	else if (vecArgs[0] == "info")
+	{
+		CHARACTER_MANAGER::instance().SendDataPlayer(ch);
+	}
+	else if (vecArgs[0] == "remove")
+	{
+		if (!ch->IsGM())
+			return;
+
+		if (vecArgs.size() < 2)
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, "usage: /event_manager remove <event index>");
+			return;
+		}
+
+		BYTE removeIndex;
+		str_to_number(removeIndex, vecArgs[1].c_str());
+
+		if (CHARACTER_MANAGER::instance().CloseEventManuel(removeIndex))
+			ch->ChatPacket(CHAT_TYPE_INFO, "event closed");
+		else
+			ch->ChatPacket(CHAT_TYPE_INFO, "no active event with that index");
+	}
+	else if (vecArgs[0] == "update")
+	{
+		if (!ch->IsGM())
+			return;
+
+		const BYTE subHeader = EVENT_MANAGER_UPDATE;
+		db_clientdesc->DBPacket(HEADER_GD_EVENT_MANAGER, 0, &subHeader, sizeof(BYTE));
+
+		ch->ChatPacket(CHAT_TYPE_INFO, "event manager reload requested");
+	}
+}
+#endif
+

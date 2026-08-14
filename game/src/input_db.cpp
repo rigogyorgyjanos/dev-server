@@ -1994,6 +1994,62 @@ void CInputDB::ReloadAdmin(const char * c_pData )
 }
 //END_RELOAD_ADMIN
 
+#ifdef ENABLE_EVENT_MANAGER
+void CInputDB::EventManager(const char* c_pData)
+{
+	CHARACTER_MANAGER& chrMngr = CHARACTER_MANAGER::instance();
+
+	const BYTE subIndex = *(BYTE*)c_pData;
+	c_pData += sizeof(BYTE);
+
+	if (subIndex == EVENT_MANAGER_LOAD)
+	{
+		chrMngr.ClearEventData();
+
+		const BYTE dayCount = *(BYTE*)c_pData;
+		c_pData += sizeof(BYTE);
+
+		const bool updateFromGameMaster = *(bool*)c_pData;
+		c_pData += sizeof(bool);
+
+		for (int x = 0; x < dayCount; ++x)
+		{
+			const BYTE dayIndex = *(BYTE*)c_pData;
+			c_pData += sizeof(BYTE);
+
+			const BYTE dayEventCount = *(BYTE*)c_pData;
+			c_pData += sizeof(BYTE);
+
+			if (dayEventCount > 0)
+			{
+				std::vector<TEventManagerData> dayEvents;
+				dayEvents.resize(dayEventCount);
+				thecore_memcpy(&dayEvents[0], c_pData, dayEventCount * sizeof(TEventManagerData));
+				c_pData += dayEventCount * sizeof(TEventManagerData);
+
+				chrMngr.SetEventData(dayIndex, dayEvents);
+			}
+		}
+
+		if (updateFromGameMaster)
+			chrMngr.UpdateAllPlayerEventData();
+	}
+	else if (subIndex == EVENT_MANAGER_EVENT_STATUS)
+	{
+		const WORD eventID = *(WORD*)c_pData;
+		c_pData += sizeof(WORD);
+
+		const bool eventStatus = *(bool*)c_pData;
+		c_pData += sizeof(bool);
+
+		const int endTime = *(int*)c_pData;
+		c_pData += sizeof(int);
+
+		chrMngr.SetEventStatus(eventID, eventStatus, endTime);
+	}
+}
+#endif
+
 ////////////////////////////////////////////////////////////////////
 // Analyze
 // @version	05/06/10 Bang2ni - 아이템 가격정보 리스트 패킷(HEADER_DG_MYSHOP_PRICELIST_RES) 처리루틴 추가.
@@ -2289,9 +2345,15 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		//
 	// RELOAD_ADMIN
 	case HEADER_DG_RELOAD_ADMIN:
-		ReloadAdmin(c_pData );		
+		ReloadAdmin(c_pData );
 		break;
 	//END_RELOAD_ADMIN
+
+#ifdef ENABLE_EVENT_MANAGER
+	case HEADER_DG_EVENT_MANAGER:
+		EventManager(c_pData);
+		break;
+#endif
 
 	case HEADER_DG_ADD_MONARCH_MONEY:
 		AddMonarchMoney(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData ); 
