@@ -403,6 +403,11 @@ enum ELimitTypes
 	/// socket0�� ���� �ð��� �ʴ����� ����. (������ ���� ���� �ش� ���� 0�̸� �������� limit value���� socket0�� ����)
 	LIMIT_TIMER_BASED_ON_WEAR,
 
+	/// LIMIT_TIMER_BASED_ON_WEAR-hoz hasonloan csak felszereles kozben fogy, DE csak akkor,
+	/// ha a tulajdonos ezen felul harcban is van (utik vagy ot utik). Allasban/varosban/nem
+	/// felszerelve nem csokken. socket0-ban a hatralevo hasznalhato ido van masodpercben.
+	LIMIT_TIME_KRIKAL,
+
 	LIMIT_MAX_NUM
 };
 

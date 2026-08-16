@@ -1036,8 +1036,8 @@ int DSManager::LeftTime(LPITEM pItem) const
 	if (pItem == NULL)
 		return false;
 
-	// 일단은 timer based on wear인 용혼석만 시간 다 되어도 안 없어진다.
-	if (pItem->GetProto()->cLimitTimerBasedOnWearIndex >= 0)
+	// 일단은 timer based on wear인 용혼석만 시간 다 되어도 안 없어진다. (LIMIT_TIME_KRIKAL도 동일하게 처리)
+	if (pItem->GetProto()->cLimitTimerBasedOnWearIndex >= 0 || pItem->GetProto()->cLimitTimeKrikalIndex >= 0)
 	{
 		return pItem->GetSocket(ITEM_SOCKET_REMAIN_SEC);
 	}
@@ -1053,8 +1053,8 @@ bool DSManager::IsTimeLeftDragonSoul(LPITEM pItem) const
 	if (pItem == NULL)
 		return false;
 
-	// 일단은 timer based on wear인 용혼석만 시간 다 되어도 안 없어진다.
-	if (pItem->GetProto()->cLimitTimerBasedOnWearIndex >= 0)
+	// 일단은 timer based on wear인 용혼석만 시간 다 되어도 안 없어진다. (LIMIT_TIME_KRIKAL도 동일하게 처리)
+	if (pItem->GetProto()->cLimitTimerBasedOnWearIndex >= 0 || pItem->GetProto()->cLimitTimeKrikalIndex >= 0)
 	{
 		return pItem->GetSocket(ITEM_SOCKET_REMAIN_SEC) > 0;
 	}

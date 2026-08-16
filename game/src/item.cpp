@@ -24,7 +24,7 @@
 
 CItem::CItem(DWORD dwVnum)
 	: m_dwVnum(dwVnum), m_bWindow(0), m_dwID(0), m_bEquipped(false), m_dwVID(0), m_wCell(0), m_dwCount(0), m_lFlag(0), m_dwLastOwnerPID(0),
-	m_bExchanging(false), m_pkDestroyEvent(NULL), m_pkUniqueExpireEvent(NULL), m_pkTimerBasedOnWearExpireEvent(NULL), m_pkRealTimeExpireEvent(NULL),
+	m_bExchanging(false), m_pkDestroyEvent(NULL), m_pkUniqueExpireEvent(NULL), m_pkTimerBasedOnWearExpireEvent(NULL), m_pkTimeKrikalExpireEvent(NULL), m_pkRealTimeExpireEvent(NULL),
 	m_pkExpireEvent(NULL),
    	m_pkAccessorySocketExpireEvent(NULL), m_pkOwnershipEvent(NULL), m_dwOwnershipPID(0), m_bSkipSave(false), m_isLocked(false),
 	m_dwMaskVnum(0), m_dwSIGVnum (0)
@@ -57,6 +57,7 @@ void CItem::Initialize()
 	m_dwOwnershipPID = 0;
 	m_pkUniqueExpireEvent = NULL;
 	m_pkTimerBasedOnWearExpireEvent = NULL;
+	m_pkTimeKrikalExpireEvent = NULL;
 	m_pkRealTimeExpireEvent = NULL;
 
 	m_pkAccessorySocketExpireEvent = NULL;
@@ -71,6 +72,7 @@ void CItem::Destroy()
 	event_cancel(&m_pkOwnershipEvent);
 	event_cancel(&m_pkUniqueExpireEvent);
 	event_cancel(&m_pkTimerBasedOnWearExpireEvent);
+	event_cancel(&m_pkTimeKrikalExpireEvent);
 	event_cancel(&m_pkRealTimeExpireEvent);
 	event_cancel(&m_pkAccessorySocketExpireEvent);
 
@@ -951,10 +953,12 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 	}
 	else
 	{
-		ModifyPoints(true);	
+		ModifyPoints(true);
 		StartUniqueExpireEvent();
 		if (-1 != GetProto()->cLimitTimerBasedOnWearIndex)
 			StartTimerBasedOnWearExpireEvent();
+		if (-1 != GetProto()->cLimitTimeKrikalIndex)
+			StartTimeKrikalExpireEvent();
 
 		// ACCESSORY_REFINE
 		StartAccessorySocketExpireEvent();
@@ -1006,6 +1010,9 @@ bool CItem::Unequip()
 
 	if (-1 != GetProto()->cLimitTimerBasedOnWearIndex)
 		StopTimerBasedOnWearExpireEvent();
+
+	if (-1 != GetProto()->cLimitTimeKrikalIndex)
+		StopTimeKrikalExpireEvent();
 
 	// ACCESSORY_REFINE
 	StopAccessorySocketExpireEvent();
@@ -1650,6 +1657,90 @@ void CItem::StopTimerBasedOnWearExpireEvent()
 	ITEM_MANAGER::instance().SaveSingleItem(this);
 }
 
+// LIMIT_TIME_KRIKAL: a TIMER_BASED_ON_WEAR-tol elteroen itt nem lehet "utolagos fizetes"
+// trukkot hasznalni (elapsed processing_time alapjan visszamenoleg levonni), mert a harc
+// allapota a felszereles alatt tobbszor is valtozhat. Ehelyett masodpercenkent ellenorzunk
+// (ugyanaz a ritmus, mint real_time_expire_event-nel), es csak akkor csokkentunk 1-et, ha
+// a tulajdonos AKKOR eppen harcban van - igy allasban/varosban nem fogy, csak tenyleges
+// harc kozben, es a socket0 mindig pontos (nincs "lemaradt" ertek a stop-kor sem).
+EVENTFUNC(time_krikal_expire_event)
+{
+	item_event_info* info = dynamic_cast<item_event_info*>( event->info );
+
+	if ( info == NULL )
+	{
+		sys_err( "time_krikal_expire_event> <Factor> Null pointer" );
+		return 0;
+	}
+
+	LPITEM pkItem = info->item;
+	LPCHARACTER pkOwner = pkItem->GetOwner();
+
+	if (pkOwner && pkOwner->IsInCombat())
+	{
+		int remain_time = pkItem->GetSocket(ITEM_SOCKET_REMAIN_SEC) - 1;
+
+		if (remain_time <= 0)
+		{
+			sys_log(0, "ITEM EXPIRED : expired(KRIKAL) %s %u", pkItem->GetName(), pkItem->GetID());
+			pkItem->SetTimeKrikalExpireEvent(NULL);
+			pkItem->SetSocket(ITEM_SOCKET_REMAIN_SEC, 0);
+
+			// A timer based on wear mintajat kovetve: ha DS, csak deaktivaljuk, nem toroljuk.
+			if (pkItem->IsDragonSoul())
+			{
+				DSManager::instance().DeactivateDragonSoul(pkItem);
+			}
+			else
+			{
+				ITEM_MANAGER::instance().RemoveItem(pkItem, "TIME_KRIKAL_EXPIRE");
+			}
+			return 0;
+		}
+
+		pkItem->SetSocket(ITEM_SOCKET_REMAIN_SEC, remain_time);
+	}
+
+	return PASSES_PER_SEC(1);
+}
+
+void CItem::SetTimeKrikalExpireEvent(LPEVENT pkEvent)
+{
+	m_pkTimeKrikalExpireEvent = pkEvent;
+}
+
+void CItem::StartTimeKrikalExpireEvent()
+{
+	if (m_pkTimeKrikalExpireEvent)
+		return;
+
+	// Idoalapu limitekbol csak egy futhat egy adott itemen - ne utkozzon a socket0-ert
+	// a REAL_TIME vagy a TIMER_BASED_ON_WEAR mechanizmussal.
+	if (IsRealTimeItem())
+		return;
+
+	if (-1 != GetProto()->cLimitTimerBasedOnWearIndex)
+		return;
+
+	if (-1 == GetProto()->cLimitTimeKrikalIndex)
+		return;
+
+	item_event_info* info = AllocEventInfo<item_event_info>();
+	info->item = this;
+
+	SetTimeKrikalExpireEvent(event_create(time_krikal_expire_event, info, PASSES_PER_SEC(1)));
+}
+
+void CItem::StopTimeKrikalExpireEvent()
+{
+	if (!m_pkTimeKrikalExpireEvent)
+		return;
+
+	event_cancel(&m_pkTimeKrikalExpireEvent);
+
+	ITEM_MANAGER::instance().SaveSingleItem(this);
+}
+
 void CItem::ApplyAddon(int iAddonType)
 {
 	CItemAddonManager::instance().ApplyAddonTo(iAddonType, this);
@@ -2169,7 +2260,10 @@ int	CItem::GetDuration()
 	}
 	
 	if (-1 != GetProto()->cLimitTimerBasedOnWearIndex)
-		return GetProto()->aLimits[GetProto()->cLimitTimerBasedOnWearIndex].lValue;	
+		return GetProto()->aLimits[GetProto()->cLimitTimerBasedOnWearIndex].lValue;
+
+	if (-1 != GetProto()->cLimitTimeKrikalIndex)
+		return GetProto()->aLimits[GetProto()->cLimitTimeKrikalIndex].lValue;
 
 	return -1;
 }

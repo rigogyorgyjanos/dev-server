@@ -833,6 +833,7 @@ bool CClientManager::InitializeItemTable()
 			item_table->bAlterToMagicItemPct = tempTable->bAlterToMagicItemPct;
 			item_table->cLimitRealTimeFirstUseIndex = -1;
 			item_table->cLimitTimerBasedOnWearIndex = -1;
+			item_table->cLimitTimeKrikalIndex = -1;
 
 			int i;
 
@@ -846,6 +847,9 @@ bool CClientManager::InitializeItemTable()
 
 				if (LIMIT_TIMER_BASED_ON_WEAR == item_table->aLimits[i].bType)
 					item_table->cLimitTimerBasedOnWearIndex = (char)i;
+
+				if (LIMIT_TIME_KRIKAL == item_table->aLimits[i].bType)
+					item_table->cLimitTimeKrikalIndex = (char)i;
 			}
 
 			for (i = 0; i < ITEM_APPLY_MAX_NUM; ++i)

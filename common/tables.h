@@ -714,8 +714,9 @@ typedef struct SItemTable : public SEntityTable
 	// �Ʒ� limit flag���� realtime�� üũ �� ���� ����, ������ VNUM�� ������ ���ε�,
 	// ���� ������� �Ź� �����۸��� �ʿ��� ��쿡 LIMIT_MAX_NUM���� �������鼭 üũ�ϴ� ���ϰ� Ŀ�� �̸� ���� �� ��.
 	char		cLimitRealTimeFirstUseIndex;		// ������ limit �ʵ尪 �߿��� LIMIT_REAL_TIME_FIRST_USE �÷����� ��ġ (������ -1)
-	char		cLimitTimerBasedOnWearIndex;		// ������ limit �ʵ尪 �߿��� LIMIT_TIMER_BASED_ON_WEAR �÷����� ��ġ (������ -1) 
-	
+	char		cLimitTimerBasedOnWearIndex;		// ������ limit �ʵ尪 �߿��� LIMIT_TIMER_BASED_ON_WEAR �÷����� ��ġ (������ -1)
+	char		cLimitTimeKrikalIndex;			// ������ limit �ʵ尪 �߿��� LIMIT_TIME_KRIKAL �÷����� ��ġ (������ -1)
+
 	BYTE GetType() { return bType; }
 	BYTE GetSubType() { return bSubType; }
 	BYTE GetWeight() { return bWeight; }

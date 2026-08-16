@@ -361,7 +361,7 @@ int get_Item_Immune_Value(string inputString)
 
 int get_Item_LimitType_Value(string inputString)
 {
-	string arLimitType[] = {"LIMIT_NONE", "LEVEL", "STR", "DEX", "INT", "CON", "PC_BANG", "REAL_TIME", "REAL_TIME_FIRST_USE", "TIMER_BASED_ON_WEAR"};
+	string arLimitType[] = {"LIMIT_NONE", "LEVEL", "STR", "DEX", "INT", "CON", "PC_BANG", "REAL_TIME", "REAL_TIME_FIRST_USE", "TIMER_BASED_ON_WEAR", "TIME_KRIKAL"};
 	
 	int retInt = -1;
 	//cout << "LimitType : " << limitTypeStr << " -> ";
@@ -811,6 +811,7 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 	itemTable->bAlterToMagicItemPct = dataArray[13];
 	itemTable->cLimitRealTimeFirstUseIndex = -1;
 	itemTable->cLimitTimerBasedOnWearIndex = -1;
+	itemTable->cLimitTimeKrikalIndex = -1;
 
 	int i;
 
@@ -824,6 +825,9 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 
 		if (LIMIT_TIMER_BASED_ON_WEAR == itemTable->aLimits[i].bType)
 			itemTable->cLimitTimerBasedOnWearIndex = (char)i;
+
+		if (LIMIT_TIME_KRIKAL == itemTable->aLimits[i].bType)
+			itemTable->cLimitTimeKrikalIndex = (char)i;
 
 	}
 

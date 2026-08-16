@@ -1565,6 +1565,25 @@ void CHARACTER::SetLastAttacked(DWORD dwTime)
 	m_pkMobInst->m_posLastAttacked = GetXYZ();
 }
 
+// LIMIT_TIME_KRIKAL grace-ablaka: ennyi ideig szamit meg "harcban levo"-nak a karakter
+// az utolso talalat (adott vagy kapott) utan. Ez azert kell, mert a tamadasok kozott
+// (fegyver sebesseg, skill cooldown stb.) termeszetes resek vannak - grace nelkul a
+// timer minden ket utes kozott le-fel kapcsolna.
+#define TIME_KRIKAL_COMBAT_GRACE_MS		10000
+
+void CHARACTER::SetLastCombatTime()
+{
+	m_dwLastCombatTime = get_dword_time();
+}
+
+bool CHARACTER::IsInCombat() const
+{
+	if (0 == m_dwLastCombatTime)
+		return false;
+
+	return (get_dword_time() - m_dwLastCombatTime) < TIME_KRIKAL_COMBAT_GRACE_MS;
+}
+
 void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageFlag)
 {
 	if (IsPC() == true || (pAttacker->IsPC() == true && pAttacker->GetTarget() == this))
@@ -1609,6 +1628,13 @@ void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageF
 // 
 bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // returns true if dead
 {
+	// LIMIT_TIME_KRIKAL: mindket fel (tamado + celpont) "harcban levo"-nak szamit egy valodi talalattol.
+	if (pAttacker)
+	{
+		SetLastCombatTime();
+		pAttacker->SetLastCombatTime();
+	}
+
 	if (DAMAGE_TYPE_MAGIC == type)
 	{
 		dam = (int)((float)dam * (100 + (pAttacker->GetPoint(POINT_MAGIC_ATT_BONUS_PER) + pAttacker->GetPoint(POINT_MELEE_MAGIC_ATT_BONUS_PER))) / 100.f + 0.5f);

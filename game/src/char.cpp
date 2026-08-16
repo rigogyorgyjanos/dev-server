@@ -229,6 +229,7 @@ void CHARACTER::Initialize()
 	m_dwStateDuration = 1;
 
 	m_dwLastAttackTime = get_dword_time() - 20000;
+	m_dwLastCombatTime = 0;
 
 	m_bAddChrState = 0;
 

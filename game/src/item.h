@@ -179,11 +179,15 @@ class CItem : public CEntity
 		void		StartTimerBasedOnWearExpireEvent();
 		void		SetTimerBasedOnWearExpireEvent(LPEVENT pkEvent);
 
+		void		StartTimeKrikalExpireEvent();
+		void		SetTimeKrikalExpireEvent(LPEVENT pkEvent);
+
 		void		StartRealTimeExpireEvent();
 		bool		IsRealTimeItem();
 
 		void		StopUniqueExpireEvent();
 		void		StopTimerBasedOnWearExpireEvent();
+		void		StopTimeKrikalExpireEvent();
 		void		StopAccessorySocketExpireEvent();
 
 		//			�ϴ� REAL_TIME�� TIMER_BASED_ON_WEAR �����ۿ� ���ؼ��� ����� ������.
@@ -306,6 +310,7 @@ class CItem : public CEntity
 		LPEVENT		m_pkExpireEvent;
 		LPEVENT		m_pkUniqueExpireEvent;
 		LPEVENT		m_pkTimerBasedOnWearExpireEvent;
+		LPEVENT		m_pkTimeKrikalExpireEvent;
 		LPEVENT		m_pkRealTimeExpireEvent;
 		LPEVENT		m_pkAccessorySocketExpireEvent;
 		LPEVENT		m_pkOwnershipEvent;

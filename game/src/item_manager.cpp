@@ -325,6 +325,27 @@ LPITEM ITEM_MANAGER::CreateItem(DWORD vnum, DWORD count, DWORD id, bool bTryMagi
 				item->SetSocket(0, duration);
 			}
 		}
+
+		// LIMIT_TIME_KRIKAL: 착용 + 전투 중일 때만 차감. 이미 착용중이면(로그인 복원) 감시 이벤트를
+		// 바로 시작하되, 실제 차감은 IsInCombat()이 true일 때만 이벤트 안에서 이루어진다.
+		else if (LIMIT_TIME_KRIKAL == item->GetLimitType(i))
+		{
+			if (true == item->IsEquipped())
+			{
+				item->StartTimeKrikalExpireEvent();
+			}
+			else if (0 == id)
+			{
+				long duration = item->GetSocket(0);
+				if (0 == duration)
+					duration = item->GetLimitValue(i);
+
+				if (0 == duration)
+					duration = 60 * 60 * 10;	// 정보가 아무것도 없으면 디폴트로 10시간 세팅
+
+				item->SetSocket(0, duration);
+			}
+		}
 	}
 
 	if (id == 0) // 새로 만드는 아이템일 때만 처리

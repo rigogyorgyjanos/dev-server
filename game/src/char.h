@@ -842,6 +842,13 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		void			SetLastAttacked(DWORD time);	// ���������� ���ݹ��� �ð� �� ��ġ�� ������
 
+		// LIMIT_TIME_KRIKAL: harc-allapot kovetese (utik vagy o ut valakit). Damage()-ban
+		// frissul mindket felen, IsInCombat() pedig egy rovid "grace" ablakon belul true-t ad
+		// vissza, hogy egymast koveto tamadasok kozotti resekben ne alljon le/induljon ujra a timer.
+		DWORD			GetLastCombatTime() const	{ return m_dwLastCombatTime; }
+		void			SetLastCombatTime();
+		bool			IsInCombat() const;
+
 		bool			SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList = true);
 		bool			IsSyncOwner(LPCHARACTER ch) const;
 
@@ -887,6 +894,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		DWORD			m_dwLastMoveTime;
 		DWORD			m_dwLastAttackTime;
+		DWORD			m_dwLastCombatTime;
 		DWORD			m_dwWalkStartTime;
 		DWORD			m_dwStopTime;
 
