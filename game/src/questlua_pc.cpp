@@ -74,7 +74,7 @@ namespace quest
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
-		if (!lua_isnumber(L, 1)) 
+		if (!lua_isnumber(L, 1))
 		{
 			sys_err("wrong skill index");
 			return 0;
@@ -83,6 +83,19 @@ namespace quest
 		lua_pushboolean(L, ch->LearnGrandMasterSkill((long)lua_tonumber(L, 1)));
 		return 1;
 	}
+
+#ifdef __SKILLS_LEVEL_OVER_P__
+	int pc_learn_sage_master_skill(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+
+		if (!lua_isnumber(L, 1))
+			return 0;
+
+		lua_pushboolean(L, ch->LearnSageMasterSkill((long)lua_tonumber(L, 1)));
+		return 1;
+	}
+#endif
 
 	int pc_set_warp_location(lua_State * L)
 	{
@@ -3040,6 +3053,9 @@ teleport_area:
 																	* 주의사항 : kill event에서만 사용할 것!
 																	*/
 
+#ifdef __SKILLS_LEVEL_OVER_P__
+			{ "learn_sage_master_skill", pc_learn_sage_master_skill	},
+#endif
 			{ NULL,			NULL			}
 		};
 

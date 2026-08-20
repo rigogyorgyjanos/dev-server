@@ -41,6 +41,7 @@ CMobInstance::CMobInstance()
 {
 	m_dwLastAttackedTime = get_dword_time();
 	m_dwLastWarpTime = get_dword_time();
+	m_dwLastChaseUpdateTime = get_dword_time();
 
 	memset( &m_posLastAttacked, 0, sizeof(m_posLastAttacked) );
 }

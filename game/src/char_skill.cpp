@@ -190,9 +190,15 @@ void CHARACTER::SetSkillLevel(DWORD dwVnum, BYTE bLev)
 		return;
 	}
 
-	m_pSkillLevels[dwVnum].bLevel = MIN(40, bLev);
+	m_pSkillLevels[dwVnum].bLevel = MIN(SKILL_MAX_LEVEL, bLev);
 
+#ifdef __SKILLS_LEVEL_OVER_P__
+	if (bLev >= 50)
+		m_pSkillLevels[dwVnum].bMasterType = SKILL_SAGE_MASTER;
+	else if (bLev >= 40)
+#else
 	if (bLev >= 40)
+#endif
 		m_pSkillLevels[dwVnum].bMasterType = SKILL_PERFECT_MASTER;
 	else if (bLev >= 30)
 		m_pSkillLevels[dwVnum].bMasterType = SKILL_GRAND_MASTER;
@@ -423,6 +429,90 @@ static bool FN_should_check_exp(LPCHARACTER ch)
 
 	return false;
 }
+
+
+#ifdef __SKILLS_LEVEL_OVER_P__
+bool CHARACTER::LearnSageMasterSkill(DWORD dwSkillVnum)
+{
+	CSkillProto * pkSk = CSkillManager::instance().Get(dwSkillVnum);
+	if (!pkSk)
+		return false;
+
+	if (!IsLearnableSkill(dwSkillVnum))
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련할 수 없는 스킬입니다."));
+		return false;
+	}
+
+	sys_log(0, "<Skill> Learn skill:%d to sage master, cur %d, next %d", dwSkillVnum, get_global_time(), GetSkillNextReadTime(dwSkillVnum));
+	if (pkSk->dwType == 0)
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("그랜드 마스터 수련을 할 수 없는 스킬입니다."));
+		return false;
+	}
+
+	if (GetSkillMasterType(dwSkillVnum) != SKILL_PERFECT_MASTER)
+		return false;
+
+	const int aiSageMasterSkillBookMaxCount[10] = {5,  7,  9, 11, 13, 15, 20, 25, 30, 35};
+	const int aiSageMasterSkillBookMinCount[10] = {1, 1, 1, 2,  2,  3,  3,  4,  5,  6};
+	const int aiSageMasterSkillBookCountForLevelUp[10] = {3, 3, 5, 5, 7, 7, 10, 10, 10, 20,};
+
+	std::string strTrainSkill;
+	{
+		std::ostringstream os;
+		os << "training_sagemaster_skill.skill" << dwSkillVnum;
+		strTrainSkill = os.str();
+	}
+
+	BYTE bLastLevel = GetSkillLevel(dwSkillVnum);
+	int idx = MIN(9, GetSkillLevel(dwSkillVnum) - 40);
+	sys_log(0, "<Skill> LearnSageMasterSkill: %s table idx %d value %d", GetName(), idx, aiSageMasterSkillBookCountForLevelUp[idx]);
+	int iTotalReadCount = GetQuestFlag(strTrainSkill) + 1;
+	SetQuestFlag(strTrainSkill, iTotalReadCount);
+
+	int iMinReadCount = aiSageMasterSkillBookMinCount[idx];
+	int iMaxReadCount = aiSageMasterSkillBookMaxCount[idx];
+	int iBookCount = aiSageMasterSkillBookCountForLevelUp[idx];
+	if (FindAffect(AFFECT_SKILL_BOOK_BONUS))
+	{
+		if (iBookCount&1)
+			iBookCount = iBookCount / 2 + 1;
+		else
+			iBookCount = iBookCount / 2;
+
+		RemoveAffect(AFFECT_SKILL_BOOK_BONUS);
+	}
+
+	int n = number(1, iBookCount);
+	DWORD nextTime = get_global_time() + number(28800, 43200);
+	sys_log(0, "<Skill> SageMaster [skill books count]: minim %d, currently %d, maximum %d (next_time %d).", iMinReadCount, iTotalReadCount, iMaxReadCount, nextTime);
+
+	bool bSuccess = n == 2;
+	if (iTotalReadCount < iMinReadCount)
+		bSuccess = false;
+	if (iTotalReadCount > iMaxReadCount)
+		bSuccess = true;
+
+	if (bSuccess)
+		SkillLevelUp(dwSkillVnum, SKILL_UP_BY_QUEST);
+
+	SetSkillNextReadTime(dwSkillVnum, nextTime);
+	if (GetSkillLevel(dwSkillVnum) == bLastLevel)
+	{
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("크윽, 갸가 부족하고 있어! 이건 무슨 조화인가!? 젠장!"));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련이 실패로 돌아갔습니다. 다시 시도해주시기 바랍니다."));
+		LogManager::instance().CharLog(this, dwSkillVnum, "GM_READ_FAIL", "");
+		return false;
+	}
+
+	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("드디어 나의 몸에 엄청난 힘이 흘러들어와!"));
+	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("몸속에 넘치는 기운을 억누르기가 힘들어! 이건, 이건말이지!"));
+	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("한 단계 높은 수련의 경지에 다다르셨습니다."));
+	LogManager::instance().CharLog(this, dwSkillVnum, "GM_READ_SUCCESS", "");
+	return true;
+}
+#endif
 
 
 bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
@@ -747,7 +837,14 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 				break;
 
 			case SKILL_PERFECT_MASTER:
+#ifdef __SKILLS_LEVEL_OVER_P__
+				if (bMethod != SKILL_UP_BY_QUEST)
+					return;
+
+				break;
+#else
 				return;
+#endif
 		}
 	}
 
@@ -850,6 +947,14 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 					SetSkillLevel(pkSk->dwVnum, 40);
 				}
 				break;
+#ifdef __SKILLS_LEVEL_OVER_P__
+			case SKILL_PERFECT_MASTER:
+				if (GetSkillLevel(pkSk->dwVnum) >= 49)
+				{
+					SetSkillLevel(pkSk->dwVnum, 49);
+				}
+				break;
+#endif
 		}
 	}
 

@@ -830,7 +830,7 @@ void CHARACTER::StateMove()
 	}
 	else
 	{
-		// XXX AGGRO 
+		// XXX AGGRO
 		if (IsMonster() && GetVictim())
 		{
 			LPCHARACTER victim = GetVictim();
@@ -840,6 +840,28 @@ void CHARACTER::StateMove()
 			{
 				// 몬스터가 적을 쫓아가는 것이면 무조건 뛰어간다.
 				SetNowWalking(false);
+			}
+		}
+
+		// Uldozes-korrekcio: ha az aldozat mozgasban van, a mob celpontja idovel elavul
+		// (a StateMove csak a mar kiszamolt m_posDest fele halad), ezert idonkent (max
+		// 300ms-enkent, hogy ne legyen felesleges CPU-terheles) ujraszamoljuk az utvonalat,
+		// ha az aldozat a jelenleg celzott ponttol mar messze elmozdult.
+		if (IsMonster() && !IsDead() && GetVictim() && !GetVictim()->IsDead())
+		{
+			LPCHARACTER victim = GetVictim();
+
+			if (m_pkMobInst && victim->IsState(victim->m_stateMove))
+			{
+				DWORD dwNow = get_dword_time();
+
+				if (dwNow - m_pkMobInst->m_dwLastChaseUpdateTime >= 300)
+				{
+					m_pkMobInst->m_dwLastChaseUpdateTime = dwNow;
+
+					if (DISTANCE_APPROX(m_posDest.x - victim->GetX(), m_posDest.y - victim->GetY()) > 300)
+						__CHARACTER_GotoNearTarget(this, victim);
+				}
 			}
 		}
 

@@ -3,8 +3,8 @@
 
 typedef struct SMobSplashAttackInfo
 {
-	DWORD	dwTiming; // ½ºÅ³ »ç¿ë ÈÄ ½ÇÁ¦·Î µ¥¹ÌÁö ¸ÔÈú¶§±îÁö ±â´Ù¸®´Â ½Ã°£ (ms)
-	DWORD	dwHitDistance; // ½ºÅ³ »ç¿ë½Ã ½ÇÁ¦·Î ½ºÅ³ °è»êÀÌ µÇ´Â °Å¸® (Àü¹æ ¸îcm)
+	DWORD	dwTiming; // ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (ms)
+	DWORD	dwHitDistance; // ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½Å¸ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½cm)
 
 	SMobSplashAttackInfo(DWORD dwTiming, DWORD dwHitDistance)
 		: dwTiming(dwTiming)
@@ -37,9 +37,10 @@ class CMobInstance
 	public:
 		CMobInstance();
 
-		PIXEL_POSITION	m_posLastAttacked;	// ¸¶Áö¸· ¸ÂÀº À§Ä¡
-		DWORD		m_dwLastAttackedTime;	// ¸¶Áö¸· ¸ÂÀº ½Ã°£
+		PIXEL_POSITION	m_posLastAttacked;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+		DWORD		m_dwLastAttackedTime;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 		DWORD		m_dwLastWarpTime;
+		DWORD		m_dwLastChaseUpdateTime;	// legutobbi uldozes-cel korrekcio ideje
 
 		bool m_IsBerserk;
 		bool m_IsGodSpeed;

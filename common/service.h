@@ -45,5 +45,6 @@
 #endif
 #define ENABLE_CHATTING_WINDOW_RENEWAL		// Chat window renewal: per-category message filtering (EXP/item/money split out of INFO)
 #define ENABLE_EVENT_MANAGER			// Event calendar: DB-driven timed events (double drop, exp bonus, tournament, etc.)
+#define __SKILLS_LEVEL_OVER_P__			// Sage Master: 4th skill mastery tier above Perfect Master (levels 41-50)
 
 #endif

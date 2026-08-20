@@ -1438,6 +1438,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				DisableCooltime();
 		bool				LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb = 0);
 		bool				LearnGrandMasterSkill(DWORD dwSkillVnum);
+#ifdef __SKILLS_LEVEL_OVER_P__
+		bool				LearnSageMasterSkill(DWORD dwSkillVnum);
+#endif
 
 	private:
 		bool				m_bDisableCooltime;

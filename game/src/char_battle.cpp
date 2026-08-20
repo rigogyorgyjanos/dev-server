@@ -3436,10 +3436,10 @@ struct FuncAggregateMonster
 			if (ch->GetVictim())
 				return;
 
-			if (number(1, 100) <= 50) // �ӽ÷� 50% Ȯ���� ���� ����´�
-				if (DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY()) < 5000)
-					if (ch->CanBeginFight())
-						ch->BeginFight(m_ch);
+			// 100% eséllyel, de csak azok a mobok, amik a jelenlegi látótávolságon (renderelt terület) belül vannak
+			if (DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY()) < (VIEW_RANGE + VIEW_BONUS_RANGE))
+				if (ch->CanBeginFight())
+					ch->BeginFight(m_ch);
 		}
 	}
 };
