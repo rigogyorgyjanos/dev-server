@@ -2,7 +2,7 @@
 #define __INC_METIN_II_DB_QID_H__
 
 /**
- * @version	05/06/10 Bang2ni - ¾ÆÀÌÅÛ °¡°ÝÁ¤º¸ Äõ¸® Ãß°¡(QID_ITEMPRICE_XXX)
+ * @version	05/06/10 Bang2ni - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½(QID_ITEMPRICE_XXX)
  */
 enum QID
 {
@@ -29,11 +29,16 @@ enum QID
     QID_GUILD_RANKING,			// 20
 
 	// MYSHOP_PRICE_LIST
-    QID_ITEMPRICE_SAVE,			///< 21, ¾ÆÀÌÅÛ °¡°ÝÁ¤º¸ ÀúÀå Äõ¸®
-    QID_ITEMPRICE_DESTROY,		///< 22, ¾ÆÀÌÅÛ °¡°ÝÁ¤º¸ »èÁ¦ Äõ¸®
-    QID_ITEMPRICE_LOAD_FOR_UPDATE,	///< 23, °¡°ÝÁ¤º¸ ¾÷µ¥ÀÌÆ®¸¦ À§ÇÑ ¾ÆÀÌÅÛ °¡°ÝÁ¤º¸ ·Îµå Äõ¸®
-    QID_ITEMPRICE_LOAD,			///< 24, ¾ÆÀÌÅÛ °¡°ÝÁ¤º¸ ·Îµå Äõ¸®
+    QID_ITEMPRICE_SAVE,			///< 21, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    QID_ITEMPRICE_DESTROY,		///< 22, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    QID_ITEMPRICE_LOAD_FOR_UPDATE,	///< 23, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½
+    QID_ITEMPRICE_LOAD,			///< 24, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½
 	// END_OF_MYSHOP_PRICE_LIST
+
+#ifdef __SKILL_COLOR_SYSTEM__
+    QID_SKILL_COLOR,
+    QID_SKILL_COLOR_SAVE,
+#endif
 };
 
 #endif

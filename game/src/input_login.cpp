@@ -29,6 +29,9 @@
 #include "priv_manager.h"
 #include "dev_log.h"
 #include "log.h"
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	#include "maintenance.h"
+#endif
 #include "horsename_manager.h"
 #include "MarkManager.h"
 #ifdef ENABLE_SWITCHBOT
@@ -624,6 +627,9 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	d->Packet(&p2, sizeof(p2));
 
 	ch->SendGreetMessage();
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	MaintenanceManager::instance().Send_CheckTable(ch);
+#endif
 
 	_send_bonus_info(ch);
 

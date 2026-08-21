@@ -91,6 +91,10 @@
 #endif
 #include "check_server.h"
 
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	#include "maintenance.h"
+#endif
+
 extern void WriteVersion();
 //extern const char * _malloc_options;
 #if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
@@ -559,6 +563,9 @@ int main(int argc, char **argv)
 	WriteVersion();
 	
 	SECTREE_MANAGER	sectree_manager;
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	MaintenanceManager maintenance;
+#endif
 	CHARACTER_MANAGER	char_manager;
 	ITEM_MANAGER	item_manager;
 	CShopManager	shop_manager;

@@ -6,6 +6,19 @@
 
 typedef	DWORD IDENT;
 
+#ifdef __SKILL_COLOR_SYSTEM__
+namespace ESkillColorLength
+{
+	enum ESkillColorLength
+	{
+		MAX_SKILL_COUNT = 6,
+		MAX_EFFECT_COUNT = 5,
+		MAX_BUFF_COUNT = 5,
+		BUFF_BEGIN = MAX_SKILL_COUNT,
+	};
+}
+#endif
+
 /**
  * @version 05/06/10	Bang2ni - Myshop Pricelist ���� ��Ŷ HEADER_XX_MYSHOP_PRICELIST_XXX �߰�
  */
@@ -151,6 +164,9 @@ enum
 #ifdef ENABLE_EVENT_MANAGER
 	HEADER_GD_EVENT_MANAGER = 155,
 #endif
+#ifdef __SKILL_COLOR_SYSTEM__
+	HEADER_GD_SKILL_COLOR_SAVE = 145,
+#endif
 
 	HEADER_GD_SETUP			= 0xff,
 
@@ -284,6 +300,9 @@ enum
 #endif
 #ifdef ENABLE_EVENT_MANAGER
 	HEADER_DG_EVENT_MANAGER = 189,
+#endif
+#ifdef __SKILL_COLOR_SYSTEM__
+	HEADER_DG_SKILL_COLOR_LOAD = 186,
 #endif
 	HEADER_DG_MAP_LOCATIONS		= 0xfe,
 	HEADER_DG_P2P			= 0xff,
@@ -1783,6 +1802,14 @@ enum
 	ITEM_DROP_EVENT = 14,
 	YANG_DROP_EVENT = 15,
 };
+#endif
+
+#ifdef __SKILL_COLOR_SYSTEM__
+typedef struct
+{
+	DWORD	player_id;
+	DWORD	dwSkillColor[ESkillColorLength::MAX_SKILL_COUNT + ESkillColorLength::MAX_BUFF_COUNT][ESkillColorLength::MAX_EFFECT_COUNT];
+} TSkillColor;
 #endif
 
 #pragma pack()

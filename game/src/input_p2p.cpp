@@ -29,6 +29,10 @@
 #include "questmanager.h"
 #include "skill.h"
 #include "threeway_war.h"
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	#include "maintenance.h"
+	extern long int global_time_maintenance;
+#endif
 #ifdef CROSS_CHANNEL_FRIEND_REQUEST
 #include "crc32.h"
 #endif
@@ -518,7 +522,11 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_GG_SHUTDOWN:
 			sys_err("Accept shutdown p2p command from %s.", d->GetHostName());
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+			Shutdown(global_time_maintenance);
+#else
 			Shutdown(10);
+#endif
 			break;
 
 		case HEADER_GG_GUILD:

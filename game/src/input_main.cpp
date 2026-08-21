@@ -1742,6 +1742,58 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 	*/
 }
 
+#ifdef __SKILL_COLOR_SYSTEM__
+void CInputMain::SetSkillColor(LPCHARACTER ch, const char* pcData)
+{
+	TPacketCGSkillColor * p = (TPacketCGSkillColor*)pcData;
+
+	if (p->skill >= ESkillColorLength::MAX_SKILL_COUNT)
+		return;
+
+	// Server-side enforcement that a skill's color can only be changed at Sage
+	// Master grade (__SKILLS_LEVEL_OVER_P__) - the client only hides the button
+	// for lower grades, which a modified client could bypass.
+	if (0 >= ch->GetSkillGroup())
+		return;
+
+	const int SKILL_COUNT = 6;
+	static const DWORD SkillList[JOB_MAX_NUM][SKILL_GROUP_MAX_NUM][SKILL_COUNT] =
+	{
+		{ {	1,	2,	3,	4,	5,	6	}, {	16,	17,	18,	19,	20,	21	} },
+		{ {	31,	32,	33,	34,	35,	36	}, {	46,	47,	48,	49,	50,	51	} },
+		{ {	61,	62,	63,	64,	65,	66	}, {	76,	77,	78,	79,	80,	81	} },
+		{ {	91,	92,	93,	94,	95,	96	}, {	106,107,108,109,110,111	} },
+	};
+
+	DWORD dwVnum = SkillList[ ch->GetJob() ][ ch->GetSkillGroup() - 1 ][ p->skill ];
+
+	if (ch->GetSkillMasterType(dwVnum) != SKILL_SAGE_MASTER)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can only change the color of a skill at Sage Master grade."));
+		return;
+	}
+
+	DWORD data[ESkillColorLength::MAX_SKILL_COUNT + ESkillColorLength::MAX_BUFF_COUNT][ESkillColorLength::MAX_EFFECT_COUNT];
+	memcpy(data, ch->GetSkillColor(), sizeof(data));
+
+	data[p->skill][0] = p->col1;
+	data[p->skill][1] = p->col2;
+	data[p->skill][2] = p->col3;
+	data[p->skill][3] = p->col4;
+	data[p->skill][4] = p->col5;
+
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have changed the color of your skill."));
+
+	ch->SetSkillColor(data[0]);
+
+	TSkillColor db_pack;
+	memcpy(db_pack.dwSkillColor, data, sizeof(data));
+	db_pack.player_id = ch->GetPlayerID();
+	db_clientdesc->DBPacketHeader(HEADER_GD_SKILL_COLOR_SAVE, 0, sizeof(TSkillColor));
+	db_clientdesc->Packet(&db_pack, sizeof(TSkillColor));
+}
+#endif
+
 void CInputMain::Attack(LPCHARACTER ch, const BYTE header, const char* data)
 {
 	if (NULL == ch)
@@ -3404,6 +3456,12 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			if (!ch->IsObserverMode())
 				UseSkill(ch, c_pData);
 			break;
+
+#ifdef __SKILL_COLOR_SYSTEM__
+		case HEADER_CG_SKILL_COLOR:
+			SetSkillColor(ch, c_pData);
+			break;
+#endif
 
 		case HEADER_CG_QUICKSLOT_ADD:
 			QuickslotAdd(ch, c_pData);

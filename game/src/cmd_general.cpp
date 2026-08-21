@@ -33,6 +33,9 @@
 #include "unique_item.h"
 #include "threeway_war.h"
 #include "log.h"
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	#include "maintenance.h"
+#endif
 #include "../../common/VnumHelper.h"
 
 
@@ -2685,6 +2688,55 @@ ACMD(do_event_manager)
 		db_clientdesc->DBPacket(HEADER_GD_EVENT_MANAGER, 0, &subHeader, sizeof(BYTE));
 
 		ch->ChatPacket(CHAT_TYPE_INFO, "event manager reload requested");
+	}
+}
+#endif
+
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+ACMD(do_maintenance_text)
+{
+	char arg1[256];
+	char arg2[256];
+	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
+
+	if (!*arg1)
+	{
+		ch->ChatPacket(CHAT_TYPE_NOTICE, "<Syntax> The arguments available for this command are:");
+		ch->ChatPacket(CHAT_TYPE_NOTICE, "<Syntax> /m_text disable");
+		ch->ChatPacket(CHAT_TYPE_NOTICE, "<Syntax> /m_text enable <text>");
+		return;
+	}
+
+	if (*arg1 && !strcmp(arg1, "disable"))
+	{
+		MaintenanceManager::instance().Send_Text(ch, "rmf");
+	}
+
+	else if (*arg1 && !strcmp(arg1, "enable"))
+	{
+		const char* sReason = one_argument(argument, arg2, sizeof(arg2));
+		MaintenanceManager::instance().Send_Text(ch, sReason);
+	}
+}
+
+
+ACMD(do_maintenance)
+{
+	char arg1[256];
+	char arg2[256];
+
+	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
+
+	if (*arg1 && !strcmp(arg1, "force_stop"))
+	{
+		MaintenanceManager::instance().Send_DisableSecurity(ch);
+	}
+	else
+	{
+		long time_maintenance = parse_time_str(arg1);
+		long duration_maintenance = parse_time_str(arg2);
+
+		MaintenanceManager::instance().Send_ActiveMaintenance(ch, time_maintenance, duration_maintenance);
 	}
 }
 #endif

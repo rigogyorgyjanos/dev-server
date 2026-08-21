@@ -9,6 +9,9 @@
 #include "battle.h"
 #include "desc.h"
 #include "desc_manager.h"
+#ifdef __SKILL_COLOR_SYSTEM__
+#include "desc_client.h"
+#endif
 #include "packet.h"
 #include "affect.h"
 #include "item.h"
@@ -2744,6 +2747,59 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		AddChainLightningExcept(pkVictim);
 	}
 	
+
+#ifdef __SKILL_COLOR_SYSTEM__
+	if (pkVictim != NULL && (dwVnum == 94 || dwVnum == 95 || dwVnum == 96 || dwVnum == 110 || dwVnum == 111))
+	{
+		BYTE skill = 0;
+		BYTE id = 0;
+		switch (dwVnum)
+		{
+		case 94:
+			skill = ESkillColorLength::BUFF_BEGIN + 0;
+			id = 3;
+			break;
+		case 95:
+			skill = ESkillColorLength::BUFF_BEGIN + 1;
+			id = 4;
+			break;
+		case 96:
+			skill = ESkillColorLength::BUFF_BEGIN + 2;
+			id = 5;
+			break;
+		case 110:
+			skill = ESkillColorLength::BUFF_BEGIN + 3;
+			id = 4;
+			break;
+		case 111:
+			skill = ESkillColorLength::BUFF_BEGIN + 4;
+			id = 5;
+			break;
+		default:
+			break;
+		}
+
+		DWORD data[ESkillColorLength::MAX_SKILL_COUNT + ESkillColorLength::MAX_BUFF_COUNT][ESkillColorLength::MAX_EFFECT_COUNT];
+		memcpy(data, pkVictim->GetSkillColor(), sizeof(data));
+
+		DWORD dataAttacker[ESkillColorLength::MAX_SKILL_COUNT + ESkillColorLength::MAX_BUFF_COUNT][ESkillColorLength::MAX_EFFECT_COUNT];
+		memcpy(dataAttacker, this->GetSkillColor(), sizeof(dataAttacker));
+
+		data[skill][0] = dataAttacker[id][0];
+		data[skill][1] = dataAttacker[id][1];
+		data[skill][2] = dataAttacker[id][2];
+		data[skill][3] = dataAttacker[id][3];
+		data[skill][4] = dataAttacker[id][4];
+
+		pkVictim->SetSkillColor(data[0]);
+
+		TSkillColor db_pack;
+		memcpy(db_pack.dwSkillColor, data, sizeof(data));
+		db_pack.player_id = pkVictim->GetPlayerID();
+		db_clientdesc->DBPacketHeader(HEADER_GD_SKILL_COLOR_SAVE, 0, sizeof(TSkillColor));
+		db_clientdesc->Packet(&db_pack, sizeof(TSkillColor));
+	}
+#endif
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		ComputeSkill(dwVnum, this);

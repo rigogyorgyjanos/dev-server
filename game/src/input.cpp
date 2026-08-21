@@ -17,6 +17,9 @@
 #include "priv_manager.h"
 #include "castle.h"
 #include "dev_log.h"
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	#include "maintenance.h"
+#endif
 
 #ifndef __WIN32__
 	#include "limit_time.h"
@@ -24,6 +27,9 @@
 
 extern time_t get_global_time();
 extern bool g_bNoPasspod;
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	extern long int global_time_maintenance;
+#endif
 
 bool IsEmptyAdminPage()
 {
@@ -436,13 +442,21 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 					p.bHeader = HEADER_GG_SHUTDOWN;
 					P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGShutdown));
 					sys_err("Accept shutdown command from %s.", d->GetHostName());
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+					Shutdown(global_time_maintenance);
+#else
 					Shutdown(10);
+#endif
 				}
 				else if (!stBuf.compare("SHUTDOWN_ONLY"))
 				{
 					LogManager::instance().CharLog(0, 0, 0, 2, "SHUTDOWN", "", d->GetHostName());
 					sys_err("Accept shutdown only command from %s.", d->GetHostName());
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+					Shutdown(global_time_maintenance);
+#else
 					Shutdown(10);
+#endif
 				}
 				else if (!stBuf.compare(0, 3, "DC "))
 				{

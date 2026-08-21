@@ -398,6 +398,9 @@ void CHARACTER::Initialize()
 
 	memset(&m_tvLastSyncTime, 0, sizeof(m_tvLastSyncTime));
 	m_iSyncHackCount = 0;
+#ifdef __SKILL_COLOR_SYSTEM__
+	memset(&m_dwSkillColor, 0, sizeof(m_dwSkillColor));
+#endif
 }
 
 void CHARACTER::Create(const char * c_pszName, DWORD vid, bool isPC)
@@ -948,6 +951,9 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 		else
 		{
 		show_all_info:
+#ifdef __SKILL_COLOR_SYSTEM__
+			memcpy(addPacket.dwSkillColor, GetSkillColor(), sizeof(addPacket.dwSkillColor));
+#endif
 			strlcpy(addPacket.name, GetName(), sizeof(addPacket.name));
 
 			if (GetGuild() != NULL)
@@ -1067,6 +1073,9 @@ void CHARACTER::UpdatePacket()
 	pack.awPart[CHR_EQUIPPART_HEAD] = GetPart(PART_HEAD);
 	pack.awPart[CHR_EQUIPPART_HAIR] = GetPart(PART_HAIR);
 
+#ifdef __SKILL_COLOR_SYSTEM__
+	memcpy(pack.dwSkillColor, GetSkillColor(), sizeof(pack.dwSkillColor));
+#endif
 	pack.bMovingSpeed	= GetLimitPoint(POINT_MOV_SPEED);
 	pack.bAttackSpeed	= GetLimitPoint(POINT_ATT_SPEED);
 	pack.bStateFlag	= m_bAddChrState;
@@ -8050,7 +8059,15 @@ void CHARACTER::LoadMissionData()
 		}
 		fclose(fp);
 	}
-	
+
+}
+#endif
+
+#ifdef __SKILL_COLOR_SYSTEM__
+void CHARACTER::SetSkillColor(DWORD * dwSkillColor)
+{
+	memcpy(m_dwSkillColor, dwSkillColor, sizeof(m_dwSkillColor));
+	UpdatePacket();
 }
 #endif
 

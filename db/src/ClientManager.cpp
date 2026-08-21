@@ -202,6 +202,21 @@ void CClientManager::MainLoop()
 
 	signal_timer_disable();
 
+#ifdef __SKILL_COLOR_SYSTEM__
+	{
+		TSkillColorCacheMap::iterator itColor = m_map_SkillColorCache.begin();
+
+		while (itColor != m_map_SkillColorCache.end())
+		{
+			CSKillColorCache* pCache = itColor->second;
+			pCache->Flush();
+			m_map_SkillColorCache.erase(itColor++);
+		}
+
+		m_map_SkillColorCache.clear();
+	}
+#endif
+
 	itertype(m_map_playerCache) it = m_map_playerCache.begin();
 
 	//�÷��̾� ���̺� ĳ�� �÷���	
@@ -1485,6 +1500,13 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 #endif
 }
 
+#ifdef __SKILL_COLOR_SYSTEM__
+void CClientManager::QUERY_SKILL_COLOR_SAVE(const char * c_pData)
+{
+	PutSkillColorCache((TSkillColor*)c_pData);
+}
+#endif
+
 void CClientManager::QUERY_ITEM_FLUSH(CPeer * pkPeer, const char * c_pData)
 {
 	DWORD dwID = *(DWORD *) c_pData;
@@ -1747,6 +1769,49 @@ void CClientManager::UpdatePlayerCache()
 	}
 }
 // END_OF_MYSHOP_PRICE_LIST
+
+#ifdef __SKILL_COLOR_SYSTEM__
+CSKillColorCache * CClientManager::GetSkillColorCache(DWORD id)
+{
+	TSkillColorCacheMap::iterator it = m_map_SkillColorCache.find(id);
+
+	if (it == m_map_SkillColorCache.end())
+		return NULL;
+
+	return it->second;
+}
+
+void CClientManager::PutSkillColorCache(const TSkillColor * pNew)
+{
+	CSKillColorCache* pCache = GetSkillColorCache(pNew->player_id);
+
+	if (!pCache)
+	{
+		pCache = new CSKillColorCache;
+		m_map_SkillColorCache.insert(TSkillColorCacheMap::value_type(pNew->player_id, pCache));
+	}
+
+	pCache->Put(const_cast<TSkillColor*>(pNew), false);
+}
+
+void CClientManager::UpdateSkillColorCache()
+{
+	TSkillColorCacheMap::iterator it = m_map_SkillColorCache.begin();
+
+	while (it != m_map_SkillColorCache.end())
+	{
+		CSKillColorCache* pCache = it->second;
+
+		if (pCache->CheckFlushTimeout())
+		{
+			pCache->Flush();
+			m_map_SkillColorCache.erase(it++);
+		}
+		else
+			++it;
+	}
+}
+#endif
 
 void CClientManager::SetCacheFlushCountLimit(int iLimit)
 {
@@ -2436,6 +2501,9 @@ void CClientManager::ProcessPackets(CPeer * peer)
 			case HEADER_GD_PLAYER_LOAD:
 				sys_log(1, "HEADER_GD_PLAYER_LOAD (handle: %d length: %d)", dwHandle, dwLength);
 				QUERY_PLAYER_LOAD(peer, dwHandle, (TPlayerLoadPacket *) data);
+#ifdef __SKILL_COLOR_SYSTEM__
+				QUERY_SKILL_COLOR_LOAD(peer, dwHandle, (TPlayerLoadPacket *) data);
+#endif
 				break;
 
 			case HEADER_GD_PLAYER_SAVE:
@@ -2814,6 +2882,12 @@ void CClientManager::ProcessPackets(CPeer * peer)
 				break;
 #endif
 
+#ifdef __SKILL_COLOR_SYSTEM__
+			case HEADER_GD_SKILL_COLOR_SAVE:
+				QUERY_SKILL_COLOR_SAVE(data);
+				break;
+#endif
+
 			default:
 				sys_err("Unknown header (header: %d handle: %d length: %d)", header, dwHandle, dwLength);
 				break;
@@ -2935,6 +3009,9 @@ int CClientManager::AnalyzeQueryResult(SQLMsg * msg)
 		case QID_ITEM:
 		case QID_QUEST:
 		case QID_AFFECT:
+#ifdef __SKILL_COLOR_SYSTEM__
+		case QID_SKILL_COLOR:
+#endif
 			RESULT_COMPOSITE_PLAYER(peer, msg, qi->iType);
 			break;
 
@@ -2973,6 +3050,9 @@ int CClientManager::AnalyzeQueryResult(SQLMsg * msg)
 		case QID_QUEST_SAVE:
 		case QID_PLAYER_SAVE:
 		case QID_ITEM_AWARD_TAKEN:
+#ifdef __SKILL_COLOR_SYSTEM__
+		case QID_SKILL_COLOR_SAVE:
+#endif
 			break;
 
 			// PLAYER_INDEX_CREATE_BUG_FIX	
@@ -3127,6 +3207,9 @@ int CClientManager::Process()
 			UpdatePlayerCache();
 			//������ �÷���
 			UpdateItemCache();
+#ifdef __SKILL_COLOR_SYSTEM__
+			UpdateSkillColorCache();
+#endif
 			//�α׾ƿ��� ó��- ĳ���� �÷���
 			UpdateLogoutPlayer();
 

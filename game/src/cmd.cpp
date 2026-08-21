@@ -118,6 +118,10 @@ ACMD(do_pkmode);
 ACMD(do_mobile);
 ACMD(do_mobile_auth);
 ACMD(do_messenger_auth);
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+ACMD(do_maintenance);
+ACMD(do_maintenance_text);
+#endif
 
 ACMD(do_getqf);
 ACMD(do_setqf);
@@ -382,6 +386,10 @@ struct command_info cmd_info[] =
 
 	{ "pkmode",		do_pkmode,		0,			POS_DEAD,	GM_PLAYER	},
 	{ "messenger_auth",	do_messenger_auth,	0,			POS_DEAD,	GM_PLAYER	},
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	{ "maintenance",		do_maintenance,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
+	{ "m_text",		do_maintenance_text,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
+#endif
 
 	{ "getqf",		do_getqf,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 	{ "setqf",		do_setqf,		0,			POS_DEAD,	GM_LOW_WIZARD	},

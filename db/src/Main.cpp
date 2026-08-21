@@ -27,11 +27,14 @@ std::string g_stPlayerDBName = "";
 bool g_bHotBackup = false;
 BOOL g_test_server = false;
 
-//´ÜÀ§ ÃÊ
+//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 int g_iPlayerCacheFlushSeconds = 60*7;
 int g_iItemCacheFlushSeconds = 60*5;
+#ifdef __SKILL_COLOR_SYSTEM__
+int g_iSkillColorCacheFlushSeconds = 60*7;
+#endif
 
-//g_iLogoutSeconds ¼öÄ¡´Â g_iPlayerCacheFlushSeconds ¿Í g_iItemCacheFlushSeconds º¸´Ù ±æ¾î¾ß ÇÑ´Ù.
+//g_iLogoutSeconds ï¿½ï¿½Ä¡ï¿½ï¿½ g_iPlayerCacheFlushSeconds ï¿½ï¿½ g_iItemCacheFlushSeconds ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 int g_iLogoutSeconds = 60*10;
 
 int g_log = 1;
@@ -114,13 +117,13 @@ int main()
 
 void emptybeat(LPHEART heart, int pulse)
 {
-	if (!(pulse % heart->passes_per_sec))	// 1ÃÊ¿¡ ÇÑ¹ø
+	if (!(pulse % heart->passes_per_sec))	// 1ï¿½Ê¿ï¿½ ï¿½Ñ¹ï¿½
 	{
 	}
 }
 
 //
-// @version	05/06/13 Bang2ni - ¾ÆÀÌÅÛ °¡°ÝÁ¤º¸ Ä³½Ã flush timeout ¼³Á¤ Ãß°¡.
+// @version	05/06/13 Bang2ni - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ flush timeout ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½.
 //
 int Start()
 {

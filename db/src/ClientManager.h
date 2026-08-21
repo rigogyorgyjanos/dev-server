@@ -15,6 +15,9 @@
 class CPlayerTableCache;
 class CItemCache;
 class CItemPriceListTableCache;
+#ifdef __SKILL_COLOR_SYSTEM__
+class CSKillColorCache;
+#endif
 
 class CPacketInfo
 {
@@ -37,6 +40,9 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	typedef std::unordered_map<DWORD, TItemCacheSet *> TItemCacheSetPtrMap;
 	typedef std::unordered_map<DWORD, CItemPriceListTableCache*> TItemPriceListCacheMap;
 	typedef std::unordered_map<short, BYTE> TChannelStatusMap;
+#ifdef __SKILL_COLOR_SYSTEM__
+	typedef std::unordered_map<DWORD, CSKillColorCache *> TSkillColorCacheMap;
+#endif
 
 	// MYSHOP_PRICE_LIST
 	/// ������ �������� ����Ʈ ��û ����
@@ -125,6 +131,11 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 
 	void			UpdatePlayerCache();
 	void			UpdateItemCache();
+#ifdef __SKILL_COLOR_SYSTEM__
+	CSKillColorCache*	GetSkillColorCache(DWORD id);
+	void				PutSkillColorCache(const TSkillColor* pNew);
+	void				UpdateSkillColorCache();
+#endif
 
 	// MYSHOP_PRICE_LIST
 	/// �������� ����Ʈ ĳ�ø� �����´�.
@@ -245,6 +256,10 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		RESULT_ITEM_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHandle, DWORD dwPID);
 	void		RESULT_QUEST_LOAD(CPeer * pkPeer, MYSQL_RES * pRes, DWORD dwHandle, DWORD dwPID);
 	void		RESULT_AFFECT_LOAD(CPeer * pkPeer, MYSQL_RES * pRes, DWORD dwHandle);
+#ifdef __SKILL_COLOR_SYSTEM__
+	void		QUERY_SKILL_COLOR_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoadPacket * packet);
+	void		RESULT_SKILL_COLOR_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHandle);
+#endif
 
 	// PLAYER_INDEX_CREATE_BUG_FIX
 	void		RESULT_PLAYER_INDEX_CREATE(CPeer *pkPeer, SQLMsg *msg);
@@ -277,6 +292,9 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 
 	void		QUERY_PLAYER_COUNT(CPeer * pkPeer, TPlayerCountPacket *);
 
+#ifdef __SKILL_COLOR_SYSTEM__
+	void		QUERY_SKILL_COLOR_SAVE(const char * c_pData);
+#endif
 	void		QUERY_ITEM_SAVE(CPeer * pkPeer, const char * c_pData);
 	void		QUERY_ITEM_DESTROY(CPeer * pkPeer, const char * c_pData);
 	void		QUERY_ITEM_FLUSH(CPeer * pkPeer, const char * c_pData);
@@ -479,6 +497,9 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	// END_OF_MYSHOP_PRICE_LIST
 
 	TChannelStatusMap m_mChannelStatus;
+#ifdef __SKILL_COLOR_SYSTEM__
+	TSkillColorCacheMap			m_map_SkillColorCache;
+#endif
 
 	struct TPartyInfo
 	{

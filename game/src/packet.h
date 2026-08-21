@@ -42,6 +42,9 @@ enum
 	HEADER_CG_ADD_FLY_TARGETING			= 53,
 	HEADER_CG_SHOOT				= 54,
 	HEADER_CG_MYSHOP				= 55,
+#ifdef __SKILL_COLOR_SYSTEM__
+	HEADER_CG_SKILL_COLOR			= 56,
+#endif
 
 #ifdef ENABLE_OFFLINESHOP_SYSTEM
 	HEADER_CG_OFFLINE_SHOP			= 57,
@@ -1131,6 +1134,9 @@ typedef struct packet_char_additional_info
 	short	sAlignment;
 	BYTE	bPKMode;
 	DWORD	dwMountVnum;
+#ifdef __SKILL_COLOR_SYSTEM__
+	DWORD	dwSkillColor[ESkillColorLength::MAX_SKILL_COUNT + ESkillColorLength::MAX_BUFF_COUNT][ESkillColorLength::MAX_EFFECT_COUNT];
+#endif
 
 } TPacketGCCharacterAdditionalInfo;
 
@@ -1151,6 +1157,9 @@ typedef struct packet_update_char
 	BYTE	bPKMode;
 	DWORD	dwMountVnum;
 	//WORD	wRaceNum;
+#ifdef __SKILL_COLOR_SYSTEM__
+	DWORD	dwSkillColor[ESkillColorLength::MAX_SKILL_COUNT + ESkillColorLength::MAX_BUFF_COUNT][ESkillColorLength::MAX_EFFECT_COUNT];
+#endif
 } TPacketGCCharacterUpdate;
 
 typedef struct packet_del_char
@@ -2776,6 +2785,19 @@ typedef struct packet_gg_offlineshop_watcher
 
 	packet_gg_offlineshop_watcher() : bHeader(HEADER_GG_OFFLINESHOP_WATCHER), wSenderPort(0), owner_id(0), dwDisplayedCount(0), dwRealWatcherCount(0) {}
 } TPacketGGOfflineShopWatcher;
+#endif
+
+#ifdef __SKILL_COLOR_SYSTEM__
+typedef struct packet_skill_color
+{
+	BYTE		bheader;
+	BYTE		skill;
+	DWORD		col1;
+	DWORD		col2;
+	DWORD		col3;
+	DWORD		col4;
+	DWORD		col5;
+} TPacketCGSkillColor;
 #endif
 
 #pragma pack()

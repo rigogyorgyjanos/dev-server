@@ -1513,6 +1513,18 @@ void CInputDB::GuildLadder(const char* c_pData)
 	g->SetWarData(p->lWin, p->lDraw, p->lLoss);
 }
 
+#ifdef __SKILL_COLOR_SYSTEM__
+void CInputDB::SkillColorLoad(LPDESC d, const char * c_pData)
+{
+	LPCHARACTER ch;
+
+	if (!d || !(ch = d->GetCharacter()))
+		return;
+
+	ch->SetSkillColor((DWORD*)c_pData);
+}
+#endif
+
 void CInputDB::ItemLoad(LPDESC d, const char * c_pData)
 {
 	LPCHARACTER ch;
@@ -2399,6 +2411,12 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 	case HEADER_DG_RESPOND_CHANNELSTATUS:
 		RespondChannelStatus(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
 		break;
+
+#ifdef __SKILL_COLOR_SYSTEM__
+	case HEADER_DG_SKILL_COLOR_LOAD:
+		SkillColorLoad(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
+		break;
+#endif
 
 	default:
 		return (-1);

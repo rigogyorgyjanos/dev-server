@@ -25,12 +25,12 @@ CItemCache::~CItemCache()
 {
 }
 
-// ÀÌ°Å ÀÌ»óÇÑµ¥...
-// Delete¸¦ ÇßÀ¸¸é, Cacheµµ ÇØÁ¦ÇØ¾ß ÇÏ´Â°Í ¾Æ´Ñ°¡???
-// ±Ùµ¥ Cache¸¦ ÇØÁ¦ÇÏ´Â ºÎºÐÀÌ ¾ø¾î.
-// ¸ø Ã£Àº °Ç°¡?
-// ÀÌ·¸°Ô ÇØ³õÀ¸¸é, °è¼Ó ½Ã°£ÀÌ µÉ ¶§¸¶´Ù ¾ÆÀÌÅÛÀ» °è¼Ó Áö¿ö...
-// ÀÌ¹Ì »ç¶óÁø ¾ÆÀÌÅÛÀÎµ¥... È®ÀÎ»ç»ì??????
+// ï¿½Ì°ï¿½ ï¿½Ì»ï¿½ï¿½Ñµï¿½...
+// Deleteï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Cacheï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½Ï´Â°ï¿½ ï¿½Æ´Ñ°ï¿½???
+// ï¿½Ùµï¿½ Cacheï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+// ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½Ç°ï¿½?
+// ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Ø³ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½...
+// ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½... È®ï¿½Î»ï¿½ï¿½??????
 // fixme
 // by rtsummit
 void CItemCache::Delete()
@@ -49,12 +49,12 @@ void CItemCache::Delete()
 	OnFlush();
 	
 	//m_bNeedQuery = false;
-	//m_lastUpdateTime = time(0) - m_expireTime; // ¹Ù·Î Å¸ÀÓ¾Æ¿ô µÇµµ·Ï ÇÏÀÚ.
+	//m_lastUpdateTime = time(0) - m_expireTime; // ï¿½Ù·ï¿½ Å¸ï¿½Ó¾Æ¿ï¿½ ï¿½Çµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 }
 
 void CItemCache::OnFlush()
 {
-	if (m_data.vnum == 0) // vnumÀÌ 0ÀÌ¸é »èÁ¦ÇÏ¶ó°í Ç¥½ÃµÈ °ÍÀÌ´Ù.
+	if (m_data.vnum == 0) // vnumï¿½ï¿½ 0ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ Ç¥ï¿½Ãµï¿½ ï¿½ï¿½ï¿½Ì´ï¿½.
 	{
 		char szQuery[QUERY_MAX_LEN];
 		snprintf(szQuery, sizeof(szQuery), "DELETE FROM item%s WHERE id=%u", GetTablePostfix(), m_data.id);
@@ -186,7 +186,7 @@ CItemPriceListTableCache::CItemPriceListTableCache()
 void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList)
 {
 	//
-	// ÀÌ¹Ì Ä³½ÌµÈ ¾ÆÀÌÅÛ°ú Áßº¹µÈ ¾ÆÀÌÅÛÀ» Ã£°í Áßº¹µÇÁö ¾Ê´Â ÀÌÀü Á¤º¸´Â tmpvec ¿¡ ³Ö´Â´Ù.
+	// ï¿½Ì¹ï¿½ Ä³ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ßºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ tmpvec ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 	//
 
 	std::vector<TItemPriceInfo> tmpvec;
@@ -202,7 +202,7 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 	}
 
 	//
-	// pUpdateList ¸¦ m_data ¿¡ º¹»çÇÏ°í ³²Àº °ø°£À» tmpvec ÀÇ ¾Õ¿¡¼­ ºÎÅÍ ³²Àº ¸¸Å­ º¹»çÇÑ´Ù.
+	// pUpdateList ï¿½ï¿½ m_data ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ tmpvec ï¿½ï¿½ ï¿½Õ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	// 
 
 	if (pUpdateList->byCount > SHOP_PRICELIST_MAX_NUM)
@@ -215,7 +215,7 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 
 	thecore_memcpy(m_data.aPriceInfo, pUpdateList->aPriceInfo, sizeof(TItemPriceInfo) * pUpdateList->byCount);
 
-	int nDeletedNum;	// »èÁ¦µÈ °¡°ÝÁ¤º¸ÀÇ °¹¼ö
+	int nDeletedNum;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	if (pUpdateList->byCount < SHOP_PRICELIST_MAX_NUM)
 	{
@@ -244,14 +244,14 @@ void CItemPriceListTableCache::OnFlush()
 	char szQuery[QUERY_MAX_LEN];
 
 	//
-	// ÀÌ Ä³½ÃÀÇ ¼ÒÀ¯ÀÚ¿¡ ´ëÇÑ ±âÁ¸¿¡ DB ¿¡ ÀúÀåµÈ ¾ÆÀÌÅÛ °¡°ÝÁ¤º¸¸¦ ¸ðµÎ »èÁ¦ÇÑ´Ù.
+	// ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ DB ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	//
 
 	snprintf(szQuery, sizeof(szQuery), "DELETE FROM myshop_pricelist%s WHERE owner_id = %u", GetTablePostfix(), m_data.dwOwnerID);
 	CDBManager::instance().ReturnQuery(szQuery, QID_ITEMPRICE_DESTROY, 0, NULL);
 
 	//
-	// Ä³½ÃÀÇ ³»¿ëÀ» ¸ðµÎ DB ¿¡ ¾´´Ù.
+	// Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ DB ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	//
 
 	for (int idx = 0; idx < m_data.byCount; ++idx)
@@ -268,4 +268,65 @@ void CItemPriceListTableCache::OnFlush()
 	m_bNeedQuery = false;
 }
 // END_OF_MYSHOP_PRICE_LIST
+
+#ifdef __SKILL_COLOR_SYSTEM__
+extern int g_iSkillColorCacheFlushSeconds;
+
+CSKillColorCache::CSKillColorCache()
+{
+	m_expireTime = MIN(1800, g_iSkillColorCacheFlushSeconds);
+}
+
+CSKillColorCache::~CSKillColorCache()
+{
+}
+
+void CSKillColorCache::OnFlush()
+{
+	char query[QUERY_MAX_LEN];
+	snprintf(query, sizeof(query),
+		"REPLACE INTO skill_color%s (`player_id`, "
+		"`s1_col1`, `s1_col2`, `s1_col3`, `s1_col4`, `s1_col5`, "
+		"`s2_col1`, `s2_col2`, `s2_col3`, `s2_col4`, `s2_col5`, "
+		"`s3_col1`, `s3_col2`, `s3_col3`, `s3_col4`, `s3_col5`, "
+		"`s4_col1`, `s4_col2`, `s4_col3`, `s4_col4`, `s4_col5`, "
+		"`s5_col1`, `s5_col2`, `s5_col3`, `s5_col4`, `s5_col5`, "
+		"`s6_col1`, `s6_col2`, `s6_col3`, `s6_col4`, `s6_col5`, " // end of skills
+		"`s7_col1`, `s7_col2`, `s7_col3`, `s7_col4`, `s7_col5`, " // begin buffs
+		"`s8_col1`, `s8_col2`, `s8_col3`, `s8_col4`, `s8_col5`, "
+		"`s9_col1`, `s9_col2`, `s9_col3`, `s9_col4`, `s9_col5`, "
+		"`s10_col1`, `s10_col2`, `s10_col3`, `s10_col4`, `s10_col5`, "
+		"`s11_col1`, `s11_col2`, `s11_col3`, `s11_col4`, `s11_col5`) "
+		"VALUES (%d, "
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, " // end of skills
+		"%d, %d, %d, %d, %d, " // begin buffs
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d)", GetTablePostfix(), m_data.player_id,
+		m_data.dwSkillColor[0][0], m_data.dwSkillColor[0][1], m_data.dwSkillColor[0][2], m_data.dwSkillColor[0][3], m_data.dwSkillColor[0][4],
+		m_data.dwSkillColor[1][0], m_data.dwSkillColor[1][1], m_data.dwSkillColor[1][2], m_data.dwSkillColor[1][3], m_data.dwSkillColor[1][4],
+		m_data.dwSkillColor[2][0], m_data.dwSkillColor[2][1], m_data.dwSkillColor[2][2], m_data.dwSkillColor[2][3], m_data.dwSkillColor[2][4],
+		m_data.dwSkillColor[3][0], m_data.dwSkillColor[3][1], m_data.dwSkillColor[3][2], m_data.dwSkillColor[3][3], m_data.dwSkillColor[3][4],
+		m_data.dwSkillColor[4][0], m_data.dwSkillColor[4][1], m_data.dwSkillColor[4][2], m_data.dwSkillColor[4][3], m_data.dwSkillColor[4][4],
+		m_data.dwSkillColor[5][0], m_data.dwSkillColor[5][1], m_data.dwSkillColor[5][2], m_data.dwSkillColor[5][3], m_data.dwSkillColor[5][4], // end of skills
+		m_data.dwSkillColor[6][0], m_data.dwSkillColor[6][1], m_data.dwSkillColor[6][2], m_data.dwSkillColor[6][3], m_data.dwSkillColor[6][4], // begin buffs
+		m_data.dwSkillColor[7][0], m_data.dwSkillColor[7][1], m_data.dwSkillColor[7][2], m_data.dwSkillColor[7][3], m_data.dwSkillColor[7][4],
+		m_data.dwSkillColor[8][0], m_data.dwSkillColor[8][1], m_data.dwSkillColor[8][2], m_data.dwSkillColor[8][3], m_data.dwSkillColor[8][4],
+		m_data.dwSkillColor[9][0], m_data.dwSkillColor[9][1], m_data.dwSkillColor[9][2], m_data.dwSkillColor[9][3], m_data.dwSkillColor[9][4],
+		m_data.dwSkillColor[10][0], m_data.dwSkillColor[10][1], m_data.dwSkillColor[10][2], m_data.dwSkillColor[10][3], m_data.dwSkillColor[10][4]);
+
+	CDBManager::instance().ReturnQuery(query, QID_SKILL_COLOR_SAVE, 0, NULL);
+
+	if (g_test_server)
+		sys_log(0, "SkillColorCache::Flush :REPLACE %u (%s)", m_data.player_id, query);
+
+	m_bNeedQuery = false;
+}
+#endif
 
