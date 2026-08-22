@@ -1123,7 +1123,11 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		bool			RefineItem(LPITEM pkItem, LPITEM pkTarget);
 		bool			DestroyItem(TItemPos Cell);
+#ifdef __BULK_ITEM_SYSTEM__
+		bool			DropItem(TItemPos Cell,  WORD bCount=0, bool bSkipHackCheck=false);
+#else
 		bool			DropItem(TItemPos Cell,  WORD bCount=0);
+#endif
 		bool			GiveRecallItem(LPITEM item);
 		void			ProcessRecallItem(LPITEM item);
 
@@ -1630,6 +1634,14 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				SetRider(LPCHARACTER ch);
 
 		bool				IsRiding() const;
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+		bool				IsFlying() const;	// TODO(flight-v2): per-vnum gate via TMobTable::bMountCapacity (dead field today) or CMobVnumHelper::IsMount
+		enum EFlightConst
+		{
+			FLIGHT_MAX_ALTITUDE		= 1000,	// ~10m in position units, clears typical building/tree height
+			FLIGHT_MAX_VERTICAL_STEP	= 150,	// max Z delta accepted per CG_MOVE packet
+		};
+#endif
 
 #ifdef __PET_SYSTEM__
 	public:
@@ -2107,6 +2119,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	public:
 		int					LastDropTime;
 		int					CountDrops;
+#ifdef __BULK_ITEM_SYSTEM__
+		int					LastBulkDropTime;	// packet-level throttle for HEADER_CG_ITEM_DROP_BULK, separate from the per-item drophack counter above
+#endif
 		void ClearPMCounter(void)       { m_iPMCounter = 0;      } 
 		void IncreasePMCounter(void)    { m_iPMCounter++;        }
 		void SetLastPMPulse(void);

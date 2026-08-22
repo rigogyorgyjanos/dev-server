@@ -113,6 +113,11 @@ class CInputMain : public CInputProcessor
 		void		ItemDrop2(LPCHARACTER ch, const char * data);
 		void		ItemDestroy(LPCHARACTER ch, const char * data);
 		void		ItemMove(LPCHARACTER ch, const char * data);
+#ifdef __BULK_ITEM_SYSTEM__
+		void		ItemDropBulk(LPCHARACTER ch, const char * data);
+		void		ItemMoveBulk(LPCHARACTER ch, const char * data);
+		void		ExchangeItemAddBulk(LPCHARACTER ch, const char * data);
+#endif
 		#ifdef ENABLE_SORT_INVEN
 		void		SortInven(LPCHARACTER ch, const char * data);
 #endif

@@ -925,6 +925,67 @@ void CInputMain::ItemMove(LPCHARACTER ch, const char * data)
 		ch->MoveItem(pinfo->Cell, pinfo->CellTo, pinfo->count);
 }
 
+#ifdef __BULK_ITEM_SYSTEM__
+void CInputMain::ItemDropBulk(LPCHARACTER ch, const char * data)
+{
+	if (!ch)
+		return;
+
+	TPacketCGItemDropBulk * pinfo = (TPacketCGItemDropBulk *) data;
+
+	BYTE count = pinfo->count;
+	if (count > ITEM_BULK_MAX_COUNT)
+		count = ITEM_BULK_MAX_COUNT;
+
+	// One legitimate user action producing many drops at once - throttle at the
+	// packet level (soft no-op, not a kick) instead of the per-item drophack
+	// counter inside DropItem(), which would false-positive on item #5 within
+	// this same synchronous loop.
+	if (thecore_pulse() < ch->LastBulkDropTime + 25)
+	{
+		sys_log(0, "BULK_DROP: %s sent another bulk drop within 1 second, ignored", ch->GetName());
+		return;
+	}
+
+	ch->LastBulkDropTime = thecore_pulse();
+
+	for (BYTE i = 0; i < count; ++i)
+		ch->DropItem(pinfo->entries[i], 0, true);
+}
+
+void CInputMain::ItemMoveBulk(LPCHARACTER ch, const char * data)
+{
+	if (!ch)
+		return;
+
+	TPacketCGItemMoveBulk * pinfo = (TPacketCGItemMoveBulk *) data;
+
+	BYTE count = pinfo->count;
+	if (count > ITEM_BULK_MAX_COUNT)
+		count = ITEM_BULK_MAX_COUNT;
+
+	for (BYTE i = 0; i < count; ++i)
+	{
+		LPITEM item = ch->GetItem(pinfo->entries[i]);
+		if (!item)
+		{
+			sys_log(0, "BULK_MOVE: %s entry %d src(win %d cell %d) has no item, skipped",
+					ch->GetName(), i, pinfo->entries[i].window_type, pinfo->entries[i].cell);
+			continue;
+		}
+
+		if (!ch->MoveItem(pinfo->entries[i], pinfo->destinations[i], item->GetCount()))
+		{
+			sys_log(0, "BULK_MOVE: %s entry %d FAILED src(win %d cell %d) -> dst(win %d cell %d) count %d",
+					ch->GetName(), i,
+					pinfo->entries[i].window_type, pinfo->entries[i].cell,
+					pinfo->destinations[i].window_type, pinfo->destinations[i].cell,
+					item->GetCount());
+		}
+	}
+}
+#endif
+
 void CInputMain::ItemPickup(LPCHARACTER ch, const char * data)
 {
 	struct command_item_pickup * pinfo = (struct command_item_pickup*) data;
@@ -1123,6 +1184,27 @@ int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 				return sizeof(TfckOFF);
 			}
 
+#ifdef __BULK_ITEM_SYSTEM__
+		case SHOP_SUBHEADER_CG_SELL_BULK:
+			{
+				if (uiBytes < sizeof(TPacketShopSellBulk))
+					return -1;
+
+				TPacketShopSellBulk * p2 = (TPacketShopSellBulk *) c_pData;
+
+				BYTE count = p2->count;
+				if (count > ITEM_BULK_MAX_COUNT)
+					count = ITEM_BULK_MAX_COUNT;
+
+				sys_log(0, "INPUT: %s SHOP: SELL_BULK count %d", ch->GetName(), count);
+
+				for (BYTE i = 0; i < count; ++i)
+					CShopManager::instance().Sell(ch, p2->slots[i], 0);
+
+				return sizeof(TPacketShopSellBulk);
+			}
+#endif
+
 		default:
 			sys_err("CInputMain::Shop : Unknown subheader %d : %s", p->subheader, ch->GetName());
 			break;
@@ -1293,6 +1375,26 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 			break;
 	}
 }
+
+#ifdef __BULK_ITEM_SYSTEM__
+void CInputMain::ExchangeItemAddBulk(LPCHARACTER ch, const char * data)
+{
+	if (!ch || !ch->GetExchange())
+		return;
+
+	if (ch->GetExchange()->GetCompany()->GetAcceptStatus() == true)
+		return;
+
+	TPacketCGExchangeItemAddBulk * pinfo = (TPacketCGExchangeItemAddBulk *) data;
+
+	BYTE count = pinfo->count;
+	if (count > 12)
+		count = 12;
+
+	for (BYTE i = 0; i < count; ++i)
+		ch->GetExchange()->AddItem(pinfo->entries[i].Pos, pinfo->entries[i].display_pos);
+}
+#endif
 
 void CInputMain::Position(LPCHARACTER ch, const char * data)
 {
@@ -1651,6 +1753,35 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 		}
 	}
 
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	{
+		long lNewZ = 0;
+
+		if (ch->IsRiding())
+		{
+			long lDeltaZ = pinfo->lZ - ch->GetZ();
+
+			if (lDeltaZ > CHARACTER::FLIGHT_MAX_VERTICAL_STEP)
+				lDeltaZ = CHARACTER::FLIGHT_MAX_VERTICAL_STEP;
+			else if (lDeltaZ < -CHARACTER::FLIGHT_MAX_VERTICAL_STEP)
+				lDeltaZ = -CHARACTER::FLIGHT_MAX_VERTICAL_STEP;
+
+			lNewZ = ch->GetZ() + lDeltaZ;
+
+			if (lNewZ < 0)
+				lNewZ = 0;
+			else if (lNewZ > CHARACTER::FLIGHT_MAX_ALTITUDE)
+				lNewZ = CHARACTER::FLIGHT_MAX_ALTITUDE;
+		}
+		else if (pinfo->lZ != 0)
+		{
+			sys_log(0, "FLIGHT_HACK: %s sent Z=%ld while not riding", ch->GetName(), pinfo->lZ);
+		}
+
+		ch->SetXYZ(ch->GetX(), ch->GetY(), lNewZ);
+	}
+#endif
+
 	if (pinfo->bFunc == FUNC_MOVE)
 	{
 		if (ch->GetLimitPoint(POINT_MOV_SPEED) == 0)
@@ -1663,36 +1794,41 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 	}
 	else
 	{
-		if (pinfo->bFunc == FUNC_ATTACK || pinfo->bFunc == FUNC_COMBO)
-			ch->OnMove(true);
-		else if (pinfo->bFunc & FUNC_SKILL)
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+		if (!ch->IsFlying())
+#endif
 		{
-			const int MASK_SKILL_MOTION = 0x7F;
-			unsigned int motion = pinfo->bFunc & MASK_SKILL_MOTION;
-
-			if (!ch->IsUsableSkillMotion(motion))
+			if (pinfo->bFunc == FUNC_ATTACK || pinfo->bFunc == FUNC_COMBO)
+				ch->OnMove(true);
+			else if (pinfo->bFunc & FUNC_SKILL)
 			{
-				const char* name = ch->GetName();
-				unsigned int job = ch->GetJob();
-				unsigned int group = ch->GetSkillGroup();
+				const int MASK_SKILL_MOTION = 0x7F;
+				unsigned int motion = pinfo->bFunc & MASK_SKILL_MOTION;
 
-				char szBuf[256];
-				snprintf(szBuf, sizeof(szBuf), "SKILL_HACK: name=%s, job=%d, group=%d, motion=%d", name, job, group, motion);
-				LogManager::instance().HackLog(szBuf, ch->GetDesc()->GetAccountTable().login, ch->GetName(), ch->GetDesc()->GetHostName());
-				sys_log(0, "%s", szBuf);
+				if (!ch->IsUsableSkillMotion(motion))
+				{
+					const char* name = ch->GetName();
+					unsigned int job = ch->GetJob();
+					unsigned int group = ch->GetSkillGroup();
 
-				if (test_server)
-				{
-					ch->GetDesc()->DelayedDisconnect(number(2, 8));
-					ch->ChatPacket(CHAT_TYPE_INFO, szBuf);
+					char szBuf[256];
+					snprintf(szBuf, sizeof(szBuf), "SKILL_HACK: name=%s, job=%d, group=%d, motion=%d", name, job, group, motion);
+					LogManager::instance().HackLog(szBuf, ch->GetDesc()->GetAccountTable().login, ch->GetName(), ch->GetDesc()->GetHostName());
+					sys_log(0, "%s", szBuf);
+
+					if (test_server)
+					{
+						ch->GetDesc()->DelayedDisconnect(number(2, 8));
+						ch->ChatPacket(CHAT_TYPE_INFO, szBuf);
+					}
+					else
+					{
+						ch->GetDesc()->DelayedDisconnect(number(150, 500));
+					}
 				}
-				else
-				{
-					ch->GetDesc()->DelayedDisconnect(number(150, 500));
-				}
+
+				ch->OnMove();
 			}
-
-			ch->OnMove();
 		}
 
 		ch->SetRotation(pinfo->bRot * 5);	// 중복 코드
@@ -1714,6 +1850,7 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 	pack.lY           = pinfo->lY;
 	pack.dwTime       = pinfo->dwTime;
 	pack.dwDuration   = (pinfo->bFunc == FUNC_MOVE) ? ch->GetCurrentMoveDuration() : 0;
+	pack.lZ           = ch->GetZ();
 
 	ch->PacketAround(&pack, sizeof(TPacketGCMove), ch);
 /*
@@ -3418,6 +3555,24 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			if (!ch->IsObserverMode())
 				ItemMove(ch, c_pData);
 			break;
+
+#ifdef __BULK_ITEM_SYSTEM__
+		case HEADER_CG_ITEM_DROP_BULK:
+			if (!ch->IsObserverMode())
+				ItemDropBulk(ch, c_pData);
+			break;
+
+		case HEADER_CG_ITEM_MOVE_BULK:
+			if (!ch->IsObserverMode())
+				ItemMoveBulk(ch, c_pData);
+			break;
+
+		case HEADER_CG_EXCHANGE_ITEM_ADD_BULK:
+			if (!ch->IsObserverMode())
+				ExchangeItemAddBulk(ch, c_pData);
+			break;
+#endif
+
 #ifdef ENABLE_SORT_INVEN
 		case SORT_INVEN:
 			if (!ch->IsObserverMode())
@@ -3446,14 +3601,22 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_CG_ATTACK:
 		case HEADER_CG_SHOOT:
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+			if (!ch->IsObserverMode() && !ch->IsFlying())
+#else
 			if (!ch->IsObserverMode())
+#endif
 			{
 				Attack(ch, bHeader, c_pData);
 			}
 			break;
 
 		case HEADER_CG_USE_SKILL:
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+			if (!ch->IsObserverMode() && !ch->IsFlying())
+#else
 			if (!ch->IsObserverMode())
+#endif
 				UseSkill(ch, c_pData);
 			break;
 

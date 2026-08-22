@@ -2554,6 +2554,11 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	if (IsObserverMode())
 		return false;
 
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	if (IsFlying())
+		return false;
+#endif
+
 	if (!CanMove())
 		return false;
 

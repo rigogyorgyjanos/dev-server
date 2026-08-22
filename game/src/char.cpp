@@ -156,6 +156,9 @@ void CHARACTER::Initialize()
 
 	CountDrops    = 0;
 	LastDropTime  = 0;
+#ifdef __BULK_ITEM_SYSTEM__
+	LastBulkDropTime = 0;
+#endif
 
 #ifdef ENABLE_SWITCHBOT
 	use_item_anti_flood_count_ = 0;
@@ -804,7 +807,7 @@ void CHARACTER::CloseMyShop()
 	}
 }
 
-void EncodeMovePacket(TPacketGCMove & pack, DWORD dwVID, BYTE bFunc, BYTE bArg, DWORD x, DWORD y, DWORD dwDuration, DWORD dwTime, BYTE bRot)
+void EncodeMovePacket(TPacketGCMove & pack, DWORD dwVID, BYTE bFunc, BYTE bArg, DWORD x, DWORD y, DWORD dwDuration, DWORD dwTime, BYTE bRot, long z)
 {
 	pack.bHeader = HEADER_GC_MOVE;
 	pack.bFunc   = bFunc;
@@ -815,6 +818,7 @@ void EncodeMovePacket(TPacketGCMove & pack, DWORD dwVID, BYTE bFunc, BYTE bArg, 
 	pack.lX		= x;
 	pack.lY		= y;
 	pack.dwDuration	= dwDuration;
+	pack.lZ		= z;
 }
 
 void CHARACTER::RestartAtSamePos()
@@ -974,7 +978,7 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 	if (iDur)
 	{
 		TPacketGCMove pack;
-		EncodeMovePacket(pack, GetVID(), FUNC_MOVE, 0, m_posDest.x, m_posDest.y, iDur, 0, (BYTE) (GetRotation() / 5));
+		EncodeMovePacket(pack, GetVID(), FUNC_MOVE, 0, m_posDest.x, m_posDest.y, iDur, 0, (BYTE) (GetRotation() / 5), GetZ());
 		d->Packet(&pack, sizeof(pack));
 
 		TPacketGCWalkMode p;
@@ -2713,7 +2717,11 @@ bool CHARACTER::Sync(long x, long y)
 	}
 
 	SetRotationToXY(x, y);
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	SetXYZ(x, y, GetZ());
+#else
 	SetXYZ(x, y, 0);
+#endif
 
 	if (GetDungeon())
 	{
@@ -2931,7 +2939,7 @@ void CHARACTER::SendMovePacket(BYTE bFunc, BYTE bArg, DWORD x, DWORD y, DWORD dw
 		dwDuration = m_dwMoveDuration;
 	}
 
-	EncodeMovePacket(pack, GetVID(), bFunc, bArg, x, y, dwDuration, dwTime, iRot == -1 ? (int) GetRotation() / 5 : iRot);
+	EncodeMovePacket(pack, GetVID(), bFunc, bArg, x, y, dwDuration, dwTime, iRot == -1 ? (int) GetRotation() / 5 : iRot, GetZ());
 	PacketView(&pack, sizeof(TPacketGCMove), this);
 }
 
@@ -7454,6 +7462,13 @@ bool CHARACTER::IsRiding() const
 {
 	return IsHorseRiding() || GetMountVnum();
 }
+
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+bool CHARACTER::IsFlying() const
+{
+	return IsRiding() && GetZ() > 0;
+}
+#endif
 
 bool CHARACTER::CanWarp() const
 {

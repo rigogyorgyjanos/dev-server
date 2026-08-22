@@ -160,6 +160,10 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_ITEM_DROP2, sizeof(TPacketCGItemDrop2), "ItemDrop2", true);
 	Set(HEADER_CG_ITEM_DESTROY, sizeof(TPacketCGItemDestroy), "ItemDestroy", true);
 	Set(HEADER_CG_ITEM_MOVE, sizeof(TPacketCGItemMove), "ItemMove", true);
+#ifdef __BULK_ITEM_SYSTEM__
+	Set(HEADER_CG_ITEM_DROP_BULK, sizeof(TPacketCGItemDropBulk), "ItemDropBulk", true);
+	Set(HEADER_CG_ITEM_MOVE_BULK, sizeof(TPacketCGItemMoveBulk), "ItemMoveBulk", true);
+#endif
 	Set(HEADER_CG_ITEM_PICKUP, sizeof(TPacketCGItemPickup), "ItemPickup", true);
 #ifdef ENABLE_SORT_INVEN
 	Set(SORT_INVEN, sizeof(TPacketCGSortInven), "InventorySort", true);
@@ -172,6 +176,9 @@ CPacketInfoCG::CPacketInfoCG()
 
 	Set(HEADER_CG_ON_CLICK, sizeof(TPacketCGOnClick), "OnClick", true);
 	Set(HEADER_CG_EXCHANGE, sizeof(TPacketCGExchange), "Exchange", true);
+#ifdef __BULK_ITEM_SYSTEM__
+	Set(HEADER_CG_EXCHANGE_ITEM_ADD_BULK, sizeof(TPacketCGExchangeItemAddBulk), "ExchangeItemAddBulk", true);
+#endif
 	Set(HEADER_CG_CHARACTER_POSITION, sizeof(TPacketCGPosition), "Position", true);
 	Set(HEADER_CG_SCRIPT_ANSWER, sizeof(TPacketCGScriptAnswer), "ScriptAnswer", true);
 	Set(HEADER_CG_SCRIPT_BUTTON, sizeof(TPacketCGScriptButton), "ScriptButton", true);

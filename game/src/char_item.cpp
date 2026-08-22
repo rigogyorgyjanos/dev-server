@@ -5796,7 +5796,11 @@ bool CHARACTER::DestroyItem(TItemPos Cell)
     return true;
 }
 
+#ifdef __BULK_ITEM_SYSTEM__
+bool CHARACTER::DropItem(TItemPos Cell, WORD bCount, bool bSkipHackCheck)
+#else
 bool CHARACTER::DropItem(TItemPos Cell, WORD bCount)
+#endif
 {
 	LPITEM item = NULL; 
 
@@ -5868,11 +5872,15 @@ bool CHARACTER::DropItem(TItemPos Cell, WORD bCount)
 	}
 
 	PIXEL_POSITION pxPos = GetXYZ();
-	
+
+#ifdef __BULK_ITEM_SYSTEM__
+	if (!bSkipHackCheck)
+	{
+#endif
 	// Clear the variable, it looks the player does not dropped any item in the past second.
 	if (thecore_pulse() > LastDropTime + 25)
 		CountDrops = 0;
-		
+
 	// It looks the player dropped min. 4 items in the past 1 second
 	if (thecore_pulse() < LastDropTime + 25 && CountDrops >= 4)
 	{
@@ -5883,6 +5891,9 @@ bool CHARACTER::DropItem(TItemPos Cell, WORD bCount)
 		GetDesc()->SetPhase(PHASE_CLOSE);
 		return false;
 	}
+#ifdef __BULK_ITEM_SYSTEM__
+	}
+#endif
 
 	if (pkItemToDrop->AddToGround(GetMapIndex(), pxPos))
 	{

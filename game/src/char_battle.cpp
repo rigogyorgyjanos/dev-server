@@ -1628,6 +1628,11 @@ void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageF
 // 
 bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // returns true if dead
 {
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	if (IsFlying())
+		return false;
+#endif
+
 	// LIMIT_TIME_KRIKAL: mindket fel (tamado + celpont) "harcban levo"-nak szamit egy valodi talalattol.
 	if (pAttacker)
 	{
@@ -3241,10 +3246,15 @@ LPCHARACTER CHARACTER::GetNearestVictim(LPCHARACTER pkChr)
 		if (!pAttacker)
 			continue;
 
-		if (pAttacker->IsAffectFlag(AFF_EUNHYUNG) || 
+		if (pAttacker->IsAffectFlag(AFF_EUNHYUNG) ||
 				pAttacker->IsAffectFlag(AFF_INVISIBILITY) ||
 				pAttacker->IsAffectFlag(AFF_REVIVE_INVISIBLE))
 			continue;
+
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+		if (pAttacker->IsFlying())
+			continue;
+#endif
 
 		float fDist = DISTANCE_APPROX(pAttacker->GetX() - pkChr->GetX(), pAttacker->GetY() - pkChr->GetY());
 
@@ -3536,6 +3546,11 @@ void CHARACTER::ForgetMyAttacker(bool revive)
 
 void CHARACTER::AggregateMonster()
 {
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	if (IsFlying())
+		return;
+#endif
+
 	LPSECTREE pSec = GetSectree();
 	if (pSec)
 	{
@@ -3546,6 +3561,11 @@ void CHARACTER::AggregateMonster()
 
 void CHARACTER::AttractRanger()
 {
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	if (IsFlying())
+		return;
+#endif
+
 	LPSECTREE pSec = GetSectree();
 	if (pSec)
 	{
@@ -3556,6 +3576,11 @@ void CHARACTER::AttractRanger()
 
 void CHARACTER::PullMonster()
 {
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	if (IsFlying())
+		return;
+#endif
+
 	LPSECTREE pSec = GetSectree();
 	if (pSec)
 	{

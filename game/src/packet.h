@@ -29,6 +29,12 @@ enum
 	HEADER_CG_ITEM_DROP2			= 20,
 	HEADER_CG_ITEM_DESTROY			= 21,
 
+#ifdef __BULK_ITEM_SYSTEM__
+	HEADER_CG_ITEM_DROP_BULK			= 22,	// Bulk Item Operations: one packet drops/moves/exchange-adds many items at once
+	HEADER_CG_ITEM_MOVE_BULK			= 23,
+	HEADER_CG_EXCHANGE_ITEM_ADD_BULK		= 24,
+#endif
+
 	HEADER_CG_ON_CLICK				= 26,
 	HEADER_CG_EXCHANGE				= 27,
 	HEADER_CG_CHARACTER_POSITION		= 28,
@@ -709,6 +715,7 @@ typedef struct command_move
 	long	lX;
 	long	lY;
 	DWORD	dwTime;
+	long	lZ;			// __MOUNT_FLIGHT_SYSTEM__: not ifdef'd on purpose, keeps wire size identical regardless of build flags on either side
 } TPacketCGMove;
 
 typedef struct command_sync_position_element
@@ -797,6 +804,30 @@ typedef struct command_item_move
 	WORD	count;
 } TPacketCGItemMove;
 
+#ifdef __BULK_ITEM_SYSTEM__
+enum { ITEM_BULK_MAX_COUNT = 45 };	// generous headroom above one inventory page; hard-capped, not a true limit on selection size
+
+// One packet drops every selected item at once (full stack each) - avoids the
+// per-item CHARACTER::DropItem() drophack counter tripping on a legitimate bulk action.
+typedef struct command_item_drop_bulk
+{
+	BYTE		header;
+	BYTE		count;						// entries actually used, <= ITEM_BULK_MAX_COUNT
+	TItemPos	entries[ITEM_BULK_MAX_COUNT];
+} TPacketCGItemDropBulk;
+
+// One packet moves every selected item at once. destinations[i] is picked by the
+// client (nearest empty slot to the clicked one); the server still validates each
+// move independently via the normal CHARACTER::MoveItem() checks.
+typedef struct command_item_move_bulk
+{
+	BYTE		header;
+	BYTE		count;
+	TItemPos	entries[ITEM_BULK_MAX_COUNT];
+	TItemPos	destinations[ITEM_BULK_MAX_COUNT];
+} TPacketCGItemMoveBulk;
+#endif
+
 typedef struct command_item_pickup
 {
 	BYTE 	header;
@@ -828,8 +859,21 @@ enum
 	SHOP_SUBHEADER_CG_END,
 	SHOP_SUBHEADER_CG_BUY,
 	SHOP_SUBHEADER_CG_SELL,
-	SHOP_SUBHEADER_CG_SELL2
+	SHOP_SUBHEADER_CG_SELL2,
+#ifdef __BULK_ITEM_SYSTEM__
+	SHOP_SUBHEADER_CG_SELL_BULK,
+#endif
 };
+
+#ifdef __BULK_ITEM_SYSTEM__
+// One packet sells every selected item at once (full stack each, ANTIFLAG_SELL-blocked
+// entries already filtered out client-side before sending).
+typedef struct command_shop_sell_bulk
+{
+	BYTE	count;					// entries actually used, <= ITEM_BULK_MAX_COUNT
+	WORD	slots[ITEM_BULK_MAX_COUNT];
+} TPacketShopSellBulk;
+#endif
 
 #ifdef ENABLE_OFFLINESHOP_SYSTEM
 // Client -> game subheaders carried under HEADER_CG_OFFLINE_SHOP (TPacketCGShop.subheader)
@@ -957,6 +1001,25 @@ typedef struct command_exchange
 	BYTE	arg2;
 	TItemPos	Pos;
 } TPacketCGExchange;
+
+#ifdef __BULK_ITEM_SYSTEM__
+// Own top-level header rather than a HEADER_CG_EXCHANGE subheader: CInputMain::Exchange()
+// is fixed-size dispatch today (unlike Shop's variable-length-capable path), so reusing
+// it here would mean touching its existing signature/dispatch - not worth the risk for
+// a fixed-size bulk struct that doesn't need that machinery anyway.
+typedef struct command_exchange_bulk_entry
+{
+	TItemPos	Pos;
+	BYTE		display_pos;	// destination slot in the 12-slot offer grid, already picked client-side
+} TExchangeBulkEntry;
+
+typedef struct command_exchange_item_add_bulk
+{
+	BYTE				header;
+	BYTE				count;		// entries actually used, <= EXCHANGE_ITEM_MAX_NUM (12)
+	TExchangeBulkEntry	entries[12];
+} TPacketCGExchangeItemAddBulk;
+#endif
 
 typedef struct command_position
 {
@@ -1644,7 +1707,7 @@ struct packet_mount
 };
 
 typedef struct packet_move
-{	
+{
 	BYTE		bHeader;
 	BYTE		bFunc;
 	BYTE		bArg;
@@ -1654,6 +1717,7 @@ typedef struct packet_move
 	long		lY;
 	DWORD		dwTime;
 	DWORD		dwDuration;
+	long		lZ;		// __MOUNT_FLIGHT_SYSTEM__: not ifdef'd on purpose, keeps wire size identical regardless of build flags on either side
 } TPacketGCMove;
 
 // ������

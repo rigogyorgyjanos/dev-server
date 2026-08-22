@@ -48,5 +48,7 @@
 #define __SKILLS_LEVEL_OVER_P__			// Sage Master: 4th skill mastery tier above Perfect Master (levels 41-50)
 #define ENABLE_MAINTENANCE_SYSTEM			// Technical Maintenance: GM-scheduled countdown shutdown + in-game banner
 #define __SKILL_COLOR_SYSTEM__			// Skill Color System: player-chosen RGB tint for a skill's particle effects, S grade only
+#define __MOUNT_FLIGHT_SYSTEM__			// Mount Flight System: server-authoritative altitude while riding, Ctrl/Shift up/down, no combat while airborne
+#define __BULK_ITEM_SYSTEM__			// Bulk Item Operations: single-packet multi-item drop/move/sell/exchange-add, avoids per-item packet flood/kick
 
 #endif

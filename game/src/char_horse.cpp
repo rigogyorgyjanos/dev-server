@@ -76,6 +76,11 @@ bool CHARACTER::StopRiding()
 {
 	if (CHorseRider::StopRiding())
 	{
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+		if (GetZ() > 0)
+			SetXYZ(GetX(), GetY(), 0);	// v1: no fall physics, snap straight to the ground on dismount
+#endif
+
 		quest::CQuestManager::instance().Unmount(GetPlayerID());
 
 		if (!IsDead() && !IsStun())
@@ -289,6 +294,11 @@ DWORD CHARACTER::GetMyHorseVnum() const
 
 void CHARACTER::HorseDie()
 {
+#ifdef __MOUNT_FLIGHT_SYSTEM__
+	if (GetZ() > 0)
+		SetXYZ(GetX(), GetY(), 0);	// v1: no fall physics, snap straight to the ground if the mount dies mid-flight
+#endif
+
 	CHorseRider::HorseDie();
 	HorseSummon(false);
 }
