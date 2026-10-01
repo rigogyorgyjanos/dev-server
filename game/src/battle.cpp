@@ -64,6 +64,13 @@ bool battle_is_attackable(LPCHARACTER ch, LPCHARACTER victim)
 	// 상대방이 죽었으면 중단한다.
 	if (victim->IsDead())
 		return false;
+#ifdef ENABLE_12ZI
+	if (ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000)
+	{
+		if (victim->IsPC() && ch->IsPC())
+			return false;
+	}
+#endif
 
 	// 안전지대면 중단
 	{
@@ -546,6 +553,16 @@ int CalcMeleeDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnoreDe
 		pkAttacker->ChatPacket(CHAT_TYPE_TALKING, "%s", szMeleeAttack);
 		pkVictim->ChatPacket(CHAT_TYPE_TALKING, "%s", szMeleeAttack);
 	}
+
+#ifdef ENABLE_12ZI
+	if (pkAttacker->IsMonster() && (pkAttacker->GetMapIndex() >= 3580000 && pkAttacker->GetMapIndex() < 3590000))
+	{
+		if (pkAttacker->GetLevel() > 85)
+			iDam += pkAttacker->GetLevel()*8;
+		else
+			iDam += pkAttacker->GetLevel()*5;
+	}
+#endif
 
 	return CalcBattleDamage(iDam, pkAttacker->GetLevel(), pkVictim->GetLevel());
 }

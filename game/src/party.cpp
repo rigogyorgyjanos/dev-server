@@ -7,6 +7,9 @@
 #include "p2p.h"
 #include "desc_client.h"
 #include "dungeon.h"
+#ifdef ENABLE_12ZI
+#include "zodiac_temple.h"
+#endif
 #include "unique_item.h"
 
 CPartyManager::CPartyManager()
@@ -288,6 +291,10 @@ void CParty::Initialize()
 	m_bPCParty = false;
 	m_pkDungeon = NULL;
 	m_pkDungeon_for_Only_party = NULL;
+#ifdef ENABLE_12ZI
+	m_pkZodiac = NULL;
+	m_pkZodiac_for_Only_party = NULL;
+#endif
 }
 
 
@@ -344,6 +351,13 @@ void CParty::Destroy()
 		m_pkDungeon_for_Only_party->SetPartyNull();
 		m_pkDungeon_for_Only_party = NULL;
 	}
+#ifdef ENABLE_12ZI
+	if (m_pkZodiac_for_Only_party != NULL)
+	{
+		m_pkZodiac_for_Only_party->SetPartyNull();
+		m_pkZodiac_for_Only_party = NULL;
+	}
+#endif
 }
 
 void CParty::ChatPacketToAllMember(BYTE type, const char* format, ...)
@@ -447,6 +461,12 @@ void CParty::P2PJoin(DWORD dwPID)
 	{
 		m_pkDungeon->QuitParty(this);
 	}
+#ifdef ENABLE_12ZI
+	if (m_pkZodiac)
+	{
+		m_pkZodiac->QuitParty(this);
+	}
+#endif
 }
 
 void CParty::Join(DWORD dwPID)
@@ -584,6 +604,12 @@ void CParty::Link(LPCHARACTER pkChr)
 		{
 			pkChr->SetDungeon(GetDungeon());
 		}
+#ifdef ENABLE_12ZI
+		if (GetZodiac() && GetZodiac()->GetMapIndex() == pkChr->GetMapIndex())
+		{
+			pkChr->SetZodiac(GetZodiac());
+		}
+#endif
 
 		RequestSetMemberLevel(pkChr->GetPlayerID(), pkChr->GetLevel());
 
@@ -1323,6 +1349,10 @@ void CParty::Update()
 
 		if (l->GetDungeon())
 			it->second.bNear = l->GetDungeon() == ch->GetDungeon();
+#ifdef ENABLE_12ZI
+		else if (l->GetZodiac())
+			it->second.bNear = l->GetZodiac() == ch->GetZodiac();
+#endif
 		else
 			it->second.bNear = (DISTANCE_APPROX(l->GetX()-ch->GetX(), l->GetY()-ch->GetY()) < PARTY_DEFAULT_RANGE);
 
@@ -1333,7 +1363,11 @@ void CParty::Update()
 		}
 	}
 
+#ifdef ENABLE_12ZI
+	if (iNearMember <= 1 && !l->GetDungeon() && !l->GetZodiac())
+#else
 	if (iNearMember <= 1 && !l->GetDungeon())
+#endif
 	{
 		for (it = m_memberMap.begin(); it != m_memberMap.end(); ++it)
 			it->second.bNear = false;
@@ -1515,11 +1549,41 @@ LPDUNGEON CParty::GetDungeon_for_Only_party()
 	return m_pkDungeon_for_Only_party;
 }
 
+#ifdef ENABLE_12ZI
+void CParty::SetZodiac(LPZODIAC pZodiac)
+{
+	m_pkZodiac = pZodiac;
+	m_map_iFlag.clear();
+}
+
+LPZODIAC CParty::GetZodiac()
+{
+	return m_pkZodiac;
+}
+
+void CParty::SetZodiac_for_Only_party(LPZODIAC pZodiac)
+{
+	m_pkZodiac_for_Only_party = pZodiac;
+}
+
+LPZODIAC CParty::GetZodiac_for_Only_party()
+{
+	return m_pkZodiac_for_Only_party;
+}
+#endif
+
 
 bool CParty::IsPositionNearLeader(LPCHARACTER ch)
 {
 	if (!m_pkChrLeader)
 		return false;
+
+	if (m_pkChrLeader->GetDungeon())
+		return m_pkChrLeader->GetDungeon() == ch->GetDungeon();
+#ifdef ENABLE_12ZI
+	if (m_pkChrLeader->GetZodiac())
+		return m_pkChrLeader->GetZodiac() == ch->GetZodiac();
+#endif
 
 	if (DISTANCE_APPROX(ch->GetX() - m_pkChrLeader->GetX(), ch->GetY() - m_pkChrLeader->GetY()) >= PARTY_DEFAULT_RANGE)
 		return false;

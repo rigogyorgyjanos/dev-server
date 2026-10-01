@@ -1118,6 +1118,149 @@ void CDungeon::Notice(const char* msg)
 }
 // END_OF_DUNGEON_NOTICE
 
+#ifdef ENABLE_12ZI
+namespace
+{
+	struct FZodiacNotice
+	{
+		FZodiacNotice(const char * psz) : m_psz(psz)
+		{
+		}
+
+		void operator() (LPENTITY ent)
+		{
+			if (ent->IsType(ENTITY_CHARACTER))
+			{
+				LPCHARACTER ch = (LPCHARACTER) ent;
+				if (!ch)
+					return;
+
+				if (ch->IsPC())
+					ch->ChatPacket(CHAT_TYPE_MISSION, "%s", m_psz);
+			}
+		}
+
+		const char * m_psz;
+	};
+}
+
+void CDungeon::ZodiacMessage(const char* msg)
+{
+	LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (!pMap)
+	{
+		sys_err("cannot find map by index %d", m_lMapIndex);
+		return;
+	}
+
+	FZodiacNotice f(msg);
+	pMap->for_each(f);
+}
+
+namespace
+{
+	struct FZodiacNoticeClear
+	{
+		void operator() (LPENTITY ent)
+		{
+			if (ent->IsType(ENTITY_CHARACTER))
+			{
+				LPCHARACTER ch = (LPCHARACTER) ent;
+				if (!ch)
+					return;
+
+				if (ch->IsPC())
+					ch->ChatPacket(CHAT_TYPE_CLEAR_MISSION, "Zodiac");
+			}
+		}
+	};
+}
+
+void CDungeon::ZodiacMessageClear()
+{
+	LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (!pMap)
+	{
+		sys_err("cannot find map by index %d", m_lMapIndex);
+		return;
+	}
+
+	FZodiacNoticeClear f;
+	pMap->for_each(f);
+}
+
+namespace
+{
+	struct FZodiacTime
+	{
+		BYTE currentfloor, nextfloor;
+		int time;
+
+		FZodiacTime(BYTE c, BYTE n, int t)
+			: currentfloor(c), nextfloor(n), time(t)
+		{}
+
+		void operator() (LPENTITY ent)
+		{
+			if (ent->IsType(ENTITY_CHARACTER))
+			{
+				LPCHARACTER ch = (LPCHARACTER) ent;
+				if (!ch)
+					return;
+
+				if (ch->IsPC())
+					ch->ChatPacket(CHAT_TYPE_COMMAND, "ZodiacTime %d %d %d", currentfloor, nextfloor, time);
+			}
+		}
+	};
+}
+
+void CDungeon::ZodiacTime(BYTE currentfloor, BYTE nextfloor, int time)
+{
+	LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (!pMap)
+	{
+		sys_err("cannot find map by index %d", m_lMapIndex);
+		return;
+	}
+
+	FZodiacTime f(currentfloor, nextfloor, time);
+	pMap->for_each(f);
+}
+
+namespace
+{
+	struct FZodiacTimeClear
+	{
+		void operator() (LPENTITY ent)
+		{
+			if (ent->IsType(ENTITY_CHARACTER))
+			{
+				LPCHARACTER ch = (LPCHARACTER) ent;
+				if (!ch)
+					return;
+
+				if (ch->IsPC())
+					ch->ChatPacket(CHAT_TYPE_COMMAND, "ZodiacTimeClear");
+			}
+		}
+	};
+}
+
+void CDungeon::ZodiacTimeClear()
+{
+	LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (!pMap)
+	{
+		sys_err("cannot find map by index %d", m_lMapIndex);
+		return;
+	}
+
+	FZodiacTimeClear f;
+	pMap->for_each(f);
+}
+#endif
+
 struct FExitDungeonToStartPosition
 {
 	void operator () (LPENTITY ent)

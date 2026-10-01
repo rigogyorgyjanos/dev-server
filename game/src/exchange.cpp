@@ -571,6 +571,9 @@ bool CExchange::Done()
 			item->AddToCharacter(victim, TItemPos(INVENTORY, empty_pos));
 		ITEM_MANAGER::instance().FlushDelayedSave(item);
 
+		// Drop Info window: what the trade partner receives
+		victim->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Item %u %u", item->GetVnum(), item->GetCount());
+
 		item->SetExchanging(false);
 		{
 			char exchange_buf[51];
@@ -595,6 +598,7 @@ bool CExchange::Done()
 	{
 		GetOwner()->PointChange(POINT_GOLD, -m_lGold, true);
 		victim->PointChange(POINT_GOLD, m_lGold, true);
+		victim->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %ld", m_lGold); // Drop Info window
 
 		if (m_lGold > 1000)
 		{

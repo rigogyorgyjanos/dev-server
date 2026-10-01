@@ -1,9 +1,15 @@
 #include "stdafx.h"
 #include <sstream>
+#include <memory>
 
 #include "desc.h"
 #include "desc_manager.h"
 #include "char.h"
+#include "char_manager.h"
+#include "item.h"
+#include "item_manager.h"
+#include "mob_manager.h"
+#include "skill.h"
 #include "buffer_manager.h"
 #include "config.h"
 #include "profiler.h"
@@ -52,6 +58,13 @@ void ClearAdminPages()
 		g_stAdminPageIP[n].clear();
 
 	g_stAdminPageIP.clear();
+}
+
+// Shared by every read-only WEBADMIN command below (PLAYER_LIST, PLAYER_DETAIL): same gate
+// USER_COUNT already used inline twice above - factored out here instead of a third copy.
+static bool IsCallerAllowedOnAdminSocket(LPDESC d)
+{
+	return IsEmptyAdminPage() || IsAdminPage(inet_ntoa(d->GetAddr().sin_addr));
 }
 
 CInputProcessor::CInputProcessor() : m_pPacketInfo(NULL), m_iBufferLeft(0)
@@ -278,6 +291,517 @@ std::vector<TPlayerTable> g_vec_save;
 ACMD(do_block_chat);
 // END_OF_BLOCK_CHAT
 
+// ---------------------------------------------------------------------------
+// WEBADMIN: PLAYER_LIST / PLAYER_DETAIL - see the webadmin app's
+// reference_game_admin_socket_protocol memory / src/lib/actions/players.ts.
+// Hand-rolled JSON (no JSON lib is linked into this project) - safe here because every
+// string field we emit is escaped, and the whole reply always stays on one line for the
+// existing "read a single \n-terminated line" transport this admin-socket already uses.
+// ---------------------------------------------------------------------------
+static void JsonAppendEscaped(std::string& rDest, const char* c_szText)
+{
+	rDest += '"';
+	for (const unsigned char* p = (const unsigned char*) c_szText; *p; ++p)
+	{
+		switch (*p)
+		{
+			case '"':	rDest += "\\\"";	break;
+			case '\\':	rDest += "\\\\";	break;
+			case '\n':	rDest += "\\n";		break;
+			case '\r':	rDest += "\\r";		break;
+			case '\t':	rDest += "\\t";		break;
+			default:
+				if (*p < 0x20)
+				{
+					char buf[8];
+					snprintf(buf, sizeof(buf), "\\u%04x", *p);
+					rDest += buf;
+				}
+				else
+				{
+					rDest += (char) *p;
+				}
+		}
+	}
+	rDest += '"';
+}
+
+static void JsonAppendPlayerListEntry(std::string& rDest, LPCHARACTER ch)
+{
+	char buf[512];
+	snprintf(buf, sizeof(buf),
+			"{\"name\":%%NAME%%,\"level\":%d,\"job\":%d,\"empire\":%d,\"gmLevel\":%d,"
+			"\"mapIndex\":%ld,\"x\":%ld,\"y\":%ld,\"hp\":%d,\"maxHp\":%d,\"playSeconds\":%u}",
+			ch->GetLevel(), (int) ch->GetJob(), (int) ch->GetEmpire(), (int) ch->GetGMLevel(),
+			ch->GetMapIndex(), ch->GetX(), ch->GetY(), ch->GetHP(), ch->GetMaxHP(),
+			(unsigned) ch->GetSessionSeconds());
+
+	// snprintf can't escape the name for us (it might contain '"' in theory) - splice the
+	// properly-escaped name in where the placeholder is instead of formatting it directly
+	// into the buffer. Note: snprintf turns the "%%NAME%%" in the format into "%NAME%".
+	std::string stEntry(buf);
+	size_t placeholder = stEntry.find("%NAME%");
+	std::string stName;
+	JsonAppendEscaped(stName, ch->GetName());
+	if (placeholder != std::string::npos)
+		stEntry.replace(placeholder, 6, stName);
+
+	rDest += stEntry;
+}
+
+static void BuildPlayerListJson(std::string& rDest)
+{
+	rDest = "[";
+	bool bFirst = true;
+
+	CHARACTER_MANAGER::NAME_MAP& rMap = CHARACTER_MANAGER::instance().GetPCMap();
+	for (CHARACTER_MANAGER::NAME_MAP::iterator it = rMap.begin(); it != rMap.end(); ++it)
+	{
+		LPCHARACTER ch = it->second;
+		if (!ch || !ch->GetDesc())
+			continue;
+
+		if (!bFirst)
+			rDest += ",";
+		bFirst = false;
+
+		JsonAppendPlayerListEntry(rDest, ch);
+	}
+
+	rDest += "]";
+}
+
+static void JsonAppendItem(std::string& rDest, const char* c_szPosKey, int iPos, LPITEM item)
+{
+	// "id" is the item's unique DB id - the webadmin passes it back to TAKE_ITEM
+	char buf[128];
+	snprintf(buf, sizeof(buf), "{\"%s\":%d,\"id\":%u,\"vnum\":%u,\"count\":%u,\"name\":",
+			c_szPosKey, iPos, item->GetID(), item->GetVnum(), (unsigned) item->GetCount());
+	rDest += buf;
+	JsonAppendEscaped(rDest, item->GetName());
+	rDest += "}";
+}
+
+static void BuildPlayerDetailJson(std::string& rDest, LPCHARACTER ch)
+{
+	char buf[768];
+	snprintf(buf, sizeof(buf),
+			"{\"found\":true,\"name\":%%NAME%%,\"level\":%d,\"job\":%d,\"empire\":%d,\"gmLevel\":%d,"
+			"\"mapIndex\":%ld,\"x\":%ld,\"y\":%ld,"
+			"\"hp\":%d,\"maxHp\":%d,\"sp\":%d,\"maxSp\":%d,\"stamina\":%d,\"maxStamina\":%d,"
+			"\"exp\":%u,\"gold\":%d,\"playSeconds\":%u,",
+			ch->GetLevel(), (int) ch->GetJob(), (int) ch->GetEmpire(), (int) ch->GetGMLevel(),
+			ch->GetMapIndex(), ch->GetX(), ch->GetY(),
+			ch->GetHP(), ch->GetMaxHP(), ch->GetSP(), ch->GetMaxSP(), ch->GetStamina(), ch->GetMaxStamina(),
+			(unsigned) ch->GetExp(), ch->GetGold(), (unsigned) ch->GetSessionSeconds());
+
+	std::string stName;
+	JsonAppendEscaped(stName, ch->GetName());
+	std::string stHead(buf);
+	// snprintf turned the "%%NAME%%" in the format into "%NAME%"
+	size_t placeholder = stHead.find("%NAME%");
+	if (placeholder != std::string::npos)
+		stHead.replace(placeholder, 6, stName);
+	rDest = stHead;
+
+	// Equipped items (all WEAR_* slots - see common/item_length.h)
+	rDest += "\"equipped\":[";
+	bool bFirst = true;
+	for (int slot = 0; slot < WEAR_POSITION_COUNT; ++slot)
+	{
+		LPITEM item = ch->GetWear(slot);
+		if (!item)
+			continue;
+
+		if (!bFirst)
+			rDest += ",";
+		bFirst = false;
+		JsonAppendItem(rDest, "slot", slot, item);
+	}
+	rDest += "],";
+
+	// Every INVENTORY-window cell except the worn-equipment block (already listed above): base
+	// bag, active dragon soul decks, belt and the WJ_SPLIT_INVENTORY tabs (see common/length.h)
+	rDest += "\"inventory\":[";
+	bFirst = true;
+	for (int cell = 0; cell < INVENTORY_AND_EQUIP_SLOT_MAX; ++cell)
+	{
+		if (cell >= EQUIPMENT_SLOT_START && cell < EQUIPMENT_SLOT_END)
+			continue;
+
+		LPITEM item = ch->GetInventoryItem(cell);
+		if (!item)
+			continue;
+
+		if (!bFirst)
+			rDest += ",";
+		bFirst = false;
+		JsonAppendItem(rDest, "cell", cell, item);
+	}
+	rDest += "],";
+
+	// Learned skills - GetSkillLevel() returns 0 for anything not learned, so a plain sweep
+	// over every possible vnum is simplest (SKILL_MAX_NUM is small, this runs once per request)
+	rDest += "\"skills\":[";
+	bFirst = true;
+	for (DWORD vnum = 1; vnum < SKILL_MAX_NUM; ++vnum)
+	{
+		int level = ch->GetSkillLevel(vnum);
+		if (level <= 0)
+			continue;
+
+		if (!bFirst)
+			rDest += ",";
+		bFirst = false;
+
+		const CSkillProto* pkSkill = CSkillManager::instance().Get(vnum);
+		char skillBuf[256];
+		snprintf(skillBuf, sizeof(skillBuf), "{\"vnum\":%u,\"level\":%d,\"name\":", vnum, level);
+		rDest += skillBuf;
+		JsonAppendEscaped(rDest, pkSkill ? pkSkill->szName : "?");
+		rDest += "}";
+	}
+	rDest += "],";
+
+	// Active affects/buffs - lDuration counts DOWN once a second on a live character (see
+	// char_affect.cpp), so it already IS "seconds remaining", not the original total duration.
+	rDest += "\"affects\":[";
+	bFirst = true;
+	const std::list<CAffect *>& rAffects = ch->GetAffectContainer();
+	for (std::list<CAffect *>::const_iterator it = rAffects.begin(); it != rAffects.end(); ++it)
+	{
+		if (!bFirst)
+			rDest += ",";
+		bFirst = false;
+
+		char affectBuf[128];
+		snprintf(affectBuf, sizeof(affectBuf), "{\"type\":%u,\"applyOn\":%u,\"value\":%ld,\"remainingSeconds\":%ld}",
+				(*it)->dwType, (unsigned) (*it)->bApplyOn, (*it)->lApplyValue, (*it)->lDuration);
+		rDest += affectBuf;
+	}
+	rDest += "]}";
+}
+
+// ---------------------------------------------------------------------------
+// Webadmin write commands (admin mode only - see the IsAdminMode() block in Analyze).
+// Every one of them targets a character by name and only acts if that character is logged
+// into THIS core; the webadmin sends the command to every core and uses whichever replies
+// "OK ...". Replies: "OK[ <detail>]" or "ERR <CODE>" (NOT_FOUND = not online on this core).
+// ---------------------------------------------------------------------------
+static LPCHARACTER WebAdminFindLocalPC(const std::string& stName)
+{
+	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindPC(stName.c_str());
+	return (ch && ch->GetDesc()) ? ch : NULL;
+}
+
+static int WebAdminFindEmptyCell(LPCHARACTER ch, LPITEM item);
+
+// System whisper from "[Szerver]" - shows up in the player's PM window as a system line
+// (client game.py OnRecvWhisperSystemMessage). Same packet the PvP-duel notice uses (pvp.cpp).
+static void WebAdminWhisper(LPCHARACTER ch, const char* c_szMessage)
+{
+	LPDESC pkDesc = ch->GetDesc();
+	if (!pkDesc || !*c_szMessage)
+		return;
+
+	const int len = MIN(CHAT_MAX_LEN, (int) strlen(c_szMessage) + 1);
+
+	TPacketGCWhisper pack;
+	pack.bHeader = HEADER_GC_WHISPER;
+	pack.wSize = sizeof(TPacketGCWhisper) + len;
+	pack.bType = WHISPER_TYPE_SYSTEM;
+	strlcpy(pack.szNameFrom, "[Szerver]", sizeof(pack.szNameFrom));
+
+	TEMP_BUFFER buf;
+	buf.write(&pack, sizeof(TPacketGCWhisper));
+	buf.write(c_szMessage, len);
+	pkDesc->Packet(buf.read_peek(), buf.size());
+}
+
+// Queues an item into the account's Itemshop storage (MALL) through item_award - the db core
+// picks the row up within ~5s and places it the next time the storage is opened (db
+// ClientManager.cpp, HEADER_GD_MALL_LOAD). Needs the attrtype/attrvalue columns from
+// server-live/item_award_attr_setup.sql; returns false if the row couldn't be written.
+static bool WebAdminAwardToMall(LPCHARACTER ch, DWORD dwVnum, int iCount,
+		const long* alSockets, const BYTE* abAttrType, const short* asAttrValue)
+{
+	if (!ch->GetDesc())
+		return false;
+
+	static const long s_alNoSockets[ITEM_SOCKET_MAX_NUM] = {};
+	static const BYTE s_abNoType[ITEM_ATTRIBUTE_MAX_NUM] = {};
+	static const short s_asNoValue[ITEM_ATTRIBUTE_MAX_NUM] = {};
+	const long* s = alSockets ? alSockets : s_alNoSockets;
+	const BYTE* t = abAttrType ? abAttrType : s_abNoType;
+	const short* v = asAttrValue ? asAttrValue : s_asNoValue;
+
+	const char* c_szLogin = ch->GetDesc()->GetAccountTable().login;
+	char szLogin[LOGIN_MAX_LEN * 2 + 1];
+	DBManager::instance().EscapeString(szLogin, sizeof(szLogin), c_szLogin, strlen(c_szLogin));
+
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery(
+			"INSERT INTO item_award (pid, login, vnum, count, given_time, why, mall, socket0, socket1, socket2, "
+			"attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3, "
+			"attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6) "
+			"VALUES(%u, '%s', %u, %d, NOW(), 'WEBADMIN', 1, %ld, %ld, %ld, "
+			"%u, %d, %u, %d, %u, %d, %u, %d, %u, %d, %u, %d, %u, %d)",
+			ch->GetPlayerID(), szLogin, dwVnum, iCount, s[0], s[1], s[2],
+			t[0], v[0], t[1], v[1], t[2], v[2], t[3], v[3], t[4], v[4], t[5], v[5], t[6], v[6]));
+
+	const bool bOk = pMsg->Get() && pMsg->Get()->uiAffectedRows == 1;
+	if (!bOk)
+		sys_err("WEBADMIN: item_award insert failed for %s (vnum %u) - item_award_attr_setup.sql not run?", ch->GetName(), dwVnum);
+	return bOk;
+}
+
+static std::string WebAdminKick(const std::string& stName)
+{
+	LPDESC pkDesc = DESC_MANAGER::instance().FindByCharacterName(stName.c_str());
+	if (!pkDesc || !pkDesc->GetCharacter())
+		return "ERR NOT_FOUND";
+
+	sys_log(0, "WEBADMIN: KICK %s", stName.c_str());
+	// Same as the /dc GM command
+	DESC_MANAGER::instance().DestroyDesc(pkDesc);
+	return "OK";
+}
+
+static std::string WebAdminGiveItem(const std::string& stName, DWORD dwVnum, int iCount)
+{
+	LPCHARACTER ch = WebAdminFindLocalPC(stName);
+	if (!ch)
+		return "ERR NOT_FOUND";
+
+	TItemTable* pTable = ITEM_MANAGER::instance().GetTable(dwVnum);
+	if (!pTable)
+		return "ERR NO_SUCH_ITEM";
+
+	iCount = MINMAX(1, iCount, ITEM_MAX_COUNT);
+	sys_log(0, "WEBADMIN: GIVE_ITEM %s vnum %u count %d", stName.c_str(), dwVnum, iCount);
+
+	// Non-stackable items can't carry a count - hand them out one by one (capped, a typo like
+	// "3000 swords" shouldn't flood the storage)
+	const bool bStackable = IS_SET(pTable->dwFlags, ITEM_FLAG_STACKABLE);
+	const int iPieces = bStackable ? 1 : MIN(iCount, 50);
+	const int iPerPiece = bStackable ? iCount : 1;
+	int iInInventory = 0, iToMall = 0;
+	for (int i = 0; i < iPieces; ++i)
+	{
+		// AutoGiveItem would drop the item on the ground when there's no room - check first
+		// (with a throwaway item of the same vnum, the tab choice depends on the item type)
+		// and send it to the Itemshop storage instead
+		LPITEM pkProbe = ITEM_MANAGER::instance().CreateItem(dwVnum, 1, 0, false);
+		if (!pkProbe)
+			return "ERR CREATE_FAILED";
+		const bool bRoom = WebAdminFindEmptyCell(ch, pkProbe) != -1;
+		M2_DESTROY_ITEM(pkProbe);
+
+		if (bRoom)
+		{
+			if (!ch->AutoGiveItem(dwVnum, iPerPiece))
+				return "ERR CREATE_FAILED";
+			iInInventory += iPerPiece;
+		}
+		else if (WebAdminAwardToMall(ch, dwVnum, iPerPiece, NULL, NULL, NULL))
+			iToMall += iPerPiece;
+		else
+			return (iInInventory || iToMall) ? "ERR PARTIAL" : "ERR NO_SPACE";
+	}
+
+	char szResult[64];
+	snprintf(szResult, sizeof(szResult), "OK %d %d", iInInventory, iToMall);
+	return szResult;
+}
+
+// Same tab selection as CHARACTER::AutoGiveItem (WJ_SPLIT_INVENTORY_SYSTEM), -1 = no room
+static int WebAdminFindEmptyCell(LPCHARACTER ch, LPITEM item)
+{
+	if (item->IsDragonSoul())
+		return ch->GetEmptyDragonSoulInventory(item);
+	if (item->IsSkillBook())
+		return ch->GetEmptySkillBookInventory(item->GetSize());
+	if (item->IsUpgradeItem())
+		return ch->GetEmptyUpgradeItemsInventory(item->GetSize());
+	if (item->IsStone())
+		return ch->GetEmptyStoneInventory(item->GetSize());
+	if (item->IsSandik())
+		return ch->GetEmptySandikInventory(item->GetSize());
+	return ch->GetEmptyInventory(item->GetSize());
+}
+
+// GIVE_ITEM with an exact item layout: no random bonuses (CreateItem without bTryMagic), the 3
+// sockets and all 7 attribute slots exactly as given. Socket values: 0 = no socket, 1 = empty
+// socket, otherwise the vnum of the spirit stone sitting in it (see ITEM_METIN in
+// char_item.cpp). Attribute slots 0-4 are the normal bonuses, 5-6 the rare ("6/7") ones; type 0
+// leaves the slot empty. Unlike AutoGiveItem this never drops the item on the ground - a
+// hand-made item shouldn't be up for grabs when the inventory is full.
+static std::string WebAdminGiveItemEx(const std::string& stName, DWORD dwVnum, int iCount,
+		const long* alSockets, const BYTE* abAttrType, const short* asAttrValue)
+{
+	LPCHARACTER ch = WebAdminFindLocalPC(stName);
+	if (!ch)
+		return "ERR NOT_FOUND";
+
+	TItemTable* pTable = ITEM_MANAGER::instance().GetTable(dwVnum);
+	if (!pTable)
+		return "ERR NO_SUCH_ITEM";
+
+	for (int i = 0; i < ITEM_ATTRIBUTE_MAX_NUM; ++i)
+		if (abAttrType[i] >= MAX_APPLY_NUM)
+			return "ERR BAD_ATTRIBUTE";
+
+	// Only a non-stackable item can carry its own sockets/bonuses - give copies one by one
+	iCount = MINMAX(1, iCount, 50);
+	sys_log(0, "WEBADMIN: GIVE_ITEM_EX %s vnum %u x%d sockets %ld %ld %ld", stName.c_str(), dwVnum, iCount,
+			alSockets[0], alSockets[1], alSockets[2]);
+
+	int iGiven = 0, iToMall = 0;
+	for (int n = 0; n < iCount; ++n)
+	{
+		LPITEM item = ITEM_MANAGER::instance().CreateItem(dwVnum, 1, 0, false);
+		if (!item)
+			return (iGiven || iToMall) ? "ERR PARTIAL" : "ERR CREATE_FAILED";
+
+		for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
+			item->SetSocket(i, alSockets[i], false);
+
+		for (int i = 0; i < ITEM_ATTRIBUTE_MAX_NUM; ++i)
+			item->SetForceAttribute(i, abAttrType[i], abAttrType[i] ? asAttrValue[i] : 0);
+
+		const int iCell = WebAdminFindEmptyCell(ch, item);
+		if (iCell == -1)
+		{
+			// No room: this copy (and every later one) goes to the Itemshop storage with the
+			// exact same sockets/bonuses via item_award
+			M2_DESTROY_ITEM(item);
+			if (WebAdminAwardToMall(ch, dwVnum, 1, alSockets, abAttrType, asAttrValue))
+			{
+				++iToMall;
+				continue;
+			}
+			if (!iGiven && !iToMall)
+				return "ERR NO_SPACE";
+			break;
+		}
+
+		item->AddToCharacter(ch, TItemPos(item->IsDragonSoul() ? DRAGON_SOUL_INVENTORY : INVENTORY, iCell));
+		LogManager::instance().ItemLog(ch, item, "WEBADMIN_GIVE", item->GetName());
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Item %u %u", dwVnum, 1u);
+		++iGiven;
+	}
+
+	char szResult[32];
+	snprintf(szResult, sizeof(szResult), "OK %d %d", iGiven, iToMall);
+	return szResult;
+}
+
+static std::string WebAdminSetLevel(const std::string& stName, int iLevel)
+{
+	LPCHARACTER ch = WebAdminFindLocalPC(stName);
+	if (!ch)
+		return "ERR NOT_FOUND";
+
+	iLevel = MINMAX(1, iLevel, gPlayerMaxLevel);
+	sys_log(0, "WEBADMIN: SET_LEVEL %s %d -> %d", stName.c_str(), ch->GetLevel(), iLevel);
+	// Same as the /advance GM command
+	ch->ResetPoint(iLevel);
+
+	char szResult[32];
+	snprintf(szResult, sizeof(szResult), "OK %d", ch->GetLevel());
+	return szResult;
+}
+
+static std::string WebAdminGiveExp(const std::string& stName, long lAmount)
+{
+	LPCHARACTER ch = WebAdminFindLocalPC(stName);
+	if (!ch)
+		return "ERR NOT_FOUND";
+
+	if (lAmount <= 0)
+		return "ERR BAD_AMOUNT";
+
+	if (ch->GetLevel() >= gPlayerMaxLevel)
+		return "ERR MAX_LEVEL";
+
+	sys_log(0, "WEBADMIN: GIVE_EXP %s %ld", stName.c_str(), lAmount);
+	// PointChange(POINT_EXP) levels the character up (repeatedly) exactly like killing a mob
+	ch->PointChange(POINT_EXP, (int) lAmount, true);
+
+	char szResult[48];
+	snprintf(szResult, sizeof(szResult), "OK %d %u", ch->GetLevel(), (unsigned) ch->GetExp());
+	return szResult;
+}
+
+static std::string WebAdminSpawnMob(const std::string& stName, DWORD dwVnum, int iCount)
+{
+	LPCHARACTER ch = WebAdminFindLocalPC(stName);
+	if (!ch)
+		return "ERR NOT_FOUND";
+
+	const CMob* pkMob = CMobManager::instance().Get(dwVnum);
+	if (!pkMob)
+		return "ERR NO_SUCH_MOB";
+
+	iCount = MINMAX(1, iCount, 20);
+	sys_log(0, "WEBADMIN: SPAWN_MOB near %s vnum %u count %d", stName.c_str(), dwVnum, iCount);
+
+	// Same spread as the /mob GM command
+	int iSpawned = 0;
+	for (int i = 0; i < iCount; ++i)
+	{
+		if (CHARACTER_MANAGER::instance().SpawnMobRange(dwVnum,
+				ch->GetMapIndex(),
+				ch->GetX() - number(200, 750),
+				ch->GetY() - number(200, 750),
+				ch->GetX() + number(200, 750),
+				ch->GetY() + number(200, 750),
+				true,
+				pkMob->m_table.bType == CHAR_TYPE_STONE))
+			++iSpawned;
+	}
+
+	char szResult[32];
+	snprintf(szResult, sizeof(szResult), "OK %d", iSpawned);
+	return szResult;
+}
+
+// iCount <= 0 or >= the stack size removes the whole item
+static std::string WebAdminTakeItem(const std::string& stName, DWORD dwItemID, int iCount)
+{
+	LPCHARACTER ch = WebAdminFindLocalPC(stName);
+	if (!ch)
+		return "ERR NOT_FOUND";
+
+	LPITEM item = ITEM_MANAGER::instance().Find(dwItemID);
+	if (!item || item->GetOwner() != ch)
+		return "ERR NO_SUCH_ITEM";
+
+	if (item->IsExchanging() || item->isLocked())
+		return "ERR ITEM_BUSY";
+
+	sys_log(0, "WEBADMIN: TAKE_ITEM %s id %u vnum %u count %d/%u", stName.c_str(), dwItemID,
+			item->GetVnum(), iCount, (unsigned) item->GetCount());
+
+	const DWORD dwTakenVnum = item->GetVnum();
+	const unsigned uTaken = (iCount > 0 && (DWORD) iCount < item->GetCount()) ? (unsigned) iCount : (unsigned) item->GetCount();
+
+	if (iCount > 0 && (DWORD) iCount < item->GetCount())
+	{
+		char szHint[64];
+		snprintf(szHint, sizeof(szHint), "%s %d", item->GetName(), iCount);
+		LogManager::instance().ItemLog(ch, item, "WEBADMIN_TAKE", szHint);
+		item->SetCount(item->GetCount() - iCount);
+	}
+	else
+	{
+		ITEM_MANAGER::instance().RemoveItem(item, "WEBADMIN_TAKE");
+	}
+
+	char szResult[48];
+	snprintf(szResult, sizeof(szResult), "OK %u %u", dwTakenVnum, uTaken);
+	return szResult;
+}
+
 int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 {
 	if (bHeader == 10) // 엔터는 무시
@@ -374,6 +898,38 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			}
 			stResult += szTmp;
 		}
+		else if (!stBuf.compare("PLAYER_LIST"))
+		{
+			if (!IsCallerAllowedOnAdminSocket(d))
+			{
+				char szTmp[64];
+				snprintf(szTmp, sizeof(szTmp), "WEBADMIN : Wrong Connector : %s", inet_ntoa(d->GetAddr().sin_addr));
+				stResult = szTmp;
+			}
+			else
+			{
+				BuildPlayerListJson(stResult);
+			}
+		}
+		else if (!stBuf.compare(0, 14, "PLAYER_DETAIL "))
+		{
+			if (!IsCallerAllowedOnAdminSocket(d))
+			{
+				char szTmp[64];
+				snprintf(szTmp, sizeof(szTmp), "WEBADMIN : Wrong Connector : %s", inet_ntoa(d->GetAddr().sin_addr));
+				stResult = szTmp;
+			}
+			else
+			{
+				std::string stName = stBuf.substr(14, CHARACTER_NAME_MAX_LEN);
+				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindPC(stName.c_str());
+
+				if (!ch || !ch->GetDesc())
+					stResult = "{\"found\":false}";
+				else
+					BuildPlayerDetailJson(stResult, ch);
+			}
+		}
 		else if (!stBuf.compare("CHECK_P2P_CONNECTIONS"))
 		{
 			std::ostringstream oss(std::ostringstream::out);
@@ -421,9 +977,11 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 				// 어드민 명령들
 				if (!stBuf.compare(0, 7, "NOTICE "))
 				{
-					std::string msg = stBuf.substr(7, 50);
+					// was 50 - long enough for a real announcement, still well under CHAT_MAX_LEN
+					std::string msg = stBuf.substr(7, 250);
 					LogManager::instance().CharLog(0, 0, 0, 1, "NOTICE", msg.c_str(), d->GetHostName());
 					BroadcastNotice(msg.c_str());
+					stResult = "OK";
 				}
 				else if (!stBuf.compare("CLOSE_PASSPOD"))
 				{
@@ -608,6 +1166,116 @@ dev_log(LOG_DEB0, "DC : '%s'", msg.c_str());
 						}
 					}
 				}
+				// Webadmin write commands - helpers above Analyze()
+				else if (!stBuf.compare(0, 5, "KICK "))
+				{
+					std::istringstream is(stBuf.substr(5));
+					std::string strName;
+					is >> strName;
+					stResult = is.fail() ? "ERR SYNTAX" : WebAdminKick(strName);
+				}
+				else if (!stBuf.compare(0, 10, "GIVE_ITEM "))
+				{
+					std::istringstream is(stBuf.substr(10));
+					std::string strName;
+					DWORD dwVnum = 0;
+					int iCount = 0;
+					is >> strName >> dwVnum >> iCount;
+					stResult = is.fail() ? "ERR SYNTAX" : WebAdminGiveItem(strName, dwVnum, iCount);
+				}
+				else if (!stBuf.compare(0, 7, "NOTIFY "))
+				{
+					const std::string stRest = stBuf.substr(7);
+					const size_t sep = stRest.find(' ');
+					LPCHARACTER ch = sep == std::string::npos ? NULL : WebAdminFindLocalPC(stRest.substr(0, sep));
+					if (sep == std::string::npos)
+						stResult = "ERR SYNTAX";
+					else if (!ch)
+						stResult = "ERR NOT_FOUND";
+					else
+					{
+						std::string stText = stRest.substr(sep + 1);
+						size_t start = 0;
+						while (start <= stText.size())
+						{
+							size_t end = stText.find("||", start);
+							if (end == std::string::npos)
+								end = stText.size();
+							const std::string stLine = stText.substr(start, MIN(end - start, (size_t) 250));
+							WebAdminWhisper(ch, stLine.c_str());
+							start = end + 2;
+						}
+						stResult = "OK";
+					}
+				}
+				else if (!stBuf.compare(0, 13, "GIVE_ITEM_EX "))
+				{
+					// GIVE_ITEM_EX <name> <vnum> <count> <socket0..2> <attrType0> <attrValue0> ... <attrType6> <attrValue6>
+					std::istringstream is(stBuf.substr(13));
+					std::string strName;
+					DWORD dwVnum = 0;
+					int iCount = 0;
+					long alSockets[ITEM_SOCKET_MAX_NUM] = {};
+					BYTE abAttrType[ITEM_ATTRIBUTE_MAX_NUM] = {};
+					short asAttrValue[ITEM_ATTRIBUTE_MAX_NUM] = {};
+					is >> strName >> dwVnum >> iCount;
+					for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
+						is >> alSockets[i];
+					for (int i = 0; i < ITEM_ATTRIBUTE_MAX_NUM; ++i)
+					{
+						// read the type as an int - ">> BYTE" would read a single character
+						int iType = 0;
+						is >> iType >> asAttrValue[i];
+						abAttrType[i] = (BYTE) MINMAX(0, iType, 255);
+					}
+					stResult = is.fail() ? "ERR SYNTAX"
+						: WebAdminGiveItemEx(strName, dwVnum, iCount, alSockets, abAttrType, asAttrValue);
+				}
+				else if (!stBuf.compare(0, 10, "SET_LEVEL "))
+				{
+					std::istringstream is(stBuf.substr(10));
+					std::string strName;
+					int iLevel = 0;
+					is >> strName >> iLevel;
+					stResult = is.fail() ? "ERR SYNTAX" : WebAdminSetLevel(strName, iLevel);
+				}
+				else if (!stBuf.compare(0, 9, "GIVE_EXP "))
+				{
+					std::istringstream is(stBuf.substr(9));
+					std::string strName;
+					long lAmount = 0;
+					is >> strName >> lAmount;
+					stResult = is.fail() ? "ERR SYNTAX" : WebAdminGiveExp(strName, lAmount);
+				}
+				else if (!stBuf.compare(0, 10, "SPAWN_MOB "))
+				{
+					std::istringstream is(stBuf.substr(10));
+					std::string strName;
+					DWORD dwVnum = 0;
+					int iCount = 0;
+					is >> strName >> dwVnum >> iCount;
+					stResult = is.fail() ? "ERR SYNTAX" : WebAdminSpawnMob(strName, dwVnum, iCount);
+				}
+				else if (!stBuf.compare(0, 10, "TAKE_ITEM "))
+				{
+					std::istringstream is(stBuf.substr(10));
+					std::string strName;
+					DWORD dwItemID = 0;
+					int iCount = 0;
+					is >> strName >> dwItemID >> iCount;
+					stResult = is.fail() ? "ERR SYNTAX" : WebAdminTakeItem(strName, dwItemID, iCount);
+				}
+#ifdef ENABLE_EVENT_MANAGER
+				else if (stBuf == "EVENT_RELOAD")
+				{
+					// Same as the GM's "/event_manager update": the db core re-reads
+					// player.event_table and pushes it to every core and online player,
+					// so one core is enough - the webadmin stops at the first "OK".
+					const BYTE subHeader = EVENT_MANAGER_UPDATE;
+					db_clientdesc->DBPacket(HEADER_GD_EVENT_MANAGER, 0, &subHeader, sizeof(BYTE));
+					stResult = "OK";
+				}
+#endif
 			}
 		}
 

@@ -1,4 +1,7 @@
 #include "dungeon.h"
+#ifdef ENABLE_12ZI
+#include "zodiac_temple.h"
+#endif
 
 enum
 {
@@ -31,6 +34,9 @@ typedef struct regen
 	LPEVENT	event;
 
 	size_t id; // to help dungeon regen identification
+#ifdef ENABLE_12ZI
+	BYTE level;
+#endif
 
 	regen() :
 		prev(NULL), next(NULL),
@@ -46,6 +52,9 @@ typedef struct regen
 		is_aggressive(0),
 		event(NULL),
 		id(0)
+#ifdef ENABLE_12ZI
+		, level(0)
+#endif
 	{}
 } REGEN;
 
@@ -83,7 +92,22 @@ EVENTINFO(dungeon_regen_event_info)
 	}
 };
 
-extern bool	regen_load(const char *filename, long lMapIndex, int base_x, int base_y); 
+#ifdef ENABLE_12ZI
+EVENTINFO(zodiac_regen_event_info)
+{
+	LPREGEN 	regen;
+	CZodiac::IdType zodiac_id;
+
+	zodiac_regen_event_info()
+	: regen( 0 )
+	, zodiac_id( 0 )
+	{
+	}
+};
+
+extern bool	regen_zodiac(const char* filename, long lMapIndex, int base_x, int base_y, LPZODIAC pZodiac, bool bOnce = true );
+#endif
+extern bool	regen_load(const char *filename, long lMapIndex, int base_x, int base_y);
 extern bool	regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDUNGEON pDungeon, bool bOnce = true );
 extern bool	regen_load_in_file(const char* filename, long lMapIndex, int base_x, int base_y );
 extern void	regen_free();

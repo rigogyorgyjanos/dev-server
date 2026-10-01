@@ -19,7 +19,11 @@
 #include "DragonSoul.h"
 
 #define IS_NO_SAVE_AFFECT(type) ((type) == AFFECT_WAR_FLAG || (type) == AFFECT_REVIVE_INVISIBLE || ((type) >= AFFECT_PREMIUM_START && (type) <= AFFECT_PREMIUM_END))
+#ifdef ENABLE_12ZI
+#define IS_NO_CLEAR_ON_DEATH_AFFECT(type) ((type) == AFFECT_BLOCK_CHAT || ((type) >= 500 && (type) < 600) || ((type) == AFFECT_CZ_UNLIMIT_ENTER))
+#else
 #define IS_NO_CLEAR_ON_DEATH_AFFECT(type) ((type) == AFFECT_BLOCK_CHAT || ((type) >= 500 && (type) < 600))
+#endif
 
 void SendAffectRemovePacket(LPDESC d, DWORD pid, DWORD type, BYTE point)
 {

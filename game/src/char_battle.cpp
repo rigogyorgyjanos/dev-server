@@ -4,6 +4,9 @@
 #include "desc.h"
 #include "desc_manager.h"
 #include "char_manager.h"
+#ifdef ENABLE_12ZI
+#	include "zodiac_temple.h"
+#endif
 #include "item.h"
 #include "item_manager.h"
 #include "mob_manager.h"
@@ -1252,6 +1255,12 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			quest::CQuestManager::instance().Kill(pkKiller->GetPlayerID(), quest::QUEST_NO_NPC);
 			CGuildManager::instance().Kill(pkKiller, this);
 		}
+#ifdef ENABLE_12ZI
+		if ((IsMonster() || IsStone()) && pkKiller->IsPC() && (pkKiller->GetMapIndex() >= 3580000 && pkKiller->GetMapIndex() < 3590000))
+		{
+			CZodiacManager::instance().DeadMob(this, pkKiller->GetMapIndex());
+		}
+#endif
 	}
 
 	//CHECK_FORKEDROAD_WAR
@@ -1306,6 +1315,15 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				SET_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_DEATH_PENALTY);
 				LogManager::instance().CharLog(this, pkKiller->GetRaceNum(), "DEAD_BY_NPC", pkKiller->GetName());
 			}
+#ifdef ENABLE_12ZI
+			if (IsPC() && pkKiller->IsMonster() && (GetMapIndex() >= 3580000 && GetMapIndex() < 3590000))
+			{
+				IncDeadCount();
+				this->SetQuestFlag("12zi_temple.IsDead", 1);
+				this->SetQuestFlag("12zi_temple.PrismNeed", this->GetDeadCount());
+				CZodiacManager::instance().DeadPC(this->GetMapIndex());
+			}
+#endif
 		}
 		else
 		{
@@ -1413,6 +1431,12 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					{
 						chResurrect->SetDungeon(GetDungeon());
 					}
+#ifdef ENABLE_12ZI
+					if (GetZodiac() && chResurrect)
+					{
+						chResurrect->SetZodiac(GetZodiac());
+					}
+#endif
 					// END_OF_DUNGEON_MONSTER_REBIRTH_BUG_FIX
 
 					Reward(false);
@@ -1541,6 +1565,52 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			sys_err("DragonLair: Dragon killed by nobody");
 		}
 	}
+#ifdef ENABLE_12ZI
+	if (IsStone())
+	{
+		if (GetSectree())
+		{
+			GetSectree()->RemoveEntity(this);
+			ViewCleanup();
+		}
+	}
+
+	if (IsZodiacBoss())
+	{
+		if (m_pkZodiacSkill1)
+			event_cancel(&m_pkZodiacSkill1);
+
+		if (m_pkZodiacSkill2)
+			event_cancel(&m_pkZodiacSkill2);
+
+		if (m_pkZodiacSkill3)
+			event_cancel(&m_pkZodiacSkill3);
+
+		if (m_pkZodiacSkill4)
+			event_cancel(&m_pkZodiacSkill4);
+
+		if (m_pkZodiacSkill5)
+			event_cancel(&m_pkZodiacSkill5);
+
+		if (m_pkZodiacSkill6)
+			event_cancel(&m_pkZodiacSkill6);
+
+		if (m_pkZodiacSkill7)
+			event_cancel(&m_pkZodiacSkill7);
+
+		if (m_pkZodiacSkill8)
+			event_cancel(&m_pkZodiacSkill8);
+
+		if (m_pkZodiacSkill9)
+			event_cancel(&m_pkZodiacSkill9);
+
+		if (m_pkZodiacSkill10)
+			event_cancel(&m_pkZodiacSkill10);
+
+		if (m_pkZodiacSkill11)
+			event_cancel(&m_pkZodiacSkill11);
+	}
+#endif
 }
 
 struct FuncSetLastAttacked
@@ -2281,6 +2351,40 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		float damMul = this->GetDamMul();
 		float tempDam = dam;
 		dam = tempDam * damMul + 0.5f;
+#ifdef ENABLE_12ZI
+		if ((IsMonster() || IsStone()) && (pAttacker && pAttacker->IsPC()))
+		{
+			if (IsZodiacStatue())
+			{
+				dam = 1;
+
+				if (number(1, 30) == 15)
+				{
+					LPZODIAC pZodiac = CZodiacManager::instance().FindByMapIndex(pAttacker->GetMapIndex());
+					if (pZodiac)
+					{
+						SpawnZodiacStone(pZodiac);
+					}
+				}
+			}
+			else if (GetRaceNum() == 20464)
+			{
+				dam = 1;
+				CanonDamage();
+			}
+			else if (GetRaceNum() >= 2900 && GetRaceNum() <= 2908)
+			{
+				if (number(0, 160) <= 7)
+				{
+					LPZODIAC pZodiac = CZodiacManager::instance().FindByMapIndex(pAttacker->GetMapIndex());
+					if (pZodiac)
+					{
+						SpawnZodiacGroup(pZodiac);
+					}
+				}
+			}
+		}
+#endif
 
 
 		if (pAttacker)
@@ -2369,6 +2473,13 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		else
 			Dead(pAttacker);
 	}
+#ifdef ENABLE_12ZI
+	if (pAttacker && pAttacker->GetRaceNum() == 20464) //Canon
+	{
+		EffectPacket(SE_DEAPO_BOOM);
+		pAttacker->Dead();
+	}
+#endif
 
 	return false;
 }

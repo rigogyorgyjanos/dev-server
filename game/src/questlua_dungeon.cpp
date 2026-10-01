@@ -1425,7 +1425,63 @@ namespace quest
 		return 0;
 	}
 
-	void RegisterDungeonFunctionTable() 
+#ifdef ENABLE_12ZI
+	int dungeon_zodiac_clear(lua_State* L)
+	{
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		if (pDungeon)
+			pDungeon->ZodiacMessageClear();
+
+		return 0;
+	}
+
+	int dungeon_zodiac_notice(lua_State* L)
+	{
+		if (!lua_isstring(L, 1))
+			return 0;
+
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		if (pDungeon)
+			pDungeon->ZodiacMessage(lua_tostring(L, 1));
+
+		return 0;
+	}
+
+	int dungeon_zodiac_time(lua_State* L)
+	{
+		if (!lua_isnumber(L,1) || !lua_isnumber(L,2) || !lua_isnumber(L,3))
+			return 0;
+
+		BYTE current = (BYTE)lua_tonumber(L, 1);
+		BYTE next = (BYTE)lua_tonumber(L, 2);
+		int time = (int)lua_tonumber(L, 3);
+
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		if (pDungeon)
+			pDungeon->ZodiacTime(current, next, time);
+
+		return 0;
+	}
+
+	int dungeon_zodiac_time_clear(lua_State* L)
+	{
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		if (pDungeon)
+			pDungeon->ZodiacTimeClear();
+
+		return 0;
+	}
+#endif
+
+	void RegisterDungeonFunctionTable()
 	{
 		luaL_reg dungeon_functions[] = 
 		{
@@ -1489,6 +1545,14 @@ namespace quest
 			{ "all_near_to",	dungeon_all_near_to	},
 			{ "set_warp_location",	dungeon_set_warp_location	},
 			{ "setqf2",			dungeon_set_quest_flag2	},
+
+#ifdef ENABLE_12ZI
+			{ "zodiac_notice_clear",	dungeon_zodiac_clear		},
+			{ "zodiac_notice",			dungeon_zodiac_notice		},
+
+			{ "zodiac_time",			dungeon_zodiac_time			},
+			{ "zodiac_time_clear",		dungeon_zodiac_time_clear	},
+#endif
 
 			{ NULL,				NULL			}
 		};

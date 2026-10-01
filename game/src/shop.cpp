@@ -21,7 +21,11 @@
 
 /* ------------------------------------------------------------------------------------ */
 CShop::CShop()
-	: m_dwVnum(0), m_dwNPCVnum(0), m_pkPC(NULL)
+	: m_dwVnum(0), m_dwNPCVnum(0),
+#ifdef ENABLE_12ZI
+	m_IsLimitedItemShop(false),
+#endif
+	m_pkPC(NULL)
 {
 	m_pGrid = M2_NEW CGrid(10, 9);
 }
@@ -68,6 +72,10 @@ bool CShop::Create(DWORD dwVnum, DWORD dwNPCVnum, TShopItemTable * pTable)
 
 	m_dwVnum = dwVnum;
 	m_dwNPCVnum = dwNPCVnum;
+#ifdef ENABLE_12ZI
+	if (dwNPCVnum == 20451) //Comerciante del zodiaco
+		m_IsLimitedItemShop = true;
+#endif
 
 	BYTE bItemCount;
 
@@ -244,6 +252,16 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		sys_log(1, "Shop::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), dwPrice);
 		return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
 	}
+#ifdef ENABLE_12ZI
+	if (ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000)
+	{
+		if (ch->CountZodiacItems(r_item.vnum) < (DWORD)r_item.count)
+		{
+			sys_log(1, "Shop::Buy : Shop limited purchase : %s has %d, price %d", ch->GetName(), r_item.count, dwPrice);
+			return SHOP_SUBHEADER_GC_LIMITED_PURCHASE_OVER;
+		}
+	}
+#endif
 
 	LPITEM item;
 
@@ -309,6 +327,13 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		}
 	}
 
+#ifdef ENABLE_12ZI
+	if (ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000)
+	{
+		ch->SetZodiacItems(r_item.vnum, 0);
+		ch->SetPurchaseZodiacItems(r_item.vnum, r_item.count);
+	}
+#endif
 	ch->PointChange(POINT_GOLD, -dwPrice, false);
 
 	//세금 계산
@@ -404,6 +429,12 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 			item->AddToCharacter(ch, TItemPos(INVENTORY, iEmptyPos));
 		ITEM_MANAGER::instance().FlushDelayedSave(item);
 		LogManager::instance().ItemLog(ch, item, "BUY", item->GetName());
+#ifdef ENABLE_12ZI
+		if (ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000)
+		{
+			BroadcastUpdateItemCh(pos, ch);
+		}
+#endif
 
 		if (item->GetVnum() >= 80003 && item->GetVnum() <= 80007)
 		{
@@ -412,6 +443,10 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 
 		DBManager::instance().SendMoneyLog(MONEY_LOG_SHOP, item->GetVnum(), -dwPrice);
 	}
+
+	// Drop Info window: the bought item
+	if (item)
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Item %u %u", item->GetVnum(), item->GetCount());
 
 	if (item)
 		sys_log(0, "SHOP: BUY: name %s %s(x %d):%u price %u", ch->GetName(), item->GetName(), item->GetCount(), item->GetID(), dwPrice);
@@ -445,6 +480,9 @@ bool CShop::AddGuest(LPCHARACTER ch, DWORD owner_vid, bool bOtherEmpire)
 
 	memset(&pack2, 0, sizeof(pack2));
 	pack2.owner_vid = owner_vid;
+#ifdef ENABLE_12ZI
+	pack2.islimiteditemshop = m_IsLimitedItemShop;
+#endif
 
 	for (DWORD i = 0; i < m_itemVector.size() && i < SHOP_HOST_ITEM_MAX_NUM; ++i)
 	{
@@ -561,6 +599,59 @@ void CShop::BroadcastUpdateItem(BYTE pos)
 
 	Broadcast(buf.read_peek(), buf.size());
 }
+
+#ifdef ENABLE_12ZI
+void CShop::BroadcastUpdateItemCh(BYTE pos, LPCHARACTER ch)
+{
+	if (!ch || !ch->IsPC())
+	{
+		sys_err("Shop.cpp: BroadcastUpdateItemCh: No existe ch o ch->IsPC");
+		return;
+	}
+
+	TPacketGCShop pack;
+	TPacketGCShopUpdateItem pack2;
+
+	TEMP_BUFFER	buf;
+
+	pack.header		= HEADER_GC_SHOP;
+	pack.subheader	= SHOP_SUBHEADER_GC_UPDATE_ITEM;
+	pack.size		= sizeof(pack) + sizeof(pack2);
+
+	pack2.pos		= pos;
+
+	if (m_pkPC && !m_itemVector[pos].pkItem)
+		pack2.item.vnum = 0;
+	else
+	{
+		pack2.item.vnum = m_itemVector[pos].vnum;
+		if (m_itemVector[pos].pkItem)
+		{
+			thecore_memcpy(pack2.item.alSockets, m_itemVector[pos].pkItem->GetSockets(), sizeof(pack2.item.alSockets));
+			thecore_memcpy(pack2.item.aAttr, m_itemVector[pos].pkItem->GetAttributes(), sizeof(pack2.item.aAttr));
+		}
+		else
+		{
+			memset(pack2.item.alSockets, 0, sizeof(pack2.item.alSockets));
+			memset(pack2.item.aAttr, 0, sizeof(pack2.item.aAttr));
+		}
+	}
+
+	pack2.item.price	= m_itemVector[pos].price;
+#ifdef ENABLE_CHEQUE_SYSTEM
+	pack2.item.cheque = m_itemVector[pos].cheque; //Check if you have "cheque" or "price_cheque"
+#endif
+	pack2.item.count	= m_itemVector[pos].count;
+
+	pack2.item.getLimitedCount = m_itemVector[pos].count;
+	pack2.item.getLimitedPurchaseCount = ch->PurchaseCountZodiacItems(m_itemVector[pos].vnum);
+
+	buf.write(&pack, sizeof(pack));
+	buf.write(&pack2, sizeof(pack2));
+
+	Broadcast(buf.read_peek(), buf.size());
+}
+#endif
 
 int CShop::GetNumberByVnum(DWORD dwVnum)
 {

@@ -11,6 +11,9 @@
 #include "desc_manager.h"
 #include "char.h"
 #include "char_manager.h"
+#ifdef ENABLE_12ZI
+#	include "zodiac_temple.h"
+#endif
 #include "motion.h"
 #include "packet.h"
 #include "affect.h"
@@ -683,12 +686,51 @@ ACMD(do_restart)
 					break;
 
 				case SCMD_RESTART_HERE:
-					sys_log(0, "do_restart: restart here");
-					ch->RestartAtSamePos();
-					//ch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY());
-					ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
-					ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
-					ch->ReviveInvisible(5);
+					{
+#ifdef ENABLE_12ZI
+						if (ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000)
+						{
+							sys_log(0, "do_restart: restart here zodiac");
+
+							BYTE bNeedPrism;
+							if (ch->GetQuestFlag("12zi_temple.IsDead") == 1 || ch->GetQuestFlag("12zi_temple.PrismNeed") > 0)
+							{
+								if (ch->GetQuestFlag("12zi_temple.PrismNeed") == 1)
+									bNeedPrism = 1;
+								else if (ch->GetQuestFlag("12zi_temple.PrismNeed") == 2)
+									bNeedPrism = 2;
+								else if (ch->GetQuestFlag("12zi_temple.PrismNeed") == 3)
+									bNeedPrism = 4;
+								else if (ch->GetQuestFlag("12zi_temple.PrismNeed") == 4)
+									bNeedPrism = 8;
+								else if (ch->GetQuestFlag("12zi_temple.PrismNeed") >= 5)
+									bNeedPrism = 10;
+								else
+									bNeedPrism = ch->GetQuestFlag("12zi_temple.PrismNeed");
+							}
+							else
+							{
+								if (ch->GetDeadCount() == 3)
+									bNeedPrism = 4;
+								else if (ch->GetDeadCount() == 4)
+									bNeedPrism = 8;
+								else if (ch->GetDeadCount() >= 5)
+									bNeedPrism = 10;
+								else
+									bNeedPrism = ch->GetDeadCount();
+							}
+
+							ch->ChatPacket(CHAT_TYPE_COMMAND, "OpenReviveDialog %u %u", (DWORD)ch->GetVID(), bNeedPrism);
+							return;
+						}
+#endif
+						sys_log(0, "do_restart: restart here");
+						ch->RestartAtSamePos();
+						//ch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY());
+						ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
+						ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
+						ch->ReviveInvisible(5);
+					}
 					break;
 			}
 
@@ -712,12 +754,22 @@ ACMD(do_restart)
 			break;
 
 		case SCMD_RESTART_HERE:
-			sys_log(0, "do_restart: restart here");
-			ch->RestartAtSamePos();
-			//ch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY());
-			ch->PointChange(POINT_HP, 50 - ch->GetHP());
-			ch->DeathPenalty(0);
-			ch->ReviveInvisible(5);
+			{
+#ifdef ENABLE_12ZI
+				if (ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000)
+				{
+					sys_log(0, "do_restart: restart here zodiac");
+					return;
+				}
+#endif
+
+				sys_log(0, "do_restart: restart here");
+				ch->RestartAtSamePos();
+				//ch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY());
+				ch->PointChange(POINT_HP, 50 - ch->GetHP());
+				ch->DeathPenalty(0);
+				ch->ReviveInvisible(5);
+			}
 			break;
 	}
 }
@@ -1069,6 +1121,13 @@ ACMD(do_ungroup)
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던전 안에서는 파티에서 나갈 수 없습니다."));
 		return;
 	}
+#ifdef ENABLE_12ZI
+	if (ch->GetZodiac() || (ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000))
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Group] You cannot leave a group while you are in a Zodiac Temple."));
+		return;
+	}
+#endif
 
 	LPPARTY pParty = ch->GetParty();
 
@@ -2737,6 +2796,304 @@ ACMD(do_maintenance)
 		long duration_maintenance = parse_time_str(arg2);
 
 		MaintenanceManager::instance().Send_ActiveMaintenance(ch, time_maintenance, duration_maintenance);
+	}
+}
+
+ACMD(do_player_login)
+{
+	char arg1[256];
+
+	one_argument(argument, arg1, sizeof(arg1));
+
+	MaintenanceManager::instance().Send_PlayerLogin(ch, arg1);
+}
+#endif
+
+#ifdef ENABLE_12ZI
+ACMD(do_cz_check_box)
+{
+	const char *line;
+	char arg1[256], arg2[256];
+	line = two_arguments (argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
+
+	if (0 == arg1[0] || 0 == arg2[0])
+		return;
+
+	int color = atoi(arg1);
+	int index = atoi(arg2);
+
+	if (color < 0 || color > 1)
+		return;
+
+	if (index < 0 || index > 29)
+		return;
+
+	ch->ZTT_CHECK_BOX(color,index);
+	ch->ZTT_LOAD_INFO();
+
+}
+
+ACMD(do_cz_reward)
+{
+	char arg1[256];
+	one_argument (argument, arg1, sizeof(arg1));
+
+	if (0 == arg1[0])
+		return;
+
+	int type = atoi(arg1);
+
+	if(type < 1 || type > 3)
+		return;
+
+	ch->ZTT_REWARD(type);
+}
+
+ACMD(do_revivedialog)
+{
+	if (!ch)
+		return;
+
+	char arg1[256];
+	one_argument(argument, arg1, sizeof(arg1));
+
+	if (!*arg1)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Missing data. Please, contact an administrator."));
+		return;
+	}
+
+	DWORD vid = 0;
+	str_to_number(vid, arg1);
+	LPCHARACTER tch = CHARACTER_MANAGER::instance().Find(vid);
+
+	if (!tch)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("There is no one to resuscitate."));
+		return;
+	}
+
+	if (!tch->IsPC())
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The person you are trying to revive is not human."));
+		return;
+	}
+
+	if (!tch->IsDead())
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can not resurrect someone who is alive."));
+		return;
+	}
+
+	BYTE bNeedPrism;
+	if (tch->GetQuestFlag("12zi_temple.IsDead") == 1 || tch->GetQuestFlag("12zi_temple.PrismNeed") > 0)
+	{
+		if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 1)
+			bNeedPrism = 1;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 2)
+			bNeedPrism = 2;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 3)
+			bNeedPrism = 4;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 4)
+			bNeedPrism = 8;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") >= 5)
+			bNeedPrism = 10;
+		else
+			bNeedPrism = tch->GetQuestFlag("12zi_temple.PrismNeed");
+	}
+	else
+	{
+		if (tch->GetDeadCount() == 3)
+			bNeedPrism = 4;
+		else if (tch->GetDeadCount() == 4)
+			bNeedPrism = 8;
+		else if (tch->GetDeadCount() >= 5)
+			bNeedPrism = 10;
+		else
+			bNeedPrism = tch->GetDeadCount();
+	}
+
+	ch->ChatPacket(CHAT_TYPE_COMMAND, "OpenReviveDialog %u %u", (DWORD)tch->GetVID(), bNeedPrism);
+}
+
+ACMD(do_revive)
+{
+	if (!ch)
+		return;
+
+	char arg1[256];
+	one_argument(argument, arg1, sizeof(arg1));
+
+	if (!*arg1)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Missing data. Please, contact an administrator."));
+		return;
+	}
+
+	DWORD vid = 0;
+	str_to_number(vid, arg1);
+	LPCHARACTER tch = CHARACTER_MANAGER::instance().Find(vid);
+
+	if (!tch)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("There is no one to resuscitate."));
+		return;
+	}
+
+	if (!tch->IsPC())
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The person you are trying to revive is not human."));
+		return;
+	}
+
+	if (!tch->IsDead())
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can not resurrect someone who is alive."));
+		return;
+	}
+
+	if (!(ch->GetMapIndex() >= 3580000 && ch->GetMapIndex() < 3590000) || !(tch->GetMapIndex() >= 3580000 && tch->GetMapIndex() < 3590000))
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This action can only be done in the Zodiac Temple."));
+		return;
+	}
+
+	BYTE bNeedPrism;
+	if (tch->GetQuestFlag("12zi_temple.IsDead") == 1 || tch->GetQuestFlag("12zi_temple.PrismNeed") > 0)
+	{
+		if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 1)
+			bNeedPrism = 1;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 2)
+			bNeedPrism = 2;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 3)
+			bNeedPrism = 4;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") == 4)
+			bNeedPrism = 8;
+		else if (tch->GetQuestFlag("12zi_temple.PrismNeed") >= 5)
+			bNeedPrism = 10;
+		else
+			bNeedPrism = tch->GetQuestFlag("12zi_temple.PrismNeed");
+	}
+	else
+	{
+		if (tch->GetDeadCount() == 3)
+			bNeedPrism = 4;
+		else if (tch->GetDeadCount() == 4)
+			bNeedPrism = 8;
+		else if (tch->GetDeadCount() >= 5)
+			bNeedPrism = 10;
+		else
+			bNeedPrism = tch->GetDeadCount();
+	}
+
+	int iPrismCount = (ch->CountSpecifyItem(33025) + ch->CountSpecifyItem(33032));
+	if (iPrismCount < (int)bNeedPrism)
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "NotEnoughPrism %u", bNeedPrism);
+		return;
+	}
+
+	int iDelPrism = bNeedPrism-ch->CountSpecifyItem(33032);
+	if (iDelPrism <= 0)
+	{
+		ch->RemoveSpecifyItem(33032, bNeedPrism);
+	}
+	else
+	{
+		ch->RemoveSpecifyItem(33025, bNeedPrism-ch->CountSpecifyItem(33032));
+		ch->RemoveSpecifyItem(33032, ch->CountSpecifyItem(33032));
+	}
+
+	tch->ChatPacket(CHAT_TYPE_COMMAND, "CloseRestartWindow");
+	tch->GetDesc()->SetPhase(PHASE_GAME);
+	tch->SetPosition(POS_STANDING);
+	tch->StartRecoveryEvent();
+	tch->RestartAtSamePos();
+	tch->PointChange(POINT_HP, tch->GetMaxHP() - tch->GetHP());
+	tch->PointChange(POINT_SP, tch->GetMaxSP() - tch->GetSP());
+	tch->ReviveInvisible(5);
+	tch->SetQuestFlag("12zi_temple.IsDead", 0);
+	sys_log(0, "do_restart: restart here zodiac");
+}
+
+ACMD(do_jump_floor)
+{
+	if (ch)
+	{
+		if ((ch->GetParty() && ch->GetParty()->GetLeaderPID() == ch->GetPlayerID()) || !ch->GetParty())
+		{
+			LPZODIAC pkZodiac = CZodiacManager::instance().FindByMapIndex(ch->GetMapIndex());
+			if (pkZodiac && pkZodiac->IsNextFloor() == true)
+			{
+				pkZodiac->NewFloor(pkZodiac->GetNextFloor());
+			}
+		}
+	}
+}
+
+ACMD(do_next_floor)
+{
+	if (ch)
+	{
+		if ((ch->GetParty() && ch->GetParty()->GetLeaderPID() == ch->GetPlayerID()) || !ch->GetParty())
+		{
+			LPZODIAC pkZodiac = CZodiacManager::instance().FindByMapIndex(ch->GetMapIndex());
+			if (pkZodiac && pkZodiac->IsNextFloor() == true)
+			{
+				pkZodiac->NewFloor(pkZodiac->GetFloor()+1);
+			}
+		}
+	}
+}
+
+ACMD(do_cz_complete_reward)
+{
+	char arg1[256];
+	one_argument(argument, arg1, sizeof(arg1));
+	if (!*arg1)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: cz_complete_reward <color>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "List of the available colors:");
+		ch->ChatPacket(CHAT_TYPE_INFO, " yellow");
+		ch->ChatPacket(CHAT_TYPE_INFO, " green");
+		ch->ChatPacket(CHAT_TYPE_INFO, " all");
+		return;
+	}
+
+	std::string strArg(arg1);
+	if (!strArg.compare(0, 6, "yellow"))
+	{
+		if (ch->IsGM())
+		{
+			ch->SetQuestFlag("12zi_temple.zt_color_0", 1073741823);
+			ch->ZTT_CHECK_REWARD();
+			ch->ZTT_LOAD_INFO();
+		}
+		else
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Only GM have access to this command"));
+	}
+	else if (!strArg.compare(0, 5, "green"))
+	{
+		if (ch->IsGM())
+		{
+			ch->SetQuestFlag("12zi_temple.zt_color_1", 1073741823);
+			ch->ZTT_CHECK_REWARD();
+			ch->ZTT_LOAD_INFO();
+		}
+		else
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Only GM have access to this command"));
+	}
+	else if (!strArg.compare(0, 3, "all"))
+	{
+		if (ch->IsGM())
+		{
+			ch->SetQuestFlag("12zi_temple.zt_color_0", 1073741823);
+			ch->SetQuestFlag("12zi_temple.zt_color_1", 1073741823);
+			ch->ZTT_CHECK_REWARD();
+			ch->ZTT_LOAD_INFO();
+		}
+		else
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Only GM have access to this command"));
 	}
 }
 #endif

@@ -23,6 +23,19 @@ class CDungeon
 	void	Notice(const char* msg);
 	// END_OF_DUNGEON_NOTICE
 
+#ifdef ENABLE_12ZI
+	void	ZodiacMessage(const char* msg);
+	void	ZodiacMessageClear();
+
+	void	ZodiacTime(BYTE currentfloor, BYTE nextfloor, int time);
+	void	ZodiacTimeClear();
+
+	void	SetZodiacCountMonster(int count) { m_iZodiacMonsterCount = count; }
+	void	ZodiacIncMonster() { m_iZodiacMonsterCount++; }
+	void	ZodiacDecMonster() { m_iZodiacMonsterCount--; }
+	int		ZodiacCountMonster() { return m_iZodiacMonsterCount; }
+#endif
+
 	void	JoinParty(LPPARTY pParty);
 	void	QuitParty(LPPARTY pParty);
 
@@ -38,8 +51,8 @@ class CDungeon
 
 	void	IncMonster() { m_iMonsterCount++; sys_log(0, "MonsterCount %d", m_iMonsterCount); }
 	void	DecMonster() { m_iMonsterCount--; CheckEliminated(); }
-	int	CountMonster() { return m_iMonsterCount; }	// µ¥ÀÌÅÍ·Î ¸®Á¨ÇÑ ¸ó½ºÅÍÀÇ ¼ö
-	int	CountRealMonster();				// ½ÇÁ¦·Î ¸Ê»ó¿¡ ÀÖ´Â ¸ó½ºÅÍ
+	int	CountMonster() { return m_iMonsterCount; }	// ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+	int	CountRealMonster();				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê»ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	void	IncPartyMember(LPPARTY pParty, LPCHARACTER ch);
 	void	DecPartyMember(LPPARTY pParty, LPCHARACTER ch);
@@ -103,7 +116,7 @@ class CDungeon
 	void	SetFlag(std::string name, int value);
 	void	SetWarpLocation (long map_index, int x, int y);
 
-	// item groupÀº item_vnum°ú item_count·Î ±¸¼º.
+	// item groupï¿½ï¿½ item_vnumï¿½ï¿½ item_countï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	typedef std::vector <std::pair <DWORD, int> > ItemGroup;
 	void	CreateItemGroup (std::string& group_name, ItemGroup& item_group);
 	const ItemGroup* GetItemGroup (std::string& group_name);
@@ -138,11 +151,14 @@ class CDungeon
 	bool		m_bUseRevive;
 
 	int		m_iMonsterCount;
+#ifdef ENABLE_12ZI
+	int		m_iZodiacMonsterCount;
+#endif
 
 	bool		m_bExitAllAtEliminate;
 	bool		m_bWarpAtEliminate;
 
-	// Àû Àü¸ê½Ã ¿öÇÁÇÏ´Â À§Ä¡
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Ä¡
 	int		m_iWarpDelay;
 	long		m_lWarpMapIndex;
 	long		m_lWarpX;
@@ -163,9 +179,9 @@ class CDungeon
 	friend EVENTFUNC(dungeon_exit_all_event);
 	friend EVENTFUNC(dungeon_jump_to_event);
 
-	// ÆÄÆ¼ ´ÜÀ§ ´øÀü ÀÔÀåÀ» À§ÇÑ ÀÓ½Ã º¯¼ö.
-	// m_map_pkParty´Â °ü¸®°¡ ºÎ½ÇÇÏ¿© »ç¿ëÇÒ ¼ö ¾ø´Ù°í ÆÇ´ÜÇÏ¿©,
-	// ÀÓ½Ã·Î ÇÑ ÆÄÆ¼¿¡ ´ëÇÑ °ü¸®¸¦ ÇÏ´Â º¯¼ö »ý¼º.
+	// ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+	// m_map_pkPartyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ù°ï¿½ ï¿½Ç´ï¿½ï¿½Ï¿ï¿½,
+	// ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	
 	LPPARTY m_pParty;
 	public :

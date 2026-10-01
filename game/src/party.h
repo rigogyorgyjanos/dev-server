@@ -5,7 +5,7 @@
 
 enum // unit : minute
 {
-	PARTY_ENOUGH_MINUTE_FOR_EXP_BONUS = 60, // ÆÄÆ¼ °á¼º ÈÄ 60ºÐ ÈÄ ºÎÅÍ Ãß°¡ °æÇèÄ¡ º¸³Ê½º
+	PARTY_ENOUGH_MINUTE_FOR_EXP_BONUS = 60, // ï¿½ï¿½Æ¼ ï¿½á¼º ï¿½ï¿½ 60ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½Ê½ï¿½
 	PARTY_HEAL_COOLTIME_LONG = 60,
 	PARTY_HEAL_COOLTIME_SHORT = 30,
 	PARTY_MAX_MEMBER = 8,
@@ -69,12 +69,12 @@ class CPartyManager : public singleton<CPartyManager>
 		void		P2PQuitParty(DWORD pid);
 
 	private:
-		TPartyMap	m_map_pkParty;		// PID·Î ¾î´À ÆÄÆ¼¿¡ ÀÖ³ª °Ë»öÇÏ±â À§ÇÑ ÄÁÅ×ÀÌ³Ê
-		TPartyMap	m_map_pkMobParty;	// Mob ÆÄÆ¼´Â PID ´ë½Å VID ·Î µû·Î °ü¸®ÇÑ´Ù.
+		TPartyMap	m_map_pkParty;		// PIDï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½Ö³ï¿½ ï¿½Ë»ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½
+		TPartyMap	m_map_pkMobParty;	// Mob ï¿½ï¿½Æ¼ï¿½ï¿½ PID ï¿½ï¿½ï¿½ VID ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 
-		TPCPartySet	m_set_pkPCParty;	// »ç¶÷µéÀÇ ÆÄÆ¼ ÀüÃ¼ ÁýÇÕ
+		TPCPartySet	m_set_pkPCParty;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
 
-		bool		m_bEnablePCParty;	// µðºñ°¡ ÄÑÁ®ÀÖÁö ¾ÊÀ¸¸é »ç¶÷µéÀÇ ÆÄÆ¼ »óÅÂ°¡ º¯°æºÒ°¡
+		bool		m_bEnablePCParty;	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½Ò°ï¿½
 };
 
 enum EPartyMessages
@@ -184,6 +184,10 @@ class CParty
 
 		void		SetDungeon(LPDUNGEON pDungeon);
 		LPDUNGEON	GetDungeon();
+#ifdef ENABLE_12ZI
+		void		SetZodiac(LPZODIAC pZodiac);
+		LPZODIAC	GetZodiac();
+#endif
 
 		BYTE		CountMemberByVnum(DWORD dwVnum);
 
@@ -246,13 +250,21 @@ class CParty
 		TFlagMap	m_map_iFlag;
 
 		LPDUNGEON	m_pkDungeon;
-		// ¾Æ±Í µ¿±¼¿ë dungeon ¸â¹ö º¯¼ö.
-		// Á¤¸» ÀÌ·¸°Ô±îÁö ÇÏ°í ½ÍÁø ¾Ê¾Ò´Âµ¥, ´øÀü¿¡¼­ party °ü¸®°¡ Á¤¸»·Î °³ÆÇÀÌ¶ó
-		// ±×°Å °íÄ¡±â Àü±îÁö´Â ÀÌ·¸°Ô ÀÓ½Ã·Î ÇØ³õ´Â´Ù.
+		// ï¿½Æ±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ dungeon ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´Âµï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ party ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½
+		// ï¿½×°ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Ó½Ã·ï¿½ ï¿½Ø³ï¿½ï¿½Â´ï¿½.
 		LPDUNGEON	m_pkDungeon_for_Only_party;
+#ifdef ENABLE_12ZI
+		LPZODIAC	m_pkZodiac;
+		LPZODIAC	m_pkZodiac_for_Only_party;
+#endif
 	public:
 		void SetDungeon_for_Only_party(LPDUNGEON pDungeon);
 		LPDUNGEON GetDungeon_for_Only_party();
+#ifdef ENABLE_12ZI
+		void SetZodiac_for_Only_party(LPZODIAC pZodiac);
+		LPZODIAC GetZodiac_for_Only_party();
+#endif
 };
 
 template <class Func> void CParty::ForEachMember(Func & f)

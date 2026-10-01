@@ -14,12 +14,12 @@ class CShop
 	public:
 		typedef struct shop_item
 		{
-			DWORD	vnum;		// ¾ÆÀÌÅÛ ¹øÈ£
-			long	price;		// °¡°Ý
-			WORD	count;		// ¾ÆÀÌÅÛ °³¼ö
+			DWORD	vnum;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
+			long	price;		// ï¿½ï¿½ï¿½ï¿½
+			WORD	count;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 			LPITEM	pkItem;
-			int		itemid;		// ¾ÆÀÌÅÛ °íÀ¯¾ÆÀÌµð
+			int		itemid;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½
 
 			shop_item()
 			{
@@ -40,20 +40,23 @@ class CShop
 		virtual void	SetPCShop(LPCHARACTER ch);
 		virtual bool	IsPCShop()	{ return m_pkPC ? true : false; }
 
-		// °Ô½ºÆ® Ãß°¡/»èÁ¦
+		// ï¿½Ô½ï¿½Æ® ï¿½ß°ï¿½/ï¿½ï¿½ï¿½ï¿½
 		virtual bool	AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire);
 		void	RemoveGuest(LPCHARACTER ch);
 
-		// ¹°°Ç ±¸ÀÔ
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		virtual int	Buy(LPCHARACTER ch, BYTE pos);
 
-		// °Ô½ºÆ®¿¡°Ô ÆÐÅ¶À» º¸³¿
+		// ï¿½Ô½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		void	BroadcastUpdateItem(BYTE pos);
+#ifdef ENABLE_12ZI
+		void	BroadcastUpdateItemCh(BYTE pos, LPCHARACTER ch);
+#endif
 
-		// ÆÇ¸ÅÁßÀÎ ¾ÆÀÌÅÛÀÇ °¹¼ö¸¦ ¾Ë·ÁÁØ´Ù.
+		// ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë·ï¿½ï¿½Ø´ï¿½.
 		int		GetNumberByVnum(DWORD dwVnum);
 
-		// ¾ÆÀÌÅÛÀÌ »óÁ¡¿¡ µî·ÏµÇ¾î ÀÖ´ÂÁö ¾Ë·ÁÁØ´Ù.
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ÏµÇ¾ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½Ë·ï¿½ï¿½Ø´ï¿½.
 		virtual bool	IsSellingItem(DWORD itemID);
 
 		DWORD	GetVnum() { return m_dwVnum; }
@@ -65,12 +68,15 @@ class CShop
 	protected:
 		DWORD				m_dwVnum;
 		DWORD				m_dwNPCVnum;
+#ifdef ENABLE_12ZI
+		bool				m_IsLimitedItemShop;
+#endif
 
 		CGrid *				m_pGrid;
 
 		typedef std::unordered_map<LPCHARACTER, bool> GuestMapType;
 		GuestMapType m_map_guest;
-		std::vector<SHOP_ITEM>		m_itemVector;	// ÀÌ »óÁ¡¿¡¼­ Ãë±ÞÇÏ´Â ¹°°Çµé
+		std::vector<SHOP_ITEM>		m_itemVector;	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Çµï¿½
 
 		LPCHARACTER			m_pkPC;
 };

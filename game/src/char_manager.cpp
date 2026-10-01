@@ -440,7 +440,11 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMob(DWORD dwVnum, long lMapIndex, long x, lo
 	return (ch);
 }
 
+#ifdef ENABLE_12ZI
+LPCHARACTER CHARACTER_MANAGER::SpawnMobRange(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, bool bIsException, bool bSpawnMotion, bool bAggressive, BYTE bLevel)
+#else
 LPCHARACTER CHARACTER_MANAGER::SpawnMobRange(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, bool bIsException, bool bSpawnMotion, bool bAggressive )
+#endif
 {
 	const CMob * pkMob = CMobManager::instance().Get(dwVnum);
 
@@ -468,6 +472,20 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRange(DWORD dwVnum, long lMapIndex, int s
 			sys_log(1, "MOB_SPAWN: %s(%d) %dx%d", ch->GetName(), (DWORD) ch->GetVID(), ch->GetX(), ch->GetY());
 			if ( bAggressive )
 				ch->SetAggressive();
+#ifdef ENABLE_12ZI
+			if (bLevel > 0)
+			{
+				if (ch->IsZodiacBoss())
+				{
+					int New_HP = ch->GetMaxHP()-((135-bLevel)*3000);
+					ch->SetMaxHP(New_HP);
+					ch->SetHP(New_HP);
+				}
+
+				ch->SetLevel(bLevel);
+				ch->UpdatePacket();
+			}
+#endif
 			return (ch);
 		}
 	}
@@ -632,6 +650,95 @@ LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, 
 
 	return chLeader;
 }
+
+#ifdef ENABLE_12ZI
+bool CHARACTER_MANAGER::SpawnGroupGroupZodiac(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPZODIAC pZodiac, BYTE bLevel)
+{
+	const DWORD dwGroupID = CMobManager::Instance().GetGroupFromGroupGroup(dwVnum);
+
+	if( dwGroupID != 0 )
+	{
+		return SpawnGroupZodiac(dwGroupID, lMapIndex, sx, sy, ex, ey, pkRegen, bAggressive_, pZodiac, bLevel);
+	}
+	else
+	{
+		sys_err( "NOT_EXIST_GROUP_GROUP_VNUM(%u) MAP(%ld)", dwVnum, lMapIndex );
+		return false;
+	}
+}
+
+LPCHARACTER CHARACTER_MANAGER::SpawnGroupZodiac(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPZODIAC pZodiac, BYTE bLevel)
+{
+	CMobGroup * pkGroup = CMobManager::Instance().GetGroup(dwVnum);
+
+	if (!pkGroup)
+	{
+		sys_err("NOT_EXIST_GROUP_VNUM(%u) Map(%u) ", dwVnum, lMapIndex);
+		return NULL;
+	}
+
+	LPCHARACTER pkChrMaster = NULL;
+	LPPARTY pkParty = NULL;
+
+	const std::vector<DWORD> & c_rdwMembers = pkGroup->GetMemberVector();
+
+	bool bSpawnedByStone = false;
+	bool bAggressive = bAggressive_;
+
+	if (m_pkChrSelectedStone)
+	{
+		bSpawnedByStone = true;
+
+		if (m_pkChrSelectedStone->GetZodiac())
+			bAggressive = true;
+	}
+
+	LPCHARACTER chLeader = NULL;
+
+	for (DWORD i = 0; i < c_rdwMembers.size(); ++i)
+	{
+		LPCHARACTER tch = SpawnMobRange(c_rdwMembers[i], lMapIndex, sx, sy, ex, ey, true, bSpawnedByStone, false, bLevel);
+
+		if (!tch)
+		{
+			if (i == 0)	// 못만든 몬스터가 대장일 경우에는 그냥 실패
+				return NULL;
+
+			continue;
+		}
+
+		if (i == 0)
+			chLeader = tch;
+
+		tch->SetZodiac(pZodiac);
+
+		sx = tch->GetX() - number(300, 500);
+		sy = tch->GetY() - number(300, 500);
+		ex = tch->GetX() + number(300, 500);
+		ey = tch->GetY() + number(300, 500);
+
+		if (m_pkChrSelectedStone)
+			tch->SetStone(m_pkChrSelectedStone);
+		else if (pkParty)
+		{
+			pkParty->Join(tch->GetVID());
+			pkParty->Link(tch);
+		}
+		else if (!pkChrMaster)
+		{
+			pkChrMaster = tch;
+			pkChrMaster->SetRegen(pkRegen);
+
+			pkParty = CPartyManager::instance().CreateParty(pkChrMaster);
+		}
+
+		if (bAggressive)
+			tch->SetAggressive();
+	}
+
+	return chLeader;
+}
+#endif
 
 struct FuncUpdateAndResetChatCounter
 {
@@ -1088,6 +1195,11 @@ void CHARACTER_MANAGER::ClearEventData()
 
 void CHARACTER_MANAGER::CheckBonusEvent(LPCHARACTER ch)
 {
+	// ComputePoints() runs for every character, monsters too (e.g. on respawn) - the bonus
+	// event is for players only.
+	if (!ch || !ch->IsPC())
+		return;
+
 	const TEventManagerData* eventPtr = CheckEventIsActive(BONUS_EVENT, ch->GetEmpire());
 	if (eventPtr)
 		ch->ApplyPoint(eventPtr->value[0], eventPtr->value[1]);
@@ -1297,48 +1409,14 @@ void CHARACTER_MANAGER::SetEventStatus(const WORD eventID, const bool eventStatu
 	if (!eventData)
 		return;
 
+	const bool statusChanged = eventData->eventStatus != eventStatus;
 	eventData->eventStatus = eventStatus;
 	eventData->endTime = endTime;
 
-	// Auto start/end notice, Hungarian - keyed by event type, not every type gets one
-	// (matches the reference package's own scope: PvP/empire-war/wheel-of-fortune/etc.
-	// are meant to be announced by the GM's own means, not auto-broadcast).
-	extern void SendNotice(const char* c_pszBuf);
-	static const std::map<BYTE, std::pair<std::string, std::string>> s_eventText = {
-		{ BONUS_EVENT,               { "A Bónusz esemény aktív!",                 "A Bónusz esemény véget ért!" } },
-		{ DOUBLE_BOSS_LOOT_EVENT,    { "A Dupla Boss Zsákmány esemény aktív!",    "A Dupla Boss Zsákmány esemény véget ért!" } },
-		{ DOUBLE_METIN_LOOT_EVENT,   { "A Dupla Kőszobor Zsákmány esemény aktív!","A Dupla Kőszobor Zsákmány esemény véget ért!" } },
-		{ DOUBLE_MISSION_BOOK_EVENT, { "A Dupla Küldetés Könyv esemény aktív!",   "A Dupla Küldetés Könyv esemény véget ért!" } },
-		{ DUNGEON_COOLDOWN_EVENT,    { "A Dungeon Várakozás Csökkentés esemény aktív!", "A Dungeon Várakozás Csökkentés esemény véget ért!" } },
-		{ DUNGEON_TICKET_LOOT_EVENT, { "A Dungeon Jegy esemény aktív!",           "A Dungeon Jegy esemény véget ért!" } },
-		{ MOONLIGHT_EVENT,           { "A Holdfény esemény aktív!",               "A Holdfény esemény véget ért!" } },
-	};
-
-	const auto it = s_eventText.find(eventData->eventIndex);
-	if (it != s_eventText.end())
-		SendNotice((eventStatus ? it->second.first : it->second.second).c_str());
+	if (statusChanged)
+		OnEventStatusChanged(*eventData);
 
 	const DESC_MANAGER::DESC_SET& c_ref_set = DESC_MANAGER::instance().GetClientSet();
-
-	// Bonus event: point bonus is applied live in ComputePoints() while active, so
-	// on deactivation we just need to strip it back off every online character once.
-	if (eventData->eventIndex == BONUS_EVENT && !eventStatus)
-	{
-		for (const auto& desc : c_ref_set)
-		{
-			LPCHARACTER ch = desc->GetCharacter();
-			if (!ch)
-				continue;
-			if (eventData->empireFlag != 0 && eventData->empireFlag != ch->GetEmpire())
-				continue;
-			if (eventData->channelFlag != 0 && eventData->channelFlag != g_bChannel)
-				continue;
-
-			ch->ApplyPoint(eventData->value[0], -(long)eventData->value[1]);
-			ch->ComputePoints();
-		}
-	}
-
 	const int now = (int)time(NULL);
 	const BYTE subIndex = EVENT_MANAGER_EVENT_STATUS;
 
@@ -1365,6 +1443,103 @@ void CHARACTER_MANAGER::SetEventStatus(const WORD eventID, const bool eventStatu
 void CHARACTER_MANAGER::SetEventData(BYTE dayIndex, const std::vector<TEventManagerData>& data)
 {
 	m_eventData[dayIndex] = data;
+}
+
+std::vector<TEventManagerData> CHARACTER_MANAGER::GetActiveEvents() const
+{
+	std::vector<TEventManagerData> activeEvents;
+	for (const auto& dayKv : m_eventData)
+	{
+		for (const auto& eventData : dayKv.second)
+		{
+			if (eventData.eventStatus)
+				activeEvents.emplace_back(eventData);
+		}
+	}
+	return activeEvents;
+}
+
+// A full reload (EVENT_MANAGER_LOAD - GM /event_manager update, webadmin, month change) can
+// start or stop events without a separate status packet. Compare against what was active
+// before the reload and run the same side effects a status packet would.
+void CHARACTER_MANAGER::NotifyEventStatusChanges(const std::vector<TEventManagerData>& previouslyActive)
+{
+	// Explicit "-> bool": this codebase defines false/true as int macros somewhere in its
+	// headers, so an unannotated lambda returning both would deduce conflicting types.
+	auto wasActive = [&previouslyActive](WORD eventID) -> bool
+	{
+		for (const auto& oldEvent : previouslyActive)
+		{
+			if (oldEvent.eventID == eventID)
+				return true;
+		}
+		return false;
+	};
+
+	std::vector<WORD> seenEventIDs;
+	for (const auto& dayKv : m_eventData)
+	{
+		for (const auto& eventData : dayKv.second)
+		{
+			seenEventIDs.emplace_back(eventData.eventID);
+			if (eventData.eventStatus != wasActive(eventData.eventID))
+				OnEventStatusChanged(eventData);
+		}
+	}
+
+	// Active before, gone from the reloaded calendar (deleted, or moved to another month)
+	for (const auto& oldEvent : previouslyActive)
+	{
+		if (std::find(seenEventIDs.begin(), seenEventIDs.end(), oldEvent.eventID) != seenEventIDs.end())
+			continue;
+
+		TEventManagerData endedEvent = oldEvent;
+		endedEvent.eventStatus = false;
+		OnEventStatusChanged(endedEvent);
+	}
+}
+
+// Side effects of an event turning on or off on this core: the start/end notice to this core's
+// players and, for BONUS_EVENT, recomputing their stats so the bonus appears / disappears right
+// away. ComputePoints() resets every point and CheckBonusEvent() re-adds the bonus only while
+// the event is active, so the same call covers both directions.
+void CHARACTER_MANAGER::OnEventStatusChanged(const TEventManagerData& eventData)
+{
+	if (eventData.channelFlag != 0 && eventData.channelFlag != g_bChannel)
+		return;
+
+	// Auto start/end notice, Hungarian - keyed by event type, not every type gets one
+	// (matches the reference package's own scope: PvP/empire-war/wheel-of-fortune/etc.
+	// are meant to be announced by the GM's own means, not auto-broadcast).
+	extern void SendNotice(const char* c_pszBuf);
+	static const std::map<BYTE, std::pair<std::string, std::string>> s_eventText = {
+		{ BONUS_EVENT,               { "A Bónusz esemény aktív!",                 "A Bónusz esemény véget ért!" } },
+		{ DOUBLE_BOSS_LOOT_EVENT,    { "A Dupla Boss Zsákmány esemény aktív!",    "A Dupla Boss Zsákmány esemény véget ért!" } },
+		{ DOUBLE_METIN_LOOT_EVENT,   { "A Dupla Kőszobor Zsákmány esemény aktív!","A Dupla Kőszobor Zsákmány esemény véget ért!" } },
+		{ DOUBLE_MISSION_BOOK_EVENT, { "A Dupla Küldetés Könyv esemény aktív!",   "A Dupla Küldetés Könyv esemény véget ért!" } },
+		{ DUNGEON_COOLDOWN_EVENT,    { "A Dungeon Várakozás Csökkentés esemény aktív!", "A Dungeon Várakozás Csökkentés esemény véget ért!" } },
+		{ DUNGEON_TICKET_LOOT_EVENT, { "A Dungeon Jegy esemény aktív!",           "A Dungeon Jegy esemény véget ért!" } },
+		{ MOONLIGHT_EVENT,           { "A Holdfény esemény aktív!",               "A Holdfény esemény véget ért!" } },
+	};
+
+	const auto it = s_eventText.find(eventData.eventIndex);
+	if (it != s_eventText.end())
+		SendNotice((eventData.eventStatus ? it->second.first : it->second.second).c_str());
+
+	if (eventData.eventIndex == BONUS_EVENT)
+	{
+		const DESC_MANAGER::DESC_SET& c_ref_set = DESC_MANAGER::instance().GetClientSet();
+		for (const auto& desc : c_ref_set)
+		{
+			LPCHARACTER ch = desc->GetCharacter();
+			if (!ch)
+				continue;
+			if (eventData.empireFlag != 0 && eventData.empireFlag != ch->GetEmpire())
+				continue;
+
+			ch->ComputePoints();
+		}
+	}
 }
 #endif
 

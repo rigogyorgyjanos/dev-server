@@ -17,6 +17,9 @@
 #include "locale_service.h"
 
 #include "dungeon.h"
+#ifdef ENABLE_12ZI
+#include "zodiac_temple.h"
+#endif
 
 DWORD g_GoldDropTimeLimitValue = 0;
 extern bool DropEvent_CharStone_SetValue(const std::string& name, int value);
@@ -27,7 +30,11 @@ namespace quest
 	using namespace std;
 
 	CQuestManager::CQuestManager()
-		: m_pSelectedDungeon(NULL), m_dwServerTimerArg(0), m_iRunningEventIndex(0), L(NULL), m_bNoSend (false),
+		: m_pSelectedDungeon(NULL),
+#ifdef ENABLE_12ZI
+		m_pSelectedZodiac(NULL),
+#endif
+		m_dwServerTimerArg(0), m_iRunningEventIndex(0), L(NULL), m_bNoSend (false),
 		m_CurrentRunningState(NULL), m_pCurrentCharacter(NULL), m_pCurrentNPCCharacter(NULL), m_pCurrentPartyMember(NULL),
 		m_pCurrentPC(NULL),  m_iCurrentSkin(0), m_bError(false), m_pOtherPCBlockRootPC(NULL)
 	{
@@ -56,6 +63,9 @@ namespace quest
 			return false;
 
 		m_pSelectedDungeon = NULL;
+#ifdef ENABLE_12ZI
+		m_pSelectedZodiac = NULL;
+#endif
 
 		m_mapEventName.insert(TEventNameMap::value_type("click", QUEST_CLICK_EVENT));		// NPC를 클릭
 		m_mapEventName.insert(TEventNameMap::value_type("kill", QUEST_KILL_EVENT));		// Mob을 사냥
@@ -476,6 +486,9 @@ namespace quest
 		m_pCurrentPC = GetPCForce(0);
 		m_pCurrentCharacter = NULL;
 		m_pSelectedDungeon = NULL;
+#ifdef ENABLE_12ZI
+		m_pSelectedZodiac = NULL;
+#endif
 		return m_mapNPC[npc].OnServerTimer(*m_pCurrentPC);
 	}
 
@@ -931,6 +944,9 @@ namespace quest
 		m_pCurrentPC = GetPCForce(pc);
 		m_pCurrentCharacter = pkChr;
 		m_pSelectedDungeon = NULL;
+#ifdef ENABLE_12ZI
+		m_pSelectedZodiac = NULL;
+#endif
 		return (m_pCurrentPC);
 	}
 
@@ -1096,6 +1112,22 @@ namespace quest
 
 		return ch->GetDungeonForce();
 	}
+
+#ifdef ENABLE_12ZI
+	LPZODIAC CQuestManager::GetCurrentZodiac()
+	{
+		LPCHARACTER ch = GetCurrentCharacterPtr();
+
+		if (!ch)
+		{
+			if (m_pSelectedZodiac)
+				return m_pSelectedZodiac;
+			return NULL;
+		}
+
+		return ch->GetZodiacForce();
+	}
+#endif
 
 	void CQuestManager::RegisterQuest(const string & stQuestName, unsigned int idx)
 	{
@@ -1776,7 +1808,14 @@ namespace quest
 	{
 		m_pSelectedDungeon = pDungeon;
 	}
-	
+
+#ifdef ENABLE_12ZI
+	void CQuestManager::SelectZodiac(LPZODIAC pZodiac)
+	{
+		m_pSelectedZodiac = pZodiac;
+	}
+#endif
+
 	bool CQuestManager::PickupItem(unsigned int pc, LPITEM item)
 	{
 		if (test_server)

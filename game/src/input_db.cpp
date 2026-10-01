@@ -2016,6 +2016,7 @@ void CInputDB::EventManager(const char* c_pData)
 
 	if (subIndex == EVENT_MANAGER_LOAD)
 	{
+		const std::vector<TEventManagerData> previouslyActive = chrMngr.GetActiveEvents();
 		chrMngr.ClearEventData();
 
 		const BYTE dayCount = *(BYTE*)c_pData;
@@ -2042,6 +2043,8 @@ void CInputDB::EventManager(const char* c_pData)
 				chrMngr.SetEventData(dayIndex, dayEvents);
 			}
 		}
+
+		chrMngr.NotifyEventStatusChanges(previouslyActive);
 
 		if (updateFromGameMaster)
 			chrMngr.UpdateAllPlayerEventData();

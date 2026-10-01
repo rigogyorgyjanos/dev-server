@@ -89,6 +89,15 @@ typedef DebugPtr<CParty> LPPARTY;
 typedef CParty* LPPARTY;
 #endif
 
+#ifdef ENABLE_12ZI
+class CZodiac;
+#ifdef USE_DEBUG_PTR
+typedef DebugPtr<CZodiac> LPZODIAC;
+#else
+typedef CZodiac* LPZODIAC;
+#endif
+#endif
+
 typedef struct pixel_position_s
 {
 	INT x, y, z;

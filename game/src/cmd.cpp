@@ -121,6 +121,7 @@ ACMD(do_messenger_auth);
 #ifdef ENABLE_MAINTENANCE_SYSTEM
 ACMD(do_maintenance);
 ACMD(do_maintenance_text);
+ACMD(do_player_login);
 #endif
 
 ACMD(do_getqf);
@@ -268,6 +269,16 @@ ACMD(do_event_manager);
 
 // ACMD(do_remove_affect);
 
+#ifdef ENABLE_12ZI
+ACMD(do_cz_check_box);
+ACMD(do_cz_reward);
+ACMD(do_revivedialog);
+ACMD(do_revive);
+ACMD(do_jump_floor);
+ACMD(do_next_floor);
+ACMD(do_cz_complete_reward);
+#endif
+
 struct command_info cmd_info[] =
 {
 	{ "!RESERVED!",	NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}, /* 반드시 이 것이 처음이어야 한다. */
@@ -389,6 +400,7 @@ struct command_info cmd_info[] =
 #ifdef ENABLE_MAINTENANCE_SYSTEM
 	{ "maintenance",		do_maintenance,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "m_text",		do_maintenance_text,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
+	{ "player_login",		do_player_login,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 #endif
 
 	{ "getqf",		do_getqf,		0,			POS_DEAD,	GM_LOW_WIZARD	},
@@ -569,6 +581,16 @@ struct command_info cmd_info[] =
 #endif
 #ifdef ENABLE_EVENT_MANAGER
 	{ "event_manager",	do_event_manager,		0,		POS_DEAD,	GM_PLAYER },
+#endif
+
+#ifdef ENABLE_12ZI
+	{ "cz_check_box",			do_cz_check_box,		0,			POS_DEAD,	GM_PLAYER	},
+	{ "cz_reward",				do_cz_reward,			0,			POS_DEAD,	GM_PLAYER	},
+	{ "revive",					do_revive,				0,			POS_DEAD,	GM_PLAYER	},
+	{ "revivedialog",			do_revivedialog,		0,			POS_DEAD,	GM_PLAYER	},
+	{ "jumpfloor",				do_jump_floor,			0,			POS_DEAD,	GM_PLAYER	},
+	{ "nextfloor",				do_next_floor,			0,			POS_DEAD,	GM_PLAYER	},
+	{ "cz_complete_reward",		do_cz_complete_reward,	0,			POS_DEAD,	GM_IMPLEMENTOR	},
 #endif
 
 	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}  /* 반드시 이 것이 마지막이어야 한다. */

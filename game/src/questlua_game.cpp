@@ -200,6 +200,16 @@ namespace quest
 		return 0;
 	}
 	
+#ifdef ENABLE_12ZI
+	int game_open_zodiac_temple_table(lua_State* L)
+	{
+		CQuestManager& q = CQuestManager::instance();
+		LPCHARACTER ch = q.GetCurrentCharacterPtr();
+		ch->ZTT_LOAD_INFO();
+		return 0;
+	}
+#endif
+
 	void RegisterGameFunctionTable()
 	{
 		luaL_reg game_functions[] = 
@@ -216,6 +226,9 @@ namespace quest
 			{ "open_web_mall",				game_web_mall					},
 #ifdef ENABLE_EVENT_MANAGER
 			{ "check_event",				game_check_event				},
+#endif
+#ifdef ENABLE_12ZI
+			{ "zodiac_temple_table",		game_open_zodiac_temple_table	},
 #endif
 
 			{ NULL,					NULL				}

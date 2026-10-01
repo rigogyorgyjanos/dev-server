@@ -356,6 +356,7 @@ namespace quest
 
 		DBManager::instance().SendMoneyLog(MONEY_LOG_QUEST, ch->GetPlayerID(), iAmount);
 		ch->PointChange(POINT_GOLD, iAmount, true);
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %d", iAmount); // Drop Info window
 		return 0;
 	}
 
@@ -559,6 +560,10 @@ namespace quest
 		LogManager::instance().QuestRewardLog(pPC->GetCurrentQuestName().c_str(), ch->GetPlayerID(), ch->GetLevel(), dwVnum, icount);
 
 		LPITEM item = ch->AutoGiveItem(dwVnum, icount);
+#ifdef ENABLE_12ZI
+		if (item)
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상자에서 %s 가 %d 개 나왔습니다."), item->GetName(), icount);
+#endif
 
 		if ( dwVnum >= 80003 && dwVnum <= 80007 )
 		{
@@ -1007,6 +1012,8 @@ namespace quest
 		{
 			DBManager::instance().SendMoneyLog(MONEY_LOG_QUEST, ch->GetPlayerID(), gold);
 			ch->PointChange(POINT_GOLD, gold, true);
+			if (gold > 0)
+				ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %d", gold); // Drop Info window
 		}
 
 		return 0;
@@ -2847,6 +2854,69 @@ teleport_area:
 		return 2;
 	}
 
+#ifdef ENABLE_12ZI
+	int pc_set_animasphere(lua_State * L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch)
+			return 0;
+
+		if (!lua_isnumber(L,1))
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+
+		int animasphere = (int)lua_tonumber(L, 1);
+		ch->SetAnimaSphere(animasphere);
+		lua_pushnumber(L, animasphere);
+		return 1;
+	}
+
+	int pc_get_animasphere(lua_State * L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch)
+			return 0;
+
+		lua_pushnumber(L, ch->GetAnimaSphere());
+		return 1;
+	}
+
+	int pc_delete_animasphere(lua_State * L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch)
+			return 0;
+
+		if (ch->GetAnimaSphere() < 12)
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You haven't enough animasphere."));
+			return 0;
+		}
+
+		ch->SetAnimaSphere(-12);
+		return 1;
+	}
+
+	int pc_if_cz_unlimit_enter(lua_State * L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		lua_pushboolean(L, ch->IsAffectFlag(AFF_CZ_UNLIMIT_ENTER));
+		return 1;
+	}
+
+	int pc_sf_cz_unlimit_enter(lua_State * L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if(lua_toboolean(L, 1))
+			ch->AddAffect(AFFECT_CZ_UNLIMIT_ENTER, 0, 0, AFF_CZ_UNLIMIT_ENTER, 10800, 0, 1, 0);
+		else
+			ch->RemoveAffect(AFFECT_CZ_UNLIMIT_ENTER);
+		return 0;
+	}
+#endif
+
 	void RegisterPCFunctionTable()
 	{
 		luaL_reg pc_functions[] = 
@@ -3055,6 +3125,13 @@ teleport_area:
 
 #ifdef __SKILLS_LEVEL_OVER_P__
 			{ "learn_sage_master_skill", pc_learn_sage_master_skill	},
+#endif
+#ifdef ENABLE_12ZI
+			{ "set_animasphere",			pc_set_animasphere		},
+			{ "get_animasphere",			pc_get_animasphere		},
+			{ "delete_animasphere",			pc_delete_animasphere	},
+			{ "is_flag_cz_ulimit_enter",	pc_if_cz_unlimit_enter	},
+			{ "set_flag_cz_ulimit_enter",	pc_sf_cz_unlimit_enter	},
 #endif
 			{ NULL,			NULL			}
 		};

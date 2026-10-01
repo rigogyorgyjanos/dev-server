@@ -42,19 +42,21 @@ MaintenanceManager::~MaintenanceManager()	{	}
 
 EVENTINFO(maintenanceShutdown_event_data)
 {
-	int seconds;
+	long end_time; // absolute get_global_time() moment the maintenance begins
 
 	maintenanceShutdown_event_data()
-		: seconds(0)
+		: end_time(0)
 	{
 	}
 };
 static LPEVENT vegas_maintenance_check = NULL;
 
 /*********
-* When the remaining 10 seconds of time put into reverse count will start the game for all players that the server will be closed 10,9,8 etc. and then the server will automatically stop.
+* How many seconds before the announced moment (the banner reaching 00:00:00) the cores are shut down.
+* 0 = exactly when the banner runs out. The original package used 45 here, which made the server drop
+* 45 seconds before the time the GM typed in.
 */
-#define MAINTENANCE_CHECKTIME_SHUTDOWN	45
+#define MAINTENANCE_CHECKTIME_SHUTDOWN	0
 
 /*********
 * Settings min/max character/second for check in maintenance
@@ -95,8 +97,86 @@ extern const char* maintenance_translate[] = {"---------------------------------
 												"<Technical Maintenance> Reason added: %s",
 												"<Technical Maintenance> It was stopped succes!",
 												"<Syntax> Minimum %u second need for left time!",
-												"<Syntax> Minimum %u second need duration time!"
+												"<Syntax> Minimum %u second need duration time!",
+												"<Technical Maintenance> Could not save the schedule to player.maintenance (see syserr)!",
+												"<Player Login> Syntax: /player_login on | off | status",
+												"<Player Login> Players can log in again.",
+												"<Player Login> Players are locked out now - only GM accounts can log in.",
+												"<Player Login> Could not save the setting - run player_login_setup.sql on the player DB (see syserr)!",
+												"<Player Login> Currently OPEN: players can log in.",
+												"<Player Login> Currently LOCKED: only GM accounts can log in. Use /player_login on to open it."
 											};
+
+/*********
+* player.maintenance holds a single row:
+*   time     - ABSOLUTE moment (get_global_time() scale) the maintenance begins, 0 = nothing scheduled
+*   duration - predicted length of the maintenance in seconds
+*   reason   - banner text ('//' stands for a space)
+* `time` used to be a "seconds left" value that a per-second event kept rewriting. That froze the moment
+* the event stopped (core restart/crash, a second /maintenance orphaning the first event, core lag) and
+* every login then restarted the banner from the frozen value, so it never ran out. An absolute moment
+* cannot freeze: once it lies in the past the row is recognised as stale and cleared.
+*/
+struct TMaintenanceRow
+{
+	long		end_time;
+	long		duration;
+	std::string	reason;
+
+	TMaintenanceRow() : end_time(0), duration(0), reason("no_reason") {}
+};
+
+static bool LoadMaintenanceRow(TMaintenanceRow& rRow)
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT time,duration,reason FROM player.maintenance LIMIT 1"));
+
+	if (!pMsg->Get() || !pMsg->Get()->pSQLResult || pMsg->Get()->uiNumRows == 0)
+		return false;
+
+	MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
+
+	if (!row)
+		return false;
+
+	rRow.end_time = 0;
+	rRow.duration = 0;
+
+	if (row[0])
+		str_to_number(rRow.end_time, row[0]);
+
+	if (row[1])
+		str_to_number(rRow.duration, row[1]);
+
+	rRow.reason = row[2] ? row[2] : "no_reason";
+	return true;
+}
+
+static void ResetMaintenanceRow()
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("UPDATE player.maintenance SET time = 0, duration = 0, reason = 'no_reason'"));
+}
+
+// Writes the schedule and reads it back: the blind UPDATE silently does nothing when the table is empty or
+// the write fails, which would leave the GM believing a maintenance is scheduled when none is.
+static bool SaveMaintenanceSchedule(long lEndTime, long lDuration)
+{
+	{
+		std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("UPDATE player.maintenance SET time = %ld, duration = %ld", lEndTime, lDuration));
+	}
+
+	TMaintenanceRow kRow;
+
+	if (!LoadMaintenanceRow(kRow))
+	{
+		// no row to update - seed the single row the blind UPDATEs elsewhere rely on
+		std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("INSERT INTO player.maintenance (time, duration, reason) VALUES (%ld, %ld, 'no_reason')", lEndTime, lDuration));
+
+		if (!LoadMaintenanceRow(kRow))
+			return false;
+	}
+
+	return kRow.end_time == lEndTime && kRow.duration == lDuration;
+}
 
 EVENTFUNC(maintenanceDown_event)
 {
@@ -105,46 +185,60 @@ EVENTFUNC(maintenanceDown_event)
 	if (info == NULL)
 	{
 		sys_err("maintenanceDown_event> <Factor> Time 0 - Error");
+		vegas_maintenance_check = NULL;
 		return 0;
 	}
 
-	int * pSecondMaintenance = &(info->seconds);
-
-	if (*pSecondMaintenance == MAINTENANCE_CHECKTIME_SHUTDOWN)
-	{
-		char sTime[128];
-		char sDuration[128];
-		char sReason[128];
-
-		snprintf(sTime, sizeof(sTime), "UPDATE player.maintenance SET time = %u", 0);
-		snprintf(sDuration, sizeof(sDuration), "UPDATE player.maintenance SET duration = %u", 0);
-		snprintf(sReason, sizeof(sReason), "UPDATE player.maintenance SET reason = 'no_reason'");
-
-		std::unique_ptr<SQLMsg> pTime(DBManager::instance().DirectQuery(sTime));
-		std::unique_ptr<SQLMsg> pDuration(DBManager::instance().DirectQuery(sDuration));
-		std::unique_ptr<SQLMsg> pReason(DBManager::instance().DirectQuery(sReason));
-
-		TPacketGGShutdown p;
-		p.bHeader = HEADER_GG_SHUTDOWN;
-		P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGShutdown));
-		g_bNoMoreClient = true;
-		Shutdown(MAINTENANCE_CHECKTIME_SHUTDOWN);
-	}
-	else
-	{
-		char sTime[128];
-		snprintf(sTime, sizeof(sTime), "UPDATE player.maintenance SET time = %u", *pSecondMaintenance);
-		std::unique_ptr<SQLMsg> pmsg(DBManager::instance().DirectQuery(sTime));
-
-		--*pSecondMaintenance;
+	// Wall-clock based on purpose: counting pulses falls behind the banner (which runs on the client's
+	// clock) whenever the core lags.
+	if (info->end_time - get_global_time() > MAINTENANCE_CHECKTIME_SHUTDOWN)
 		return passes_per_sec;
+
+	// The schedule may have been cancelled or replaced from another core since this event was armed - the
+	// table is the source of truth, so look before pulling the plug.
+	TMaintenanceRow kRow;
+
+	if (LoadMaintenanceRow(kRow) && kRow.end_time != info->end_time)
+	{
+		if (kRow.end_time > get_global_time() && kRow.duration > 0)
+		{
+			info->end_time = kRow.end_time;
+			return passes_per_sec;
+		}
+
+		vegas_maintenance_check = NULL;
+		return 0;
 	}
+
+	ResetMaintenanceRow();
+
+	// The server is going down for maintenance: after the restart normal players stay out until a GM opens
+	// the gate with /player_login on (GM accounts can always log in).
+	MaintenanceManager::instance().SetPlayerLoginOpen(false);
+
+	TPacketGGShutdown p;
+	p.bHeader = HEADER_GG_SHUTDOWN;
+	P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGShutdown));
+	g_bNoMoreClient = true;
+	Shutdown(MAINTENANCE_CHECKTIME_SHUTDOWN);
 
 	vegas_maintenance_check = NULL;
 	return 0;
 }
 
-void StartMaintenance(LPCHARACTER ch, int iSec)
+// Only ever one countdown: an earlier one that is still running can no longer be cancelled once its
+// pointer is overwritten, and would keep firing (and shut the core down) on the old schedule.
+static void ArmMaintenanceEvent(long lEndTime)
+{
+	if (vegas_maintenance_check)
+		event_cancel(&vegas_maintenance_check);
+
+	maintenanceShutdown_event_data* info = AllocEventInfo<maintenanceShutdown_event_data>();
+	info->end_time = lEndTime;
+	vegas_maintenance_check = event_create(maintenanceDown_event, info, 1);
+}
+
+void StartMaintenance(long lEndTime)
 {
 	if (g_bNoMoreClient)
 	{
@@ -154,32 +248,19 @@ void StartMaintenance(LPCHARACTER ch, int iSec)
 
 	CWarMapManager::instance().OnShutdown();
 
-	maintenanceShutdown_event_data* info = AllocEventInfo<maintenanceShutdown_event_data>();
-	info->seconds = iSec;
-	vegas_maintenance_check = event_create(maintenanceDown_event, info, 1);
+	ArmMaintenanceEvent(lEndTime);
 }
 
 void MaintenanceManager::Send_DisableSecurity(LPCHARACTER ch)
 {
 	if (vegas_maintenance_check)
-	{
 		event_cancel(&vegas_maintenance_check);
-		vegas_maintenance_check = NULL;
-	}
-		char sTime[128];
-		char sDuration[128];
-		char sReason[128];
 
-		snprintf(sTime, sizeof(sTime), "UPDATE player.maintenance SET time = %u", 0);
-		snprintf(sDuration, sizeof(sDuration), "UPDATE player.maintenance SET duration = %u", 0);
-		snprintf(sReason, sizeof(sReason), "UPDATE player.maintenance SET reason = 'no_reason'");
+	ResetMaintenanceRow();
 
-		std::unique_ptr<SQLMsg> pTime(DBManager::instance().DirectQuery(sTime));
-		std::unique_ptr<SQLMsg> pDuration(DBManager::instance().DirectQuery(sDuration));
-		std::unique_ptr<SQLMsg> pReason(DBManager::instance().DirectQuery(sReason));
-
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[14]));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[14]));
 }
+
 void MaintenanceManager::Send_ActiveMaintenance(LPCHARACTER ch, long int time_maintenance, long int duration_maintenance)
 {
 	if (NULL == ch)
@@ -233,13 +314,18 @@ void MaintenanceManager::Send_ActiveMaintenance(LPCHARACTER ch, long int time_ma
 	}
 	else
 	{
-		char sDuration[128];
-		snprintf(sDuration, sizeof(sDuration), "UPDATE player.maintenance SET duration = %u", duration_maintenance);
-		std::unique_ptr<SQLMsg> pDuration(DBManager::instance().DirectQuery(sDuration));
+		const long lEndTime = get_global_time() + time_maintenance;
+
+		if (!SaveMaintenanceSchedule(lEndTime, duration_maintenance))
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[0]));
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT(maintenance_translate[17]));
+			return;
+		}
 
 		global_time_maintenance = time_maintenance;
 
-		StartMaintenance(ch, time_maintenance);
+		StartMaintenance(lEndTime);
 
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[0]));
 		ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT(maintenance_translate[5]), time_maintenance);
@@ -292,7 +378,7 @@ void MaintenanceManager::Send_Text(LPCHARACTER ch, const char* reason)
 
 			char sReason[512];
 			snprintf(sReason, sizeof(sReason), "UPDATE player.maintenance SET `reason` = replace(\"%s\",' ','//')", szEscapedReason);
-			std::unique_ptr<SQLMsg> reasonReplace(DBManager::instance().DirectQuery(sReason));
+			std::unique_ptr<SQLMsg> reasonReplace(DBManager::instance().DirectQuery("%s", sReason));
 
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[0]));
 			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT(maintenance_translate[12]));
@@ -307,17 +393,18 @@ void MaintenanceManager::Send_UpdateBinary(LPCHARACTER ch)
 	if (!ch->IsPC())
 		return;
 
-	if (ch)
-	{
-		SQLMsg * pMsg = DBManager::instance().DirectQuery("SELECT time,duration,reason from player.maintenance");
+	TMaintenanceRow kRow;
 
-		if (pMsg->Get()->uiNumRows > 0)
-		{
-			MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
-			ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_Update_Maintenance %s %s %s", row[0], row[1], row[2]);
-			delete pMsg;
-		}
-	}
+	if (!LoadMaintenanceRow(kRow))
+		return;
+
+	// The client counts down from what it is told here, so hand it the time that is really left now.
+	const long lLeft = kRow.end_time - get_global_time();
+
+	if (lLeft <= 0 || kRow.duration <= 0)
+		return;
+
+	ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_Update_Maintenance %ld %ld %s", lLeft, kRow.duration, kRow.reason.c_str());
 }
 
 EVENTINFO(maintenanceLoginCheck_event_data)
@@ -356,23 +443,116 @@ void MaintenanceManager::Send_CheckTable(LPCHARACTER ch)
 	if (!ch->IsPC())
 		return;
 
-	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT time,duration FROM player.maintenance LIMIT 1"));
+	// A GM who logs in while the gate is shut is told so - forgetting to open it after the maintenance
+	// would otherwise only show up as players complaining.
+	if (ch->GetGMLevel() > GM_PLAYER && !IsPlayerLoginOpen())
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[23]));
 
-	if (pMsg->Get()->uiNumRows == 0)
+	TMaintenanceRow kRow;
+
+	if (!LoadMaintenanceRow(kRow))
 		return;
+
+	if (kRow.end_time <= 0 && kRow.duration <= 0)
+		return;
+
+	if (kRow.end_time <= get_global_time() || kRow.duration <= 0)
+	{
+		// Leftover of a maintenance whose time is up (or of a row written when `time` still meant "seconds
+		// left"): drop it, otherwise every login would show a banner for something that is long over.
+		ResetMaintenanceRow();
+		return;
+	}
+
+	// The countdown that shuts the core down lives in memory only - after a core restart it is gone while
+	// the schedule is still in the table, so pick it up again from here.
+	if (!vegas_maintenance_check)
+		ArmMaintenanceEvent(kRow.end_time);
+
+	maintenanceLoginCheck_event_data* info = AllocEventInfo<maintenanceLoginCheck_event_data>();
+	info->dwPID = ch->GetPlayerID();
+	event_create(maintenanceLoginCheck_event, info, MAINTENANCE_LOGIN_CHECK_DELAY * passes_per_sec);
+}
+
+/*********
+* Login gate for normal players. The state lives in player.login_gate (one row, players_open 1/0) so every
+* core - and the auth server - sees the same answer at once and a restart keeps it. The maintenance
+* shutdown shuts the gate; `/player_login on` opens it again. It is only checked on a fresh login (auth
+* server), never when an already logged-in player warps to a map served by another core.
+*/
+
+// Fails OPEN when the table is missing or unreadable, so a broken setup can never lock everybody out.
+bool MaintenanceManager::IsPlayerLoginOpen()
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT players_open FROM player.login_gate WHERE id = 1"));
+
+	if (pMsg->uiSQLErrno || !pMsg->Get() || !pMsg->Get()->pSQLResult || pMsg->Get()->uiNumRows == 0)
+		return true;
 
 	MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 
-	int sTime = 0;
-	int sDuration = 0;
+	return !row || !row[0] || atoi(row[0]) != 0;
+}
 
-	str_to_number(sTime, row[0]);
-	str_to_number(sDuration, row[1]);
+bool MaintenanceManager::SetPlayerLoginOpen(bool bOpen)
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("INSERT INTO player.login_gate (id, players_open) VALUES (1, %d) ON DUPLICATE KEY UPDATE players_open = VALUES(players_open)", bOpen ? 1 : 0));
 
-	if (sTime > 0 && sDuration > 0)
+	return pMsg->uiSQLErrno == 0;
+}
+
+// Same idea as the GM check at character select, but by account: the auth server has no GM list in memory
+// (it never boots), so ask common.gmlist directly. Only entries the DB core would load as a GM count.
+bool MaintenanceManager::IsAccountAllowed(const char* c_pszLogin)
+{
+	if (IsPlayerLoginOpen())
+		return true;
+
+	char szLogin[LOGIN_MAX_LEN * 2 + 1];
+	DBManager::instance().EscapeString(szLogin, sizeof(szLogin), c_pszLogin, strlen(c_pszLogin));
+
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT 1 FROM common.gmlist WHERE LOWER(mAccount) = LOWER('%s') AND mAuthority IN ('IMPLEMENTOR','GOD','HIGH_WIZARD','LOW_WIZARD','WIZARD') LIMIT 1", szLogin));
+
+	// can't tell (no access to common.gmlist?) - let them in rather than lock the GMs out of their own server
+	if (pMsg->uiSQLErrno)
 	{
-		maintenanceLoginCheck_event_data* info = AllocEventInfo<maintenanceLoginCheck_event_data>();
-		info->dwPID = ch->GetPlayerID();
-		event_create(maintenanceLoginCheck_event, info, MAINTENANCE_LOGIN_CHECK_DELAY * passes_per_sec);
+		sys_err("MaintenanceManager::IsAccountAllowed> cannot read common.gmlist, letting %s in", c_pszLogin);
+		return true;
+	}
+
+	return pMsg->Get() && pMsg->Get()->uiNumRows > 0;
+}
+
+void MaintenanceManager::Send_PlayerLogin(LPCHARACTER ch, const char* c_pszArg)
+{
+	if (NULL == ch)
+		return;
+
+	if (!ch->IsPC())
+		return;
+
+	if (!strcasecmp(c_pszArg, "on") || !strcasecmp(c_pszArg, "off"))
+	{
+		const bool bOpen = !strcasecmp(c_pszArg, "on");
+
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[0]));
+
+		if (!SetPlayerLoginOpen(bOpen))
+		{
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT(maintenance_translate[21]));
+			return;
+		}
+
+		ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT(maintenance_translate[bOpen ? 19 : 20]));
+	}
+	else if (!*c_pszArg || !strcasecmp(c_pszArg, "status"))
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[0]));
+		ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT(maintenance_translate[IsPlayerLoginOpen() ? 22 : 23]));
+	}
+	else
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT(maintenance_translate[0]));
+		ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT(maintenance_translate[18]));
 	}
 }

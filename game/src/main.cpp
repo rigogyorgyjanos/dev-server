@@ -33,6 +33,9 @@
 #include "p2p.h"
 #include "guild_manager.h"
 #include "dungeon.h"
+#ifdef ENABLE_12ZI
+#include "zodiac_temple.h"
+#endif
 #include "cmd.h"
 #include "refine.h"
 #include "banword.h"
@@ -593,6 +596,9 @@ int main(int argc, char **argv)
 	CGuildManager	guild_manager;
 	CGuildMarkManager mark_manager;
 	CDungeonManager	dungeon_manager;
+#ifdef ENABLE_12ZI
+	CZodiacManager	zodiac_manager;
+#endif
 	CRefineManager	refine_manager;
 	CBanwordManager	banword_manager;
 	CPrivManager	priv_manager;
@@ -651,6 +657,10 @@ int main(int argc, char **argv)
 	OXEvent_manager.Initialize();
 	if (speed_server)
 		CSpeedServerManager::instance().Initialize();
+
+#ifdef ENABLE_SERVERTIME_PORTAL_SPAWN
+	zodiac_manager.Initialize();
+#endif
 
 	Cube_init();
 	Blend_Item_init();

@@ -94,11 +94,131 @@ OBJDIR/BattleArena.o: char_manager.h ../../common/stl.h ../../common/length.h
 OBJDIR/BattleArena.o: item.h entity.h item_manager.h vid.h char.h FSM.h
 OBJDIR/BattleArena.o: state.h horse_rider.h cmd.h affect.h affect_flag.h
 OBJDIR/BattleArena.o: cube.h mining.h packet.h sectree_manager.h sectree.h
-OBJDIR/BattleArena.o: regen.h dungeon.h questmanager.h questnpc.h questpc.h
-OBJDIR/BattleArena.o: quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/BattleArena.o: regen.h dungeon.h zodiac_temple.h questmanager.h
+OBJDIR/BattleArena.o: questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/BattleArena.o: ../../liblua/include/lua.h
 OBJDIR/BattleArena.o: ../../liblua/include/lauxlib.h
 OBJDIR/BattleArena.o: ../../liblua/include/lualib.h
 OBJDIR/FSM.o: FSM.h state.h
+OBJDIR/FarmSessionManager.o: stdafx.h debug_allocator.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/stdafx.h
+OBJDIR/FarmSessionManager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_null.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_types.h
+OBJDIR/FarmSessionManager.o: /usr/include/machine/_types.h
+OBJDIR/FarmSessionManager.o: /usr/include/x86/_types.h
+OBJDIR/FarmSessionManager.o: /usr/include/machine/_limits.h
+OBJDIR/FarmSessionManager.o: /usr/include/x86/_limits.h /usr/include/string.h
+OBJDIR/FarmSessionManager.o: /usr/include/strings.h
+OBJDIR/FarmSessionManager.o: /usr/include/xlocale/_strings.h
+OBJDIR/FarmSessionManager.o: /usr/include/xlocale/_string.h
+OBJDIR/FarmSessionManager.o: /usr/include/stdarg.h /usr/include/x86/stdarg.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_stdarg.h /usr/include/errno.h
+OBJDIR/FarmSessionManager.o: /usr/include/stdlib.h /usr/include/unistd.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/types.h
+OBJDIR/FarmSessionManager.o: /usr/include/machine/endian.h
+OBJDIR/FarmSessionManager.o: /usr/include/x86/endian.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_endian.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_stdint.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/select.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_sigset.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_timeval.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/timespec.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_timespec.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
+OBJDIR/FarmSessionManager.o: /usr/include/assert.h /usr/include/ctype.h
+OBJDIR/FarmSessionManager.o: /usr/include/_ctype.h /usr/include/runetype.h
+OBJDIR/FarmSessionManager.o: /usr/include/xlocale/_ctype.h
+OBJDIR/FarmSessionManager.o: /usr/include/limits.h /usr/include/sys/limits.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/syslimits.h
+OBJDIR/FarmSessionManager.o: /usr/include/dirent.h /usr/include/sys/dirent.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/time.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_clock_id.h /usr/include/time.h
+OBJDIR/FarmSessionManager.o: /usr/include/xlocale/_time.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/stat.h
+OBJDIR/FarmSessionManager.o: /usr/include/netinet/in.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/FarmSessionManager.o: /usr/include/netinet6/in6.h
+OBJDIR/FarmSessionManager.o: /usr/include/arpa/inet.h /usr/include/netdb.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/socket.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_iovec.h
+OBJDIR/FarmSessionManager.o: /usr/include/machine/_align.h
+OBJDIR/FarmSessionManager.o: /usr/include/x86/_align.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/signal.h
+OBJDIR/FarmSessionManager.o: /usr/include/machine/signal.h
+OBJDIR/FarmSessionManager.o: /usr/include/x86/signal.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/wait.h /usr/include/pthread.h
+OBJDIR/FarmSessionManager.o: /usr/include/sched.h /usr/include/sys/sched.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/cpuset.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_cpuset.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_bitset.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/bitset.h
+OBJDIR/FarmSessionManager.o: /usr/include/semaphore.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/_umtx.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/event.h
+OBJDIR/FarmSessionManager.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/heart.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/fdwatch.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/socket.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/kstbl.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/hangul.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/buffer.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/signal.h log.h
+OBJDIR/FarmSessionManager.o: ../../libsql/AsyncSQL.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/stdafx.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/log.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/mysql.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/FarmSessionManager.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/FarmSessionManager.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/FarmSessionManager.o: any_function.inc ../../libthecore/include/main.h
+OBJDIR/FarmSessionManager.o: utils.h /usr/include/math.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/crypt.h
+OBJDIR/FarmSessionManager.o: ../../libthecore/include/memcpy.h
+OBJDIR/FarmSessionManager.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/FarmSessionManager.o: ../../common/service.h /usr/include/float.h
+OBJDIR/FarmSessionManager.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/FarmSessionManager.o: /usr/include/stddef.h
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/FarmSessionManager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/FarmSessionManager.o: FarmSessionManager.h /usr/include/stdint.h
+OBJDIR/FarmSessionManager.o: /usr/include/machine/_stdint.h
+OBJDIR/FarmSessionManager.o: /usr/include/x86/_stdint.h char.h
+OBJDIR/FarmSessionManager.o: ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/FarmSessionManager.o: horse_rider.h constants.h ../../common/tables.h
+OBJDIR/FarmSessionManager.o: ../../common/length.h ../../common/service.h
+OBJDIR/FarmSessionManager.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/FarmSessionManager.o: affect_flag.h cube.h mining.h packet.h
+OBJDIR/FarmSessionManager.o: char_manager.h ../../common/length.h item.h
+OBJDIR/FarmSessionManager.o: item_manager.h config.h desc.h input.h
+OBJDIR/FarmSessionManager.o: packet_info.h cipher.h
+OBJDIR/FarmSessionManager.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/FarmSessionManager.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/FarmSessionManager.o: ../../../extern/include/cryptopp/trap.h p2p.h
 OBJDIR/MarkConvert.o: stdafx.h debug_allocator.h
 OBJDIR/MarkConvert.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/MarkConvert.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -1375,7 +1495,8 @@ OBJDIR/char.o: ../../common/VnumHelper.h char.h ../../common/stl.h entity.h
 OBJDIR/char.o: FSM.h state.h horse_rider.h constants.h ../../common/tables.h
 OBJDIR/char.o: ../../common/length.h ../../common/service.h
 OBJDIR/char.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/char.o: cube.h mining.h packet.h config.h crc32.h char_manager.h
+OBJDIR/char.o: cube.h mining.h packet.h zodiac_temple.h dungeon.h
+OBJDIR/char.o: sectree_manager.h sectree.h config.h crc32.h char_manager.h
 OBJDIR/char.o: ../../common/length.h item.h item_manager.h desc_client.h
 OBJDIR/char.o: desc.h input.h packet_info.h cipher.h
 OBJDIR/char.o: ../../../extern/include/cryptopp/cryptlib.h
@@ -1384,18 +1505,19 @@ OBJDIR/char.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char.o: /usr/include/x86/_stdint.h
 OBJDIR/char.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/char.o: buffer_manager.h motion.h ../../common/d3dtype.h vector.h
-OBJDIR/char.o: fishing.h exchange.h battle.h shop.h shop_manager.h safebox.h
-OBJDIR/char.o: regen.h dungeon.h sectree_manager.h sectree.h pvp.h party.h
-OBJDIR/char.o: start_position.h locale_service.h questmanager.h questnpc.h
-OBJDIR/char.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
-OBJDIR/char.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
-OBJDIR/char.o: p2p.h guild.h skill.h ../../libpoly/Poly.h
-OBJDIR/char.o: ../../libpoly/SymTable.h guild_manager.h messenger_manager.h
-OBJDIR/char.o: db.h unique_item.h priv_manager.h war_map.h xmas_event.h
-OBJDIR/char.o: banword.h target.h wedding.h marriage.h mob_manager.h
-OBJDIR/char.o: monarch.h castle.h arena.h dev_log.h horsename_manager.h gm.h
-OBJDIR/char.o: map_location.h BlueDragon_Binder.h skill_power.h
-OBJDIR/char.o: buff_on_attributes.h PetSystem.h DragonSoul.h
+OBJDIR/char.o: fishing.h exchange.h battle.h shop.h shop_manager.h
+OBJDIR/char.o: offline_shop.h offlineshop_manager.h safebox.h regen.h pvp.h
+OBJDIR/char.o: FarmSessionManager.h party.h start_position.h locale_service.h
+OBJDIR/char.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/char.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
+OBJDIR/char.o: ../../liblua/include/lualib.h p2p.h guild.h skill.h
+OBJDIR/char.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h guild_manager.h
+OBJDIR/char.o: messenger_manager.h db.h unique_item.h priv_manager.h
+OBJDIR/char.o: war_map.h xmas_event.h banword.h target.h wedding.h marriage.h
+OBJDIR/char.o: mob_manager.h monarch.h castle.h arena.h dev_log.h
+OBJDIR/char.o: horsename_manager.h gm.h map_location.h BlueDragon_Binder.h
+OBJDIR/char.o: skill_power.h buff_on_attributes.h PetSystem.h DragonSoul.h
+OBJDIR/char.o: switchbot.h
 OBJDIR/char_affect.o: stdafx.h debug_allocator.h
 OBJDIR/char_affect.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/char_affect.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -1599,12 +1721,13 @@ OBJDIR/char_battle.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char_battle.o: /usr/include/x86/_stdint.h
 OBJDIR/char_battle.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/char_battle.o: ../../common/stl.h ../../common/length.h char_manager.h
-OBJDIR/char_battle.o: item.h entity.h item_manager.h vid.h mob_manager.h
+OBJDIR/char_battle.o: item.h entity.h item_manager.h vid.h zodiac_temple.h
+OBJDIR/char_battle.o: dungeon.h sectree_manager.h sectree.h mob_manager.h
 OBJDIR/char_battle.o: battle.h char.h FSM.h state.h horse_rider.h cmd.h
-OBJDIR/char_battle.o: affect.h affect_flag.h cube.h mining.h pvp.h skill.h
-OBJDIR/char_battle.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
-OBJDIR/char_battle.o: start_position.h locale_service.h profiler.h dungeon.h
-OBJDIR/char_battle.o: sectree_manager.h sectree.h unique_item.h
+OBJDIR/char_battle.o: affect.h affect_flag.h cube.h mining.h pvp.h
+OBJDIR/char_battle.o: FarmSessionManager.h skill.h ../../libpoly/Poly.h
+OBJDIR/char_battle.o: ../../libpoly/SymTable.h start_position.h
+OBJDIR/char_battle.o: locale_service.h profiler.h unique_item.h
 OBJDIR/char_battle.o: priv_manager.h db.h vector.h marriage.h arena.h
 OBJDIR/char_battle.o: ../../liblua/include/lua.h regen.h monarch.h exchange.h
 OBJDIR/char_battle.o: shop_manager.h castle.h dev_log.h ani.h BattleArena.h
@@ -1918,11 +2041,11 @@ OBJDIR/char_item.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_item.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char_item.o: /usr/include/x86/_stdint.h
 OBJDIR/char_item.o: ../../../extern/include/cryptopp/trap.h desc_client.h
-OBJDIR/char_item.o: desc_manager.h skill.h ../../libpoly/Poly.h
-OBJDIR/char_item.o: ../../libpoly/SymTable.h start_position.h
-OBJDIR/char_item.o: locale_service.h mob_manager.h db.h vector.h
-OBJDIR/char_item.o: buffer_manager.h questmanager.h questnpc.h questpc.h
-OBJDIR/char_item.o: quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/char_item.o: desc_manager.h FarmSessionManager.h skill.h
+OBJDIR/char_item.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/char_item.o: start_position.h locale_service.h mob_manager.h db.h
+OBJDIR/char_item.o: vector.h buffer_manager.h questmanager.h questnpc.h
+OBJDIR/char_item.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/char_item.o: ../../liblua/include/lauxlib.h
 OBJDIR/char_item.o: ../../liblua/include/lualib.h fishing.h party.h dungeon.h
 OBJDIR/char_item.o: sectree_manager.h sectree.h refine.h unique_item.h
@@ -1930,7 +2053,7 @@ OBJDIR/char_item.o: war_map.h guild.h xmas_event.h marriage.h monarch.h
 OBJDIR/char_item.o: polymorph.h blend_item.h castle.h BattleArena.h arena.h
 OBJDIR/char_item.o: dev_log.h threeway_war.h safebox.h shop.h
 OBJDIR/char_item.o: ../../common/VnumHelper.h DragonSoul.h
-OBJDIR/char_item.o: buff_on_attributes.h belt_inventory_helper.h
+OBJDIR/char_item.o: buff_on_attributes.h belt_inventory_helper.h switchbot.h
 OBJDIR/char_manager.o: stdafx.h debug_allocator.h
 OBJDIR/char_manager.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/char_manager.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -2034,9 +2157,10 @@ OBJDIR/char_manager.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/char_manager.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
 OBJDIR/char_manager.o: cube.h mining.h char_manager.h ../../common/length.h
 OBJDIR/char_manager.o: item.h item_manager.h mob_manager.h party.h regen.h
-OBJDIR/char_manager.o: dungeon.h sectree_manager.h sectree.h p2p.h db.h
-OBJDIR/char_manager.o: xmas_event.h questmanager.h questnpc.h questpc.h
-OBJDIR/char_manager.o: quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/char_manager.o: dungeon.h sectree_manager.h sectree.h zodiac_temple.h
+OBJDIR/char_manager.o: p2p.h db.h xmas_event.h questmanager.h questnpc.h
+OBJDIR/char_manager.o: questpc.h quest.h lua_incl.h
+OBJDIR/char_manager.o: ../../liblua/include/lua.h
 OBJDIR/char_manager.o: ../../liblua/include/lauxlib.h
 OBJDIR/char_manager.o: ../../liblua/include/lualib.h questlua.h
 OBJDIR/char_manager.o: buffer_manager.h locale_service.h
@@ -2063,6 +2187,7 @@ OBJDIR/char_manager.o: ../../../extern/include/boost/bind/bind_cc.hpp
 OBJDIR/char_manager.o: ../../../extern/include/boost/bind/bind_mf_cc.hpp
 OBJDIR/char_manager.o: ../../../extern/include/boost/bind/bind_mf2_cc.hpp
 OBJDIR/char_manager.o: ../../../extern/include/boost/bind/placeholders.hpp
+OBJDIR/char_manager.o: desc_client.h desc_manager.h
 OBJDIR/char_quickslot.o: stdafx.h debug_allocator.h
 OBJDIR/char_quickslot.o: ../../libthecore/include/stdafx.h
 OBJDIR/char_quickslot.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -2358,7 +2483,7 @@ OBJDIR/char_skill.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/char_skill.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/char_skill.o: /usr/include/x86/_stdint.h
 OBJDIR/char_skill.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
-OBJDIR/char_skill.o: sectree_manager.h sectree.h mob_manager.h
+OBJDIR/char_skill.o: desc_client.h sectree_manager.h sectree.h mob_manager.h
 OBJDIR/char_skill.o: start_position.h locale_service.h party.h
 OBJDIR/char_skill.o: buffer_manager.h guild.h skill.h ../../libpoly/Poly.h
 OBJDIR/char_skill.o: ../../libpoly/SymTable.h unique_item.h questmanager.h
@@ -2457,13 +2582,14 @@ OBJDIR/char_state.o: ../../common/service.h ../../common/item_length.h cmd.h
 OBJDIR/char_state.o: vid.h affect.h affect_flag.h cube.h mining.h packet.h
 OBJDIR/char_state.o: battle.h char_manager.h ../../common/length.h item.h
 OBJDIR/char_state.o: item_manager.h motion.h ../../common/d3dtype.h party.h
+OBJDIR/char_state.o: zodiac_temple.h dungeon.h sectree_manager.h sectree.h
 OBJDIR/char_state.o: buffer_manager.h questmanager.h questnpc.h questpc.h
 OBJDIR/char_state.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/char_state.o: ../../liblua/include/lauxlib.h
 OBJDIR/char_state.o: ../../liblua/include/lualib.h p2p.h input.h
-OBJDIR/char_state.o: packet_info.h mob_manager.h exchange.h sectree_manager.h
-OBJDIR/char_state.o: sectree.h xmas_event.h guild_manager.h war_map.h guild.h
-OBJDIR/char_state.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/char_state.o: packet_info.h mob_manager.h exchange.h xmas_event.h
+OBJDIR/char_state.o: guild_manager.h war_map.h guild.h skill.h
+OBJDIR/char_state.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/char_state.o: locale_service.h BlueDragon.h ../../common/VnumHelper.h
 OBJDIR/PetSystem.o: stdafx.h debug_allocator.h
 OBJDIR/PetSystem.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
@@ -2840,17 +2966,18 @@ OBJDIR/cmd_general.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/cmd_general.o: ../../common/stl.h ../../common/length.h char.h
 OBJDIR/cmd_general.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
 OBJDIR/cmd_general.o: affect.h affect_flag.h cube.h mining.h char_manager.h
-OBJDIR/cmd_general.o: item.h item_manager.h motion.h ../../common/d3dtype.h
-OBJDIR/cmd_general.o: pvp.h start_position.h locale_service.h party.h
-OBJDIR/cmd_general.o: guild_manager.h p2p.h dungeon.h sectree_manager.h
-OBJDIR/cmd_general.o: sectree.h messenger_manager.h db.h war_map.h guild.h
-OBJDIR/cmd_general.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/cmd_general.o: item.h item_manager.h zodiac_temple.h dungeon.h
+OBJDIR/cmd_general.o: sectree_manager.h sectree.h motion.h
+OBJDIR/cmd_general.o: ../../common/d3dtype.h pvp.h start_position.h
+OBJDIR/cmd_general.o: locale_service.h party.h guild_manager.h p2p.h
+OBJDIR/cmd_general.o: messenger_manager.h db.h war_map.h guild.h skill.h
+OBJDIR/cmd_general.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/cmd_general.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/cmd_general.o: ../../liblua/include/lua.h
 OBJDIR/cmd_general.o: ../../liblua/include/lauxlib.h
 OBJDIR/cmd_general.o: ../../liblua/include/lualib.h monarch.h mob_manager.h
 OBJDIR/cmd_general.o: dev_log.h arena.h buffer_manager.h unique_item.h
-OBJDIR/cmd_general.o: threeway_war.h ../../common/VnumHelper.h
+OBJDIR/cmd_general.o: threeway_war.h maintenance.h ../../common/VnumHelper.h
 OBJDIR/cmd_gm.o: stdafx.h debug_allocator.h ../../libthecore/include/stdafx.h
 OBJDIR/cmd_gm.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 OBJDIR/cmd_gm.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -2945,15 +3072,16 @@ OBJDIR/cmd_gm.o: ../../common/stl.h ../../common/length.h char.h entity.h
 OBJDIR/cmd_gm.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
 OBJDIR/cmd_gm.o: affect_flag.h cube.h mining.h char_manager.h item.h
 OBJDIR/cmd_gm.o: item_manager.h sectree_manager.h sectree.h mob_manager.h
-OBJDIR/cmd_gm.o: regen.h dungeon.h guild.h skill.h ../../libpoly/Poly.h
-OBJDIR/cmd_gm.o: ../../libpoly/SymTable.h guild_manager.h p2p.h
-OBJDIR/cmd_gm.o: buffer_manager.h fishing.h questmanager.h questnpc.h
-OBJDIR/cmd_gm.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
-OBJDIR/cmd_gm.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
-OBJDIR/cmd_gm.o: vector.h db.h priv_manager.h building.h
-OBJDIR/cmd_gm.o: ../../common/building.h battle.h arena.h start_position.h
-OBJDIR/cmd_gm.o: locale_service.h party.h monarch.h castle.h BattleArena.h
-OBJDIR/cmd_gm.o: xmas_event.h threeway_war.h unique_item.h DragonSoul.h
+OBJDIR/cmd_gm.o: regen.h dungeon.h zodiac_temple.h guild.h skill.h
+OBJDIR/cmd_gm.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/cmd_gm.o: guild_manager.h p2p.h buffer_manager.h fishing.h
+OBJDIR/cmd_gm.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/cmd_gm.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
+OBJDIR/cmd_gm.o: ../../liblua/include/lualib.h vector.h db.h priv_manager.h
+OBJDIR/cmd_gm.o: building.h ../../common/building.h battle.h arena.h
+OBJDIR/cmd_gm.o: start_position.h locale_service.h party.h monarch.h castle.h
+OBJDIR/cmd_gm.o: BattleArena.h xmas_event.h threeway_war.h unique_item.h
+OBJDIR/cmd_gm.o: DragonSoul.h
 OBJDIR/cmd_oxevent.o: stdafx.h debug_allocator.h
 OBJDIR/cmd_oxevent.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/cmd_oxevent.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -4062,9 +4190,9 @@ OBJDIR/dungeon.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/dungeon.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/dungeon.o: /usr/include/x86/_stdint.h
 OBJDIR/dungeon.o: ../../../extern/include/cryptopp/trap.h regen.h
-OBJDIR/dungeon.o: start_position.h locale_service.h questmanager.h questnpc.h
-OBJDIR/dungeon.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
-OBJDIR/dungeon.o: ../../liblua/include/lauxlib.h
+OBJDIR/dungeon.o: zodiac_temple.h start_position.h locale_service.h
+OBJDIR/dungeon.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/dungeon.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/dungeon.o: ../../liblua/include/lualib.h
 OBJDIR/empire_text_convert.o: stdafx.h debug_allocator.h
 OBJDIR/empire_text_convert.o: ../../libthecore/include/stdafx.h
@@ -5513,7 +5641,7 @@ OBJDIR/input.o: p2p.h db.h questmanager.h questnpc.h questpc.h quest.h
 OBJDIR/input.o: lua_incl.h ../../liblua/include/lua.h
 OBJDIR/input.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
 OBJDIR/input.o: login_sim.h desc_client.h fishing.h item.h TrafficProfiler.h
-OBJDIR/input.o: priv_manager.h castle.h dev_log.h limit_time.h
+OBJDIR/input.o: priv_manager.h castle.h dev_log.h maintenance.h limit_time.h
 OBJDIR/input_auth.o: stdafx.h debug_allocator.h
 OBJDIR/input_auth.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/input_auth.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -5698,8 +5826,9 @@ OBJDIR/input_db.o: desc_manager.h ../../common/stl.h ../../common/length.h
 OBJDIR/input_db.o: char.h entity.h FSM.h state.h horse_rider.h cmd.h vid.h
 OBJDIR/input_db.o: affect.h affect_flag.h cube.h mining.h packet.h
 OBJDIR/input_db.o: char_manager.h item.h item_manager.h protocol.h
-OBJDIR/input_db.o: mob_manager.h shop_manager.h sectree_manager.h sectree.h
-OBJDIR/input_db.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/input_db.o: mob_manager.h shop_manager.h offline_shop.h
+OBJDIR/input_db.o: offlineshop_manager.h sectree_manager.h sectree.h skill.h
+OBJDIR/input_db.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/input_db.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/input_db.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
 OBJDIR/input_db.o: ../../liblua/include/lualib.h p2p.h input.h packet_info.h
@@ -5816,17 +5945,18 @@ OBJDIR/input_login.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
 OBJDIR/input_login.o: affect.h affect_flag.h cube.h mining.h char_manager.h
 OBJDIR/input_login.o: item.h item_manager.h buffer_manager.h protocol.h pvp.h
 OBJDIR/input_login.o: start_position.h locale_service.h messenger_manager.h
-OBJDIR/input_login.o: db.h guild_manager.h party.h dungeon.h
-OBJDIR/input_login.o: sectree_manager.h sectree.h war_map.h guild.h skill.h
-OBJDIR/input_login.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/input_login.o: db.h guild_manager.h party.h FarmSessionManager.h
+OBJDIR/input_login.o: dungeon.h sectree_manager.h sectree.h war_map.h guild.h
+OBJDIR/input_login.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/input_login.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/input_login.o: ../../liblua/include/lua.h
 OBJDIR/input_login.o: ../../liblua/include/lauxlib.h
 OBJDIR/input_login.o: ../../liblua/include/lualib.h building.h
 OBJDIR/input_login.o: ../../common/building.h wedding.h marriage.h arena.h
-OBJDIR/input_login.o: OXEvent.h priv_manager.h dev_log.h horsename_manager.h
-OBJDIR/input_login.o: MarkManager.h MarkImage.h
+OBJDIR/input_login.o: OXEvent.h priv_manager.h dev_log.h maintenance.h
+OBJDIR/input_login.o: horsename_manager.h MarkManager.h MarkImage.h
 OBJDIR/input_login.o: ../../../extern/include/IL/il.h minilzo.h lzo/lzoconf.h
+OBJDIR/input_login.o: switchbot.h
 OBJDIR/input_main.o: stdafx.h debug_allocator.h
 OBJDIR/input_main.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/input_main.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -5924,9 +6054,10 @@ OBJDIR/input_main.o: ../../common/stl.h ../../common/length.h
 OBJDIR/input_main.o: buffer_manager.h protocol.h char.h entity.h FSM.h
 OBJDIR/input_main.o: state.h horse_rider.h cmd.h vid.h affect.h affect_flag.h
 OBJDIR/input_main.o: cube.h mining.h char_manager.h item.h item_manager.h
-OBJDIR/input_main.o: shop.h shop_manager.h safebox.h regen.h dungeon.h
-OBJDIR/input_main.o: sectree_manager.h sectree.h battle.h exchange.h
-OBJDIR/input_main.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/input_main.o: FarmSessionManager.h shop.h shop_manager.h safebox.h
+OBJDIR/input_main.o: regen.h dungeon.h sectree_manager.h sectree.h
+OBJDIR/input_main.o: zodiac_temple.h battle.h exchange.h questmanager.h
+OBJDIR/input_main.o: questnpc.h questpc.h quest.h lua_incl.h
 OBJDIR/input_main.o: ../../liblua/include/lua.h
 OBJDIR/input_main.o: ../../liblua/include/lauxlib.h
 OBJDIR/input_main.o: ../../liblua/include/lualib.h profiler.h
@@ -5936,6 +6067,7 @@ OBJDIR/input_main.o: guild_manager.h banword.h empire_text_convert.h
 OBJDIR/input_main.o: unique_item.h building.h ../../common/building.h
 OBJDIR/input_main.o: locale_service.h gm.h spam.h ani.h motion.h
 OBJDIR/input_main.o: ../../common/d3dtype.h OXEvent.h DragonSoul.h
+OBJDIR/input_main.o: switchbot.h offline_shop.h offlineshop_manager.h
 OBJDIR/input_p2p.o: stdafx.h debug_allocator.h
 OBJDIR/input_p2p.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/input_p2p.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -6031,14 +6163,16 @@ OBJDIR/input_p2p.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
 OBJDIR/input_p2p.o: ../../common/stl.h ../../common/length.h char.h entity.h
 OBJDIR/input_p2p.o: FSM.h state.h horse_rider.h cmd.h vid.h affect.h
 OBJDIR/input_p2p.o: affect_flag.h cube.h mining.h char_manager.h item.h
-OBJDIR/input_p2p.o: item_manager.h p2p.h guild.h skill.h ../../libpoly/Poly.h
-OBJDIR/input_p2p.o: ../../libpoly/SymTable.h guild_manager.h party.h
-OBJDIR/input_p2p.o: messenger_manager.h db.h empire_text_convert.h
-OBJDIR/input_p2p.o: unique_item.h xmas_event.h castle.h dev_log.h
-OBJDIR/input_p2p.o: locale_service.h questmanager.h questnpc.h questpc.h
-OBJDIR/input_p2p.o: quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/input_p2p.o: item_manager.h p2p.h FarmSessionManager.h switchbot.h
+OBJDIR/input_p2p.o: offline_shop.h offlineshop_manager.h guild.h skill.h
+OBJDIR/input_p2p.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/input_p2p.o: guild_manager.h party.h messenger_manager.h db.h
+OBJDIR/input_p2p.o: empire_text_convert.h unique_item.h xmas_event.h castle.h
+OBJDIR/input_p2p.o: dev_log.h locale_service.h questmanager.h questnpc.h
+OBJDIR/input_p2p.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/input_p2p.o: ../../liblua/include/lauxlib.h
-OBJDIR/input_p2p.o: ../../liblua/include/lualib.h threeway_war.h crc32.h
+OBJDIR/input_p2p.o: ../../liblua/include/lualib.h threeway_war.h
+OBJDIR/input_p2p.o: maintenance.h crc32.h
 OBJDIR/input_udp.o: stdafx.h debug_allocator.h
 OBJDIR/input_udp.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/input_udp.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -7096,6 +7230,116 @@ OBJDIR/lzo_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept
 OBJDIR/lzo_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
 OBJDIR/lzo_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
 OBJDIR/lzo_manager.o: lzo_manager.h minilzo.h lzo/lzoconf.h
+OBJDIR/maintenance.o: stdafx.h debug_allocator.h
+OBJDIR/maintenance.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
+OBJDIR/maintenance.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+OBJDIR/maintenance.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+OBJDIR/maintenance.o: /usr/include/x86/_types.h
+OBJDIR/maintenance.o: /usr/include/machine/_limits.h
+OBJDIR/maintenance.o: /usr/include/x86/_limits.h /usr/include/string.h
+OBJDIR/maintenance.o: /usr/include/strings.h /usr/include/xlocale/_strings.h
+OBJDIR/maintenance.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
+OBJDIR/maintenance.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
+OBJDIR/maintenance.o: /usr/include/errno.h /usr/include/stdlib.h
+OBJDIR/maintenance.o: /usr/include/unistd.h /usr/include/sys/types.h
+OBJDIR/maintenance.o: /usr/include/machine/endian.h /usr/include/x86/endian.h
+OBJDIR/maintenance.o: /usr/include/sys/_endian.h
+OBJDIR/maintenance.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/maintenance.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
+OBJDIR/maintenance.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
+OBJDIR/maintenance.o: /usr/include/sys/timespec.h
+OBJDIR/maintenance.o: /usr/include/sys/_timespec.h /usr/include/sys/unistd.h
+OBJDIR/maintenance.o: /usr/include/fcntl.h /usr/include/assert.h
+OBJDIR/maintenance.o: /usr/include/ctype.h /usr/include/_ctype.h
+OBJDIR/maintenance.o: /usr/include/runetype.h /usr/include/xlocale/_ctype.h
+OBJDIR/maintenance.o: /usr/include/limits.h /usr/include/sys/limits.h
+OBJDIR/maintenance.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
+OBJDIR/maintenance.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
+OBJDIR/maintenance.o: /usr/include/sys/_clock_id.h /usr/include/time.h
+OBJDIR/maintenance.o: /usr/include/xlocale/_time.h /usr/include/sys/stat.h
+OBJDIR/maintenance.o: /usr/include/netinet/in.h
+OBJDIR/maintenance.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/maintenance.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
+OBJDIR/maintenance.o: /usr/include/netdb.h /usr/include/sys/socket.h
+OBJDIR/maintenance.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
+OBJDIR/maintenance.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
+OBJDIR/maintenance.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
+OBJDIR/maintenance.o: /usr/include/sys/wait.h /usr/include/pthread.h
+OBJDIR/maintenance.o: /usr/include/sched.h /usr/include/sys/sched.h
+OBJDIR/maintenance.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
+OBJDIR/maintenance.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
+OBJDIR/maintenance.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
+OBJDIR/maintenance.o: /usr/include/sys/event.h /usr/include/sys/queue.h
+OBJDIR/maintenance.o: typedef.h ../../libthecore/include/heart.h
+OBJDIR/maintenance.o: ../../libthecore/include/fdwatch.h
+OBJDIR/maintenance.o: ../../libthecore/include/socket.h
+OBJDIR/maintenance.o: ../../libthecore/include/kstbl.h
+OBJDIR/maintenance.o: ../../libthecore/include/hangul.h
+OBJDIR/maintenance.o: ../../libthecore/include/buffer.h
+OBJDIR/maintenance.o: ../../libthecore/include/signal.h log.h
+OBJDIR/maintenance.o: ../../libsql/AsyncSQL.h
+OBJDIR/maintenance.o: ../../libthecore/include/stdafx.h
+OBJDIR/maintenance.o: ../../libthecore/include/log.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/mysql.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/maintenance.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/maintenance.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/maintenance.o: any_function.inc ../../libthecore/include/main.h
+OBJDIR/maintenance.o: utils.h /usr/include/math.h
+OBJDIR/maintenance.o: ../../libthecore/include/crypt.h
+OBJDIR/maintenance.o: ../../libthecore/include/memcpy.h
+OBJDIR/maintenance.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/maintenance.o: ../../common/service.h /usr/include/float.h
+OBJDIR/maintenance.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/maintenance.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/maintenance.o: /usr/include/stddef.h
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/maintenance.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/maintenance.o: constants.h ../../common/tables.h ../../common/length.h
+OBJDIR/maintenance.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/maintenance.o: desc.h input.h packet_info.h packet.h cipher.h
+OBJDIR/maintenance.o: ../../../extern/include/cryptopp/cryptlib.h config.h
+OBJDIR/maintenance.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/maintenance.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+OBJDIR/maintenance.o: /usr/include/x86/_stdint.h
+OBJDIR/maintenance.o: ../../../extern/include/cryptopp/trap.h db.h
+OBJDIR/maintenance.o: desc_client.h desc_manager.h ../../common/stl.h
+OBJDIR/maintenance.o: ../../common/length.h char.h entity.h FSM.h state.h
+OBJDIR/maintenance.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h cube.h
+OBJDIR/maintenance.o: mining.h char_manager.h item.h item_manager.h motion.h
+OBJDIR/maintenance.o: ../../common/d3dtype.h pvp.h start_position.h
+OBJDIR/maintenance.o: locale_service.h party.h guild_manager.h p2p.h
+OBJDIR/maintenance.o: dungeon.h sectree_manager.h sectree.h
+OBJDIR/maintenance.o: messenger_manager.h war_map.h guild.h skill.h
+OBJDIR/maintenance.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/maintenance.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/maintenance.o: ../../liblua/include/lua.h
+OBJDIR/maintenance.o: ../../liblua/include/lauxlib.h
+OBJDIR/maintenance.o: ../../liblua/include/lualib.h monarch.h mob_manager.h
+OBJDIR/maintenance.o: dev_log.h ../../common/VnumHelper.h
+OBJDIR/maintenance.o: empire_text_convert.h castle.h maintenance.h
 OBJDIR/marriage.o: stdafx.h debug_allocator.h
 OBJDIR/marriage.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/marriage.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -7588,10 +7832,10 @@ OBJDIR/mob_manager.o: ../../common/item_length.h cmd.h vid.h affect.h
 OBJDIR/mob_manager.o: affect_flag.h cube.h mining.h packet.h char_manager.h
 OBJDIR/mob_manager.o: ../../common/length.h item.h item_manager.h
 OBJDIR/mob_manager.o: mob_manager.h regen.h dungeon.h sectree_manager.h
-OBJDIR/mob_manager.o: sectree.h text_file_loader.h ../../common/d3dtype.h
-OBJDIR/mob_manager.o: ../../common/pool.h file_loader.h questmanager.h
-OBJDIR/mob_manager.o: questnpc.h questpc.h quest.h lua_incl.h
-OBJDIR/mob_manager.o: ../../liblua/include/lua.h
+OBJDIR/mob_manager.o: sectree.h zodiac_temple.h text_file_loader.h
+OBJDIR/mob_manager.o: ../../common/d3dtype.h ../../common/pool.h
+OBJDIR/mob_manager.o: file_loader.h questmanager.h questnpc.h questpc.h
+OBJDIR/mob_manager.o: quest.h lua_incl.h ../../liblua/include/lua.h
 OBJDIR/mob_manager.o: ../../liblua/include/lauxlib.h
 OBJDIR/mob_manager.o: ../../liblua/include/lualib.h locale_service.h
 OBJDIR/monarch.o: stdafx.h debug_allocator.h
@@ -8139,7 +8383,7 @@ OBJDIR/party.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/party.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
 OBJDIR/party.o: /usr/include/x86/_stdint.h
 OBJDIR/party.o: ../../../extern/include/cryptopp/trap.h dungeon.h
-OBJDIR/party.o: sectree_manager.h sectree.h unique_item.h
+OBJDIR/party.o: sectree_manager.h sectree.h zodiac_temple.h unique_item.h
 OBJDIR/passpod.o: stdafx.h debug_allocator.h
 OBJDIR/passpod.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/passpod.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -8698,8 +8942,8 @@ OBJDIR/questlua.o: ../../common/stl.h entity.h FSM.h state.h horse_rider.h
 OBJDIR/questlua.o: cmd.h vid.h affect.h affect_flag.h cube.h mining.h
 OBJDIR/questlua.o: char_manager.h ../../common/length.h item.h item_manager.h
 OBJDIR/questlua.o: db.h xmas_event.h locale_service.h regen.h dungeon.h
-OBJDIR/questlua.o: sectree_manager.h sectree.h guild.h skill.h
-OBJDIR/questlua.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
+OBJDIR/questlua.o: sectree_manager.h sectree.h zodiac_temple.h guild.h
+OBJDIR/questlua.o: skill.h ../../libpoly/Poly.h ../../libpoly/SymTable.h
 OBJDIR/questlua.o: guild_manager.h
 OBJDIR/questlua_affect.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_affect.o: ../../libthecore/include/stdafx.h
@@ -9571,7 +9815,8 @@ OBJDIR/questlua_game.o: /usr/include/x86/_stdint.h
 OBJDIR/questlua_game.o: ../../../extern/include/cryptopp/trap.h char.h
 OBJDIR/questlua_game.o: ../../common/stl.h entity.h FSM.h state.h
 OBJDIR/questlua_game.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
-OBJDIR/questlua_game.o: cube.h mining.h item_manager.h item.h
+OBJDIR/questlua_game.o: cube.h mining.h item_manager.h item.h char_manager.h
+OBJDIR/questlua_game.o: ../../common/length.h
 OBJDIR/questlua_global.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_global.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_global.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -9684,9 +9929,9 @@ OBJDIR/questlua_global.o: buffer_manager.h questevent.h config.h fishing.h
 OBJDIR/questlua_global.o: priv_manager.h p2p.h input.h packet_info.h
 OBJDIR/questlua_global.o: mob_manager.h start_position.h locale_service.h
 OBJDIR/questlua_global.o: over9refine.h OXEvent.h regen.h dungeon.h
-OBJDIR/questlua_global.o: sectree_manager.h sectree.h guild.h skill.h
-OBJDIR/questlua_global.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
-OBJDIR/questlua_global.o: guild_manager.h
+OBJDIR/questlua_global.o: sectree_manager.h sectree.h zodiac_temple.h guild.h
+OBJDIR/questlua_global.o: skill.h ../../libpoly/Poly.h
+OBJDIR/questlua_global.o: ../../libpoly/SymTable.h guild_manager.h
 OBJDIR/questlua_guild.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_guild.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_guild.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -11191,6 +11436,7 @@ OBJDIR/questmanager.o: ../../liblua/include/lauxlib.h
 OBJDIR/questmanager.o: ../../liblua/include/lualib.h lzo_manager.h minilzo.h
 OBJDIR/questmanager.o: lzo/lzoconf.h xmas_event.h target.h party.h
 OBJDIR/questmanager.o: locale_service.h dungeon.h sectree_manager.h sectree.h
+OBJDIR/questmanager.o: zodiac_temple.h
 OBJDIR/questnpc.o: stdafx.h debug_allocator.h
 OBJDIR/questnpc.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/questnpc.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -11545,7 +11791,7 @@ OBJDIR/regen.o: ../../common/length.h ../../common/service.h
 OBJDIR/regen.o: ../../common/item_length.h cmd.h vid.h affect.h affect_flag.h
 OBJDIR/regen.o: cube.h mining.h packet.h char_manager.h ../../common/length.h
 OBJDIR/regen.o: item.h item_manager.h regen.h dungeon.h sectree_manager.h
-OBJDIR/regen.o: sectree.h mob_manager.h
+OBJDIR/regen.o: sectree.h zodiac_temple.h mob_manager.h
 OBJDIR/safebox.o: stdafx.h debug_allocator.h
 OBJDIR/safebox.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/safebox.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -11827,11 +12073,11 @@ OBJDIR/sectree_manager.o: ../../../extern/include/boost/smart_ptr/detail/operato
 OBJDIR/sectree_manager.o: ../../libgame/include/targa.h
 OBJDIR/sectree_manager.o: ../../libgame/include/attribute.h config.h
 OBJDIR/sectree_manager.o: sectree_manager.h sectree.h entity.h regen.h
-OBJDIR/sectree_manager.o: dungeon.h lzo_manager.h minilzo.h lzo/lzoconf.h
-OBJDIR/sectree_manager.o: desc.h constants.h ../../common/tables.h
-OBJDIR/sectree_manager.o: ../../common/length.h ../../common/service.h
-OBJDIR/sectree_manager.o: ../../common/item_length.h input.h packet_info.h
-OBJDIR/sectree_manager.o: packet.h cipher.h
+OBJDIR/sectree_manager.o: dungeon.h zodiac_temple.h lzo_manager.h minilzo.h
+OBJDIR/sectree_manager.o: lzo/lzoconf.h desc.h constants.h
+OBJDIR/sectree_manager.o: ../../common/tables.h ../../common/length.h
+OBJDIR/sectree_manager.o: ../../common/service.h ../../common/item_length.h
+OBJDIR/sectree_manager.o: input.h packet_info.h packet.h cipher.h
 OBJDIR/sectree_manager.o: ../../../extern/include/cryptopp/cryptlib.h
 OBJDIR/sectree_manager.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/sectree_manager.o: /usr/include/stdint.h
@@ -12841,7 +13087,7 @@ OBJDIR/wedding.o: ../../common/stl.h ../../common/length.h char_manager.h
 OBJDIR/wedding.o: item.h entity.h item_manager.h vid.h sectree_manager.h
 OBJDIR/wedding.o: sectree.h char.h FSM.h state.h horse_rider.h cmd.h affect.h
 OBJDIR/wedding.o: affect_flag.h cube.h mining.h wedding.h marriage.h regen.h
-OBJDIR/wedding.o: dungeon.h locale_service.h
+OBJDIR/wedding.o: dungeon.h zodiac_temple.h locale_service.h
 OBJDIR/xmas_event.o: stdafx.h debug_allocator.h
 OBJDIR/xmas_event.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/xmas_event.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -13139,7 +13385,7 @@ OBJDIR/threeway_war.o: ../../liblua/include/lauxlib.h
 OBJDIR/threeway_war.o: ../../liblua/include/lualib.h questlua.h
 OBJDIR/threeway_war.o: buffer_manager.h start_position.h char_manager.h
 OBJDIR/threeway_war.o: item.h item_manager.h sectree_manager.h sectree.h
-OBJDIR/threeway_war.o: regen.h dungeon.h
+OBJDIR/threeway_war.o: regen.h dungeon.h zodiac_temple.h
 OBJDIR/map_location.o: stdafx.h debug_allocator.h
 OBJDIR/map_location.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
 OBJDIR/map_location.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -13522,7 +13768,7 @@ OBJDIR/DragonLair.o: ../../common/length.h ../../common/service.h
 OBJDIR/DragonLair.o: ../../common/item_length.h cmd.h vid.h affect.h
 OBJDIR/DragonLair.o: affect_flag.h cube.h mining.h packet.h guild.h skill.h
 OBJDIR/DragonLair.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h
-OBJDIR/DragonLair.o: locale_service.h regen.h dungeon.h
+OBJDIR/DragonLair.o: locale_service.h regen.h dungeon.h zodiac_temple.h
 OBJDIR/questlua_dragonlair.o: stdafx.h debug_allocator.h
 OBJDIR/questlua_dragonlair.o: ../../libthecore/include/stdafx.h
 OBJDIR/questlua_dragonlair.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -16540,6 +16786,980 @@ OBJDIR/item_manager_read_tables.o: unique_item.h safebox.h blend_item.h
 OBJDIR/item_manager_read_tables.o: dev_log.h locale_service.h
 OBJDIR/item_manager_read_tables.o: item_manager_private_types.h
 OBJDIR/item_manager_read_tables.o: group_text_parse_tree.h
+OBJDIR/switchbot.o: stdafx.h debug_allocator.h
+OBJDIR/switchbot.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
+OBJDIR/switchbot.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+OBJDIR/switchbot.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+OBJDIR/switchbot.o: /usr/include/x86/_types.h /usr/include/machine/_limits.h
+OBJDIR/switchbot.o: /usr/include/x86/_limits.h /usr/include/string.h
+OBJDIR/switchbot.o: /usr/include/strings.h /usr/include/xlocale/_strings.h
+OBJDIR/switchbot.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
+OBJDIR/switchbot.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
+OBJDIR/switchbot.o: /usr/include/errno.h /usr/include/stdlib.h
+OBJDIR/switchbot.o: /usr/include/unistd.h /usr/include/sys/types.h
+OBJDIR/switchbot.o: /usr/include/machine/endian.h /usr/include/x86/endian.h
+OBJDIR/switchbot.o: /usr/include/sys/_endian.h
+OBJDIR/switchbot.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/switchbot.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
+OBJDIR/switchbot.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
+OBJDIR/switchbot.o: /usr/include/sys/timespec.h /usr/include/sys/_timespec.h
+OBJDIR/switchbot.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
+OBJDIR/switchbot.o: /usr/include/assert.h /usr/include/ctype.h
+OBJDIR/switchbot.o: /usr/include/_ctype.h /usr/include/runetype.h
+OBJDIR/switchbot.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
+OBJDIR/switchbot.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+OBJDIR/switchbot.o: /usr/include/dirent.h /usr/include/sys/dirent.h
+OBJDIR/switchbot.o: /usr/include/sys/time.h /usr/include/sys/_clock_id.h
+OBJDIR/switchbot.o: /usr/include/time.h /usr/include/xlocale/_time.h
+OBJDIR/switchbot.o: /usr/include/sys/stat.h /usr/include/netinet/in.h
+OBJDIR/switchbot.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/switchbot.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
+OBJDIR/switchbot.o: /usr/include/netdb.h /usr/include/sys/socket.h
+OBJDIR/switchbot.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
+OBJDIR/switchbot.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
+OBJDIR/switchbot.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
+OBJDIR/switchbot.o: /usr/include/sys/wait.h /usr/include/pthread.h
+OBJDIR/switchbot.o: /usr/include/sched.h /usr/include/sys/sched.h
+OBJDIR/switchbot.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
+OBJDIR/switchbot.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
+OBJDIR/switchbot.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
+OBJDIR/switchbot.o: /usr/include/sys/event.h /usr/include/sys/queue.h
+OBJDIR/switchbot.o: typedef.h ../../libthecore/include/heart.h
+OBJDIR/switchbot.o: ../../libthecore/include/fdwatch.h
+OBJDIR/switchbot.o: ../../libthecore/include/socket.h
+OBJDIR/switchbot.o: ../../libthecore/include/kstbl.h
+OBJDIR/switchbot.o: ../../libthecore/include/hangul.h
+OBJDIR/switchbot.o: ../../libthecore/include/buffer.h
+OBJDIR/switchbot.o: ../../libthecore/include/signal.h log.h
+OBJDIR/switchbot.o: ../../libsql/AsyncSQL.h ../../libthecore/include/stdafx.h
+OBJDIR/switchbot.o: ../../libthecore/include/log.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/mysql.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/switchbot.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/switchbot.o: ../../libsql/Semaphore.h any_function.h any_function.inc
+OBJDIR/switchbot.o: ../../libthecore/include/main.h utils.h
+OBJDIR/switchbot.o: /usr/include/math.h ../../libthecore/include/crypt.h
+OBJDIR/switchbot.o: ../../libthecore/include/memcpy.h
+OBJDIR/switchbot.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/switchbot.o: ../../common/service.h /usr/include/float.h
+OBJDIR/switchbot.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/switchbot.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/switchbot.o: /usr/include/stddef.h
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/switchbot.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/switchbot.o: switchbot.h ../../common/tables.h ../../common/length.h
+OBJDIR/switchbot.o: ../../common/service.h ../../common/item_length.h desc.h
+OBJDIR/switchbot.o: constants.h input.h packet_info.h packet.h cipher.h
+OBJDIR/switchbot.o: ../../../extern/include/cryptopp/cryptlib.h config.h
+OBJDIR/switchbot.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/switchbot.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+OBJDIR/switchbot.o: /usr/include/x86/_stdint.h
+OBJDIR/switchbot.o: ../../../extern/include/cryptopp/trap.h item.h entity.h
+OBJDIR/switchbot.o: item_manager.h char_manager.h ../../common/stl.h
+OBJDIR/switchbot.o: ../../common/length.h vid.h buffer_manager.h char.h FSM.h
+OBJDIR/switchbot.o: state.h horse_rider.h cmd.h affect.h affect_flag.h cube.h
+OBJDIR/switchbot.o: mining.h p2p.h
+OBJDIR/offline_shop.o: stdafx.h debug_allocator.h
+OBJDIR/offline_shop.o: ../../libthecore/include/stdafx.h /usr/include/stdio.h
+OBJDIR/offline_shop.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+OBJDIR/offline_shop.o: /usr/include/sys/_types.h
+OBJDIR/offline_shop.o: /usr/include/machine/_types.h
+OBJDIR/offline_shop.o: /usr/include/x86/_types.h
+OBJDIR/offline_shop.o: /usr/include/machine/_limits.h
+OBJDIR/offline_shop.o: /usr/include/x86/_limits.h /usr/include/string.h
+OBJDIR/offline_shop.o: /usr/include/strings.h /usr/include/xlocale/_strings.h
+OBJDIR/offline_shop.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
+OBJDIR/offline_shop.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
+OBJDIR/offline_shop.o: /usr/include/errno.h /usr/include/stdlib.h
+OBJDIR/offline_shop.o: /usr/include/unistd.h /usr/include/sys/types.h
+OBJDIR/offline_shop.o: /usr/include/machine/endian.h
+OBJDIR/offline_shop.o: /usr/include/x86/endian.h /usr/include/sys/_endian.h
+OBJDIR/offline_shop.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/offline_shop.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
+OBJDIR/offline_shop.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
+OBJDIR/offline_shop.o: /usr/include/sys/timespec.h
+OBJDIR/offline_shop.o: /usr/include/sys/_timespec.h /usr/include/sys/unistd.h
+OBJDIR/offline_shop.o: /usr/include/fcntl.h /usr/include/assert.h
+OBJDIR/offline_shop.o: /usr/include/ctype.h /usr/include/_ctype.h
+OBJDIR/offline_shop.o: /usr/include/runetype.h /usr/include/xlocale/_ctype.h
+OBJDIR/offline_shop.o: /usr/include/limits.h /usr/include/sys/limits.h
+OBJDIR/offline_shop.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
+OBJDIR/offline_shop.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
+OBJDIR/offline_shop.o: /usr/include/sys/_clock_id.h /usr/include/time.h
+OBJDIR/offline_shop.o: /usr/include/xlocale/_time.h /usr/include/sys/stat.h
+OBJDIR/offline_shop.o: /usr/include/netinet/in.h
+OBJDIR/offline_shop.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/offline_shop.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
+OBJDIR/offline_shop.o: /usr/include/netdb.h /usr/include/sys/socket.h
+OBJDIR/offline_shop.o: /usr/include/sys/_iovec.h
+OBJDIR/offline_shop.o: /usr/include/machine/_align.h
+OBJDIR/offline_shop.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
+OBJDIR/offline_shop.o: /usr/include/machine/signal.h
+OBJDIR/offline_shop.o: /usr/include/x86/signal.h /usr/include/sys/wait.h
+OBJDIR/offline_shop.o: /usr/include/pthread.h /usr/include/sched.h
+OBJDIR/offline_shop.o: /usr/include/sys/sched.h /usr/include/sys/cpuset.h
+OBJDIR/offline_shop.o: /usr/include/sys/_cpuset.h /usr/include/sys/_bitset.h
+OBJDIR/offline_shop.o: /usr/include/sys/bitset.h /usr/include/semaphore.h
+OBJDIR/offline_shop.o: /usr/include/sys/_umtx.h /usr/include/sys/event.h
+OBJDIR/offline_shop.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/offline_shop.o: ../../libthecore/include/heart.h
+OBJDIR/offline_shop.o: ../../libthecore/include/fdwatch.h
+OBJDIR/offline_shop.o: ../../libthecore/include/socket.h
+OBJDIR/offline_shop.o: ../../libthecore/include/kstbl.h
+OBJDIR/offline_shop.o: ../../libthecore/include/hangul.h
+OBJDIR/offline_shop.o: ../../libthecore/include/buffer.h
+OBJDIR/offline_shop.o: ../../libthecore/include/signal.h log.h
+OBJDIR/offline_shop.o: ../../libsql/AsyncSQL.h
+OBJDIR/offline_shop.o: ../../libthecore/include/stdafx.h
+OBJDIR/offline_shop.o: ../../libthecore/include/log.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/mysql.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/offline_shop.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/offline_shop.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/offline_shop.o: any_function.inc ../../libthecore/include/main.h
+OBJDIR/offline_shop.o: utils.h /usr/include/math.h
+OBJDIR/offline_shop.o: ../../libthecore/include/crypt.h
+OBJDIR/offline_shop.o: ../../libthecore/include/memcpy.h
+OBJDIR/offline_shop.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/offline_shop.o: ../../common/service.h /usr/include/float.h
+OBJDIR/offline_shop.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/offline_shop.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/offline_shop.o: /usr/include/stddef.h
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/offline_shop.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/offline_shop.o: constants.h ../../common/tables.h
+OBJDIR/offline_shop.o: ../../common/length.h ../../common/service.h
+OBJDIR/offline_shop.o: ../../common/item_length.h config.h desc.h input.h
+OBJDIR/offline_shop.o: packet_info.h packet.h cipher.h
+OBJDIR/offline_shop.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/offline_shop.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/offline_shop.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+OBJDIR/offline_shop.o: /usr/include/x86/_stdint.h
+OBJDIR/offline_shop.o: ../../../extern/include/cryptopp/trap.h desc_manager.h
+OBJDIR/offline_shop.o: ../../common/stl.h ../../common/length.h char.h
+OBJDIR/offline_shop.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h
+OBJDIR/offline_shop.o: affect.h affect_flag.h cube.h mining.h char_manager.h
+OBJDIR/offline_shop.o: item.h item_manager.h sectree_manager.h sectree.h
+OBJDIR/offline_shop.o: buffer_manager.h db.h questmanager.h questnpc.h
+OBJDIR/offline_shop.o: questpc.h quest.h lua_incl.h
+OBJDIR/offline_shop.o: ../../liblua/include/lua.h
+OBJDIR/offline_shop.o: ../../liblua/include/lauxlib.h
+OBJDIR/offline_shop.o: ../../liblua/include/lualib.h mob_manager.h
+OBJDIR/offline_shop.o: locale_service.h offline_shop.h p2p.h
+OBJDIR/offline_shop.o: offlineshop_manager.h desc_client.h target.h
+OBJDIR/offlineshop_manager.o: stdafx.h debug_allocator.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/stdafx.h
+OBJDIR/offlineshop_manager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_null.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_types.h
+OBJDIR/offlineshop_manager.o: /usr/include/machine/_types.h
+OBJDIR/offlineshop_manager.o: /usr/include/x86/_types.h
+OBJDIR/offlineshop_manager.o: /usr/include/machine/_limits.h
+OBJDIR/offlineshop_manager.o: /usr/include/x86/_limits.h
+OBJDIR/offlineshop_manager.o: /usr/include/string.h /usr/include/strings.h
+OBJDIR/offlineshop_manager.o: /usr/include/xlocale/_strings.h
+OBJDIR/offlineshop_manager.o: /usr/include/xlocale/_string.h
+OBJDIR/offlineshop_manager.o: /usr/include/stdarg.h /usr/include/x86/stdarg.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_stdarg.h /usr/include/errno.h
+OBJDIR/offlineshop_manager.o: /usr/include/stdlib.h /usr/include/unistd.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/types.h
+OBJDIR/offlineshop_manager.o: /usr/include/machine/endian.h
+OBJDIR/offlineshop_manager.o: /usr/include/x86/endian.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_endian.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_stdint.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/select.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_sigset.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_timeval.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/timespec.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_timespec.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
+OBJDIR/offlineshop_manager.o: /usr/include/assert.h /usr/include/ctype.h
+OBJDIR/offlineshop_manager.o: /usr/include/_ctype.h /usr/include/runetype.h
+OBJDIR/offlineshop_manager.o: /usr/include/xlocale/_ctype.h
+OBJDIR/offlineshop_manager.o: /usr/include/limits.h /usr/include/sys/limits.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/syslimits.h
+OBJDIR/offlineshop_manager.o: /usr/include/dirent.h /usr/include/sys/dirent.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/time.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_clock_id.h
+OBJDIR/offlineshop_manager.o: /usr/include/time.h
+OBJDIR/offlineshop_manager.o: /usr/include/xlocale/_time.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/stat.h
+OBJDIR/offlineshop_manager.o: /usr/include/netinet/in.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/offlineshop_manager.o: /usr/include/netinet6/in6.h
+OBJDIR/offlineshop_manager.o: /usr/include/arpa/inet.h /usr/include/netdb.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/socket.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_iovec.h
+OBJDIR/offlineshop_manager.o: /usr/include/machine/_align.h
+OBJDIR/offlineshop_manager.o: /usr/include/x86/_align.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/signal.h
+OBJDIR/offlineshop_manager.o: /usr/include/machine/signal.h
+OBJDIR/offlineshop_manager.o: /usr/include/x86/signal.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/wait.h /usr/include/pthread.h
+OBJDIR/offlineshop_manager.o: /usr/include/sched.h /usr/include/sys/sched.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/cpuset.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_cpuset.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_bitset.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/bitset.h
+OBJDIR/offlineshop_manager.o: /usr/include/semaphore.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/_umtx.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/event.h
+OBJDIR/offlineshop_manager.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/heart.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/fdwatch.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/socket.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/kstbl.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/hangul.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/buffer.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/signal.h log.h
+OBJDIR/offlineshop_manager.o: ../../libsql/AsyncSQL.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/stdafx.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/log.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/mysql.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/offlineshop_manager.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/offlineshop_manager.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/offlineshop_manager.o: any_function.inc
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/main.h utils.h
+OBJDIR/offlineshop_manager.o: /usr/include/math.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/crypt.h
+OBJDIR/offlineshop_manager.o: ../../libthecore/include/memcpy.h
+OBJDIR/offlineshop_manager.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/offlineshop_manager.o: ../../common/service.h /usr/include/float.h
+OBJDIR/offlineshop_manager.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/offlineshop_manager.o: /usr/include/stddef.h
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/offlineshop_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/offlineshop_manager.o: ../../libgame/include/grid.h constants.h
+OBJDIR/offlineshop_manager.o: ../../common/tables.h ../../common/length.h
+OBJDIR/offlineshop_manager.o: ../../common/service.h
+OBJDIR/offlineshop_manager.o: ../../common/item_length.h config.h
+OBJDIR/offlineshop_manager.o: offline_shop.h desc.h input.h packet_info.h
+OBJDIR/offlineshop_manager.o: packet.h cipher.h
+OBJDIR/offlineshop_manager.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/offlineshop_manager.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/offlineshop_manager.o: /usr/include/stdint.h
+OBJDIR/offlineshop_manager.o: /usr/include/machine/_stdint.h
+OBJDIR/offlineshop_manager.o: /usr/include/x86/_stdint.h
+OBJDIR/offlineshop_manager.o: ../../../extern/include/cryptopp/trap.h
+OBJDIR/offlineshop_manager.o: desc_manager.h ../../common/stl.h
+OBJDIR/offlineshop_manager.o: ../../common/length.h char.h entity.h FSM.h
+OBJDIR/offlineshop_manager.o: state.h horse_rider.h cmd.h vid.h affect.h
+OBJDIR/offlineshop_manager.o: affect_flag.h cube.h mining.h char_manager.h
+OBJDIR/offlineshop_manager.o: item.h item_manager.h buffer_manager.h db.h
+OBJDIR/offlineshop_manager.o: questmanager.h questnpc.h questpc.h quest.h
+OBJDIR/offlineshop_manager.o: lua_incl.h ../../liblua/include/lua.h
+OBJDIR/offlineshop_manager.o: ../../liblua/include/lauxlib.h
+OBJDIR/offlineshop_manager.o: ../../liblua/include/lualib.h mob_manager.h
+OBJDIR/offlineshop_manager.o: locale_service.h desc_client.h
+OBJDIR/offlineshop_manager.o: group_text_parse_tree.h ../../common/d3dtype.h
+OBJDIR/offlineshop_manager.o: ../../common/pool.h file_loader.h
+OBJDIR/offlineshop_manager.o: offlineshop_manager.h p2p.h sectree_manager.h
+OBJDIR/offlineshop_manager.o: sectree.h target.h ../../common/PulseManager.h
+OBJDIR/offlineshop_search_manager.o: stdafx.h debug_allocator.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/stdafx.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/stdio.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/cdefs.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_null.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_types.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/machine/_types.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/_types.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/machine/_limits.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/_limits.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/string.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/strings.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/xlocale/_strings.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/xlocale/_string.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/stdarg.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/stdarg.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_stdarg.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/errno.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/stdlib.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/unistd.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/types.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/machine/endian.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/endian.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_endian.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_stdint.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/select.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_sigset.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_timeval.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/timespec.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_timespec.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/unistd.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/fcntl.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/assert.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/ctype.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/_ctype.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/runetype.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/xlocale/_ctype.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/limits.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/limits.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/syslimits.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/dirent.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/dirent.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/time.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_clock_id.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/time.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/xlocale/_time.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/stat.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/netinet/in.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/netinet6/in6.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/arpa/inet.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/netdb.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/socket.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_iovec.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/machine/_align.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/_align.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/signal.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/machine/signal.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/signal.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/wait.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/pthread.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sched.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/sched.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/cpuset.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_cpuset.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_bitset.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/bitset.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/semaphore.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/_umtx.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/event.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/heart.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/fdwatch.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/socket.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/kstbl.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/hangul.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/buffer.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/signal.h log.h
+OBJDIR/offlineshop_search_manager.o: ../../libsql/AsyncSQL.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/stdafx.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/log.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/mysql.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/offlineshop_search_manager.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/offlineshop_search_manager.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/offlineshop_search_manager.o: any_function.inc
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/main.h utils.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/math.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/crypt.h
+OBJDIR/offlineshop_search_manager.o: ../../libthecore/include/memcpy.h
+OBJDIR/offlineshop_search_manager.o: ../../common/singleton.h
+OBJDIR/offlineshop_search_manager.o: ../../common/utils.h
+OBJDIR/offlineshop_search_manager.o: ../../common/service.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/float.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/float.h locale.hpp
+OBJDIR/offlineshop_search_manager.o: event.h
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/offlineshop_search_manager.o: /usr/include/stddef.h
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/offlineshop_search_manager.o: config.h desc.h constants.h
+OBJDIR/offlineshop_search_manager.o: ../../common/tables.h
+OBJDIR/offlineshop_search_manager.o: ../../common/length.h
+OBJDIR/offlineshop_search_manager.o: ../../common/service.h
+OBJDIR/offlineshop_search_manager.o: ../../common/item_length.h input.h
+OBJDIR/offlineshop_search_manager.o: packet_info.h packet.h cipher.h
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/stdint.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/machine/_stdint.h
+OBJDIR/offlineshop_search_manager.o: /usr/include/x86/_stdint.h
+OBJDIR/offlineshop_search_manager.o: ../../../extern/include/cryptopp/trap.h
+OBJDIR/offlineshop_search_manager.o: char.h ../../common/stl.h entity.h FSM.h
+OBJDIR/offlineshop_search_manager.o: state.h horse_rider.h cmd.h vid.h
+OBJDIR/offlineshop_search_manager.o: affect.h affect_flag.h cube.h mining.h
+OBJDIR/offlineshop_search_manager.o: item_manager.h offline_shop.h
+OBJDIR/offlineshop_search_manager.o: offlineshop_manager.h buffer_manager.h
+OBJDIR/offlineshop_search_manager.o: DragonSoul.h ../../common/length.h
+OBJDIR/offlineshop_search_manager.o: char_manager.h item.h p2p.h
+OBJDIR/offlineshop_search_manager.o: desc_manager.h desc_client.h
+OBJDIR/zodiac_temple.o: stdafx.h debug_allocator.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/stdafx.h
+OBJDIR/zodiac_temple.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
+OBJDIR/zodiac_temple.o: /usr/include/machine/_types.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/_types.h
+OBJDIR/zodiac_temple.o: /usr/include/machine/_limits.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/_limits.h /usr/include/string.h
+OBJDIR/zodiac_temple.o: /usr/include/strings.h
+OBJDIR/zodiac_temple.o: /usr/include/xlocale/_strings.h
+OBJDIR/zodiac_temple.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
+OBJDIR/zodiac_temple.o: /usr/include/errno.h /usr/include/stdlib.h
+OBJDIR/zodiac_temple.o: /usr/include/unistd.h /usr/include/sys/types.h
+OBJDIR/zodiac_temple.o: /usr/include/machine/endian.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/endian.h /usr/include/sys/_endian.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_sigset.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_timeval.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/timespec.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_timespec.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
+OBJDIR/zodiac_temple.o: /usr/include/assert.h /usr/include/ctype.h
+OBJDIR/zodiac_temple.o: /usr/include/_ctype.h /usr/include/runetype.h
+OBJDIR/zodiac_temple.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/limits.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_clock_id.h /usr/include/time.h
+OBJDIR/zodiac_temple.o: /usr/include/xlocale/_time.h /usr/include/sys/stat.h
+OBJDIR/zodiac_temple.o: /usr/include/netinet/in.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/zodiac_temple.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
+OBJDIR/zodiac_temple.o: /usr/include/netdb.h /usr/include/sys/socket.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_iovec.h
+OBJDIR/zodiac_temple.o: /usr/include/machine/_align.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
+OBJDIR/zodiac_temple.o: /usr/include/machine/signal.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/signal.h /usr/include/sys/wait.h
+OBJDIR/zodiac_temple.o: /usr/include/pthread.h /usr/include/sched.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/sched.h /usr/include/sys/cpuset.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_cpuset.h /usr/include/sys/_bitset.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/bitset.h /usr/include/semaphore.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/_umtx.h /usr/include/sys/event.h
+OBJDIR/zodiac_temple.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/heart.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/fdwatch.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/socket.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/kstbl.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/hangul.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/buffer.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/signal.h log.h
+OBJDIR/zodiac_temple.o: ../../libsql/AsyncSQL.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/stdafx.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/log.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/mysql.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/zodiac_temple.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/zodiac_temple.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/zodiac_temple.o: any_function.inc ../../libthecore/include/main.h
+OBJDIR/zodiac_temple.o: utils.h /usr/include/math.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/crypt.h
+OBJDIR/zodiac_temple.o: ../../libthecore/include/memcpy.h
+OBJDIR/zodiac_temple.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/zodiac_temple.o: ../../common/service.h /usr/include/float.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/zodiac_temple.o: /usr/include/stddef.h
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/zodiac_temple.o: zodiac_temple.h dungeon.h sectree_manager.h sectree.h
+OBJDIR/zodiac_temple.o: entity.h char.h ../../common/stl.h FSM.h state.h
+OBJDIR/zodiac_temple.o: horse_rider.h constants.h ../../common/tables.h
+OBJDIR/zodiac_temple.o: ../../common/length.h ../../common/service.h
+OBJDIR/zodiac_temple.o: ../../common/item_length.h cmd.h vid.h affect.h
+OBJDIR/zodiac_temple.o: affect_flag.h cube.h mining.h packet.h char_manager.h
+OBJDIR/zodiac_temple.o: ../../common/length.h item.h item_manager.h party.h
+OBJDIR/zodiac_temple.o: desc.h input.h packet_info.h cipher.h
+OBJDIR/zodiac_temple.o: ../../../extern/include/cryptopp/cryptlib.h config.h
+OBJDIR/zodiac_temple.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/zodiac_temple.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+OBJDIR/zodiac_temple.o: /usr/include/x86/_stdint.h
+OBJDIR/zodiac_temple.o: ../../../extern/include/cryptopp/trap.h regen.h
+OBJDIR/zodiac_temple.o: start_position.h locale_service.h db.h questmanager.h
+OBJDIR/zodiac_temple.o: questnpc.h questpc.h quest.h lua_incl.h
+OBJDIR/zodiac_temple.o: ../../liblua/include/lua.h
+OBJDIR/zodiac_temple.o: ../../liblua/include/lauxlib.h
+OBJDIR/zodiac_temple.o: ../../liblua/include/lualib.h mob_manager.h
+OBJDIR/char_zodiac_temple.o: stdafx.h debug_allocator.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/stdafx.h
+OBJDIR/char_zodiac_temple.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_null.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_types.h
+OBJDIR/char_zodiac_temple.o: /usr/include/machine/_types.h
+OBJDIR/char_zodiac_temple.o: /usr/include/x86/_types.h
+OBJDIR/char_zodiac_temple.o: /usr/include/machine/_limits.h
+OBJDIR/char_zodiac_temple.o: /usr/include/x86/_limits.h /usr/include/string.h
+OBJDIR/char_zodiac_temple.o: /usr/include/strings.h
+OBJDIR/char_zodiac_temple.o: /usr/include/xlocale/_strings.h
+OBJDIR/char_zodiac_temple.o: /usr/include/xlocale/_string.h
+OBJDIR/char_zodiac_temple.o: /usr/include/stdarg.h /usr/include/x86/stdarg.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_stdarg.h /usr/include/errno.h
+OBJDIR/char_zodiac_temple.o: /usr/include/stdlib.h /usr/include/unistd.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/types.h
+OBJDIR/char_zodiac_temple.o: /usr/include/machine/endian.h
+OBJDIR/char_zodiac_temple.o: /usr/include/x86/endian.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_endian.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_stdint.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/select.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_sigset.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_timeval.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/timespec.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_timespec.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
+OBJDIR/char_zodiac_temple.o: /usr/include/assert.h /usr/include/ctype.h
+OBJDIR/char_zodiac_temple.o: /usr/include/_ctype.h /usr/include/runetype.h
+OBJDIR/char_zodiac_temple.o: /usr/include/xlocale/_ctype.h
+OBJDIR/char_zodiac_temple.o: /usr/include/limits.h /usr/include/sys/limits.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/syslimits.h
+OBJDIR/char_zodiac_temple.o: /usr/include/dirent.h /usr/include/sys/dirent.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/time.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_clock_id.h /usr/include/time.h
+OBJDIR/char_zodiac_temple.o: /usr/include/xlocale/_time.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/stat.h
+OBJDIR/char_zodiac_temple.o: /usr/include/netinet/in.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/char_zodiac_temple.o: /usr/include/netinet6/in6.h
+OBJDIR/char_zodiac_temple.o: /usr/include/arpa/inet.h /usr/include/netdb.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/socket.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_iovec.h
+OBJDIR/char_zodiac_temple.o: /usr/include/machine/_align.h
+OBJDIR/char_zodiac_temple.o: /usr/include/x86/_align.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/signal.h
+OBJDIR/char_zodiac_temple.o: /usr/include/machine/signal.h
+OBJDIR/char_zodiac_temple.o: /usr/include/x86/signal.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/wait.h /usr/include/pthread.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sched.h /usr/include/sys/sched.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/cpuset.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_cpuset.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_bitset.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/bitset.h
+OBJDIR/char_zodiac_temple.o: /usr/include/semaphore.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/_umtx.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/event.h
+OBJDIR/char_zodiac_temple.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/heart.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/fdwatch.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/socket.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/kstbl.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/hangul.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/buffer.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/signal.h log.h
+OBJDIR/char_zodiac_temple.o: ../../libsql/AsyncSQL.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/stdafx.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/log.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/mysql.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/char_zodiac_temple.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/char_zodiac_temple.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/char_zodiac_temple.o: any_function.inc ../../libthecore/include/main.h
+OBJDIR/char_zodiac_temple.o: utils.h /usr/include/math.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/crypt.h
+OBJDIR/char_zodiac_temple.o: ../../libthecore/include/memcpy.h
+OBJDIR/char_zodiac_temple.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/char_zodiac_temple.o: ../../common/service.h /usr/include/float.h
+OBJDIR/char_zodiac_temple.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/char_zodiac_temple.o: /usr/include/stddef.h
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/char_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/char_zodiac_temple.o: constants.h ../../common/tables.h
+OBJDIR/char_zodiac_temple.o: ../../common/length.h ../../common/service.h
+OBJDIR/char_zodiac_temple.o: ../../common/item_length.h config.h char.h
+OBJDIR/char_zodiac_temple.o: ../../common/stl.h entity.h FSM.h state.h
+OBJDIR/char_zodiac_temple.o: horse_rider.h cmd.h vid.h affect.h affect_flag.h
+OBJDIR/char_zodiac_temple.o: cube.h mining.h packet.h item.h item_manager.h
+OBJDIR/char_zodiac_temple.o: locale_service.h questmanager.h questnpc.h
+OBJDIR/char_zodiac_temple.o: questpc.h quest.h lua_incl.h
+OBJDIR/char_zodiac_temple.o: ../../liblua/include/lua.h
+OBJDIR/char_zodiac_temple.o: ../../liblua/include/lauxlib.h
+OBJDIR/char_zodiac_temple.o: ../../liblua/include/lualib.h
+OBJDIR/char_battle_zodiac.o: stdafx.h debug_allocator.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/stdafx.h
+OBJDIR/char_battle_zodiac.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_null.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_types.h
+OBJDIR/char_battle_zodiac.o: /usr/include/machine/_types.h
+OBJDIR/char_battle_zodiac.o: /usr/include/x86/_types.h
+OBJDIR/char_battle_zodiac.o: /usr/include/machine/_limits.h
+OBJDIR/char_battle_zodiac.o: /usr/include/x86/_limits.h /usr/include/string.h
+OBJDIR/char_battle_zodiac.o: /usr/include/strings.h
+OBJDIR/char_battle_zodiac.o: /usr/include/xlocale/_strings.h
+OBJDIR/char_battle_zodiac.o: /usr/include/xlocale/_string.h
+OBJDIR/char_battle_zodiac.o: /usr/include/stdarg.h /usr/include/x86/stdarg.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_stdarg.h /usr/include/errno.h
+OBJDIR/char_battle_zodiac.o: /usr/include/stdlib.h /usr/include/unistd.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/types.h
+OBJDIR/char_battle_zodiac.o: /usr/include/machine/endian.h
+OBJDIR/char_battle_zodiac.o: /usr/include/x86/endian.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_endian.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_stdint.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/select.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_sigset.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_timeval.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/timespec.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_timespec.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
+OBJDIR/char_battle_zodiac.o: /usr/include/assert.h /usr/include/ctype.h
+OBJDIR/char_battle_zodiac.o: /usr/include/_ctype.h /usr/include/runetype.h
+OBJDIR/char_battle_zodiac.o: /usr/include/xlocale/_ctype.h
+OBJDIR/char_battle_zodiac.o: /usr/include/limits.h /usr/include/sys/limits.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/syslimits.h
+OBJDIR/char_battle_zodiac.o: /usr/include/dirent.h /usr/include/sys/dirent.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/time.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_clock_id.h /usr/include/time.h
+OBJDIR/char_battle_zodiac.o: /usr/include/xlocale/_time.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/stat.h
+OBJDIR/char_battle_zodiac.o: /usr/include/netinet/in.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/char_battle_zodiac.o: /usr/include/netinet6/in6.h
+OBJDIR/char_battle_zodiac.o: /usr/include/arpa/inet.h /usr/include/netdb.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/socket.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_iovec.h
+OBJDIR/char_battle_zodiac.o: /usr/include/machine/_align.h
+OBJDIR/char_battle_zodiac.o: /usr/include/x86/_align.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/signal.h
+OBJDIR/char_battle_zodiac.o: /usr/include/machine/signal.h
+OBJDIR/char_battle_zodiac.o: /usr/include/x86/signal.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/wait.h /usr/include/pthread.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sched.h /usr/include/sys/sched.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/cpuset.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_cpuset.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_bitset.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/bitset.h
+OBJDIR/char_battle_zodiac.o: /usr/include/semaphore.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/_umtx.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/event.h
+OBJDIR/char_battle_zodiac.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/heart.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/fdwatch.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/socket.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/kstbl.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/hangul.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/buffer.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/signal.h log.h
+OBJDIR/char_battle_zodiac.o: ../../libsql/AsyncSQL.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/stdafx.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/log.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/mysql.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/char_battle_zodiac.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/char_battle_zodiac.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/char_battle_zodiac.o: any_function.inc ../../libthecore/include/main.h
+OBJDIR/char_battle_zodiac.o: utils.h /usr/include/math.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/crypt.h
+OBJDIR/char_battle_zodiac.o: ../../libthecore/include/memcpy.h
+OBJDIR/char_battle_zodiac.o: ../../common/singleton.h ../../common/utils.h
+OBJDIR/char_battle_zodiac.o: ../../common/service.h /usr/include/float.h
+OBJDIR/char_battle_zodiac.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/char_battle_zodiac.o: /usr/include/stddef.h
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/char_battle_zodiac.o: config.h desc.h constants.h
+OBJDIR/char_battle_zodiac.o: ../../common/tables.h ../../common/length.h
+OBJDIR/char_battle_zodiac.o: ../../common/service.h
+OBJDIR/char_battle_zodiac.o: ../../common/item_length.h input.h packet_info.h
+OBJDIR/char_battle_zodiac.o: packet.h cipher.h
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/char_battle_zodiac.o: /usr/include/stdint.h
+OBJDIR/char_battle_zodiac.o: /usr/include/machine/_stdint.h
+OBJDIR/char_battle_zodiac.o: /usr/include/x86/_stdint.h
+OBJDIR/char_battle_zodiac.o: ../../../extern/include/cryptopp/trap.h
+OBJDIR/char_battle_zodiac.o: desc_manager.h ../../common/stl.h
+OBJDIR/char_battle_zodiac.o: ../../common/length.h char_manager.h item.h
+OBJDIR/char_battle_zodiac.o: entity.h item_manager.h vid.h mob_manager.h
+OBJDIR/char_battle_zodiac.o: battle.h char.h FSM.h state.h horse_rider.h
+OBJDIR/char_battle_zodiac.o: cmd.h affect.h affect_flag.h cube.h mining.h
+OBJDIR/char_battle_zodiac.o: pvp.h skill.h ../../libpoly/Poly.h
+OBJDIR/char_battle_zodiac.o: ../../libpoly/SymTable.h start_position.h
+OBJDIR/char_battle_zodiac.o: locale_service.h profiler.h dungeon.h
+OBJDIR/char_battle_zodiac.o: sectree_manager.h sectree.h unique_item.h
+OBJDIR/char_battle_zodiac.o: priv_manager.h db.h vector.h marriage.h arena.h
+OBJDIR/char_battle_zodiac.o: ../../liblua/include/lua.h regen.h
+OBJDIR/char_battle_zodiac.o: zodiac_temple.h monarch.h exchange.h
+OBJDIR/char_battle_zodiac.o: shop_manager.h castle.h dev_log.h ani.h
+OBJDIR/char_battle_zodiac.o: BattleArena.h party.h guild.h guild_manager.h
+OBJDIR/char_battle_zodiac.o: questmanager.h questnpc.h questpc.h quest.h
+OBJDIR/char_battle_zodiac.o: lua_incl.h ../../liblua/include/lauxlib.h
+OBJDIR/char_battle_zodiac.o: ../../liblua/include/lualib.h questlua.h
+OBJDIR/char_battle_zodiac.o: buffer_manager.h threeway_war.h BlueDragon.h
+OBJDIR/char_battle_zodiac.o: DragonLair.h war_map.h
+OBJDIR/questlua_zodiac_temple.o: stdafx.h debug_allocator.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/stdafx.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/stdio.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/cdefs.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_null.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_types.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/machine/_types.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/x86/_types.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/machine/_limits.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/x86/_limits.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/string.h /usr/include/strings.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/xlocale/_strings.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/xlocale/_string.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/stdarg.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/x86/stdarg.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_stdarg.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/errno.h /usr/include/stdlib.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/unistd.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/types.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/machine/endian.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/x86/endian.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_endian.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_pthreadtypes.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_stdint.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/select.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_sigset.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_timeval.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/timespec.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_timespec.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/unistd.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/fcntl.h /usr/include/assert.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/ctype.h /usr/include/_ctype.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/runetype.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/xlocale/_ctype.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/limits.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/limits.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/syslimits.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/dirent.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/dirent.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/time.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_clock_id.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/time.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/xlocale/_time.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/stat.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/netinet/in.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_sockaddr_storage.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/netinet6/in6.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/arpa/inet.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/netdb.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/socket.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_iovec.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/machine/_align.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/x86/_align.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/signal.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/machine/signal.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/x86/signal.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/wait.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/pthread.h /usr/include/sched.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/sched.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/cpuset.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_cpuset.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_bitset.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/bitset.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/semaphore.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/_umtx.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/event.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/sys/queue.h typedef.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/heart.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/fdwatch.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/socket.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/kstbl.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/hangul.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/buffer.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/signal.h log.h
+OBJDIR/questlua_zodiac_temple.o: ../../libsql/AsyncSQL.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/stdafx.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/log.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/mysql.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/mariadb_com.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/mariadb_version.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/ma_list.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/mariadb_ctype.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/mariadb_stmt.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/errmsg.h
+OBJDIR/questlua_zodiac_temple.o: /usr/local/include/mysql/mysqld_error.h
+OBJDIR/questlua_zodiac_temple.o: ../../libsql/Semaphore.h any_function.h
+OBJDIR/questlua_zodiac_temple.o: any_function.inc
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/main.h utils.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/math.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/crypt.h
+OBJDIR/questlua_zodiac_temple.o: ../../libthecore/include/memcpy.h
+OBJDIR/questlua_zodiac_temple.o: ../../common/singleton.h
+OBJDIR/questlua_zodiac_temple.o: ../../common/utils.h ../../common/service.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/float.h
+OBJDIR/questlua_zodiac_temple.o: /usr/include/x86/float.h locale.hpp event.h
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/intrusive_ptr.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/intrusive_ptr.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/user.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/detail/select_compiler_config.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/compiler/gcc.hpp
+OBJDIR/questlua_zodiac_temple.o: /usr/include/stddef.h
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/detail/select_platform_config.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/platform/bsd.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/detail/posix_features.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/detail/suffix.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/helper_macros.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/assert.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/detail/workaround.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/workaround.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_convertible.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_nullptr_t.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/sp_noexcept.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/config/no_tr1/functional.hpp
+OBJDIR/questlua_zodiac_temple.o: ../../../extern/include/boost/smart_ptr/detail/operator_bool.hpp
+OBJDIR/questlua_zodiac_temple.o: questlua.h quest.h lua_incl.h
+OBJDIR/questlua_zodiac_temple.o: ../../liblua/include/lua.h
+OBJDIR/questlua_zodiac_temple.o: ../../liblua/include/lauxlib.h
+OBJDIR/questlua_zodiac_temple.o: ../../liblua/include/lualib.h
+OBJDIR/questlua_zodiac_temple.o: buffer_manager.h questmanager.h questnpc.h
+OBJDIR/questlua_zodiac_temple.o: questpc.h zodiac_temple.h dungeon.h
+OBJDIR/questlua_zodiac_temple.o: sectree_manager.h sectree.h entity.h
+OBJDIR/questlua_zodiac_temple.o: war_map.h constants.h ../../common/tables.h
+OBJDIR/questlua_zodiac_temple.o: ../../common/length.h ../../common/service.h
+OBJDIR/questlua_zodiac_temple.o: ../../common/item_length.h guild.h skill.h
+OBJDIR/questlua_zodiac_temple.o: ../../libpoly/Poly.h
+OBJDIR/questlua_zodiac_temple.o: ../../libpoly/SymTable.h char.h
+OBJDIR/questlua_zodiac_temple.o: ../../common/stl.h FSM.h state.h
+OBJDIR/questlua_zodiac_temple.o: horse_rider.h cmd.h vid.h affect.h
+OBJDIR/questlua_zodiac_temple.o: affect_flag.h cube.h mining.h packet.h
 OBJDIR/minilzo.o: minilzo.h lzo/lzoconf.h /usr/include/limits.h
 OBJDIR/minilzo.o: /usr/include/sys/cdefs.h /usr/include/sys/limits.h
 OBJDIR/minilzo.o: /usr/include/machine/_limits.h /usr/include/x86/_limits.h
@@ -16644,19 +17864,20 @@ OBJDIR/main.o: entity.h FSM.h state.h horse_rider.h cmd.h vid.h affect.h
 OBJDIR/main.o: affect_flag.h cube.h mining.h char_manager.h item.h
 OBJDIR/main.o: mob_manager.h motion.h ../../common/d3dtype.h
 OBJDIR/main.o: sectree_manager.h sectree.h shop_manager.h regen.h dungeon.h
-OBJDIR/main.o: text_file_loader.h ../../common/pool.h file_loader.h skill.h
-OBJDIR/main.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h pvp.h party.h
-OBJDIR/main.o: questmanager.h questnpc.h questpc.h quest.h lua_incl.h
-OBJDIR/main.o: ../../liblua/include/lua.h ../../liblua/include/lauxlib.h
-OBJDIR/main.o: ../../liblua/include/lualib.h profiler.h lzo_manager.h
-OBJDIR/main.o: messenger_manager.h db.h p2p.h input.h packet_info.h
-OBJDIR/main.o: guild_manager.h refine.h banword.h priv_manager.h war_map.h
-OBJDIR/main.o: guild.h building.h ../../common/building.h login_sim.h
-OBJDIR/main.o: desc_client.h desc.h cipher.h
-OBJDIR/main.o: ../../../extern/include/cryptopp/cryptlib.h
-OBJDIR/main.o: ../../../extern/include/cryptopp/stdcpp.h
+OBJDIR/main.o: zodiac_temple.h text_file_loader.h ../../common/pool.h
+OBJDIR/main.o: file_loader.h skill.h ../../libpoly/Poly.h
+OBJDIR/main.o: ../../libpoly/SymTable.h pvp.h FarmSessionManager.h
 OBJDIR/main.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-OBJDIR/main.o: /usr/include/x86/_stdint.h
+OBJDIR/main.o: /usr/include/x86/_stdint.h offline_shop.h
+OBJDIR/main.o: offlineshop_manager.h party.h questmanager.h questnpc.h
+OBJDIR/main.o: questpc.h quest.h lua_incl.h ../../liblua/include/lua.h
+OBJDIR/main.o: ../../liblua/include/lauxlib.h ../../liblua/include/lualib.h
+OBJDIR/main.o: profiler.h lzo_manager.h messenger_manager.h db.h p2p.h
+OBJDIR/main.o: input.h packet_info.h guild_manager.h refine.h banword.h
+OBJDIR/main.o: priv_manager.h war_map.h guild.h building.h
+OBJDIR/main.o: ../../common/building.h login_sim.h desc_client.h desc.h
+OBJDIR/main.o: cipher.h ../../../extern/include/cryptopp/cryptlib.h
+OBJDIR/main.o: ../../../extern/include/cryptopp/stdcpp.h
 OBJDIR/main.o: ../../../extern/include/cryptopp/trap.h target.h marriage.h
 OBJDIR/main.o: wedding.h fishing.h item_addon.h TrafficProfiler.h
 OBJDIR/main.o: locale_service.h arena.h OXEvent.h monarch.h polymorph.h
@@ -16664,7 +17885,7 @@ OBJDIR/main.o: blend_item.h castle.h passpod.h ani.h BattleArena.h
 OBJDIR/main.o: over9refine.h horsename_manager.h MarkManager.h MarkImage.h
 OBJDIR/main.o: ../../../extern/include/IL/il.h spam.h panama.h threeway_war.h
 OBJDIR/main.o: DragonLair.h skill_power.h SpeedServer.h DragonSoul.h
-OBJDIR/main.o: ../../../extern/include/boost/bind.hpp
+OBJDIR/main.o: switchbot.h ../../../extern/include/boost/bind.hpp
 OBJDIR/main.o: ../../../extern/include/boost/bind/bind.hpp
 OBJDIR/main.o: ../../../extern/include/boost/ref.hpp
 OBJDIR/main.o: ../../../extern/include/boost/core/ref.hpp
@@ -16692,3 +17913,4 @@ OBJDIR/main.o: ../../libserverkey/CheckServerKey.h ../../libserverkey/SIM.h
 OBJDIR/main.o: ../../libserverkey/base64_ssl.h
 OBJDIR/main.o: ../../libserverkey/PublicKey.Gen.h
 OBJDIR/main.o: ../../libserverkey/RSACrypto.h /usr/include/memory.h
+OBJDIR/main.o: maintenance.h

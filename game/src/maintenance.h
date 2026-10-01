@@ -12,5 +12,11 @@ class MaintenanceManager : public singleton<MaintenanceManager>
 	void	Send_Text(LPCHARACTER ch, const char* reason);
 	void	Send_DisableSecurity(LPCHARACTER ch);
 	void	Send_ActiveMaintenance(LPCHARACTER ch, long int time_maintenance, long int duration_maintenance);
+
+	// Login gate for normal players (accounts of GMs always get through) - state lives in player.login_gate
+	bool	IsPlayerLoginOpen();
+	bool	SetPlayerLoginOpen(bool bOpen);
+	bool	IsAccountAllowed(const char* c_pszLogin);
+	void	Send_PlayerLogin(LPCHARACTER ch, const char* c_pszArg);
 };
 #endif

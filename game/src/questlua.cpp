@@ -490,6 +490,9 @@ namespace quest
 		RegisterDragonLairFunctionTable();
 		RegisterSpeedServerFunctionTable();
 		RegisterDragonSoulFunctionTable();
+#ifdef ENABLE_12ZI
+		RegisterZodiacTempleFunctionTable();
+#endif
 
 		{
 			luaL_reg member_functions[] = 

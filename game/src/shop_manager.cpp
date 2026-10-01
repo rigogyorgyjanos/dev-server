@@ -348,6 +348,7 @@ void CShopManager::Sell(LPCHARACTER ch, WORD bCell, WORD bCount)
 	CMonarch::instance().SendtoDBAddMoney(dwTax, ch->GetEmpire(), ch);
 
 	ch->PointChange(POINT_GOLD, dwPrice, false);
+	ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %u", dwPrice); // Drop Info window
 }
 
 bool CompareShopItemName(const SShopItemTable& lhs, const SShopItemTable& rhs)

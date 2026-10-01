@@ -350,6 +350,10 @@ enum
 
 	/////////////////////////////////////////////////////////////////////////////
 
+#ifdef ENABLE_12ZI
+	HEADER_GC_SEPCIAL_ZODIAC_EFFECT			= 216,
+#endif
+
 	HEADER_GG_LOGIN				= 1,
 	HEADER_GG_LOGOUT				= 2,
 	HEADER_GG_RELAY				= 3,
@@ -1531,6 +1535,9 @@ enum EPacketShopSubHeaders
 	SHOP_SUBHEADER_GC_SOLD_OUT,
 	SHOP_SUBHEADER_GC_START_EX,
 	SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX,
+#ifdef ENABLE_12ZI
+	SHOP_SUBHEADER_GC_LIMITED_PURCHASE_OVER,
+#endif
 	SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM,
 	SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP,
 };
@@ -1545,11 +1552,19 @@ struct packet_shop_item
 	long	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 	TShopPriceItem price_items[5]; // itemmel vasarlas max 5
+#ifdef ENABLE_12ZI
+	DWORD		getLimitedCount;
+	DWORD		getLimitedPurchaseCount;
+#endif
 
 	packet_shop_item() : price_type(SHOPEX_GOLD) {
 		memset(&alSockets, 0, sizeof(alSockets));
 		memset(&aAttr, 0, sizeof(aAttr));
 		memset(&price_items, 0, sizeof(TShopPriceItem));
+#ifdef ENABLE_12ZI
+		getLimitedCount = 0;
+		getLimitedPurchaseCount = 0;
+#endif
 	}
 };
 
@@ -1557,6 +1572,9 @@ typedef struct packet_shop_start
 {
 	DWORD   owner_vid;
 	struct packet_shop_item	items[SHOP_HOST_ITEM_MAX_NUM];
+#ifdef ENABLE_12ZI
+	bool	islimiteditemshop;
+#endif
 } TPacketGCShopStart;
 
 typedef struct packet_shop_start_ex // ������ TSubPacketShopTab* shop_tabs �� �����.
@@ -2406,6 +2424,18 @@ typedef struct SPacketGCSpecialEffect
 	BYTE type;
 	DWORD vid;
 } TPacketGCSpecialEffect;
+
+#ifdef ENABLE_12ZI
+typedef struct SPacketGCSpecialZodiacEffect
+{
+	BYTE header;
+	BYTE type;
+	BYTE type2;
+	DWORD vid;
+	long x;
+	long y;
+} TPacketGCSpecialZodiacEffect;
+#endif
 
 typedef struct SPacketCGChangeName
 {

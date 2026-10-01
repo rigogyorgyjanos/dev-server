@@ -20,7 +20,10 @@ ItemAwardManager::~ItemAwardManager()
 void ItemAwardManager::RequestLoad()
 {
 	char szQuery[QUERY_MAX_LEN];
-	snprintf(szQuery, sizeof(szQuery), "SELECT id,login,vnum,count,socket0,socket1,socket2,mall,why FROM item_award WHERE taken_time IS NULL and id > %d", g_dwLastCachedItemAwardID);
+	snprintf(szQuery, sizeof(szQuery), "SELECT id,login,vnum,count,socket0,socket1,socket2,mall,why,"
+			"attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,"
+			"attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6"
+			" FROM item_award WHERE taken_time IS NULL and id > %d", g_dwLastCachedItemAwardID);
 	CDBManager::instance().ReturnQuery(szQuery, QID_ITEM_AWARD_LOAD, 0, NULL);
 }
 
@@ -69,6 +72,20 @@ void ItemAwardManager::Load(SQLMsg * pMsg)
 				giftData.vnum = kData->dwVnum;				//아이템 vnum도 복사
 				CClientManager::instance().ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER,&giftData,sizeof(TPacketItemAwardInfromer));
 			}
+		}
+
+		// the attribute columns follow "why" (which the block above reads without advancing col)
+		++col;
+		for (int iAttr = 0; iAttr < ITEM_ATTRIBUTE_MAX_NUM; ++iAttr)
+		{
+			int iType = 0;
+			if (row[col])
+				str_to_number(iType, row[col]);
+			++col;
+			kData->abAttrType[iAttr] = (BYTE) iType;
+			if (row[col])
+				str_to_number(kData->asAttrValue[iAttr], row[col]);
+			++col;
 		}
 
 		m_map_award.insert(std::make_pair(dwID, kData));

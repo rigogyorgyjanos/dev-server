@@ -116,6 +116,17 @@ void CInputLogin::Login(LPDESC d, const char * data)
 		return;
 	}
 
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	// this direct (non-auth) login is a fresh login too - same player-login gate as the auth server
+	if (!MaintenanceManager::instance().IsAccountAllowed(login))
+	{
+		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
+		strlcpy(failurePacket.szStatus, "MAINTAIN", sizeof(failurePacket.szStatus));
+		d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
+		return;
+	}
+#endif
+
 	if (g_iUserLimit > 0)
 	{
 		int iTotal;

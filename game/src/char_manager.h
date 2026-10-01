@@ -43,7 +43,13 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		void			Update(int iPulse);
 
 		LPCHARACTER		SpawnMob(DWORD dwVnum, long lMapIndex, long x, long y, long z, bool bSpawnMotion = false, int iRot = -1, bool bShow = true);
+#ifdef ENABLE_12ZI
+		LPCHARACTER		SpawnMobRange(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, bool bIsException=false, bool bSpawnMotion = false , bool bAggressive = false, BYTE bLevel = 0);
+		LPCHARACTER		SpawnGroupZodiac(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen = NULL, bool bAggressive_ = false, LPZODIAC pZodiac = NULL, BYTE bLevel = 0);
+		bool			SpawnGroupGroupZodiac(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen = NULL, bool bAggressive_ = false, LPZODIAC pZodiac = NULL, BYTE bLevel = 0);
+#else
 		LPCHARACTER		SpawnMobRange(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, bool bIsException=false, bool bSpawnMotion = false , bool bAggressive = false);
+#endif
 		LPCHARACTER		SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen = NULL, bool bAggressive_ = false, LPDUNGEON pDungeon = NULL);
 		bool			SpawnGroupGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen = NULL, bool bAggressive_ = false, LPDUNGEON pDungeon = NULL);
 		bool			SpawnMoveGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, int tx, int ty, LPREGEN pkRegen = NULL, bool bAggressive_ = false);
@@ -119,6 +125,9 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		void			CompareEventSendData(TEMP_BUFFER* buf);
 		const TEventManagerData*	CheckEventIsActive(BYTE eventIndex, BYTE empireIndex = 0);
 		void			CheckEventForDrop(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM>& vec_item);
+		std::vector<TEventManagerData>	GetActiveEvents() const;
+		void			NotifyEventStatusChanges(const std::vector<TEventManagerData>& previouslyActive);
+		void			OnEventStatusChanged(const TEventManagerData& eventData);
 #endif
 
 	private:

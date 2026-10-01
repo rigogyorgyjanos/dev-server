@@ -8,6 +8,9 @@
 #include "packet.h"
 #include "motion.h"
 #include "party.h"
+#ifdef ENABLE_12ZI
+#	include "zodiac_temple.h"
+#endif
 #include "affect.h"
 #include "buffer_manager.h"
 #include "questmanager.h"
@@ -1132,6 +1135,24 @@ void CHARACTER::StateBattle()
 		}
 	}
 
+#ifdef ENABLE_12ZI
+	if (IsZodiacBoss())
+	{
+		if (GetLastZodiacAttackTime() + number(5, 15) < (DWORD)get_global_time())
+		{
+			SetLastZodiacAttackTime(get_global_time());
+
+			m_dwLastAttackTime = dwCurTime + (dwDuration-1);
+
+			BYTE type = number(0, 2);
+			ZodiacDamage(type, victim);
+			return;
+		}
+	}
+
+	if (GetRaceNum() == 20464 && victim->IsPC())
+		return;
+#endif
 	if (!Attack(victim))    // 공격 실패라면? 왜 실패했지? TODO
 		m_dwStateDuration = passes_per_sec / 2;
 	else

@@ -3015,6 +3015,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									else if (bi[i].vnum == 1)
 									{
 										PointChange(POINT_GOLD, 1000, true);
+										ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %d", 1000); // Drop Info window
 									}
 									else
 									{
@@ -3378,6 +3379,35 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
+#ifdef ENABLE_12ZI
+							case 72327:
+							case 72329:
+								{
+									if (GetExchange() || IsOpenSafebox() || GetShopOwner() || IsCubeOpen()
+										#ifdef ENABLE_COSTUME_ATTR_TRANSFER
+										|| IsAttrTransferOpen()
+										#endif
+									)
+									{
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can not use this while you have an open window."));
+										return false;
+									}
+
+									SetAnimaSphere(30);
+									item->SetCount(item->GetCount() - 1);
+								}
+								break;
+							case 72328:
+								if (FindAffect(AFFECT_CZ_UNLIMIT_ENTER))
+								{
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 효과가 걸려 있습니다."));
+									return false;
+								}
+								AddAffect(AFFECT_CZ_UNLIMIT_ENTER, 0, 0, AFF_CZ_UNLIMIT_ENTER, 10800, 0, false);
+								SetQuestFlag("12zi_temple.MarkTime", get_global_time()+10800);
+								item->SetCount(item->GetCount() - 1);
+								break;
+#endif
 							case 71013: // 축제용폭죽
 								CreateFly(number(FLY_FIREWORK1, FLY_FIREWORK6), this);
 								item->SetCount(item->GetCount() - 1);
@@ -4160,6 +4190,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), iGold);
 #endif
 									PointChange(POINT_GOLD, iGold);
+									ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %d", iGold); // Drop Info window
 								}
 								break;
 
@@ -6264,6 +6295,7 @@ namespace NPartyPickupDistribute
 				if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
 				{
 					ch->PointChange(POINT_GOLD, iMoney, true);
+					ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %d", iMoney); // Drop Info window
 
 					if (iMoney > 1000) // 천원 이상만 기록한다.
 						LogManager::instance().CharLog(ch, iMoney, "GET_GOLD", "");
@@ -6301,6 +6333,7 @@ void CHARACTER::GiveGold(int iAmount)
 		}
 
 		PointChange(POINT_GOLD, dwMyAmount, true);
+		ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %u", dwMyAmount); // Drop Info window
 
 		if (dwMyAmount > 1000) 
 			LogManager::instance().CharLog(this, dwMyAmount, "GET_GOLD", "");
@@ -6308,6 +6341,7 @@ void CHARACTER::GiveGold(int iAmount)
 	else
 	{
 		PointChange(POINT_GOLD, iAmount, true);
+		ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %d", iAmount); // Drop Info window
 
 		if (LC_IsBrazil() == true)
 		{
@@ -6383,6 +6417,10 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 							bCount -= bCount2;
 
 							item2->SetCount(item2->GetCount() + bCount2);
+
+							// Drop Info window: how much of the pickup landed on this existing stack
+							if (bCount2 > 0)
+								ChatPacket(CHAT_TYPE_COMMAND, "BINARY_Highlight_ItemAdd %d %d %d", INVENTORY, i, bCount2);
 
 							if (bCount == 0)
 							{
@@ -7382,6 +7420,11 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, WORD bCount, int iRarePct, bool
 
 				item->SetCount(item->GetCount() + bCount2);
 
+				// Drop Info window: everything AutoGiveItem hands out with a chat message (boxes, quest and Zodiac rewards, ...).
+				// Keep it behind bMsg: SortInven re-gives the whole inventory through here with bMsg = false.
+				if (bMsg && bCount2 > 0)
+					ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Item %u %u", dwItemVnum, (unsigned int) bCount2);
+
 				if (bCount == 0)
 				{
 					if (bMsg)
@@ -7423,6 +7466,8 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, WORD bCount, int iRarePct, bool
 							inv_item->GetCount() < ITEM_MAX_COUNT)
 					{
 						inv_item->SetCount(inv_item->GetCount() + item->GetCount());
+						if (bMsg)
+							ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Item %u %u", dwItemVnum, (unsigned int) item->GetCount());
 						return inv_item;
 					}
 				}
@@ -7461,6 +7506,8 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, WORD bCount, int iRarePct, bool
 		else
 			item->AddToCharacter(this, TItemPos(INVENTORY, iEmptyCell));
 		LogManager::instance().ItemLog(this, item, "SYSTEM", item->GetName());
+		if (bMsg)
+			ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Item %u %u", dwItemVnum, (unsigned int) item->GetCount());
 
 		if (item->GetType() == ITEM_USE && item->GetSubType() == USE_POTION)
 		{
@@ -7866,6 +7913,7 @@ bool CHARACTER::GiveItemFromSpecialItemGroup(DWORD dwGroupNum, std::vector<DWORD
 		{
 			case CSpecialItemGroup::GOLD:
 				PointChange(POINT_GOLD, dwCount);
+				ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %u", dwCount); // Drop Info window
 				LogManager::instance().CharLog(this, dwCount, "TREASURE_GOLD", "");
 
 				bSuccess = true;

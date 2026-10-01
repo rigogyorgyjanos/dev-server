@@ -50,5 +50,9 @@
 #define __SKILL_COLOR_SYSTEM__			// Skill Color System: player-chosen RGB tint for a skill's particle effects, S grade only
 #define __MOUNT_FLIGHT_SYSTEM__			// Mount Flight System: server-authoritative altitude while riding, Ctrl/Shift up/down, no combat while airborne
 #define __BULK_ITEM_SYSTEM__			// Bulk Item Operations: single-packet multi-item drop/move/sell/exchange-add, avoids per-item packet flood/kick
+#define ENABLE_12ZI				// Zodiac Temple: 12-floor instanced party dungeon (vendor package's own flag name, kept as-is)
+#if defined(ENABLE_12ZI)
+	#define ENABLE_SERVERTIME_PORTAL_SPAWN	// Zodiac Temple: automatic daily portal rotation, initialized only on channel 99
+#endif
 
 #endif

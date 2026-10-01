@@ -17,6 +17,9 @@
 #include "login_data.h"
 #include "locale_service.h"
 #include "spam.h"
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+	#include "maintenance.h"
+#endif
 
 extern bool g_bNoPasspod;
 extern std::string g_stBlockDate;
@@ -481,6 +484,15 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						sys_log(0, "   STATUS: %s", szStatus);
 						M2_DELETE(pinfo);
 					}
+#ifdef ENABLE_MAINTENANCE_SYSTEM
+					else if (!MaintenanceManager::instance().IsAccountAllowed(pinfo->login))
+					{
+						// player login is closed (see /player_login) and this is not a GM account
+						LoginFailure(d, "MAINTAIN");
+						sys_log(0, "   MAINTAIN");
+						M2_DELETE(pinfo);
+					}
+#endif
 					else
 					{
 						if (LC_IsEurope())

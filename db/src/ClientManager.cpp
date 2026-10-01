@@ -495,9 +495,8 @@ void CClientManager::SendOfflineShopOnSetup(CPeer* pkPeer)
 #ifdef ENABLE_EVENT_MANAGER
 namespace
 {
-	// EMPIRE_WAR_EVENT / TOURNAMENT_EVENT run indefinitely once started (no scheduled end -
-	// a GM closes them manually via /event_manager remove); every other event type ends
-	// on its own at endTime like normal.
+	// EMPIRE_WAR_EVENT / TOURNAMENT_EVENT are "starts at" entries with no scheduled end
+	// (endTime NULL in the DB). The client shows them as "Starts at: hh:mm" instead of a range.
 	bool IsEventTypeOnlyStart(BYTE eventIndex)
 	{
 		switch (eventIndex)
@@ -508,24 +507,80 @@ namespace
 		}
 		return false;
 	}
+
+	int GetMonthKey(const struct tm& t)
+	{
+		return (t.tm_year + 1900) * 12 + t.tm_mon;
+	}
+
+	// First second of the local day after the one containing t
+	time_t GetNextLocalMidnight(time_t t)
+	{
+		struct tm vKey = *localtime(&t);
+		vKey.tm_hour = 0;
+		vKey.tm_min = 0;
+		vKey.tm_sec = 0;
+		vKey.tm_mday += 1;
+		vKey.tm_isdst = -1;
+		return mktime(&vKey);
+	}
+
+	// The moment an event stops being active (exclusive). An event without an end (NULL
+	// endTime) runs until a GM closes it (/event_manager remove or the webadmin - both set
+	// endTime to NOW()) or until its start day is over, whichever comes first.
+	time_t GetEventEffectiveEnd(const TEventManagerData& eventData)
+	{
+		return eventData.endTime != 0 ? (time_t)eventData.endTime : GetNextLocalMidnight(eventData.startTime);
+	}
+
+	bool IsEventRunningAt(const TEventManagerData& eventData, time_t now)
+	{
+		return now >= eventData.startTime && now < GetEventEffectiveEnd(eventData);
+	}
 }
 
 bool CClientManager::InitializeEventManager(bool updateFromGameMaster)
 {
 	m_EventManager.clear();
 
+	// Loaded window: EVENT_CALENDAR_MONTHS_BACK months before the current one through
+	// EVENT_CALENDAR_MONTHS_AHEAD after it - the client calendar can page through exactly these
+	// (keep uieventcalendar.py's constants in sync). UpdateEventManager reloads when the month
+	// turns over, so the window moves along.
+	const int EVENT_CALENDAR_MONTHS_BACK = 1;
+	const int EVENT_CALENDAR_MONTHS_AHEAD = 3;
+
+	const time_t curTime = time(NULL);
+	struct tm vMonthStart = *localtime(&curTime);
+	m_iEventManagerMonthKey = GetMonthKey(vMonthStart);
+
+	vMonthStart.tm_mday = 1;
+	vMonthStart.tm_hour = 0;
+	vMonthStart.tm_min = 0;
+	vMonthStart.tm_sec = 0;
+	vMonthStart.tm_isdst = -1;
+	struct tm vWindowEnd = vMonthStart;
+	vWindowEnd.tm_mon += EVENT_CALENDAR_MONTHS_AHEAD + 1;
+	vMonthStart.tm_mon -= EVENT_CALENDAR_MONTHS_BACK;	// mktime normalizes month/year under- and overflow
+
+	const time_t windowStart = mktime(&vMonthStart);
+	const time_t windowEnd = mktime(&vWindowEnd);
+
 	// eventIndex is an ENUM column (BONUS_EVENT, DOUBLE_BOSS_LOOT_EVENT, ...) - "+0" forces MySQL
 	// to return its numeric ordinal instead of the string label, matching the eventIndex values
 	// in the enum in common/tables.h (the ENUM's declared member order lines up with it 1:1).
-	std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(
-		"SELECT id, eventIndex+0, UNIX_TIMESTAMP(startTime), UNIX_TIMESTAMP(endTime), empireFlag, channelFlag, value0, value1, value2, value3 "
-		"FROM player.event_table"));
+	// endTime is NULL for events without an end; a legacy '0000-00-00' makes UNIX_TIMESTAMP
+	// return NULL or 0 - IFNULL turns all of those into 0 so str_to_number never sees a NULL.
+	char szQuery[1024];
+	snprintf(szQuery, sizeof(szQuery),
+		"SELECT id, eventIndex+0, IFNULL(UNIX_TIMESTAMP(startTime), 0), IFNULL(UNIX_TIMESTAMP(endTime), 0), "
+		"empireFlag, channelFlag, value0, value1, value2, value3 "
+		"FROM player.event_table WHERE startTime < FROM_UNIXTIME(%u) ORDER BY startTime",
+		(unsigned int)windowEnd);
+	std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery));
 
 	if (pMsg->Get()->uiNumRows != 0)
 	{
-		const time_t curTime = time(NULL);
-		const struct tm vNowKey = *localtime(&curTime);
-
 		MYSQL_ROW row;
 		while (NULL != (row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 		{
@@ -542,33 +597,37 @@ bool CClientManager::InitializeEventManager(bool updateFromGameMaster)
 			for (int j = 0; j < 4; ++j)
 				str_to_number(p.value[j], row[col++]);
 
-			p.eventTypeOnlyStart = IsEventTypeOnlyStart(p.eventIndex);
-			p.eventStatus = p.eventTypeOnlyStart ? false : (curTime >= p.startTime && curTime <= p.endTime);
-
-			// Bucket by day-of-month: events ending this month key off their start day,
-			// events that already started before this month (still running) key off their
-			// end day instead, so a long-running event still shows up somewhere on today's
-			// calendar view rather than only on a start date the player already scrolled past.
-			const time_t startKeyTime = p.startTime;
-			const struct tm vStartKey = *localtime(&startKeyTime);
-
-			BYTE dayIndex;
-			if (vStartKey.tm_mon == vNowKey.tm_mon && vStartKey.tm_year == vNowKey.tm_year)
-				dayIndex = (BYTE)vStartKey.tm_mday;
-			else
+			if (p.startTime <= 0 || p.eventIndex == EVENT_NONE)
 			{
-				const time_t endKeyTime = p.endTime;
-				const struct tm vEndKey = *localtime(&endKeyTime);
-				dayIndex = (BYTE)vEndKey.tm_mday;
+				sys_err("event_table id %u: invalid startTime or eventIndex, skipped", p.eventID);
+				continue;
 			}
 
-			m_EventManager[dayIndex].emplace_back(p);
-		}
+			// Already over before the window starts
+			const time_t effectiveEnd = GetEventEffectiveEnd(p);
+			if (effectiveEnd <= windowStart)
+				continue;
 
-		for (auto& kv : m_EventManager)
-		{
-			std::stable_sort(kv.second.begin(), kv.second.end(),
-				[](const TEventManagerData& a, const TEventManagerData& b) { return a.startTime < b.startTime; });
+			p.eventTypeOnlyStart = IsEventTypeOnlyStart(p.eventIndex);
+			p.eventStatus = IsEventRunningAt(p, curTime);
+
+			// Grouped by the start's day-of-month only to keep the per-group count in a BYTE
+			// on the wire - the client places every event by its real start/end dates.
+			BYTE dayIndex = 1;
+			if (p.startTime >= windowStart)
+			{
+				const time_t startKeyTime = p.startTime;
+				dayIndex = (BYTE)localtime(&startKeyTime)->tm_mday;
+			}
+
+			std::vector<TEventManagerData>& dayEvents = m_EventManager[dayIndex];
+			// The day's event count travels as a BYTE (db->game->client)
+			if (dayEvents.size() >= 255)
+			{
+				sys_err("event_table id %u: day %u already has %u events, skipped", p.eventID, dayIndex, (unsigned int)dayEvents.size());
+				continue;
+			}
+			dayEvents.emplace_back(p);
 		}
 	}
 
@@ -591,10 +650,12 @@ void CClientManager::RecvEventManagerPacket(const char* data)
 		memcpy(&eventID, data, sizeof(WORD));
 
 		char szQuery[1024];
-		snprintf(szQuery, sizeof(szQuery), "UPDATE player.event_table SET endTime = NOW() WHERE id = %u", eventID);
+		snprintf(szQuery, sizeof(szQuery),
+			"UPDATE player.event_table SET endTime = NOW() WHERE id = %u AND (endTime IS NULL OR endTime > NOW())", eventID);
 		std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery));
 
-		InitializeEventManager(false);
+		// true: the cores push the refreshed calendar to their online players too
+		InitializeEventManager(true);
 	}
 }
 
@@ -603,36 +664,32 @@ void CClientManager::UpdateEventManager()
 	const time_t curTime = time(NULL);
 	const struct tm vNowKey = *localtime(&curTime);
 
-	const auto it = m_EventManager.find((BYTE)vNowKey.tm_mday);
-	if (it == m_EventManager.end())
-		return;
-
-	for (auto& eventData : it->second)
+	// New month: reload that month's events (this also re-sends them to every core and player)
+	if (GetMonthKey(vNowKey) != m_iEventManagerMonthKey)
 	{
-		bool sendStatusPacket = false;
+		InitializeEventManager(true);
+		return;
+	}
 
-		if (!eventData.eventStatus && !eventData.eventTypeOnlyStart && curTime >= eventData.startTime && (eventData.endTime == 0 || curTime <= eventData.endTime))
-		{
-			eventData.eventStatus = true;
-			sendStatusPacket = true;
-		}
-		else if (eventData.eventStatus && eventData.endTime != 0 && curTime > eventData.endTime)
-		{
-			eventData.eventStatus = false;
-			sendStatusPacket = true;
-		}
+	// Every loaded event, not only today's bucket - a multi-day event sits on its start day
+	// but has to end on a later one.
+	for (auto& dayKv : m_EventManager)
+	for (auto& eventData : dayKv.second)
+	{
+		const bool isRunning = IsEventRunningAt(eventData, curTime);
+		if (isRunning == eventData.eventStatus)
+			continue;
 
-		if (sendStatusPacket)
-		{
-			std::vector<BYTE> buf;
-			const BYTE subIndex = EVENT_MANAGER_EVENT_STATUS;
-			buf.insert(buf.end(), (BYTE*)&subIndex, (BYTE*)&subIndex + sizeof(BYTE));
-			buf.insert(buf.end(), (BYTE*)&eventData.eventID, (BYTE*)&eventData.eventID + sizeof(WORD));
-			buf.insert(buf.end(), (BYTE*)&eventData.eventStatus, (BYTE*)&eventData.eventStatus + sizeof(bool));
-			buf.insert(buf.end(), (BYTE*)&eventData.endTime, (BYTE*)&eventData.endTime + sizeof(int));
+		eventData.eventStatus = isRunning;
 
-			ForwardPacket(HEADER_DG_EVENT_MANAGER, buf.data(), (int)buf.size());
-		}
+		std::vector<BYTE> buf;
+		const BYTE subIndex = EVENT_MANAGER_EVENT_STATUS;
+		buf.insert(buf.end(), (BYTE*)&subIndex, (BYTE*)&subIndex + sizeof(BYTE));
+		buf.insert(buf.end(), (BYTE*)&eventData.eventID, (BYTE*)&eventData.eventID + sizeof(WORD));
+		buf.insert(buf.end(), (BYTE*)&eventData.eventStatus, (BYTE*)&eventData.eventStatus + sizeof(bool));
+		buf.insert(buf.end(), (BYTE*)&eventData.endTime, (BYTE*)&eventData.endTime + sizeof(int));
+
+		ForwardPacket(HEADER_DG_EVENT_MANAGER, buf.data(), (int)buf.size());
 	}
 }
 
@@ -887,7 +944,8 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 
 				__typeof(pSet->begin()) it = pSet->begin();
 
-				char szQuery[512];
+				// 512 was enough before the award's 7 bonus columns were added to the INSERT below
+				char szQuery[1024];
 
 				while (it != pSet->end())
 				{
@@ -1016,15 +1074,21 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 							}
 						}
 
+						const BYTE* t = pItemAward->abAttrType;
+						const short* v = pItemAward->asAttrValue;
 						snprintf(szQuery, sizeof(szQuery), 
-								"INSERT INTO item%s (id, owner_id, window, pos, vnum, count, socket0, socket1, socket2) "
-								"VALUES(%u, %u, '%s', %d, %u, %u, %u, %u, %u)",
+								"INSERT INTO item%s (id, owner_id, window, pos, vnum, count, socket0, socket1, socket2, "
+								"attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3, "
+								"attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6) "
+								"VALUES(%u, %u, '%s', %d, %u, %u, %u, %u, %u, "
+								"%u, %d, %u, %d, %u, %d, %u, %d, %u, %d, %u, %d, %u, %d)",
 								GetTablePostfix(),
 								GainItemID(),
 								pi->account_id,
 								pi->ip[0] == 0 ? "SAFEBOX" : "MALL",
 								iPos,
-								pItemAward->dwVnum, pItemAward->dwCount, pItemAward->dwSocket0, pItemAward->dwSocket1, dwSocket2);
+								pItemAward->dwVnum, pItemAward->dwCount, pItemAward->dwSocket0, pItemAward->dwSocket1, dwSocket2,
+								t[0], v[0], t[1], v[1], t[2], v[2], t[3], v[3], t[4], v[4], t[5], v[5], t[6], v[6]);
 					}
 
 					std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
@@ -1042,6 +1106,11 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 					item.alSockets[0] = pItemAward->dwSocket0;
 					item.alSockets[1] = pItemAward->dwSocket1;
 					item.alSockets[2] = dwSocket2;
+					for (int iAttr = 0; iAttr < ITEM_ATTRIBUTE_MAX_NUM; ++iAttr)
+					{
+						item.aAttr[iAttr].bType = pItemAward->abAttrType[iAttr];
+						item.aAttr[iAttr].sValue = pItemAward->asAttrValue[iAttr];
+					}
 					s_items.push_back(item);
 
 					vec_dwFinishedAwardID.push_back(std::make_pair(pItemAward->dwID, item.id));

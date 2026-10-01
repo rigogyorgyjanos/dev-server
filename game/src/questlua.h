@@ -34,6 +34,9 @@ namespace quest
 	extern void RegisterDragonLairFunctionTable();
 	extern void RegisterSpeedServerFunctionTable();
 	extern void RegisterDragonSoulFunctionTable();
+#ifdef ENABLE_12ZI
+	extern void RegisterZodiacTempleFunctionTable();
+#endif
 
 	extern void combine_lua_string(lua_State* L, std::ostringstream &s);
 	

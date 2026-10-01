@@ -17,6 +17,10 @@ typedef struct SItemAward
     char	szWhy[ITEM_AWARD_WHY_MAX_LEN+1];
     bool	bTaken;
     bool	bMall;
+    // item_award.attrtype0-6 / attrvalue0-6 (server-live/item_award_attr_setup.sql) - lets an
+    // award carry exact bonuses, e.g. a webadmin gift that didn't fit the inventory
+    BYTE	abAttrType[ITEM_ATTRIBUTE_MAX_NUM];
+    short	asAttrValue[ITEM_ATTRIBUTE_MAX_NUM];
 } TItemAward;
 
 class ItemAwardManager : public singleton<ItemAwardManager>

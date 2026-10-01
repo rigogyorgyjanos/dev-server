@@ -242,6 +242,13 @@ enum EChatType
 	CHAT_TYPE_ITEM_INFO,
 	CHAT_TYPE_MONEY_INFO,
 #endif
+#ifdef ENABLE_12ZI
+	// Wire-matched with the client's EChatType (which has no MONARCH_NOTICE) - MUST stay before it, not after,
+	// or these values would be off-by-one against the client's CHAT_TYPE_MISSION/SUB_MISSION/CLEAR_MISSION.
+	CHAT_TYPE_MISSION,
+	CHAT_TYPE_SUB_MISSION,
+	CHAT_TYPE_CLEAR_MISSION,
+#endif
 	CHAT_TYPE_MONARCH_NOTICE,	// unused server-only tag, no client-side counterpart - kept after the wire-matched block above so it can't shift EXP/ITEM/MONEY_INFO's values out of sync with the client enum again
 	CHAT_TYPE_MAX_NUM
 };
@@ -698,7 +705,27 @@ enum SPECIAL_EFFECT
 	SE_EQUIP_RAMADAN_RING,		
 	SE_EQUIP_HALLOWEEN_CANDY,		
 	SE_EQUIP_HAPPINESS_RING,		
-	SE_EQUIP_LOVE_PENDANT,		
+	SE_EQUIP_LOVE_PENDANT,
+#ifdef ENABLE_12ZI
+	SE_SKILL_DAMAGE_ZONE,
+	SE_SKILL_SAFE_ZONE,
+
+	SE_METEOR,
+	SE_BEAD_RAIN,
+	SE_FALL_ROCK,
+	SE_ARROW_RAIN,
+	SE_HORSE_DROP,
+	SE_EGG_DROP,
+	SE_DEAPO_BOOM,
+
+	SE_SKILL_DAMAGE_ZONE_BIG,
+	SE_SKILL_DAMAGE_ZONE_MIDDLE,
+	SE_SKILL_DAMAGE_ZONE_SMALL,
+
+	SE_SKILL_SAFE_ZONE_BIG,
+	SE_SKILL_SAFE_ZONE_MIDDLE,
+	SE_SKILL_SAFE_ZONE_SMALL,
+#endif
 } ;
 
 #include "item_length.h"

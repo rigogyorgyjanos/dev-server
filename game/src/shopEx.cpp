@@ -251,6 +251,9 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	ITEM_MANAGER::instance().FlushDelayedSave(item);
 	LogManager::instance().ItemLog(ch, item, "BUY", item->GetName());
 
+	// Drop Info window: the bought item
+	ch->ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Item %u %u", item->GetVnum(), item->GetCount());
+
 	if (item->GetVnum() >= 80003 && item->GetVnum() <= 80007)
 	{
 		LogManager::instance().GoldBarLog(ch->GetPlayerID(), item->GetID(), PERSONAL_SHOP_BUY, "");

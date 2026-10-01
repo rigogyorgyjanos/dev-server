@@ -112,6 +112,9 @@ enum EAffectTypes
 #ifdef ENABLE_OFFLINESHOP_SYSTEM
 	AFFECT_DECORATION = 707,	// premium offline-shop status (granted by Shop Decoration item, vnum 71221)
 #endif
+#ifdef ENABLE_12ZI
+	AFFECT_CZ_UNLIMIT_ENTER = 600,
+#endif
 	AFFECT_QUEST_START_IDX = 1000
 };
 
@@ -166,7 +169,11 @@ enum EAffectBits
 
 	AFF_CHINA_FIREWORK,
 	AFF_HAIR,	// ���
-	AFF_GERMANY, // ���� 
+	AFF_GERMANY, // ����
+
+#ifdef ENABLE_12ZI
+	AFF_CZ_UNLIMIT_ENTER,
+#endif
 
 	AFF_BITS_MAX
 };

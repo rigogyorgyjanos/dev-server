@@ -3,6 +3,9 @@
 #include "../../common/VnumHelper.h"
 
 #include "char.h"
+#ifdef ENABLE_12ZI
+#	include "zodiac_temple.h"
+#endif
 
 #include "config.h"
 #include "utils.h"
@@ -401,6 +404,12 @@ void CHARACTER::Initialize()
 
 	memset(&m_tvLastSyncTime, 0, sizeof(m_tvLastSyncTime));
 	m_iSyncHackCount = 0;
+#ifdef ENABLE_12ZI
+	m_pkZodiac = NULL;
+	m_dwZodiacCzLastTime = 0;
+	m_dwLastZodiacAttackTime = 0;
+	m_dwDeadCount = 0;
+#endif
 #ifdef __SKILL_COLOR_SYSTEM__
 	memset(&m_dwSkillColor, 0, sizeof(m_dwSkillColor));
 #endif
@@ -429,7 +438,17 @@ void CHARACTER::Destroy()
 			if (m_pkDungeon->IsValidRegen(m_pkRegen, regen_id_)) {
 				--m_pkRegen->count;
 			}
-		} else {
+		}
+#ifdef ENABLE_12ZI
+		else if (m_pkZodiac)
+		{
+			if (m_pkZodiac->IsValidRegen(m_pkRegen, regen_id_))
+			{
+				--m_pkRegen->count;
+			}
+		}
+#endif
+		else {
 			// Is this really safe?
 			--m_pkRegen->count;
 		}
@@ -440,6 +459,12 @@ void CHARACTER::Destroy()
 	{
 		SetDungeon(NULL);
 	}
+#ifdef ENABLE_12ZI
+	if (m_pkZodiac)
+	{
+		SetZodiac(NULL);
+	}
+#endif
 
 #ifdef __PET_SYSTEM__
 	if (m_petSystem)
@@ -1830,9 +1855,19 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	if (t->lMapIndex >= 10000)
 	{
+#ifdef ENABLE_12ZI
+		bool isZodiacDungeon = (t->lMapIndex >= 3580000 && t->lMapIndex < 3590000) ? false : true;
+		if (isZodiacDungeon)
+		{
+			m_posWarp.x = t->lExitX;
+			m_posWarp.y = t->lExitY;
+			m_lWarpMapIndex = t->lExitMapIndex;
+		}
+#else
 		m_posWarp.x = t->lExitX;
 		m_posWarp.y = t->lExitY;
 		m_lWarpMapIndex = t->lExitMapIndex;
+#endif
 	}
 
 	SetRealPoint(POINT_PLAYTIME, t->playtime);
@@ -4370,6 +4405,10 @@ void CHARACTER::SetParty(LPPARTY pkParty)
 
 	if (m_pkDungeon && IsPC() && !pkParty) // Fix
 		SetDungeon(NULL);
+#ifdef ENABLE_12ZI
+	if (m_pkZodiac && IsPC() && !pkParty)
+		SetZodiac(NULL);
+#endif
 
 	m_pkParty = pkParty;
 
@@ -4884,6 +4923,53 @@ void CHARACTER::SetDungeon(LPDUNGEON pkDungeon)
 	}
 }
 
+#ifdef ENABLE_12ZI
+void CHARACTER::SetZodiac(LPZODIAC pkZodiac)
+{
+	if (pkZodiac && m_pkZodiac)
+		sys_err("%s is trying to reassigning zodiac (current %p, new party %p)", GetName(), get_pointer(m_pkZodiac), get_pointer(pkZodiac));
+
+	if (m_pkZodiac == pkZodiac)
+	{
+		return;
+	}
+
+	if (m_pkZodiac)
+	{
+		if (IsPC())
+		{
+			if (GetParty())
+				m_pkZodiac->DecPartyMember(GetParty(), this);
+			else
+				m_pkZodiac->DecMember(this);
+		}
+		else if (IsMonster() || IsStone())
+		{
+			m_pkZodiac->DecMonster();
+		}
+	}
+
+	m_pkZodiac = pkZodiac;
+
+	if (pkZodiac)
+	{
+		sys_log(0, "%s ZODIAC set to %p, PARTY is %p", GetName(), get_pointer(pkZodiac), get_pointer(m_pkParty));
+
+		if (IsPC())
+		{
+			if (GetParty())
+				m_pkZodiac->IncPartyMember(GetParty(), this);
+			else
+				m_pkZodiac->IncMember(this);
+		}
+		else if (IsMonster() || IsStone())
+		{
+			m_pkZodiac->IncMonster();
+		}
+	}
+}
+#endif
+
 void CHARACTER::SetWarMap(CWarMap * pWarMap)
 {
 	if (m_pWarMap)
@@ -4964,6 +5050,16 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 
 	DWORD vid = GetVID();
 	sys_log(0, "OnClick %s[vnum %d ServerUniqueID %d, pid %d] by %s", GetName(), GetRaceNum(), vid, GetPlayerID(), pkChrCauser->GetName());
+#ifdef ENABLE_12ZI
+	if (pkChrCauser != this && IsPC() && pkChrCauser->IsPC() && IsPolymorphed() && (GetMapIndex() >= 3580000 && GetMapIndex() < 3590000) && (pkChrCauser->GetMapIndex() >= 3580000 && pkChrCauser->GetMapIndex() < 3590000))
+	{
+		if (GetPolymorphVnum() >= 20452 && GetPolymorphVnum() <= 20463)
+		{
+			SetPolymorph(0);
+			return;
+		}
+	}
+#endif
 
 	// 상점을 연상태로 퀘스트를 진행할 수 없다.
 	{
@@ -6388,6 +6484,16 @@ LPDUNGEON CHARACTER::GetDungeonForce() const
 
 	return m_pkDungeon;
 }
+
+#ifdef ENABLE_12ZI
+LPZODIAC CHARACTER::GetZodiacForce() const
+{
+	if (m_lWarpMapIndex > 10000)
+		return CZodiacManager::instance().FindByMapIndex(m_lWarpMapIndex);
+
+	return m_pkZodiac;
+}
+#endif
 
 void CHARACTER::SetBlockMode(BYTE bFlag)
 {
@@ -7853,7 +7959,10 @@ void CHARACTER::RewardMissionBook(WORD missionID)
 				}
 
 				// SetStatistics(STAT_TYPE_HUNTING_MISSIONS, 1);
-				PointChange(POINT_GOLD, number(missionData->gold[0], missionData->gold[1]));
+				const int iMissionGold = number(missionData->gold[0], missionData->gold[1]);
+				PointChange(POINT_GOLD, iMissionGold);
+				if (iMissionGold > 0)
+					ChatPacket(CHAT_TYPE_COMMAND, "BINARY_DropInfo_Yang %d", iMissionGold); // Drop Info window
 				PointChange(POINT_EXP, number(missionData->exp[0], missionData->exp[1]));
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Succesfully get reward!"));
 				ChatPacket(CHAT_TYPE_COMMAND, "RewardMissionData %u %d", missionID, true);
@@ -8083,6 +8192,281 @@ void CHARACTER::SetSkillColor(DWORD * dwSkillColor)
 {
 	memcpy(m_dwSkillColor, dwSkillColor, sizeof(m_dwSkillColor));
 	UpdatePacket();
+}
+#endif
+
+#ifdef ENABLE_12ZI
+void CHARACTER::BeadTime()
+{
+	int animaSphere = GetAnimaSphere();
+	int lastTime = GetQuestFlag("12zi_temple.beadtime");
+	int remainTime = 3600 - (get_global_time() - lastTime);
+
+	if (animaSphere >= 36)
+	{
+		ChatPacket(CHAT_TYPE_COMMAND, "Bead_count %d", GetAnimaSphere());
+		ChatPacket(CHAT_TYPE_COMMAND, "Bead_time %d", 0);
+		return;
+	}
+
+	if ((animaSphere == 0) && (lastTime == 0))
+	{
+		SetAnimaSphere(36);
+		SetQuestFlag("12zi_temple.beadtime", get_global_time());
+		ChatPacket(CHAT_TYPE_COMMAND, "Bead_count %d", GetAnimaSphere());
+		ChatPacket(CHAT_TYPE_COMMAND, "Bead_time %d", 0);
+		return;
+	}
+
+	if (animaSphere < 36 && ((get_global_time() - lastTime) > 3600))
+	{
+		int iTime = get_global_time() - lastTime;
+		int iCount = iTime/3600;
+
+		if ((animaSphere+iCount) <= 36)
+		{
+			SetAnimaSphere(iCount);
+		}
+		else if ((animaSphere+iCount) > 36)
+		{
+			int jCount = 36-animaSphere;
+			if (jCount <= 36)
+				SetAnimaSphere(jCount);
+
+			ChatPacket(CHAT_TYPE_COMMAND, "Bead_count %d", GetAnimaSphere());
+			ChatPacket(CHAT_TYPE_COMMAND, "Bead_time %d", 0);
+		}
+
+		SetQuestFlag("12zi_temple.beadtime", get_global_time());
+		ChatPacket(CHAT_TYPE_COMMAND, "Bead_count %d", GetAnimaSphere());
+		ChatPacket(CHAT_TYPE_COMMAND, "Bead_time %d", remainTime);
+		return;
+	}
+
+	ChatPacket(CHAT_TYPE_COMMAND, "Bead_count %d", animaSphere);
+	ChatPacket(CHAT_TYPE_COMMAND, "Bead_time %d", remainTime);
+}
+
+void CHARACTER::MarkTime()
+{
+	int markLastTime = GetQuestFlag("12zi_temple.MarkTime");
+	int markRemainTime = markLastTime - get_global_time();
+
+	if (markRemainTime == 0)
+	{
+		if (FindAffect(AFFECT_CZ_UNLIMIT_ENTER))
+			RemoveAffect(AFFECT_CZ_UNLIMIT_ENTER);
+	}
+	else
+	{
+		RemoveAffect(AFFECT_CZ_UNLIMIT_ENTER);
+		AddAffect(AFFECT_CZ_UNLIMIT_ENTER, 0, 0, AFF_CZ_UNLIMIT_ENTER, markRemainTime, 0, false);
+	}
+}
+
+int CHARACTER::GetAnimaSphere()
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT bead FROM player.player WHERE id = '%d';", GetPlayerID()));
+	if (pMsg->Get()->uiNumRows == 0)
+		return 0;
+
+	MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
+	int bBead = 0;
+	str_to_number(bBead, row[0]);
+	return bBead;
+}
+
+void CHARACTER::SetAnimaSphere(int amount)
+{
+	int value = abs(amount);
+
+	if (amount > 0)
+	{
+		DBManager::instance().DirectQuery("UPDATE player.player SET bead = bead + '%d' WHERE id = '%d'", value, GetPlayerID());
+	}
+	else
+	{
+		SetQuestFlag("12zi_temple.beadtime", get_global_time());
+		DBManager::instance().DirectQuery("UPDATE player.player SET bead = bead - '%d' WHERE id = '%d'", value, GetPlayerID());
+	}
+
+	ChatPacket(CHAT_TYPE_COMMAND, "Bead_count %d", GetAnimaSphere());
+}
+
+void CHARACTER::IsZodiacEffectMob()
+{
+	if (!this)
+		return;
+
+	if (!IsMonster())
+		return;
+
+	if (IsDead())
+		return;
+
+	DWORD Monster = GetRaceNum();
+
+	if (!Monster || Monster == 0)
+		return;
+
+	if (Monster == 2750 || Monster == 2860) //Officer (Zi or Hai)
+	{
+		if (number(1, 2) == 1)
+		{
+			EffectPacket(SE_SKILL_DAMAGE_ZONE);
+		}
+		else
+		{
+			EffectPacket(SE_SKILL_SAFE_ZONE);
+		}
+	}
+}
+
+void CHARACTER::IsZodiacEffectPC(DWORD Monster)
+{
+	if (!this)
+		return;
+
+	if (!IsPC())
+		return;
+
+	if (IsDead())
+		return;
+
+	if (!Monster || Monster == 0)
+		return;
+
+	if (!GetDesc() || !GetDesc()->GetCharacter())
+	{
+		sys_err("Character::IsZodiacEffectPC : cannot get desc or character");
+		return;
+	}
+
+	if (Monster == 20464) //Canon
+		EffectPacket(SE_DEAPO_BOOM);
+	else if (Monster == 2770 || Monster == 2771 || Monster == 2772) //Yin
+		EffectPacket(SE_METEOR);
+	else if (Monster == 2790 || Monster == 2791 || Monster == 2792) //Chen
+		EffectPacket(SE_BEAD_RAIN);
+	else if (Monster == 2830 || Monster == 2831 || Monster == 2832) //Shen
+		EffectPacket(SE_FALL_ROCK);
+	else if (Monster == 2800 || Monster == 2801 || Monster == 2802) //Si
+		EffectPacket(SE_ARROW_RAIN);
+	else if (Monster == 2810 || Monster == 2811 || Monster == 2812) //Wu
+		EffectPacket(SE_HORSE_DROP);
+	else if (Monster == 2840 || Monster == 2841 || Monster == 2842) //Yu
+		EffectPacket(SE_EGG_DROP);
+}
+
+void CHARACTER::ZodiacFloorMessage(BYTE Floor)
+{
+	if (!IsPC())
+		return;
+
+	if ((Floor >= 1 && Floor <= 5) || (Floor == 9) || (Floor == 10) || (Floor == 16) || (Floor == 20) || (Floor == 23) || (Floor == 25) || (Floor == 26) || (Floor >= 31 && Floor <= 33))
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Defeat all monsters.")); //246
+	else if (Floor == 6)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Defeat the Zodiac boss without dying.")); //256
+	else if (Floor == 7 || Floor == 21)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Destroy a Metin stone. If you are successful, you'll receive a bonus buff.")); //262
+	else if (Floor == 8 || Floor == 27 || Floor == 30)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Destroy all Metin stones.")); //242
+	else if (Floor == 11 || Floor == 17)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Defeat the Zodiac boss.")); //254
+	else if (Floor == 12 || Floor == 19 || Floor == 24)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Defeat all monsters without dying.")); //257
+	else if (Floor == 13 || Floor == 18 || Floor == 29)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Destroy Metin stones.")); //234
+	else if (Floor == 14 || Floor == 28)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Bonus level: Destroy Metin stones.")); //235
+	else if (Floor == 15 || Floor == 34)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Defeat monsters.")); //248
+	else if (Floor == 22)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Defeat all Zodiac bosses.")); //252
+	else if (Floor >= 35 && Floor <= 39)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Bonus level: Destroy a Metin stone.")); //261
+	else if (Floor == 40)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Bonus level: You have 5 minutes to trade with the merchant and stock up on supplies.")); //239
+	else if (Floor == 41)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("The mission was unsuccessful.")); //225
+	else if (Floor == 42)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("You just missed the bonus level.")); //251
+	else if (Floor == 43)
+		ChatPacket(CHAT_TYPE_MISSION, LC_TEXT("Time's up.")); //227
+}
+
+void CHARACTER::EffectZodiacPacket(long X, long Y, int enumEffectType, int enumEffectType2)
+{
+	TPacketGCSpecialZodiacEffect p;
+
+	p.header = HEADER_GC_SEPCIAL_ZODIAC_EFFECT;
+	p.type = enumEffectType;
+	p.type2 = enumEffectType2;
+	p.vid = GetVID();
+	p.x = X;
+	p.y = Y;
+
+	PacketAround(&p, sizeof(p));
+}
+
+DWORD CHARACTER::CountZodiacItems(DWORD Vnum)
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT count FROM player.zodiac_npc WHERE item_vnum = '%u' and owner_id = '%d'", Vnum, GetPlayerID()));
+	if (pMsg->Get()->uiNumRows == 0)
+		return 0;
+
+	MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
+	DWORD dwCount = 0;
+	str_to_number(dwCount, row[0]);
+	return dwCount;
+}
+
+void CHARACTER::SetZodiacItems(DWORD Vnum, int Count)
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT owner_id FROM player.zodiac_npc WHERE item_vnum = '%u' and owner_id = '%u'", Vnum, GetPlayerID()));
+	if (pMsg->Get()->uiNumRows == 0)
+	{
+		char szQuery[512];
+		snprintf(szQuery, sizeof(szQuery), "INSERT INTO player.zodiac_npc(owner_id, item_vnum, count) VALUES(%u, %u, %d)", GetPlayerID(), Vnum, Count);
+		DBManager::Instance().DirectQuery(szQuery);
+		return;
+	}
+	else
+	{
+		char szQuery2[512];
+		snprintf(szQuery2, sizeof(szQuery2), "UPDATE player.zodiac_npc SET count = '%d' WHERE item_vnum = %u and owner_id = '%u'", Count, Vnum, GetPlayerID());
+		DBManager::Instance().DirectQuery(szQuery2);
+	}
+}
+
+DWORD CHARACTER::PurchaseCountZodiacItems(DWORD Vnum)
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT count FROM player.zodiac_npc_sold WHERE item_vnum = '%u' and owner_id = '%d'", Vnum, GetPlayerID()));
+	if (pMsg->Get()->uiNumRows == 0)
+		return 0;
+
+	MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
+	DWORD dwCount = 0;
+	str_to_number(dwCount, row[0]);
+	return dwCount;
+}
+
+void CHARACTER::SetPurchaseZodiacItems(DWORD Vnum, int Count)
+{
+	std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery("SELECT owner_id FROM player.zodiac_npc_sold WHERE item_vnum = '%u' and owner_id = '%u'", Vnum, GetPlayerID()));
+	if (pMsg->Get()->uiNumRows == 0)
+	{
+		char szQuery[512];
+		snprintf(szQuery, sizeof(szQuery), "INSERT INTO player.zodiac_npc_sold(owner_id, item_vnum, count) VALUES(%u, %u, %d)", GetPlayerID(), Vnum, Count);
+		DBManager::Instance().DirectQuery(szQuery);
+		return;
+	}
+	else
+	{
+		char szQuery2[512];
+		snprintf(szQuery2, sizeof(szQuery2), "UPDATE player.zodiac_npc_sold SET count = '%d' WHERE item_vnum = '%u' and owner_id = '%u'", Count, Vnum, GetPlayerID());
+		DBManager::Instance().DirectQuery(szQuery2);
+	}
 }
 #endif
 

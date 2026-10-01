@@ -423,6 +423,9 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		SendEventData(CPeer* pkPeer = NULL, bool updateFromGameMaster = false);
 
 	std::map<BYTE, std::vector<TEventManagerData>>	m_EventManager;
+	// year*12+month of the calendar month m_EventManager was loaded for - UpdateEventManager
+	// reloads (and re-sends to every core) once the month turns over.
+	int		m_iEventManagerMonthKey = -1;
 #endif
 
 	// Building

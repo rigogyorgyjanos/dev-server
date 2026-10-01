@@ -601,6 +601,11 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	public:
 		DWORD			GetPlayerID() const	{ return m_dwPlayerID; }
 
+		// Seconds connected this session - m_dwPlayStartTime is private and only used
+		// internally (see the (get_dword_time() - m_dwPlayStartTime) pattern throughout
+		// char.cpp); added for the webadmin PLAYER_LIST/PLAYER_DETAIL admin-socket commands.
+		DWORD			GetSessionSeconds() const	{ return (get_dword_time() - m_dwPlayStartTime) / 1000; }
+
 		void			SetPlayerProto(const TPlayerTable * table);
 		void			CreatePlayerProto(TPlayerTable & tab);	// ���� �� ���
 
@@ -841,6 +846,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		DWORD			GetLastAttackTime() const	{ return m_dwLastAttackTime; }
 
 		void			SetLastAttacked(DWORD time);	// ���������� ���ݹ��� �ð� �� ��ġ�� ������
+#ifdef ENABLE_12ZI
+		void			SetLastZodiacCzLastTime(int time) { m_dwZodiacCzLastTime = time; }
+		int				GetLastZodiacCzLastTime() const	{ return m_dwZodiacCzLastTime; }
+#endif
 
 		// LIMIT_TIME_KRIKAL: harc-allapot kovetese (utik vagy o ut valakit). Damage()-ban
 		// frissul mindket felen, IsInCombat() pedig egy rovid "grace" ablakon belul true-t ad
@@ -901,6 +910,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			m_bWalking;
 		bool			m_bNowWalking;
 		bool			m_bStaminaConsume;
+#ifdef ENABLE_12ZI
+		int				m_dwZodiacCzLastTime;
+#endif
 		// End
 
 		// Quickslot ����
@@ -1056,6 +1068,18 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	protected:
 		LPDUNGEON	m_pkDungeon;
 		int			m_iEventAttr;
+
+		////////////////////////////////////////////////////////////////////////////////////////
+		// Zodiac
+#ifdef ENABLE_12ZI
+	public:
+		void			SetZodiac(LPZODIAC pkZodiac);
+		LPZODIAC		GetZodiac() const	{ return m_pkZodiac; }
+		LPZODIAC		GetZodiacForce() const;
+
+	protected:
+		LPZODIAC	m_pkZodiac;
+#endif
 
 		////////////////////////////////////////////////////////////////////////////////////////
 		// Guild
@@ -2223,6 +2247,72 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			m_bLookingSearch = false;
 		std::vector<DWORD> m_vecSearchItems;
 #endif
+#endif
+
+#ifdef ENABLE_12ZI
+	public:
+		void BeadTime();
+		void MarkTime();
+
+		void SetAnimaSphere(int amount);
+		int GetAnimaSphere();
+
+		void IsZodiacEffectMob();
+		void IsZodiacEffectPC(DWORD Monster);
+
+		void ZodiacFloorMessage(BYTE Floor);
+
+		void SetLastZodiacAttackTime(DWORD time) { m_dwLastZodiacAttackTime = time; }
+		DWORD GetLastZodiacAttackTime() const	{ return m_dwLastZodiacAttackTime; }
+
+		void IncDeadCount() { m_dwDeadCount++; }
+		void SetDeadCount(DWORD dead) { m_dwDeadCount = dead; }
+		DWORD GetDeadCount() const	{ return m_dwDeadCount; }
+
+		void EffectZodiacPacket(long X, long Y, int enumEffectType, int enumEffectType2 = 0);
+
+		bool IsZodiacBoss();
+		bool IsZodiacOfficer();
+		bool IsZodiacStatue();
+		WORD GetStatueVnum() const;
+
+		LPEVENT m_pkZodiacSkill1;
+		LPEVENT m_pkZodiacSkill2;
+		LPEVENT m_pkZodiacSkill3;
+		LPEVENT m_pkZodiacSkill4;
+		LPEVENT m_pkZodiacSkill5;
+		LPEVENT m_pkZodiacSkill6;
+		LPEVENT m_pkZodiacSkill7;
+		LPEVENT m_pkZodiacSkill8;
+		LPEVENT m_pkZodiacSkill9;
+		LPEVENT m_pkZodiacSkill10;
+		LPEVENT m_pkZodiacSkill11;
+
+		void ZodiacDamage(BYTE Type, LPCHARACTER Victim = NULL);
+
+		int ZodiacSkillAttack(LPCHARACTER Victim, DWORD dwVnum, BYTE bSkillLevel);
+
+		DWORD CountZodiacItems(DWORD Vnum);
+		void SetZodiacItems(DWORD Vnum, int Count);
+
+		DWORD PurchaseCountZodiacItems(DWORD Vnum);
+		void SetPurchaseZodiacItems(DWORD Vnum, int Count);
+
+		void CanonDamage();
+
+		void SpawnZodiacGroup(LPZODIAC pZodiac);
+		void SpawnZodiacStone(LPZODIAC pZodiac);
+
+		void	ZTT_CHECK_BOX(int color, int index);
+		void	ZTT_LOAD_INFO();
+		int		ZTT_CHECK_ITEM_ROW(int color, int index);
+		int		ZTT_CHECK_ITEM_COLUMN(int color, int index);
+		void	ZTT_CHECK_REWARD();
+		void	ZTT_REWARD(int type);
+
+	private:
+		DWORD	m_dwLastZodiacAttackTime;
+		DWORD	m_dwDeadCount;
 #endif
 
 };
